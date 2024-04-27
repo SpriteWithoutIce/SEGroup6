@@ -4,24 +4,6 @@
   <!-- 设置标题 -->
   <el-container style="height: 100vh" class="form-container">
     <el-container>
-      <el-aside width="200px">
-        <!-- 下边的部分是选择菜单 -->
-        <el-menu
-          class="aside my-menu"
-          @select="selectFunc"
-          default-active="1"
-          :unique-opened="true"
-        >
-          <el-sub-menu index="1">
-            <template #title>
-              <span>问诊列表</span>
-            </template>
-            <el-menu-item index="1">今日</el-menu-item>
-            <el-menu-item index="2">昨日</el-menu-item>
-            <el-menu-item index="3">更早</el-menu-item>
-          </el-sub-menu>
-        </el-menu>
-      </el-aside>
       <el-container>
         <!-- 在这里插入了一个空标题，让表格内容和菜单内容间距看起来舒服点 -->
         <el-header height="30px" style="padding: 0; margin: 0"> </el-header>
@@ -50,16 +32,14 @@
             </el-table>
             <!-- 分页组件 -->
             <el-pagination
-              @size-change="handleSizeChange"
+              :pager-count="10"
+              class="page"
+              :current-page="pagination.currentPage"
+              :page-size="pagination.pageSize"
+              :total="pagination.total"
+              layout="prev, pager, next ,total"
               @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-sizes="[10, 20, 30, 40]"
-              :page-size="pageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="totalItems"
-              :hide-on-single-page="false"
-            >
-            </el-pagination>
+            />
           </div>
         </el-main>
 
@@ -87,6 +67,78 @@ export default {
           date: "2024年4月27日",
         },
         {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月27日",
+        },
+        {
           name: "小张",
           age: 17,
           sex: "男",
@@ -99,6 +151,11 @@ export default {
           date: "2024年1月15日",
         },
       ],
+      pagination: {
+        total: 0,
+        currentPage: 1,
+        pageSize: 10,
+      },
       //这里设置数据初始化
       filteredPatients: [],
     };
@@ -110,66 +167,17 @@ export default {
     showPrescriptionDetails(row) {
       this.$refs.prescriptionDetails.openModal(row);
     },
-    selectFunc(index) {
-      let today = new Date();
-      today.setHours(0, 0, 0, 0); // Set time to midnight
-      let yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-
-      switch (index) {
-        case "1":
-          // 今日
-          this.filteredPatients = this.patient.filter((stu) => {
-            let parts = stu.date
-              .split("年")
-              .join("-")
-              .split("月")
-              .join("-")
-              .split("日")
-              .join("")
-              .split("-");
-            let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
-            stuDate.setHours(0, 0, 0, 0);
-            return stuDate.toDateString() === today.toDateString();
-          });
-          break;
-        case "2":
-          // 昨日
-          this.filteredPatients = this.patient.filter((stu) => {
-            let parts = stu.date
-              .split("年")
-              .join("-")
-              .split("月")
-              .join("-")
-              .split("日")
-              .join("")
-              .split("-");
-            let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
-            stuDate.setHours(0, 0, 0, 0);
-            return stuDate.toDateString() === yesterday.toDateString();
-          });
-          break;
-        case "3":
-          // 更早
-          this.filteredPatients = this.patient.filter((stu) => {
-            let parts = stu.date
-              .split("年")
-              .join("-")
-              .split("月")
-              .join("-")
-              .split("日")
-              .join("")
-              .split("-");
-            let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
-            stuDate.setHours(0, 0, 0, 0);
-            return stuDate < yesterday;
-          });
-          break;
-      }
-      console.log(this.filteredPatients);
+    handleCurrentChange(e) {
+      this.pagination.currentPage = e;
+      const start = (this.pagination.currentPage - 1) * 10;
+      const end = start + 10;
+      this.filteredPatients = this.patient.slice(start, end);
     },
   },
   mounted() {
+    //分页初始化
+    this.pagination.total = this.patient.length;
+    this.handleCurrentChange(1);
     console.log("Patient data loaded:", this.patient);
     // 等待 DOM 更新后再执行筛选逻辑
     //唉我真吐了，1记得加上单引号
@@ -183,9 +191,15 @@ export default {
 </script>
 
 <style scoped>
+.page {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5%;
+}
 .form-container {
   position: absolute;
-  top: 650px;
+  top: 600px;
   left: 0;
   width: 100%;
   background-color: white;
