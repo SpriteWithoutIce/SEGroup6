@@ -2,11 +2,16 @@
   <!-- 注意调用的位置 -->
   <PrescriptionDetails ref="prescriptionDetails"> </PrescriptionDetails>
   <!-- 设置标题 -->
-  <el-container style="height: 100vh;">
+  <el-container style="height: 100vh" class="form-container">
     <el-container>
       <el-aside width="200px">
         <!-- 下边的部分是选择菜单 -->
-        <el-menu class="aside my-menu" @select="selectFunc" default-active="1" :unique-opened="true">
+        <el-menu
+          class="aside my-menu"
+          @select="selectFunc"
+          default-active="1"
+          :unique-opened="true"
+        >
           <el-sub-menu index="1">
             <template #title>
               <span>问诊列表</span>
@@ -19,45 +24,57 @@
       </el-aside>
       <el-container>
         <!-- 在这里插入了一个空标题，让表格内容和菜单内容间距看起来舒服点 -->
-        <el-header height="30px" style="padding:0;margin:0">
-        </el-header>
+        <el-header height="30px" style="padding: 0; margin: 0"> </el-header>
         <el-main class="main">
           <div>
             <el-table :data="filteredPatients">
               <!-- 可以加上一个问诊号 -->
-              <el-table-column prop="name" label="姓名">
-              </el-table-column>
-              <el-table-column prop="age" label="年龄">
-              </el-table-column>
-              <el-table-column prop="sex" label="性别">
-              </el-table-column>
-              <el-table-column prop="date" style="background-color:black" label="问诊时间">
+              <el-table-column prop="name" label="姓名"> </el-table-column>
+              <el-table-column prop="age" label="年龄"> </el-table-column>
+              <el-table-column prop="sex" label="性别"> </el-table-column>
+              <el-table-column
+                prop="date"
+                style="background-color: black"
+                label="问诊时间"
+              >
               </el-table-column>
               <el-table-column style="text-align: right" label="操作">
                 <template #default="scope">
-                  <el-button class="prescribe-button" @click="showPrescriptionDetails(scope.row)">开具处方</el-button>
+                  <el-button
+                    class="prescribe-button"
+                    @click="showPrescriptionDetails(scope.row)"
+                    >开具处方</el-button
+                  >
                 </template>
               </el-table-column>
             </el-table>
             <!-- 分页组件 -->
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-              :current-page="currentPage" :page-sizes="[10, 20, 30, 40]" :page-size="pageSize"
-              layout="total, sizes, prev, pager, next, jumper" :total="totalItems" :hide-on-single-page="false">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-sizes="[10, 20, 30, 40]"
+              :page-size="pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="totalItems"
+              :hide-on-single-page="false"
+            >
             </el-pagination>
           </div>
         </el-main>
 
-
-        <el-footer height="30px" align="center" class="footer">SE_GROUP_6</el-footer>
+        <el-footer height="30px" align="center" class="footer"
+          >SE_GROUP_6</el-footer
+        >
       </el-container>
     </el-container>
   </el-container>
 </template>
 
 <script>
-import PrescriptionDetails from './PrescriptionDetails.vue'
+import PrescriptionDetails from "./PrescriptionDetails.vue";
 export default {
-  data () {
+  data() {
     return {
       desc: "问诊列表统计",
       //注意，函数里有日期比较逻辑，所以务必注意后端的日期数据格式！！！
@@ -67,60 +84,82 @@ export default {
           name: "小王",
           age: 18,
           sex: "男",
-          date: "2024年4月27日"
-        }, {
+          date: "2024年4月27日",
+        },
+        {
           name: "小张",
           age: 17,
           sex: "男",
-          date: "2024年2月15日"
-        }, {
+          date: "2024年2月15日",
+        },
+        {
           name: "小秋",
           age: 16,
           sex: "女",
-          date: "2024年1月15日"
-        }
+          date: "2024年1月15日",
+        },
       ],
       //这里设置数据初始化
-      filteredPatients: [
-      ],
-    }
+      filteredPatients: [],
+    };
   },
   components: {
     PrescriptionDetails,
   },
   methods: {
-    showPrescriptionDetails (row) {
+    showPrescriptionDetails(row) {
       this.$refs.prescriptionDetails.openModal(row);
     },
-    selectFunc (index) {
+    selectFunc(index) {
       let today = new Date();
       today.setHours(0, 0, 0, 0); // Set time to midnight
       let yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
 
       switch (index) {
-        case '1':
+        case "1":
           // 今日
-          this.filteredPatients = this.patient.filter(stu => {
-            let parts = stu.date.split('年').join('-').split('月').join('-').split('日').join('').split('-');
+          this.filteredPatients = this.patient.filter((stu) => {
+            let parts = stu.date
+              .split("年")
+              .join("-")
+              .split("月")
+              .join("-")
+              .split("日")
+              .join("")
+              .split("-");
             let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
             stuDate.setHours(0, 0, 0, 0);
             return stuDate.toDateString() === today.toDateString();
           });
           break;
-        case '2':
+        case "2":
           // 昨日
-          this.filteredPatients = this.patient.filter(stu => {
-            let parts = stu.date.split('年').join('-').split('月').join('-').split('日').join('').split('-');
+          this.filteredPatients = this.patient.filter((stu) => {
+            let parts = stu.date
+              .split("年")
+              .join("-")
+              .split("月")
+              .join("-")
+              .split("日")
+              .join("")
+              .split("-");
             let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
             stuDate.setHours(0, 0, 0, 0);
             return stuDate.toDateString() === yesterday.toDateString();
           });
           break;
-        case '3':
+        case "3":
           // 更早
-          this.filteredPatients = this.patient.filter(stu => {
-            let parts = stu.date.split('年').join('-').split('月').join('-').split('日').join('').split('-');
+          this.filteredPatients = this.patient.filter((stu) => {
+            let parts = stu.date
+              .split("年")
+              .join("-")
+              .split("月")
+              .join("-")
+              .split("日")
+              .join("")
+              .split("-");
             let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
             stuDate.setHours(0, 0, 0, 0);
             return stuDate < yesterday;
@@ -130,22 +169,27 @@ export default {
       console.log(this.filteredPatients);
     },
   },
-  mounted () {
+  mounted() {
     console.log("Patient data loaded:", this.patient);
     // 等待 DOM 更新后再执行筛选逻辑
     //唉我真吐了，1记得加上单引号
     this.$nextTick(() => {
-      this.selectFunc('1');
+      this.selectFunc("1");
       console.log("here");
       console.log("Filtered patients after DOM update:", this.filteredPatients);
     });
-  }
-}
+  },
+};
 </script>
 
-
-
 <style scoped>
+.form-container {
+  position: absolute;
+  top: 650px;
+  left: 0;
+  width: 100%;
+  background-color: white;
+}
 .header {
   font-size: 30px;
   line-height: 80px;
@@ -187,6 +231,5 @@ export default {
   color: white;
   font-size: 17px;
   line-height: 30px;
-
 }
 </style>

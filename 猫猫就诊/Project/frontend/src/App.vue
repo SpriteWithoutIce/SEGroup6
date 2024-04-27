@@ -1,37 +1,23 @@
-<template>
-  <PrescriptionDetails ref="prescriptionDetails"> </PrescriptionDetails>
-  <HeaderNavigation />
-  <MakePrescription />
-  <NavBar />
-</template>
-
-<script>
-import PrescriptionDetails from './components/Prescription/PrescriptionDetails.vue'
-import MakePrescription from './components/Prescription/MakePrescription.vue'
-import HeaderNavigation from './components/HeaderNavigation.vue';
-import NavBar from './components/Navigation/Navbar.vue'
-export default {
-  name: 'App',
-  components: {
-    NavBar,
-    PrescriptionDetails,
-    MakePrescription,
-    HeaderNavigation,
-  },
-  methods: {
-    showPrescriptionDetails () {
-      this.$refs.prescriptionDetails.openModal();
-    }
-  }
-}
+<script setup>
+import CarouselA from "@/views/CarouselA.vue";
+import HeadA from "@/views/HeadA.vue";
+import SearchA from "@/views/SearchA.vue";
+import SignA from "@/views/SignA.vue";
+import InputA from "@/views/InputA.vue";
+import MakePrescription from "@/components/Prescription/MakePrescription.vue";
 </script>
 
-<style>
-#app {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-</style>
+<template>
+  <scroll>
+    <div class="all-container" width="100%">
+      <HeadA></HeadA>
+      <CarouselA class="carousel-class" />
+      <SearchA />
+      <SignA></SignA>
+      <InputA />
+      <MakePrescription></MakePrescription>
+    </div>
+  </scroll>
+</template>
+
+<style scoped></style>
