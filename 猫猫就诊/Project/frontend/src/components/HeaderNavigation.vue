@@ -43,7 +43,7 @@ export default {
     return {
       WebURL: "http://localhost:8080",
       currentIndex: 0,
-      images: ['http://localhost:8080/img/navigation/banner1.jpg', 'http://localhost:8080/img/navigation/banner2.jpg', 'http://localhost:8080/img/navigation/banner3.jpg'],
+      images: ['http://localhost:8080/static/img/navigation/banner1.jpg', 'http://localhost:8080/static/img/navigation/banner2.jpg', 'http://localhost:8080/static/img/navigation/banner3.jpg'],
     };
   },
   mounted () {
