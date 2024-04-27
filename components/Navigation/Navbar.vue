@@ -1,0 +1,77 @@
+<template>
+  <div class="navbar" :class="{ sticky: isSticky }">
+    <a href="#" class="white-bold">首页</a>
+    <a href="#" class="white-bold">关于</a>
+    <a href="#" class="white-bold">联系我们</a>
+  </div>
+</template>
+
+<script>
+import { ref, onMounted, onUnmounted } from 'vue';
+
+export default {
+  name: 'NavBar',
+  setup () {
+    const isSticky = ref(false);
+
+    const checkScroll = () => {
+      isSticky.value = window.scrollY > 200;
+    };
+
+    onMounted(() => {
+      window.addEventListener('scroll', checkScroll);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('scroll', checkScroll);
+    });
+
+    return { isSticky };
+  },
+};
+</script>
+
+<style scoped>
+.navbar {
+  width: 100%;
+  height: 70px;
+  transition: all 0.2s;
+  opacity: 0;
+  background-color: #78291e;
+  /* 设置背景色为深蓝色 */
+}
+
+.navbar.sticky::before {
+  content: '';
+  position: absolute;
+  top: -14px;
+  left: 40px;
+  width: 210px;
+  height: 105px;
+  background-image: url('../../assets/navigation/logo.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 6;
+}
+
+.navbar.sticky {
+
+  text-align: right;
+  color: white;
+  position: fixed;
+  top: 0;
+  opacity: 1;
+  z-index: 5;
+}
+
+.white-bold {
+  position: relative;
+  top: 21px;
+  right: 42px;
+  font-size: large;
+  font-weight: bold;
+  color: white;
+  margin-left: 70px;
+  /* 调整文本之间的间距 */
+}
+</style>
