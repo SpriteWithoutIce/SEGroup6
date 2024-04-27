@@ -3,37 +3,38 @@
 <!-- 功能修改成点击可以切换图片，图片也会进行轮播 https://blog.csdn.net/boxuestudio/article/details/129099623-->
 <template>
   <div>
-  <el-header class="header-nav">
-    <nav>
-      <!-- 导航链接可以根据需要添加 -->
-      <!-- 这是需要加路由的，路由应该放在index里边 -->
-      <a href="#unknown">首页</a>
-      <a href="#unknown">登录</a>
-      <a href="#unknown">联系我们</a>
-      <a href="#unknown">关于</a>
-    </nav>
-    <!-- 下边这段肯定可以简化 -->
-    <!-- 改了会出bug导致的 -->
-    <div class="clickable-images">
-      <a href="#link1" class="image-link" @mouseover="showSurroundImage(1)" @mouseleave="hideSurroundImage()">
-        <img class="designed-icon" src="../assets/navigation/list1.1.png" alt="Image 1">
-        <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 1">
-      </a>
-      <a href="#link2" class="image-link" @mouseover="showSurroundImage(2)" @mouseleave="hideSurroundImage()">
-        <img class="designed-icon" src="../assets/navigation/list1.2.png" alt="Image 2">
-        <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 2">
-      </a>
-      <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
-        <img class="designed-icon" src="../assets/navigation/list1.3.png" alt="Image 3">
-        <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 3">
-      </RouterLink>
-      <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(4)" @mouseleave="hideSurroundImage()">
-        <img class="designed-icon" src="../assets/navigation/list1.4.png" alt="Image 4">
-        <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 4">
-      </RouterLink>
-    </div>
-  </el-header>
-  <RouterView/>
+    <el-header class="header-nav">
+      <nav>
+        <!-- 导航链接可以根据需要添加 -->
+        <!-- 这是需要加路由的，路由应该放在index里边 -->
+        <a href="#unknown">首页</a>
+        <a href="#unknown">登录</a>
+        <a href="#unknown">联系我们</a>
+        <a href="#unknown">关于</a>
+      </nav>
+      <!-- 下边这段肯定可以简化 -->
+      <!-- 改了会出bug导致的 -->
+      <div class="clickable-images">
+        <a href="#link1" class="image-link" @mouseover="showSurroundImage(1)" @mouseleave="hideSurroundImage()">
+          <img class="designed-icon" src="../assets/navigation/list1.1.png" alt="Image 1">
+          <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 1">
+        </a>
+        <a href="#link2" class="image-link" @mouseover="showSurroundImage(2)" @mouseleave="hideSurroundImage()">
+          <img class="designed-icon" src="../assets/navigation/list1.2.png" alt="Image 2">
+          <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 2">
+        </a>
+        <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(3)"
+          @mouseleave="hideSurroundImage()">
+          <img class="designed-icon" src="../assets/navigation/list1.3.png" alt="Image 3">
+          <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 3">
+        </RouterLink>
+        <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(4)" @mouseleave="hideSurroundImage()">
+          <img class="designed-icon" src="../assets/navigation/list1.4.png" alt="Image 4">
+          <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 4">
+        </RouterLink>
+      </div>
+    </el-header>
+    <RouterView />
   </div>
 </template>
 
@@ -142,7 +143,8 @@ export default {
   background-image: url('../assets/navigation/logo.png');
   background-size: cover;
   background-repeat: no-repeat;
-  z-index: 2;
+  /*图层拉高，否则会被after影响到*/
+  z-index: 5;
 }
 
 .header-nav nav {
@@ -171,7 +173,7 @@ export default {
   width: 100%;
   background-color: rgba(13, 65, 153, 0.941);
   transform: translateX(-50%) scaleX(0);
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s;
 }
 
 .header-nav nav a:hover::after {
