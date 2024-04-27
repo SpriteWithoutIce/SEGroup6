@@ -1,3 +1,4 @@
+// lyx 这是干嘛用的？
 import HeaderNavigation from "./HeaderNavigation.vue";
 import MakePrescription from "./Prescription/MakePrescription.vue";
 import PrescriptionDetails from "./Prescription/PrescriptionDetails.vue";

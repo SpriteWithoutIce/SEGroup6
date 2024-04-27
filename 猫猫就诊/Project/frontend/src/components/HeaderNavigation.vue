@@ -2,6 +2,7 @@
 <!-- 感觉把边上那个按钮去掉吧,主要是图片不好看的原因 -->
 <!-- 功能修改成点击可以切换图片，图片也会进行轮播 https://blog.csdn.net/boxuestudio/article/details/129099623-->
 <template>
+  <div>
   <el-header class="header-nav">
     <nav>
       <!-- 导航链接可以根据需要添加 -->
@@ -22,20 +23,24 @@
         <img class="designed-icon" src="../assets/navigation/list1.2.png" alt="Image 2">
         <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 2">
       </a>
-      <a href="#link3" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
+      <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
         <img class="designed-icon" src="../assets/navigation/list1.3.png" alt="Image 3">
         <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 3">
-      </a>
-      <a href="#link4" class="image-link" @mouseover="showSurroundImage(4)" @mouseleave="hideSurroundImage()">
+      </RouterLink>
+      <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(4)" @mouseleave="hideSurroundImage()">
         <img class="designed-icon" src="../assets/navigation/list1.4.png" alt="Image 4">
         <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 4">
-      </a>
+      </RouterLink>
     </div>
-
   </el-header>
+  <RouterView/>
+  </div>
 </template>
 
 <script>
+import { RouterLink, RouterView } from 'vue-router'
+import BillList from './Bills/BillList.vue'
+import Prescription from './Prescription/MakePrescription.vue'
 
 export default {
   name: 'HeaderNavigation',
@@ -50,6 +55,8 @@ export default {
     setInterval(this.changeBackground, 5000); // Change background every 5 seconds
   },
   components: {
+    RouterLink,
+    RouterView
   },
   methods: {
     changeBackground () {
