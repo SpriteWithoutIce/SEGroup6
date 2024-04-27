@@ -157,7 +157,7 @@ export default {
 /*问诊列表*/
 .main {
   background-color: white;
-  background-image: url(../../assets/Bill/Bill_bg.png);
+  background-image: url(../../assets/prescription/prescription_bg.png);
 }
 
 .pay-button {

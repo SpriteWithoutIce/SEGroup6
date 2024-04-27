@@ -22,10 +22,10 @@
         <img class="designed-icon" src="../assets/navigation/list1.2.png" alt="Image 2">
         <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 2">
       </a>
-      <a href="#link3" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
+      <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
         <img class="designed-icon" src="../assets/navigation/list1.3.png" alt="Image 3">
         <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 3">
-      </a>
+      </RouterLink>
       <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(4)" @mouseleave="hideSurroundImage()">
         <img class="designed-icon" src="../assets/navigation/list1.4.png" alt="Image 4">
         <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 4">
@@ -38,6 +38,7 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
 import BillList from './Bills/BillList.vue'
+import Prescription from './Prescription/MakePrescription.vue'
 
 export default {
   name: 'HeaderNavigation',
