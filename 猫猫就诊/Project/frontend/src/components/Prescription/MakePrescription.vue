@@ -6,7 +6,7 @@
     <el-container>
       <el-aside width="200px">
         <!-- 下边的部分是选择菜单 -->
-        <el-menu class="aside my-menu" @select="selectFunc" default-active="1" :unique-opened="true">
+        <el-menu class="aside my-menu"  default-active="1" :unique-opened="true">
           <el-sub-menu index="1">
             <template #title>
               <span>问诊列表</span>
@@ -23,16 +23,16 @@
         </el-header>
         <el-main class="main">
           <div>
-            <el-table :data="filteredPatients">
+            <el-table :data="patient">
               <!-- 可以加上一个问诊号 -->
               <el-table-column prop="name" label="姓名">
               </el-table-column>
-              <el-table-column prop="age" label="年龄">
+              <!-- <el-table-column prop="age" label="年龄">
               </el-table-column>
               <el-table-column prop="sex" label="性别">
               </el-table-column>
               <el-table-column prop="date" style="background-color:black" label="问诊时间">
-              </el-table-column>
+              </el-table-column> -->
               <el-table-column style="text-align: right" label="操作">
                 <template #default="scope">
                   <el-button class="prescribe-button" @click="showPrescriptionDetails(scope.row)">开具处方</el-button>
@@ -55,7 +55,6 @@
 </template>
 
 <script>
-// import instance from '../../axios';
 import PrescriptionDetails from './PrescriptionDetails.vue'
 export default {
   data () {
@@ -64,22 +63,6 @@ export default {
       //注意，函数里有日期比较逻辑，所以务必注意后端的日期数据格式！！！
       // 把stus设置成数据库读取的内容就好
       patient: [
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月27日"
-        }, {
-          name: "小张",
-          age: 17,
-          sex: "男",
-          date: "2024年2月15日"
-        }, {
-          name: "小秋",
-          age: 16,
-          sex: "女",
-          date: "2024年1月15日"
-        }
       ],
       //这里设置数据初始化
       filteredPatients: [
@@ -90,22 +73,11 @@ export default {
     PrescriptionDetails,
   },
   methods: {
-    // getPatientsData () {
-    //   instance.axios.get('/patients', {})
-    //     .then(res => {
-    //       const data = res.data;
-    //       this.patient = data;
-    //       console.log('Fetched users data:', data);
-    //     })
-    //     .catch(error => {
-    //       console.error('Error fetching users data:', error);
-    //     });
-    // },
     getPatientsData: function () {
-
+      let ts = this;
       this.$axios.get('/api/patients/list/')
         .then(function (response) {
-          this.patient = response.data;
+          ts.patient = response.data['patients'];
         })
         .catch(function (error) {
           console.log(error);
@@ -158,9 +130,9 @@ export default {
     this.getPatientsData();
     // 等待 DOM 更新后再执行筛选逻辑
     //唉我真吐了，1记得加上单引号
-    this.$nextTick(() => {
-      this.selectFunc('1');
-    });
+    //this.$nextTick(() => {
+      //this.selectFunc('1');
+    //});
   }
 }
 </script>

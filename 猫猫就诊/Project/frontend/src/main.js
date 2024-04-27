@@ -6,7 +6,7 @@ import axios from 'axios'
 
 
 const app = createApp(App)
-app.prototype.$axios = axios;
+app.config.globalProperties.$axios = axios
 app.config.productionTip = false;
 
 app.use(ElementPlus)
