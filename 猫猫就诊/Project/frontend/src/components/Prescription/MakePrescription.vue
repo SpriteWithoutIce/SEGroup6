@@ -55,6 +55,7 @@
 </template>
 
 <script>
+// import instance from '../../axios';
 import PrescriptionDetails from './PrescriptionDetails.vue'
 export default {
   data () {
@@ -89,6 +90,29 @@ export default {
     PrescriptionDetails,
   },
   methods: {
+    // getPatientsData () {
+    //   instance.axios.get('/patients', {})
+    //     .then(res => {
+    //       const data = res.data;
+    //       this.patient = data;
+    //       console.log('Fetched users data:', data);
+    //     })
+    //     .catch(error => {
+    //       console.error('Error fetching users data:', error);
+    //     });
+    // },
+    getPatientsData: function () {
+
+      this.$axios.get('/api/patients/list/')
+        .then(function (response) {
+          this.patient = response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+    },
+
+
     showPrescriptionDetails (row) {
       this.$refs.prescriptionDetails.openModal(row);
     },
@@ -131,13 +155,11 @@ export default {
     },
   },
   mounted () {
-    console.log("Patient data loaded:", this.patient);
+    this.getPatientsData();
     // 等待 DOM 更新后再执行筛选逻辑
     //唉我真吐了，1记得加上单引号
     this.$nextTick(() => {
       this.selectFunc('1');
-      console.log("here");
-      console.log("Filtered patients after DOM update:", this.filteredPatients);
     });
   }
 }

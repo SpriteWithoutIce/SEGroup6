@@ -65,7 +65,6 @@ export default {
         medicines: [{ name: '', quantity: 0, price: 0, totalPrice: 0 }]
       },
       medicinesDB: [
-
         { name: '阿司匹林', stock: 100, price: 2.5 },
         { name: '头孢', stock: 50, price: 10.0 },
         { name: '布洛芬', stock: 80, price: 5.0 },
