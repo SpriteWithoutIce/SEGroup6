@@ -67,7 +67,7 @@ export default {
           name: "小王",
           age: 18,
           sex: "男",
-          date: "2024年3月15日"
+          date: "2024年4月27日"
         }, {
           name: "小张",
           age: 17,
@@ -82,18 +82,6 @@ export default {
       ],
       //这里设置数据初始化
       filteredPatients: [
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年3月15日"
-        },
-        {
-          name: "小秋",
-          age: 16,
-          sex: "女",
-          date: "2024年1月15日"
-        }
       ],
     }
   },
@@ -139,7 +127,18 @@ export default {
           });
           break;
       }
+      console.log(this.filteredPatients);
     },
+  },
+  mounted () {
+    console.log("Patient data loaded:", this.patient);
+    // 等待 DOM 更新后再执行筛选逻辑
+    //唉我真吐了，1记得加上单引号
+    this.$nextTick(() => {
+      this.selectFunc('1');
+      console.log("here");
+      console.log("Filtered patients after DOM update:", this.filteredPatients);
+    });
   }
 }
 </script>
