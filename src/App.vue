@@ -1,30 +1,14 @@
-<template>
-  <BillDetails ref="BillDetails"> </BillDetails>
-  <HeaderNavigation />
-  <BillList />
-  <NavBar />
-</template>
-
-<script>
-import BillDetails from './components/Bills/BillDetails.vue'
+<script setup>
 import BillList from './components/Bills/BillList.vue'
 import HeaderNavigation from './components/HeaderNavigation.vue';
 import NavBar from './components/Navigation/Navbar.vue'
-export default {
-  name: 'App',
-  components: {
-    NavBar,
-    BillDetails,
-    BillList,
-    HeaderNavigation,
-  },
-  methods: {
-    showBillDetails () {
-      this.$refs.billDetails.openModal();
-    }
-  }
-}
 </script>
+
+<template>
+  <HeaderNavigation />
+  <!-- <BillList /> -->
+  <NavBar />
+</template>
 
 <style>
 #app {

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import BillList from '../components/Bills/BillList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,6 +9,11 @@ const router = createRouter({
     //   name: 'order',
     //   component: MyOrderVue
     // },
+    {
+      path: '/Bill',
+      name: 'Bill',
+      component: BillList
+    }
   ]
 })
 
