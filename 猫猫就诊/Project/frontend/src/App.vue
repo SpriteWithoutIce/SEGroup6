@@ -1,5 +1,5 @@
 <script setup>
-import HeaderNavigation from './components/HeaderNavigation.vue';
+import HeaderNavigation from './components/Navigation/HeaderNavigation.vue';
 import NavBar from './components/Navigation/Navbar.vue'
 </script>
 

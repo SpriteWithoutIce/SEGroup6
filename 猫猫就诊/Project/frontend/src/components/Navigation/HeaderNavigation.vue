@@ -16,21 +16,21 @@
       <!-- 改了会出bug导致的 -->
       <div class="clickable-images">
         <a href="#link1" class="image-link" @mouseover="showSurroundImage(1)" @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../assets/navigation/list1.1.png" alt="Image 1">
-          <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 1">
+          <img class="designed-icon" src="../../assets/navigation/list1.1.png" alt="Image 1">
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 1">
         </a>
         <a href="#link2" class="image-link" @mouseover="showSurroundImage(2)" @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../assets/navigation/list1.2.png" alt="Image 2">
-          <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 2">
+          <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2">
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2">
         </a>
         <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(3)"
           @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../assets/navigation/list1.3.png" alt="Image 3">
-          <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 3">
+          <img class="designed-icon" src="../../assets/navigation/list1.3.png" alt="Image 3">
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 3">
         </RouterLink>
         <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(4)" @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../assets/navigation/list1.4.png" alt="Image 4">
-          <img class="Surround-image" src="../assets/navigation/list1_bg.png" alt="Surround Image 4">
+          <img class="designed-icon" src="../../assets/navigation/list1.4.png" alt="Image 4">
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 4">
         </RouterLink>
       </div>
     </el-header>
@@ -40,8 +40,8 @@
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import BillList from './Bills/BillList.vue'
-import Prescription from './Prescription/MakePrescription.vue'
+import BillList from '../Bills/BillList.vue'
+import Prescription from '../Prescription/MakePrescription.vue'
 
 export default {
   name: 'HeaderNavigation',
@@ -115,9 +115,7 @@ export default {
   color: white;
   padding: 0;
   text-align: center;
-  background-image: url('../assets/navigation/banner1.jpg'),
-    url('../assets/navigation/banner2.jpg'),
-    url('../assets/navigation/banner3.jpg');
+  background-image: url('../../assets/navigation/banner1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -140,7 +138,7 @@ export default {
   left: 30px;
   width: 300px;
   height: 150px;
-  background-image: url('../assets/navigation/logo.png');
+  background-image: url('../../assets/navigation/logo.png');
   background-size: cover;
   background-repeat: no-repeat;
   /*图层拉高，否则会被after影响到*/
