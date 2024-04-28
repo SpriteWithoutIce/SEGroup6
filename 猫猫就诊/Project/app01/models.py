@@ -15,10 +15,24 @@ class Users(models.Model):
 class Patients(models.Model):
     account = models.ForeignKey(verbose_name="患者账号", to="Users", to_field="account", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="患者姓名", max_length=20)
+    age = models.IntegerField(verbose_name="患者年龄")
+    
+    gender_choices = (
+        (1, "男"),
+        (2, "女"),
+    )
+    gender = models.SmallIntegerField(verbose_name="患者性别", choices=gender_choices)
 
 class Doctors(models.Model):
     account = models.ForeignKey(verbose_name="医生账号", to="Users", to_field="account", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="医生姓名", max_length=20)
+    age = models.IntegerField(verbose_name="医生年龄")
+    
+    gender_choices = (
+        (1, "男"),
+        (2, "女"),
+    )
+    gender = models.SmallIntegerField(verbose_name="医生性别", choices=gender_choices)
     title = models.CharField(verbose_name="医生职称", max_length=50)
     section = models.CharField(verbose_name="医生科室", max_length=20)
     speciality = models.CharField(verbose_name="医生特长", max_length=150)
