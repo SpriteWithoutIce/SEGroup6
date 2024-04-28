@@ -16,8 +16,6 @@ export default defineConfig({
     }
   },
   transpileDependencies: true,
-  // 输出目录
-  assetsDir: 'static',
   devServer : {
     proxy: {
       '/api': {
@@ -25,6 +23,22 @@ export default defineConfig({
         changeOrigin: true,
         pathRewrite: {
           '/api': ''
+        }
+      }
+    }
+  },
+  // 修改打包配置，实现静态资源分类打包和分拆打包
+  build: {
+    chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      output: {
+        chunkFileNames: 'static/js/[name]-[hash].js',
+        entryFileNames: 'static/js/[name]-[hash].js',
+        assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          }
         }
       }
     }
