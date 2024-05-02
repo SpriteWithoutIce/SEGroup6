@@ -2,37 +2,81 @@
   <Header :squares2="squares2" />
   <!-- 就诊须知内容 -->
   <div class="notice-box">  
-    <form>  
+    <div class="container2" style="margin-bottom: 50px;">  
+      <button class="button2 button-prev">上一步</button>  
+      <button class="button2 button-next" v-if="checked && first" type="submit">下一步</button> 
+      <button class="button2 button-next" v-if="checked && second" type="submit2">下一步</button> 
+    </div> 
+    <!-- 首诊信息 -->
+    <div class="container3" v-if="first">
+    <form @submit.prevent="submitForm">  
       <div class="form-group">  
-        <label for="name">姓名:</label>  
         <input type="text" id="name" name="name" class="form-control" placeholder="请输入姓名">  
-        <label for="paymentType">支付类型:</label>  
-        <select id="paymentType" name="paymentType" class="form-control">  
+        <select id="paymentType" name="paymentType" class="form-control" placeholder="支付类型">  
           <option value="医保">医保</option>  
           <option value="非医保">非医保</option>  
         </select>  
       </div>  
       <div class="form-group">  
-        <label for="gender">性别:</label>  
-        <select id="gender" name="gender" class="form-control">  
+        <select id="gender" name="gender" class="form-control" placeholder="性别">  
           <option value="男">男</option>  
           <option value="女">女</option>  
         </select>  
-        <label for="birthday">生日:</label>  
-        <input type="date" id="birthday" name="birthday" class="form-control">  
+        <input type="date" id="birthday" name="birthday" class="form-control" placeholder="出生日期">  
       </div>  
       <div class="form-group">  
-        <label for="idType">证件类型:</label>  
-        <select id="idType" name="idType" class="form-control">  
+        <select id="idType" name="idType" class="form-control" placeholder="证件类型">
           <option value="身份证">身份证</option>  
-          <option value="绿卡">绿卡</option>  
+          <option value="医保卡">医保卡</option>  
+          <option value="诊疗卡">诊疗卡</option>
+          <option value="护照">护照</option>
+          <option value="军官证">军官证</option>
+          <option value="港澳通行证">港澳通行证</option>
+        </select>  
+        <input type="tel" id="phone" name="phone" class="form-control" placeholder="联系电话">  
+      </div>   
+      <div class="form-group">
+        <input type="text" id="number" name="number" class="form-control" placeholder="请输入证件号"> 
+      </div>
+      <div class="form-group">
+        <input type="text" id="addr" name="addr" class="form-control" placeholder="请输入住址"> 
+      </div>
+    </form>  
+    </div>
+    <!-- 复诊信息 -->
+    <div class="container3" v-if="second">
+    <form @submit2.prevent="submitForm2">  
+      <div class="form-group">  
+        <input type="text" id="name" name="name" class="form-control" placeholder="请输入姓名">  
+        <select id="gender" name="gender" class="form-control" placeholder="性别">  
+          <option value="男">男</option>  
+          <option value="女">女</option>  
+        </select>  
+      </div>  
+      <div class="form-group">  
+        <select id="idType" name="idType" class="form-control" placeholder="证件类型">
+          <option value="身份证">身份证</option>  
+          <option value="医保卡">医保卡</option>  
+          <option value="诊疗卡">诊疗卡</option>
+          <option value="护照">护照</option>
+          <option value="军官证">军官证</option>
+          <option value="港澳通行证">港澳通行证</option>
           <!-- 可以继续添加其他选项 -->  
         </select>  
-        <label for="phone">电话:</label>  
-        <input type="tel" id="phone" name="phone" class="form-control" placeholder="请输入电话">  
+        <input type="tel" id="phone" name="phone" class="form-control" placeholder="联系电话"> 
       </div>  
-      <button type="submit">提交</button>  
+      <div class="form-group">
+        <input type="text" id="number" name="number" class="form-control" placeholder="请输入证件号"> 
+      </div>
     </form>  
+    </div>
+    <!-- 打勾&按钮 -->
+    <div>
+      <div class="checkbox-container" style="text-align: center; margin-top: 20px;">  
+        <input type="checkbox" id="checkbox" v-model="checked" />  
+        <label for="checkbox">我已阅读并同意《个人隐私收集声明》</label>  
+      </div>  
+    </div>
   </div>  
 </template>  
   
@@ -68,6 +112,25 @@ export default {
       info2:[
         "就诊须知","挂号类别","填写预约信息","选择科室","选择医生","选择时间地点","核对预约信息","预约成功"
       ],
+      first: 1,
+      second: 0,
+      form: {  
+        name: '',  
+        paymentType: '' ,
+        gender:'',
+        birthday:'',
+        idType:'',
+        phone:'',
+        number:'',
+        addr:'',
+      },
+      form2: {  
+        name: '',  
+        gender:'',
+        idType:'',
+        phone:'',
+        number:'',
+      }  
     };  
   }  ,
   methods: {  
@@ -78,71 +141,33 @@ export default {
     },  
     nextSquare(){
 
-    }
+    },
+    submitForm() {  
+      // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
+      console.log(this.form); // 在控制台打印表单数据  
+    } ,
+    submitForm2() {  
+      // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
+      console.log(this.form2); // 在控制台打印表单数据  
+    }  
   }  
 };  
 </script>  
   
 <style scoped>  
-.container {  
-  flex-wrap: wrap;  
-}  
-  
-.square {  
-  font-size: large;
-  width: 150px;  
-  height: 120px;  
-  display: flex;  
-  justify-content: center;  
-  align-items: center;  
-  margin: 0 10px;  
-  border-radius: 10px;
-  background-color: #e5ecff;  
-  color: #000000;  
-  cursor: pointer;  
-  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
-}  
-  
-.square-hovered {  
-  background-color: #003366;  
-  color: #FFFFFF;  
-}  
-
 .container2 {  
   display: flex;  
   flex-wrap: wrap;  
   justify-content: center;  
 }  
-  
-.square2 {  
-  width: 120px;  
-  height: 50px;  
+.container3 {  
   display: flex;  
-  justify-content: center;  
-  align-items: center;  
-  margin: 0 10px 10px 0;  
-  background-color: #e0e0e0;  
-  color: #808080;  
-  cursor: pointer;  
-  transition: background-color 0.3s, color 0.3s;  
+  flex-direction: column;  
+  align-items: center; /* 垂直居中 */  
+  justify-content: center; /* 水平居中（如果 body 不是全屏高度，则不会居中在屏幕中间） */  
+  height: 40vh; /* 设置 body 高度为视口高度，以确保垂直居中 */  
+  margin: 0; /* 移除默认的 body 边距 */  
 }  
-  
-.square-hovered2 {  
-  background-color: #003366;  
-  color: #FFFFFF;  
-}  
-  
-.square-active2 {  
-  background-color: orange;  
-  color: white;  
-}  
-  
-.checkbox-container {  
-  width: 100%;  
-  padding: 10px;  
-  box-sizing: border-box;  
-}  
-  
 button {  
   margin: auto auto;  
   padding: 5px 10px;  
@@ -176,13 +201,51 @@ button {
   display: flex;  
   flex-direction: row;  
   justify-content: space-between;  
-  margin-bottom: 10px;  
+  margin-bottom: 20px; 
+  width: 500px;
+  height: 50px; 
+  border-radius: 25px;
 }  
 .form-control {  
   flex: 1;  
   margin-right: 10px;  
+  border-radius: 25px;
+  border: none;
+  padding: 0 10px;
 }  
 .form-control:last-child {  
   margin-right: 0;  
+}  
+.button2 {  
+  border: none;
+  font-size: large;
+  width: 150px;  
+  height: 50px;  
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  margin: 0 10px;  
+  border-radius: 10px;
+  background-color: #fcfcfc;  
+  color: #000000;  
+  cursor: pointer;  
+  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+}  
+.button-next {  
+  background-color: #003366; /* 浅蓝色 */  
+  color: #fcfcfc; /* 深蓝色 */  
+}  
+.button-prev {  
+  background-color: #e5ecff; /* 深蓝色 */  
+  color: #003366; /* 白色 */  
+}  
+.button:hover {  
+  opacity: 0.8; /* 鼠标悬停时透明度降低 */  
+}  
+
+.checkbox-container {  
+  width: 100%;  
+  padding: 10px;  
+  box-sizing: border-box;  
 }  
 </style>
