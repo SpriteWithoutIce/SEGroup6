@@ -9,6 +9,7 @@
         :key="index"  
         :class="{noSelected:dayStatus[index].status!='empty'}"
         @mouseover="hoverButton"
+        @click="clickButton(day)"
       > 
         <div>{{ day.date }}</div>  
         <div v-if="index==0">今天</div> 
@@ -17,45 +18,47 @@
         <div v-if="dayStatus[index].status=='none'">无排班</div>
         <div v-else-if="dayStatus[index].status=='full'">约满</div>
         <div v-else>有号</div>
-        <!-- 这里可以添加更多内容，如排班状态等 -->  
       </button> 
     </div>  
   
     <!-- 底部医生介绍 -->  
     <div class="doctor-intro">  
       <div   
-        class="doctor-item"   
         v-for="doctor in doctors"   
         :key="doctor.name"  
       >  
-        <div class="doctor-header"> 
-          <img :src="doctor.avatar" alt="" class="avatar">
-          <div class="info">  
-            <div class="name">{{ doctor.name }}</div>  
-            <div class="title">{{ doctor.title }}</div>  
-            <div class="research">{{ doctor.research }}</div>  
+        <div v-if="doctorHasScheduleForDate(doctor, selectedDate)" class="doctor-item">
+          <div class="doctor-header"> 
+            <img :src="doctor.avatar" alt="" class="avatar">
+            <div class="info">  
+              <div class="name">{{ doctor.name }}</div>  
+              <div class="title">{{ doctor.title }}</div>  
+              <div class="research">{{ doctor.research }}</div>  
+            </div>  
           </div>  
-        </div>  
-        <div class="schedule">  
-          <div v-for="(daySchedule, dayIndex) in doctor.schedule"   
-                  :key="dayIndex">
-            <button class="schedule-item" v-if="daySchedule.status!='empty'">
-              <div class="time-label">{{ daySchedule.time }}</div>  
-              <div>
-                <div class="status">约满</div> 
-              </div>
-            </button>
-            <button v-else @mouseover="isHovered = true "   
-              @mouseleave="isHovered = false" 
-              class="schedule-item" :style="isHovered? 'color: blue; background-color: #85c400;color:white;' : 'color: blue;'">
-              <div class="time-label">{{ daySchedule.time }}</div>  
-              <div>
-                <div class="status" style="color: blue;">余&nbsp;{{ daySchedule.number }}</div> 
-              </div>
-            </button>
-          </div>
-          
-        </div>  
+          <div class="schedule">  
+            <div v-for="(daySchedule, dayIndex) in doctor.schedule"   
+                    :key="dayIndex">
+              <div v-if="dayHasScheduleForDate(daySchedule,selectedDate)">
+                <button class="schedule-item" v-if="daySchedule.status!='empty'">
+                  <div class="time-label">{{ daySchedule.time }}
+                  </div>  
+                  <div>
+                    <div class="status">约满</div> 
+                  </div>
+                </button>
+                <button v-else @mouseover="isHovered[dayIndex] = true "   
+                  @mouseleave="isHovered[dayIndex] = false" 
+                  class="schedule-item" :style="isHovered[dayIndex]? 'color: blue; background-color: #85c400;color:white;' : 'color: blue;'">
+                  <div class="time-label">{{ daySchedule.time }}</div>  
+                  <div>
+                    <div class="status" style="color: blue;">余&nbsp;{{ daySchedule.number }}</div> 
+                  </div>
+                </button>
+              </div> 
+            </div>  
+          </div>  
+        </div>
       </div>  
     </div>  
   </div>  
@@ -94,7 +97,16 @@ export default {
         "就诊须知","挂号类别","填写预约信息","选择科室","选择医生","选择时间地点","核对预约信息","预约成功"
       ],
       nextSevenDays: [],
-      dayStatus: [],
+      dayStatus:[
+        {'status':'none'},
+        {'status':'none'},
+        {'status':'none'},
+        {'status':'none'},
+        {'status':'none'},
+        {'status':'none'},
+        {'status':'none'},
+      ],
+      selectedDate: null,
       today: new Date(), // 今天的日期  
       doctors: [  
         {  
@@ -103,13 +115,33 @@ export default {
           avatar: 'img/lsy.jpg', // 头像URL  
           research: '生物信息', // 主要研究方向  
           schedule: [  
-            {time: '05-02(上午)',status:'empty', number: 10},
-            {time: '05-04(下午) ',status: 'full'},
+            {time: '05-09(上午)',status:'empty', number: 10},
+            {time: '05-07(下午) ',status: 'full'},
           ],  
-        },  
+        },
+        {  
+          name: '医生B',  
+          title: '副主任医师',  
+          avatar: 'img/touxiang.png', // 头像URL  
+          research: '生物信息', // 主要研究方向  
+          schedule: [  
+            {time: '05-05(上午)',status:'full'},
+            {time: '05-03(下午) ',status: 'empty',number:5},
+          ],  
+        }, 
+        {  
+          name: '医生C',  
+          title: '副主任医师',  
+          avatar: 'img/touxiang (1).png', // 头像URL  
+          research: '生物信息', // 主要研究方向  
+          schedule: [  
+            {time: '05-06(上午)',status:'full'},
+            {time: '05-03(下午) ',status: 'full'},
+          ],  
+        }, 
         // ... 其他医生数据  
       ],  
-      isHovered:false
+      isHovered:[false,false,false,false,false,false,false,false,false,false]
     };  
   }  ,
   methods: {  
@@ -139,18 +171,34 @@ export default {
       const days = ['日', '一', '二', '三', '四', '五', '六'];  
       return `周${days[date.getDay()]}`;  
     },  
+    clickButton(day){
+      this.selectedDate=day.date
+    },
+    doctorHasScheduleForDate(doctor, date) {  
+      return doctor.schedule.some(item => item.time.includes(date));  
+    }, 
+    dayHasScheduleForDate(daySchedule, date) {  
+      return daySchedule.time.includes(date);  
+    },  
   },  
   created() {
     this.nextSevenDays=this.locatenextSevenDays()
-    this.dayStatus=[
-        {'status':'none'},
-        {'status':'full'},
-        {'status':'full'},
-        {'status':'empty'},
-        {'status':'empty'},
-        {'status':'empty'},
-        {'status':'empty'},
-      ]
+    for (let i = 0; i < this.nextSevenDays.length; i++) {  
+      const day = this.nextSevenDays[i].date;
+      console.log(day)
+      this.dayStatus[i].status='none';
+      this.doctors.forEach(doctor => {  
+        doctor.schedule.forEach(scheduleItem => {  
+          if (scheduleItem.time.includes(day)) {  
+            if (scheduleItem.status === 'full' && this.dayStatus[i].status!='empty') {  
+              this.dayStatus[i].status='full';
+            } else if (scheduleItem.status === 'empty') {  
+              this.dayStatus[i].status='empty';
+            }  
+          }  
+        });  
+      });
+    }
   },
 };  
 </script>  
@@ -221,14 +269,15 @@ export default {
 }
 .doctor-intro {  
   display: flex;  
-  flex-wrap: wrap;  
-  justify-content: space-around;  
-  
+  flex-direction: column;
+  justify-content: center;
+  /* flex-wrap: wrap;  
+  justify-content: space-around;   */
 }  
   
 .doctor-item {  
-  width: 500px;  
-  margin: 10px;  
+  width: 600px; /* 如果你想要每个元素占据整行宽度，可以设置为100% */  
+  margin: 10px auto; /* 如果垂直排列，通常只需要上下边距 */
   border: 1px solid #ccc;  
   padding: 15px;  
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  
@@ -276,16 +325,16 @@ export default {
   background-color: white;
   height: 35px;
   border-radius: 5px;
-  width: 500px;
+  width: 550px;
 }  
   
 .time-label {  
-  font-weight: bold;  
+  /* font-weight: bold;   */
   padding-left: 10px;
 }  
   
 .status {  
-  font-style: italic;  
+  /* font-style: italic;   */
   color: #666;  
   padding-right: 20px;
 }  
