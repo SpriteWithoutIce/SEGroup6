@@ -5,7 +5,7 @@ import HeadA from './HeadA.vue';
 import SearchA from './SearchA.vue';
 import SignA from './SignA.vue';
 import InputA from './InputA.vue';
-import MakePrescription from '@/components/Prescription/MakePrescription.vue';
+import CheckHistory from './CheckHistory.vue';
 </script>
 
 <template>
@@ -16,7 +16,7 @@ import MakePrescription from '@/components/Prescription/MakePrescription.vue';
       <SearchA />
       <SignA></SignA>
       <InputA />
-      <MakePrescription></MakePrescription>
+      <CheckHistory></CheckHistory>
     </div>
   </scroll>
 </template>
