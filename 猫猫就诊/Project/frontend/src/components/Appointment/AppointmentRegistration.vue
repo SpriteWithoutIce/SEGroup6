@@ -49,7 +49,6 @@
       <router-link v-if="checked" @click="nextSquare" class="router-button" to="/AppointmentRegistration2">
         下一步
       </router-link>
-      <!-- <button v-if="checked" @click="nextSquare">下一步</button>  -->
     </div>
     <div class="checkbox-container" style="text-align: center; margin-top: 20px;">  
       <input type="checkbox" id="checkbox" v-model="checked" />  
@@ -166,13 +165,22 @@ export default {
 }  
   
 .router-button {  
-  margin: auto auto;  
-  padding: 5px 10px;  
-  background-color: #003366;  
-  color: #FFFFFF;  
-  width: 150px;
-  height: 50px;
+  border: none;
+  font-size: large;
+  width: 150px;  
+  height: 50px;  
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  margin: 0 10px;  
   border-radius: 10px;
+  background-color: #fcfcfc;  
+  color: #000000;  
+  cursor: pointer;  
+  transition: background-color 0.3s, color 0.3s;
+  background-color: #003366; /* 浅蓝色 */  
+  color: #fcfcfc; /* 深蓝色 */  
+  text-decoration: none;
 }  
 .button-container {
   display: flex;  

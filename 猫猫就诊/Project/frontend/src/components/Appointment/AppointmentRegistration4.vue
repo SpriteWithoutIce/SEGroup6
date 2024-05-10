@@ -1,6 +1,7 @@
 <template>  
   <Header :squares2="squares2" />
   <div class="notice-box">  
+    <div>{{ this.submit_info.name }}</div>
     <div class="department-selector">  
       <div class="left-buttons">  
         <button  
@@ -91,7 +92,18 @@ export default {
       hoveredButton: 'internal',  
       selectedDepartmentName: '', // 用于存储选中的部门名称
       selectedDepartmentRight:'',
-      selectedSubDepartment: ''
+      selectedSubDepartment: '',
+      submit_info:{
+        first:-1,
+        name: '',  
+        paymentType: '' ,
+        gender:'',
+        birthday:'',
+        idType:'',
+        phone:'',
+        number:'',
+        addr:'',
+      }
     };  
   }  ,
   methods: {  
@@ -185,7 +197,10 @@ export default {
       // 清除hover状态  
       // this.hoveredButton = null; // 如果需要的话  
     },  
-  }  
+  }  ,
+  created(){
+    this.submit_info=this.$route.query.patient
+  }
 };  
 </script>  
   
