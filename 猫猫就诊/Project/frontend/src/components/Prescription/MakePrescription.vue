@@ -23,6 +23,7 @@
         </el-header>
         <el-main class="main">
           <div>
+            <!-- filtered没问题，current出现了问题 -->
             <el-table :data="currentPatients">
               <el-table-column prop="Id" label="排队号">
               </el-table-column>
@@ -206,10 +207,9 @@ export default {
             let parts = stu.date.split('年').join('-').split('月').join('-').split('日').join('').split('-');
             let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
             stuDate.setHours(0, 0, 0, 0);
-            this.pagination.total = this.filteredPatients.length;
-            this.handleCurrentChange(1);
             return stuDate.toDateString() === today.toDateString();
           });
+          this.handleCurrentChange(1);
           break;
         case '2':
           // 昨日
@@ -217,10 +217,9 @@ export default {
             let parts = stu.date.split('年').join('-').split('月').join('-').split('日').join('').split('-');
             let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
             stuDate.setHours(0, 0, 0, 0);
-            this.pagination.total = this.filteredPatients.length;
-            this.handleCurrentChange(1);
             return stuDate.toDateString() === yesterday.toDateString();
           });
+          this.handleCurrentChange(1);
           break;
         case '3':
           // 更早
@@ -228,10 +227,9 @@ export default {
             let parts = stu.date.split('年').join('-').split('月').join('-').split('日').join('').split('-');
             let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
             stuDate.setHours(0, 0, 0, 0);
-            this.pagination.total = this.filteredPatients.length;
-            this.handleCurrentChange(1);
             return stuDate < yesterday;
           });
+          this.handleCurrentChange(1);
           break;
       }
       console.log(this.filteredPatients);
