@@ -1,5 +1,6 @@
 <template>
   <!-- 注意调用的位置 -->
+  <div>
   <BillDetails @update:payStatus="updatePayStatus" ref="BillDetails"> </BillDetails>
   <el-container style="height: 100vh" class="container-header">
     <el-container>
@@ -23,7 +24,7 @@
         <el-main class="main">
           <div>
             <!-- :data 属性接收一个数组，该数组包含了所有要显示的数据对象 -->
-            <el-table :data="filteredPatients">
+            <el-table :data="filteredBills">
               <!-- 设置 prop 属性 - Element UI 自动将该属性对应字段的数据渲染到表格的每一行中 -->
               <el-table-column prop="type" label="类型"> </el-table-column>
               <el-table-column prop="issue" label="具体事由"> </el-table-column>
@@ -62,6 +63,7 @@
       </el-container>
     </el-container>
   </el-container>
+  </div>
 </template>
 
 <script>
@@ -70,7 +72,7 @@ export default {
   data() {
     return {
       desc: '缴费列表统计',
-      patient: [
+      bill: [
         {
           id: 1,
           type: '挂号',
@@ -96,7 +98,7 @@ export default {
           payStatus: false
         }
       ],
-      filteredPatients: []
+      filteredBills: []
     }
   },
   components: {
@@ -108,18 +110,18 @@ export default {
     },
     selectFunc(payStatus) {
       // 根据传入的 payStatus 筛选患者数据
-      this.filteredPatients = this.patient.filter((stu) => {
+      this.filteredBills = this.bill.filter((stu) => {
         return stu.payStatus === payStatus
       })
     },
     // bug：这里目前无法从根本上实现属性的修改，页面一重新挂载就会恢复，后续链接后端时再修正逻辑
     updatePayStatus(id) {
-      // 找到 patient 数组中对应的对象，并更新 payStatus
-      const index = this.patient.findIndex((item) => item.id === id)
+      // 找到 bill 数组中对应的对象，并更新 payStatus
+      const index = this.bill.findIndex((item) => item.id === id)
       if (index !== -1) {
-        this.patient[index].payStatus = true
+        this.bill[index].payStatus = true
       }
-      // 更新 filteredPatients
+      // 更新 filteredBills
       this.selectFunc(false)
     }
   },
