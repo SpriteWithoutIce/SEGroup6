@@ -51,9 +51,9 @@
                     <el-icon class="jinggao"><Warning /></el-icon>
                     <p>&nbsp;实际就诊时间以医院安排为准！</p>
                 </div>
-                <el-divider class="divider" />        
+                <el-divider class="divider" />    
                 <div class="button">
-                    <el-button type="primary" plain @click="showPrescriptionDetails" class="xiang">显示详情</el-button>
+                    <el-button type="primary" plain @click="showPrescriptionDetails(item)" class="xiang">显示详情</el-button>
                     <el-button type="primary" plain  v-if="item.state === '已预约'">取消挂号</el-button>
                 </div>
             </el-card>
@@ -87,20 +87,14 @@ export default{
         DetailA,
     },
     methods:{
-        showPrescriptionDetails() {
-            this.$refs.detail.openModal();
+        showPrescriptionDetails(item) {
+            this.$refs.detail.openModal(item);
         },
     }
     
 }
 </script>
 <style scoped>
-.page {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 5%;
-}
 .neirong {
   display: flex;
   flex-direction: row;
