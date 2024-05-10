@@ -2,7 +2,7 @@
   <!-- 注意调用的位置 -->
   <div>
   <BillDetails @update:payStatus="updatePayStatus" ref="BillDetails"> </BillDetails>
-  <el-container style="height: 100vh" class="container-header">
+  <el-container class="componentBody">
     <el-container>
       <el-aside width="200px">
         <!-- 下边的部分是选择菜单 -->
@@ -21,10 +21,10 @@
       <el-container>
         <!-- 插入一个空标题，让表格内容和菜单内容间距看起来更舒适 -->
         <el-header height="30px" style="padding: 0; margin: 0"></el-header>
-        <el-main class="main">
-          <div>
+        <el-main class="el-main">
+          <div class="main">
             <!-- :data 属性接收一个数组，该数组包含了所有要显示的数据对象 -->
-            <el-table :data="filteredBills">
+            <el-table :data="filteredBillsDiv" class="el-table">
               <!-- 设置 prop 属性 - Element UI 自动将该属性对应字段的数据渲染到表格的每一行中 -->
               <el-table-column prop="type" label="类型"> </el-table-column>
               <el-table-column prop="issue" label="具体事由"> </el-table-column>
@@ -46,19 +46,16 @@
             </el-table>
             <!-- 分页组件，目前不显示？ -->
             <el-pagination
-              @size-change="handleSizeChange"
+              class="page"
+              :current-page="pagination.currentPage"
+              :page-size="pagination.pageSize"
+              :total="pagination.total"
+              layout="prev, pager, next , total"
               @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-sizes="[10, 20, 30, 40]"
-              :page-size="pageSize"
-              :total="totalItems"
-              :hide-on-single-page="false"
-              layout="total, sizes, prev, pager, next, jumper"
             >
             </el-pagination>
           </div>
         </el-main>
-
         <el-footer height="30px" align="center" class="footer">SE_GROUP_6</el-footer>
       </el-container>
     </el-container>
@@ -98,13 +95,26 @@ export default {
           payStatus: false
         }
       ],
-      filteredBills: []
+      pagination: {
+        total: 0,
+        currentPage: 1,
+        pageSize: 10,
+      },
+      filteredBills: [],
+      filteredBillsDiv: []
     }
   },
   components: {
     BillDetails
   },
   methods: {
+    handleCurrentChange(e) {
+      this.pagination.currentPage = e;
+      const start = (this.pagination.currentPage - 1) * this.pagination.pageSize;
+      const end = start + this.pagination.pageSize;
+      this.filteredBillsDiv = this.filteredBills.slice(start, end);
+      this.pagination.total = this.filteredBillsDiv.length;
+    },
     showBillDetails(row) {
       this.$refs.BillDetails.openModal(row)
     },
@@ -112,7 +122,9 @@ export default {
       // 根据传入的 payStatus 筛选患者数据
       this.filteredBills = this.bill.filter((stu) => {
         return stu.payStatus === payStatus
-      })
+      }),
+      this.filteredBillsDiv = this.filteredBills.slice(0, this.pagination.pageSize);
+      this.pagination.total = this.filteredBillsDiv.length;
     },
     // bug：这里目前无法从根本上实现属性的修改，页面一重新挂载就会恢复，后续链接后端时再修正逻辑
     updatePayStatus(id) {
@@ -128,11 +140,20 @@ export default {
   mounted() {
     // 默认是未缴费页面
     this.selectFunc(false)
+    //分页初始化
+    this.handleCurrentChange(1);
   }
 }
 </script>
 
 <style scoped>
+.componentBody{
+  height: 57vh;
+}
+.page {
+  justify-content: center;
+  margin-bottom: 1vh; 
+}
 .header {
   font-size: 30px;
   line-height: 80px;
@@ -157,11 +178,24 @@ export default {
 }
 
 /*问诊列表*/
-.main {
+.el-main {
+  display: flex;
+  flex-direction: column;
   background-color: white;
   background-image: url(../../assets/prescription/prescription_bg.png);
 }
 
+.main {
+  justify-content: space-between;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  background-color: white;
+  background-image: url(../../assets/prescription/prescription_bg.png);
+}
+.el-table{
+  min-height: 150px;
+}
 .pay-button {
   background-color: whitesmoke;
   margin-left: -10px;
