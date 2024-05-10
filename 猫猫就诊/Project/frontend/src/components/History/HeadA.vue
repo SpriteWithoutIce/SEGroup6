@@ -14,7 +14,7 @@
 
 <style scoped>
 .logo {
-  background-image: url("../utils/logo.png");
+  background-image: url("@/utils/logo.png");
   background-repeat: no-repeat;
   background-size: cover;
   height: 100px;

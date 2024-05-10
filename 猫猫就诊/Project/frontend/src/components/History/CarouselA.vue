@@ -29,7 +29,7 @@
 }
 .img1 {
   width: 100%;
-  background-image: url("../utils/5.jpg");
+  background-image: url("@/utils/1.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -38,8 +38,8 @@
 }
 .img2 {
   width: 100%;
-  background-image: url("../utils/6.jpg");
-  background-position: center;
+  background-image: url("@/utils/2.jpg");
+  background-position: bottom;
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;
@@ -47,8 +47,8 @@
 }
 .img3 {
   width: 100%;
-  background-image: url("../utils/7.jpg");
-  background-position: center;
+  background-image: url("@/utils/3.jpg");
+  background-position: 0% 90%;
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;
@@ -56,8 +56,8 @@
 }
 .img4 {
   width: 100%;
-  background-image: url("../utils/8.jpg");
-  background-position: center;
+  background-image: url("@/utils/4.jpg");
+  background-position: 0% 90%;
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;

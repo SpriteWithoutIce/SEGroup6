@@ -1,6 +1,6 @@
 <template>
   <!-- 注意调用的位置 -->
-  <PrescriptionDetails ref="prescriptionDetails"> </PrescriptionDetails>
+  <HistoryDetails ref="historydetails"> </HistoryDetails>
   <!-- 设置标题 -->
   <el-container style="height: 100vh" class="form-container">
     <el-container>
@@ -25,7 +25,7 @@
                   <el-button
                     class="prescribe-button"
                     @click="showPrescriptionDetails(scope.row)"
-                    >开具处方</el-button
+                    >处方查询</el-button
                   >
                 </template>
               </el-table-column>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import PrescriptionDetails from "../Prescription/PrescriptionDetails.vue";
+import HistoryDetails from "./HistoryDetails.vue";
 export default {
   data() {
     return {
@@ -70,7 +70,55 @@ export default {
           name: "小王",
           age: 18,
           sex: "男",
-          date: "2024年4月27日",
+          date: "2024年4月28日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月29日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月15日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月12日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月11日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月19日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月23日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月1日",
+        },
+        {
+          name: "小王",
+          age: 18,
+          sex: "男",
+          date: "2024年4月5日",
         },
         {
           name: "小王",
@@ -82,61 +130,13 @@ export default {
           name: "小王",
           age: 18,
           sex: "男",
-          date: "2024年4月27日",
+          date: "2024年4月9日",
         },
         {
           name: "小王",
           age: 18,
           sex: "男",
-          date: "2024年4月27日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月27日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月27日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月27日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月27日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月27日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月27日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月27日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月27日",
+          date: "2024年4月7日",
         },
         {
           name: "小张",
@@ -161,11 +161,11 @@ export default {
     };
   },
   components: {
-    PrescriptionDetails,
+    HistoryDetails,
   },
   methods: {
     showPrescriptionDetails(row) {
-      this.$refs.prescriptionDetails.openModal(row);
+      this.$refs.historydetails.openModal(row);
     },
     handleCurrentChange(e) {
       this.pagination.currentPage = e;
@@ -177,7 +177,7 @@ export default {
   mounted() {
     //分页初始化
     this.pagination.total = this.patient.length;
-    this.handleCurrentChange(1);
+    this.handleCurrentChange(1);//这里是filter
     console.log("Patient data loaded:", this.patient);
     // 等待 DOM 更新后再执行筛选逻辑
     //唉我真吐了，1记得加上单引号
