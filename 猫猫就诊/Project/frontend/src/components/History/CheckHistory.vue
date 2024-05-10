@@ -11,21 +11,21 @@
           <div>
             <el-table :data="filteredPatients">
               <!-- 可以加上一个问诊号 -->
-              <el-table-column prop="name" label="姓名"> </el-table-column>
-              <el-table-column prop="age" label="年龄"> </el-table-column>
-              <el-table-column prop="sex" label="性别"> </el-table-column>
+              <el-table-column prop="name" label="就诊人" align="center"> </el-table-column>
+              <el-table-column prop="office" label="科室" align="center"> </el-table-column>
+              <el-table-column prop="date" label="就诊日期" align="center"> </el-table-column>
               <el-table-column
-                prop="date"
+                prop="time"
                 style="background-color: black"
-                label="问诊时间"
+                label="就诊时间" align="center"
               >
               </el-table-column>
-              <el-table-column style="text-align: right" label="操作">
+              <el-table-column style="text-align: right" label="相关信息" align="center">
                 <template #default="scope">
                   <el-button
                     class="prescribe-button"
                     @click="showPrescriptionDetails(scope.row)"
-                    >处方查询</el-button
+                    >处方查看</el-button
                   >
                 </template>
               </el-table-column>
@@ -63,92 +63,23 @@ export default {
         {
           name: "小王",
           age: 18,
-          sex: "男",
-          date: "2024年4月27日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月28日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月29日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月15日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月12日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月11日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月19日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月23日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月1日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月5日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月27日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月9日",
-        },
-        {
-          name: "小王",
-          age: 18,
-          sex: "男",
-          date: "2024年4月7日",
-        },
-        {
-          name: "小张",
-          age: 17,
-          sex: "男",
-          date: "2024年2月15日",
+          office:"心血管内科",
+          date: "2024-04-02",
+          time:"9:30"
         },
         {
           name: "小秋",
           age: 16,
-          sex: "女",
-          date: "2024年1月15日",
+          office:"心血管内科",
+          date: "2024-01-15",
+          time:"14:30"
+        },
+        {
+          name: "小王",
+          age: 18,
+          office:"心血管内科",
+          date: "2024-01-23",
+          time:"19:30"
         },
       ],
       pagination: {
