@@ -1,6 +1,7 @@
 <template>
   <div class="navbar" :class="{ sticky: isSticky }">
     <a href="#" class="white-bold">首页</a>
+    <a href="#" class="white-bold">登录</a>
     <a href="#" class="white-bold">关于</a>
     <a href="#" class="white-bold">联系我们</a>
   </div>
@@ -55,7 +56,6 @@ export default {
 }
 
 .navbar.sticky {
-
   text-align: right;
   color: white;
   position: fixed;
@@ -65,6 +65,7 @@ export default {
 }
 
 .white-bold {
+  text-decoration: none;
   position: relative;
   top: 21px;
   right: 42px;
@@ -73,5 +74,22 @@ export default {
   color: white;
   margin-left: 70px;
   /* 调整文本之间的间距 */
+}
+
+.white-bold::after {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  bottom: 0;
+  height: 3px;
+  width: 130%;
+  background-color: rgba(13, 65, 153, 0.941);
+  transform: translateX(-50%) scaleX(0);
+  transition: transform 0.3s;
+}
+
+.white-bold:hover::after {
+  transform: translateX(-50%) scaleX(0.5);
 }
 </style>
