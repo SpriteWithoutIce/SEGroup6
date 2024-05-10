@@ -16,7 +16,9 @@
           {{ form.date }}
         </el-form-item>
         <div class="button-group">
+          <!-- 确认缴费按钮 -->
           <el-button @click="submitForm" type="primary" :plain="true">确认缴费</el-button>
+          <!-- 取消缴费按钮 -->
           <el-button @click="cancelModal">取消</el-button>
         </div>
       </el-form>
@@ -42,6 +44,7 @@ export default {
     };
   },
   methods: {
+    // 触发弹窗（在父组件中引用）
     openModal (row) {
       this.isVisible = true;
       document.body.style.overflow = 'hidden'; // 禁止滚动
@@ -51,21 +54,24 @@ export default {
       this.form.date = row.date;
       this.form.id = row.id;
     },
+    // 关闭弹窗
     closeModal () {
       this.isVisible = false;
       document.body.style.overflow = ''; // 恢复滚动
     },
+    // 取消按钮触发
     cancelModal (){
       ElMessage({
         type: 'info',
         message: '取消缴费 ╮(╯▽╰)╭',
         showClose: true,
       });
+      // 关闭弹窗
       this.closeModal();
     },
+    // 确认缴费
     submitForm () {
-      // 提交表单逻辑
-      // console.log('提交表单');
+      // 修改数据库（bug：这部分的数据库修改逻辑还没正确实现）
       this.$emit('update:pay-status', this.form.id);
       ElMessage({
         showClose: true,
