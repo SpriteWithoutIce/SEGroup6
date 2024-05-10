@@ -13,8 +13,8 @@ import HistoryA from './HistoryA.vue';
   <scroll>
     <div class="all-container" width="100%">
       <HeadA></HeadA>
-      <CarouselA class="carousel-class" />
-      <SearchA />
+      <CarouselA/>
+      <SearchA></SearchA>
       <SignA></SignA>
       <InputA />
       <HistoryA></HistoryA>

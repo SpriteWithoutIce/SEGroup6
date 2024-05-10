@@ -1,5 +1,4 @@
 <template>
-    <HistoryDetails ref="historydetails"> </HistoryDetails>
     <div class="container">
         <div class="card-container">
             <el-card v-for="item in info" :key="item" style="width: 30%;min-height:400px;margin:1.6%;">
@@ -65,7 +64,6 @@
 
 </template>
 <script>
-import HistoryDetails from "./HistoryDetails.vue";
 export default{
     data(){
         return{
@@ -80,31 +78,25 @@ export default{
         }
     },
     methods: {
-    showPrescriptionDetails(row) {
-      this.$refs.historydetails.openModal(row);
+        showPrescriptionDetails(row) {
+            this.$refs.historydetails.openModal(row);
+        },
+        handleCurrentChange(e) {
+            this.pagination.currentPage = e;
+            const start = (this.pagination.currentPage - 1) * 6;
+            const end = start + 6;
+            this.info = this.info.slice(start, end);
+        },
     },
-    handleCurrentChange(e) {
-      this.pagination.currentPage = e;
-      const start = (this.pagination.currentPage - 1) * 6;
-      const end = start + 6;
-      this.info = this.info.slice(start, end);
-    },
-  },
-  mounted() {
-    //分页初始化
-    this.pagination.total = this.info.length;
-    this.handleCurrentChange(1);//这里是filter
-    // 等待 DOM 更新后再执行筛选逻辑
-    //唉我真吐了，1记得加上单引号
-    this.$nextTick(() => {
-      this.selectFunc("1");
-      console.log("here");
-      console.log("Filtered patients after DOM update:", this.info);
-    });
-  },
 }
 </script>
 <style scoped>
+.page {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5%;
+}
 .neirong {
   display: flex;
   flex-direction: row;

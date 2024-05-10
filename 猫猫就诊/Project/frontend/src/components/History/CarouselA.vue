@@ -21,20 +21,12 @@
   width: 100%;
   min-height: 400px;
 }
-.el-carousel__item p {
-  font-size: 28px;
-  color: rgb(58, 57, 57);
-  opacity: 0.75;
-  min-height: 400px;
-}
 .img1 {
   width: 100%;
   background-image: url("@/utils/1.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  display: flex;
-  justify-content: center;
 }
 .img2 {
   width: 100%;
@@ -43,7 +35,6 @@
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;
-  justify-content: center;
 }
 .img3 {
   width: 100%;
@@ -52,7 +43,6 @@
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;
-  justify-content: center;
 }
 .img4 {
   width: 100%;
@@ -61,6 +51,5 @@
   background-size: cover;
   background-repeat: no-repeat;
   display: flex;
-  justify-content: center;
 }
 </style>
