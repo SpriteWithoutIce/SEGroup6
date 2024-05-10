@@ -7,7 +7,8 @@ import PresA from './components/History/PresA.vue';
 
 <template>
   <div id="app">
-    <PresA></PresA>
+    <HeaderNavigation></HeaderNavigation>
+    <NavBar></NavBar>
   </div>
 </template>
 

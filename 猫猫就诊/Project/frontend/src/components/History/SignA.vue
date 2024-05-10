@@ -4,7 +4,7 @@
   <div class="sign-container">
     <div class="neirong">
       <el-icon class="jinggao"><Warning /></el-icon>
-      <p>详细问诊记录以医院出具的单据为准！</p>
+      <p>详细信息以医院出具的单据为准！</p>
     </div>
   </div>
 </template>

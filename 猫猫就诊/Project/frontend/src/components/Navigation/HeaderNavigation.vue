@@ -23,7 +23,7 @@
           <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2">
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2">
         </RouterLink>
-        <RouterLink to="/PatientA" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
+        <RouterLink to="/PresA" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.5.png" alt="Image 5">
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 5">
         </RouterLink>

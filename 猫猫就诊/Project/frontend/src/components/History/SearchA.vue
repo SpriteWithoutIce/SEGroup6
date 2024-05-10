@@ -3,8 +3,8 @@
 <template>
   <div class="search-container">
     <div class="wenzi">
-      <p class="guahao">挂号信息查询</p>
-      <p class="back">首页 > 挂号信息查询</p>
+      <p class="guahao">挂号查询</p>
+      <p class="back">首页 > 挂号查询</p>
     </div>
     <el-divider class="divider" />
   </div>

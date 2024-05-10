@@ -1,5 +1,5 @@
 <template>
-    <DetailA ref="detail"> </DetailA>
+    <DetailB ref="detail"> </DetailB>
     <div class="container">
         <div class="card-container"> 
             <el-card v-for="item in info" :key="item" style="width: 30%;min-height:00px;margin:1.6%;">
@@ -34,24 +34,24 @@
 
 </template>
 <script>
-import DetailA from "./DetailA.vue";
+import DetailB from "./DetailB.vue";
 export default{
     data(){
         return{
             info:[
-                {office:"心血管门诊",orderNum:"w0023",price:"0.00元",name:"buaa",cardNum:"001741",position:"门诊楼三层内科二诊区",time:"2024-05-14 下午 14:10-14:20",line:"37",state:"已预约",advice:"心跳过快"},
-                {office:"心血管门诊",orderNum:"w0024",price:"0.00元",name:"buaa",cardNum:"001741",position:"门诊楼三层内科二诊区",time:"2024-05-15 下午 14:10-14:20",line:"38",state:"已就诊",advice:""},
-                {office:"心血管门诊",orderNum:"w0025",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-16 下午 14:10-14:20",line:"39",state:"已预约",advice:""},
-                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约",advice:""},
-                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约",advice:""},
-                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约",advice:""},
-                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约",advice:""}             
+                {office:"心血管门诊",time:"2024-05-14 下午 14:10-14:20",advice:"心跳过快",medicine:[{name:"金莲花软件囊",time:3,cnt:1,use:"口服",fre:"Tid",price:"5.98"},{name:"复方鲜竹沥液",time:3,cnt:2,use:"口服",fre:"Tid",price:1.09},{name:"复方鲜竹沥液",time:3,cnt:2,use:"口服",fre:"Tid",price:1.09}]},
+                {office:"心血管门诊",orderNum:"w0024",price:"0.00元",name:"buaa",cardNum:"001741",position:"门诊楼三层内科二诊区",time:"2024-05-15 下午 14:10-14:20",line:"38",state:"已就诊",advice:"",medicine:[]},
+                {office:"心血管门诊",orderNum:"w0025",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-16 下午 14:10-14:20",line:"39",state:"已预约",advice:"",medicine:[]},
+                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约",advice:"",medicine:[]},
+                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约",advice:"",medicine:[]},
+                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约",advice:"",medicine:[]},
+                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约",advice:"",medicine:[]},             
             ],
             filterInfo:[],
         }
     },
     components: {
-        DetailA,
+        DetailB,
     },
     methods:{
         showPrescriptionDetails(item) {
