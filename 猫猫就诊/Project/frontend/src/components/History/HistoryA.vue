@@ -71,22 +71,15 @@ export default{
                 {office:"心血管门诊",orderNum:"w0023",price:"0.00元",name:"buaa",cardNum:"001741",position:"门诊楼三层内科二诊区",time:"2024-05-14 下午 14:10-14:20",line:"37",state:"已预约"},
                 {office:"心血管门诊",orderNum:"w0024",price:"0.00元",name:"buaa",cardNum:"001741",position:"门诊楼三层内科二诊区",time:"2024-05-15 下午 14:10-14:20",line:"38",state:"已就诊"},
                 {office:"心血管门诊",orderNum:"w0025",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-16 下午 14:10-14:20",line:"39",state:"已预约"},
+                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约"},
+                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约"},
+                {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约"},
                 {office:"心血管门诊",orderNum:"w0026",price:"0.00元",name:"hhh",cardNum:"001742",position:"门诊楼三层内科二诊区",time:"2024-05-17 下午 14:10-14:20",line:"40",state:"已预约"}
+               
             ],
-            
+            filterInfo:[],
             circleUrl:'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
         }
-    },
-    methods: {
-        showPrescriptionDetails(row) {
-            this.$refs.historydetails.openModal(row);
-        },
-        handleCurrentChange(e) {
-            this.pagination.currentPage = e;
-            const start = (this.pagination.currentPage - 1) * 6;
-            const end = start + 6;
-            this.info = this.info.slice(start, end);
-        },
     },
 }
 </script>
@@ -149,18 +142,14 @@ p {
     flex-wrap: wrap;
     width:100%;
 }
-.e1-card{
-    margin-top:50px;
-}
 .footer {
-  position:absolute;
-  bottom:0;
+  position:relative;
   width:100%;
   background-color: rgb(8, 3, 88);
   color: white;
   font-size: 17px;
   line-height: 30px;
-  margin-top:1.5%;
+  margin-top:10px;
 }
 </style>
   
