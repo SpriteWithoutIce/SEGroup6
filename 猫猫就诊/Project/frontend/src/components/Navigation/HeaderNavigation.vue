@@ -23,12 +23,16 @@
           <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2">
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2">
         </RouterLink>
-        <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(3)"
+        <RouterLink to="/PatientA" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
+          <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2">
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2">
+        </RouterLink>
+        <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(4)"
           @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.3.png" alt="Image 3">
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 3">
         </RouterLink>
-        <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(4)" @mouseleave="hideSurroundImage()">
+        <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(5)" @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.4.png" alt="Image 4">
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 4">
         </RouterLink>
