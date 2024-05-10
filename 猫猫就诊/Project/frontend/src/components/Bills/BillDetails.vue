@@ -16,8 +16,8 @@
           {{ form.date }}
         </el-form-item>
         <div class="button-group">
-          <el-button @click="submitForm" type="primary">确认缴费</el-button>
-          <el-button @click="closeModal">取消</el-button>
+          <el-button @click="submitForm" type="primary" :plain="true">确认缴费</el-button>
+          <el-button @click="cancelModal">取消</el-button>
         </div>
       </el-form>
     </div>
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { ElMessage } from 'element-plus';
 
 export default {
   name: 'BillDetails',
@@ -54,10 +55,23 @@ export default {
       this.isVisible = false;
       document.body.style.overflow = ''; // 恢复滚动
     },
+    cancelModal (){
+      ElMessage({
+        type: 'info',
+        message: '取消缴费 ╮(╯▽╰)╭',
+        showClose: true,
+      });
+      this.closeModal();
+    },
     submitForm () {
       // 提交表单逻辑
-      console.log('提交表单');
+      // console.log('提交表单');
       this.$emit('update:pay-status', this.form.id);
+      ElMessage({
+        showClose: true,
+        message: '缴费成功 ╰(*°▽°*)╯',
+        type: 'success',
+      })
       // 提交后关闭弹窗
       this.closeModal();
     },
