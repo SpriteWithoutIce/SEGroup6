@@ -15,10 +15,10 @@
       <!-- 下边这段肯定可以简化 -->
       <!-- 改了会出bug导致的 -->
       <div class="clickable-images">
-        <a href="#link1" class="image-link" @mouseover="showSurroundImage(1)" @mouseleave="hideSurroundImage()">
+        <router-link to="/AppointmentRegistration" class="image-link" @mouseover="showSurroundImage(1)" @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.1.png" alt="Image 1">
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 1">
-        </a>
+        </router-link>
         <a href="#link2" class="image-link" @mouseover="showSurroundImage(2)" @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2">
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2">
