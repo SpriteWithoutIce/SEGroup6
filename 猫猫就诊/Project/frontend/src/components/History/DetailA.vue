@@ -5,8 +5,55 @@
         <p style="margin-left:15px;font-size:larger;color:white;">{{ form.state }}</p>
         <p  v-if="form.state === '已预约'" style="margin-left:15px;font-size:small;color:white;">请在约定时间前往就诊</p>
       </div>
-      <el-button  v-if="form.state === '已预约'" class="button">取消挂号</el-button>
-      <el-button @click="closeModal" class="button">退出</el-button>
+      <div class="content">
+        <h2>就诊信息</h2>
+        <div class="line">
+            <p style="margin-left:15px;">就诊科室：</p>       
+            <p>{{ form.office }}</p>             
+        </div>
+        <div class="line">
+            <p style="margin-left:15px;">科室地址：</p>      
+            <p>{{ form.position }}</p>             
+        </div>
+        <div class="line">
+            <p style="margin-left:15px;">预约时间：</p>       
+            <p>{{ form.time }}</p>             
+        </div>
+        <div class="y">
+          <el-icon class="w"><Bell /></el-icon>
+          <p class="w">就诊时间以医生实际看诊叫号顺序为准</p>
+        </div>
+        <div class="line">
+            <p style="margin-left:15px;">排队号：</p>       
+            <p>{{ form.line}}</p>             
+        </div>
+        <div class="line">
+            <p style="margin-left:15px;">就诊人：</p>       
+            <p>{{ form.name }}</p>             
+        </div>
+        <div class="line">
+            <p style="margin-left:15px;">电子就医卡号：</p>       
+            <p>{{ form.cardNum }}</p>             
+        </div>
+      </div>
+      <div class="m"></div>
+      <div class="content">
+        <h2>订单信息</h2>
+        <div class="line">
+            <p style="margin-left:15px;">订单号：</p>       
+            <p>{{ form.orderNum }}</p>             
+        </div>
+        <div class="line">
+            <p style="margin-left:15px;">费用：</p>       
+            <p>现场待支付医事服务费{{ form.price }}</p>             
+        </div>
+      </div>
+      <div class="button">
+        <el-button  v-if="form.state === '已预约'">取消挂号</el-button>
+      </div>
+      <div class="button">
+        <el-button @click="closeModal">退出</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -42,8 +89,51 @@ export default{
 
 </script>
 <style scoped>
+.w{
+  color:rgb(252, 191, 50);
+}
+.y{
+  position:relative;
+  background-color: rgb(244, 244, 194);
+  width:90%;
+  height:30px;
+  transform: translateX(-50%);
+  left: 50%;
+  display: flex;
+  flex-direction:row;
+  justify-content:center;
+  align-items: center;
+}
+.m{
+  background-color: rgb(228, 228, 228);
+  width:100%;
+  height:5px;
+}
+.el-button{
+  height:40px;
+}
+h2 {
+  line-height: 0.1; /* 降低行高，根据需要调整该值 */
+  margin-left:15px;
+}
+.content{
+  margin-top:10px;
+  margin-bottom:10px;
+  display: flex;
+  flex-direction:column;
+  align-items: flex-start;
+  width:100%;
+  justify-content: center;
+}
+.line{
+    display: flex;
+    flex-direction:row;
+}
 .button{
   width:100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 p {
   line-height: 0.1; /* 降低行高，根据需要调整该值 */
@@ -55,7 +145,7 @@ p {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 5px;
 }
 .modal-background {
   position: fixed;
@@ -73,7 +163,7 @@ p {
   max-width: 500px; /* 设置最大宽度为800像素 */
   width: 100%; 
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: 5px;
   display: flex; /* 使用Flexbox布局 */
   flex-direction: column; /* 设置为垂直方向的布局 */
   justify-content: center; /* 垂直居中所有子元素 */
