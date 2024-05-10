@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 
 # Create your models here.
@@ -15,38 +16,58 @@ class Users(models.Model):
 class Patients(models.Model):
     account = models.ForeignKey(verbose_name="患者账号", to="Users", to_field="account", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="患者姓名", max_length=20)
-    age = models.IntegerField(verbose_name="患者年龄")
+    
+    health_insurance_choices = (
+        (1, "医保"),
+        (2, "非医保"),
+    )
+    health_insurance = models.SmallIntegerField(verbose_name="医保情况", choices=health_insurance_choices, default=1)
     
     gender_choices = (
         (1, "男"),
         (2, "女"),
     )
     gender = models.SmallIntegerField(verbose_name="患者性别", choices=gender_choices)
+    
+    birthday = models.DateField(verbose_name="患者生日", default=datetime.date.today)
+    phone_num = models.CharField(verbose_name="患者电话", max_length=15, default="")
+    
+    identity_choices = (
+        (1, "身份证"),
+        (2, "医保卡"),
+        (3, "诊疗卡"),
+        (4, "护照"),
+        (5, "军官证"),
+        (6, "港澳通行证"),
+    )
+    identity = models.SmallIntegerField(verbose_name="身份证明", choices=identity_choices, default=1)
+    identity_num = models.CharField(verbose_name="证件号", max_length=64, default="")
+    address = models.CharField(verbose_name="患者住址", max_length=128, default="")
 
 class Doctors(models.Model):
     account = models.ForeignKey(verbose_name="医生账号", to="Users", to_field="account", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="医生姓名", max_length=20)
-    age = models.IntegerField(verbose_name="医生年龄")
     
     gender_choices = (
         (1, "男"),
         (2, "女"),
     )
-    gender = models.SmallIntegerField(verbose_name="医生性别", choices=gender_choices)
     title = models.CharField(verbose_name="医生职称", max_length=50)
     section = models.CharField(verbose_name="医生科室", max_length=20)
-    speciality = models.CharField(verbose_name="医生特长", max_length=150)
+    research = models.CharField(verbose_name="研究方向", max_length=150, null=True, blank=True)
 
 class OnDuty(models.Model):
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", primary_key=True, on_delete=models.CASCADE)
-    start = models.DateTimeField(verbose_name="开始时间")
-    end = models.DateTimeField(verbose_name="结束时间")
+    date = models.DateField(verbose_name="值班日期", default=datetime.date.today)
     
-    state_choices = (
-        (1, "已预约"),
-        (2, "空闲"),
+    time_choices = (
+        (1, "上午"),
+        (2, "下午"),
+        (3, "晚上"),
     )
-    state = models.SmallIntegerField(verbose_name="预约状态", choices=state_choices)
+    time = models.SmallIntegerField(verbose_name="值班时间", choices=time_choices, default=1)
+    
+    state = models.IntegerField(verbose_name="预约状态")
 
 class Register(models.Model):
     patient = models.ForeignKey(verbose_name="患者编号", to="Patients", to_field="id", on_delete=models.CASCADE)
