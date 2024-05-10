@@ -4,7 +4,7 @@
   <BillDetails @update:payStatus="updatePayStatus" ref="BillDetails"> </BillDetails>
   <el-container class="componentBody">
     <el-container>
-      <el-aside width="200px">
+      <el-aside>
         <!-- 下边的部分是选择菜单 -->
         <!-- @select="selectFunc" 表示当 <el-menu> 上的某个菜单项被选中时，会触发 selectFunc 方法 -->
         <!-- :unique-opened="true" 表示同时只能展开一个子菜单 -->
@@ -50,8 +50,10 @@
               :current-page="pagination.currentPage"
               :page-size="pagination.pageSize"
               :total="pagination.total"
-              layout="prev, pager, next , total"
-              @current-change="handleCurrentChange"
+              :pager-count="3"
+              background
+              layout="prev, pager, next, total"
+              @update:current-page="handleCurrentChange"
             >
             </el-pagination>
           </div>
@@ -93,7 +95,79 @@ export default {
           price: 5,
           date: '2024年1月15日',
           payStatus: false
-        }
+        },
+        {
+          id: 3,
+          type: '挂号',
+          issue: '全科挂号',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          issue: '全科挂号',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          issue: '全科挂号',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          issue: '全科挂号',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          issue: '全科挂号',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          issue: '全科挂号',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          issue: '全科挂号',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          issue: '全科挂号',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          issue: '全科挂号',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
       ],
       pagination: {
         total: 0,
@@ -113,7 +187,7 @@ export default {
       const start = (this.pagination.currentPage - 1) * this.pagination.pageSize;
       const end = start + this.pagination.pageSize;
       this.filteredBillsDiv = this.filteredBills.slice(start, end);
-      this.pagination.total = this.filteredBillsDiv.length;
+      this.pagination.total = this.filteredBills.length;
     },
     showBillDetails(row) {
       this.$refs.BillDetails.openModal(row)
@@ -123,8 +197,7 @@ export default {
       this.filteredBills = this.bill.filter((stu) => {
         return stu.payStatus === payStatus
       }),
-      this.filteredBillsDiv = this.filteredBills.slice(0, this.pagination.pageSize);
-      this.pagination.total = this.filteredBillsDiv.length;
+      this.handleCurrentChange(1);
     },
     // bug：这里目前无法从根本上实现属性的修改，页面一重新挂载就会恢复，后续链接后端时再修正逻辑
     updatePayStatus(id) {
@@ -151,6 +224,7 @@ export default {
   height: 57vh;
 }
 .page {
+  margin-top: 2vh;
   justify-content: center;
   margin-bottom: 1vh; 
 }
@@ -163,12 +237,17 @@ export default {
 /*菜单栏*/
 .aside {
   background-color: wheat;
+  width: clamp(130px,30vw,230px);
 }
 
 .my-menu .el-menu-item.is-active {
   color: black;
   background-color: cornflowerblue;
   opacity: 0.5;
+  width: clamp(130px,30vw,230px);
+}
+.el-aside{
+  width: clamp(130px,30vw,230px);
 }
 
 /*标题的下划线*/
@@ -192,9 +271,6 @@ export default {
   flex-direction: column;
   background-color: white;
   background-image: url(../../assets/prescription/prescription_bg.png);
-}
-.el-table{
-  min-height: 150px;
 }
 .pay-button {
   background-color: whitesmoke;
