@@ -6,6 +6,7 @@ import SearchA from './SearchA.vue';
 import SignA from './SignA.vue';
 import InputA from './InputA.vue';
 import CheckHistory from './CheckHistory.vue';
+import HistoryA from './HistoryA.vue';
 </script>
 
 <template>
@@ -16,7 +17,7 @@ import CheckHistory from './CheckHistory.vue';
       <SearchA />
       <SignA></SignA>
       <InputA />
-      <CheckHistory></CheckHistory>
+      <HistoryA></HistoryA>
     </div>
   </scroll>
 </template>

@@ -63,6 +63,7 @@ export default {
         {
           name: "小王",
           age: 18,
+          sex:"男",
           office:"心血管内科",
           date: "2024-04-02",
           time:"9:30"
@@ -70,14 +71,16 @@ export default {
         {
           name: "小秋",
           age: 16,
+          sex:"女",
           office:"心血管内科",
           date: "2024-01-15",
-          time:"14:30"
+          time:"14:30",
+          advice:"增加体力活动，如快走、游泳或骑自行车，每周至少150分钟。控制体重，保持在健康范围内。减少盐分摄入，以降低高血压的风险。"
         },
         {
           name: "小王",
           age: 18,
-          office:"心血管内科",
+          office:"精神科",
           date: "2024-01-23",
           time:"19:30"
         },

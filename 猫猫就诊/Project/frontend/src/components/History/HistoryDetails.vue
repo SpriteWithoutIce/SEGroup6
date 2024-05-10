@@ -44,28 +44,17 @@ export default {
       ]
     };
   },
-  computed: {
-    totalPrice () {
-      return this.form.medicines.reduce((total, medicine) => total + parseFloat(medicine.totalPrice || 0), 0).toFixed(2);
-    }
-  },
   methods: {
     openModal (row) {
       this.isVisible = true;
       document.body.style.overflow = 'hidden'; // 禁止滚动
       this.form.name = row.name;
       this.form.gender = row.sex;
+      this.advice=row.advice;
     },
     closeModal () {
       this.isVisible = false;
       document.body.style.overflow = ''; // 恢复滚动
-    },
-    calculatePrice (medicine) {
-      const selectedMedicine = this.medicinesDB.find(med => med.name === medicine.name);
-      if (selectedMedicine) {
-        medicine.price = selectedMedicine.price;
-        medicine.totalPrice = (selectedMedicine.price * medicine.quantity).toFixed(2);
-      }
     },
 
     querySearch (queryString, cb) {
