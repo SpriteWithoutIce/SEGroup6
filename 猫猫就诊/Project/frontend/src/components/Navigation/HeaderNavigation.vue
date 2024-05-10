@@ -134,7 +134,7 @@ export default {
 .header-nav::before {
   content: '';
   position: absolute;
-  top: 10px;
+  top: 20px;
   left: 30px;
   width: 300px;
   height: 150px;
@@ -218,7 +218,7 @@ export default {
 
 /*调整灰色矩形内可点击元素距离*/
 .clickable-images a {
-  margin: 0 95px;
+  margin: 0 11vw;
 
   position: relative;
 }

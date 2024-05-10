@@ -35,7 +35,9 @@
                   <template #default="scope">
                     <!-- 使用 v-if来判断是否显示按钮 -->
                     <div v-if="scope.row.payStatus === false">
-                      <el-button class="pay-button" @click="showBillDetails(scope.row)">缴费</el-button>
+                      <el-button class="pay-button" @click="showBillDetails(scope.row)"
+                        >缴费</el-button
+                      >
                     </div>
                     <!-- 使用 v-else显示文本 -->
                     <div v-else class="butAbanText">已缴费，无需操作</div>
@@ -43,9 +45,16 @@
                 </el-table-column>
               </el-table>
               <!-- 分页组件，目前不显示？ -->
-              <el-pagination class="page" :current-page="pagination.currentPage" :page-size="pagination.pageSize"
-                :total="pagination.total" :pager-count="3" background layout="prev, pager, next, total"
-                @update:current-page="handleCurrentChange">
+              <el-pagination
+                class="page"
+                :current-page="pagination.currentPage"
+                :page-size="pagination.pageSize"
+                :total="pagination.total"
+                :pager-count="3"
+                background
+                layout="prev, pager, next, total"
+                @update:current-page="handleCurrentChange"
+              >
               </el-pagination>
             </div>
           </el-main>
@@ -59,7 +68,7 @@
 <script>
 import BillDetails from './BillDetails.vue'
 export default {
-  data () {
+  data() {
     return {
       desc: '缴费列表统计',
       bill: [
@@ -158,12 +167,12 @@ export default {
           price: 5,
           date: '2024年1月15日',
           payStatus: false
-        },
+        }
       ],
       pagination: {
         total: 0,
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       filteredBills: [],
       filteredBillsDiv: []
@@ -173,25 +182,25 @@ export default {
     BillDetails
   },
   methods: {
-    handleCurrentChange (e) {
-      this.pagination.currentPage = e;
-      const start = (this.pagination.currentPage - 1) * this.pagination.pageSize;
-      const end = start + this.pagination.pageSize;
-      this.filteredBillsDiv = this.filteredBills.slice(start, end);
-      this.pagination.total = this.filteredBills.length;
+    handleCurrentChange(e) {
+      this.pagination.currentPage = e
+      const start = (this.pagination.currentPage - 1) * this.pagination.pageSize
+      const end = start + this.pagination.pageSize
+      this.filteredBillsDiv = this.filteredBills.slice(start, end)
+      this.pagination.total = this.filteredBills.length
     },
-    showBillDetails (row) {
+    showBillDetails(row) {
       this.$refs.BillDetails.openModal(row)
     },
-    selectFunc (payStatus) {
+    selectFunc(payStatus) {
       // 根据传入的 payStatus 筛选患者数据
-      this.filteredBills = this.bill.filter((stu) => {
+      ;(this.filteredBills = this.bill.filter((stu) => {
         return stu.payStatus === payStatus
-      }),
-        this.handleCurrentChange(1);
+      })),
+        this.handleCurrentChange(1)
     },
     // bug：这里目前无法从根本上实现属性的修改，页面一重新挂载就会恢复，后续链接后端时再修正逻辑
-    updatePayStatus (id) {
+    updatePayStatus(id) {
       // 找到 bill 数组中对应的对象，并更新 payStatus
       const index = this.bill.findIndex((item) => item.id === id)
       if (index !== -1) {
@@ -201,26 +210,24 @@ export default {
       this.selectFunc(false)
     }
   },
-  mounted () {
+  mounted() {
     // 默认是未缴费页面
     this.selectFunc(false)
     //分页初始化
-    this.handleCurrentChange(1);
+    this.handleCurrentChange(1)
   }
 }
 </script>
 
 <style scoped>
 .componentBody {
-  height: 57vh;
+  height: 100vh;
 }
-
 .page {
   margin-top: 2vh;
   justify-content: center;
   margin-bottom: 1vh;
 }
-
 .header {
   font-size: 30px;
   line-height: 80px;
@@ -233,14 +240,14 @@ export default {
   width: clamp(130px, 30vw, 230px);
 }
 
+.el-aside {
+  width: clamp(130px, 30vw, 230px);
+}
+
 .my-menu .el-menu-item.is-active {
   color: black;
   background-color: cornflowerblue;
   opacity: 0.5;
-  width: clamp(130px, 30vw, 230px);
-}
-
-.el-aside {
   width: clamp(130px, 30vw, 230px);
 }
 
@@ -256,6 +263,7 @@ export default {
   flex-direction: column;
   background-color: white;
   background-image: url(../../assets/prescription/prescription_bg.png);
+  background-size: cover;
 }
 
 .main {
@@ -263,8 +271,6 @@ export default {
   display: flex;
   height: 100%;
   flex-direction: column;
-  background-color: white;
-  background-image: url(../../assets/prescription/prescription_bg.png);
 }
 
 .pay-button {
@@ -273,10 +279,10 @@ export default {
   max-width: 75px;
 }
 
-.butAbanText {
+/* .butAbanText {
   font-size: 6px;
   color: rgba(128, 128, 128, 0.847);
-}
+} */
 
 /*页尾*/
 .footer {
