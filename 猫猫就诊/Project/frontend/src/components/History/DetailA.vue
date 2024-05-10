@@ -6,7 +6,7 @@
         <p  v-if="form.state === '已预约'" style="margin-left:15px;font-size:small;color:white;">请在约定时间前往就诊</p>
       </div>
       <div class="content">
-        <h2>就诊信息</h2>
+        <h3>就诊信息</h3>
         <div class="line">
             <p style="margin-left:15px;">就诊科室：</p>       
             <p>{{ form.office }}</p>             
@@ -38,7 +38,7 @@
       </div>
       <div class="m"></div>
       <div class="content">
-        <h2>订单信息</h2>
+        <h3>订单信息</h3>
         <div class="line">
             <p style="margin-left:15px;">订单号：</p>       
             <p>{{ form.orderNum }}</p>             
@@ -112,7 +112,7 @@ export default{
 .el-button{
   height:40px;
 }
-h2 {
+h3 {
   line-height: 0.1; /* 降低行高，根据需要调整该值 */
   margin-left:15px;
 }
