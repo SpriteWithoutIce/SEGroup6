@@ -43,7 +43,7 @@
 }
 .input-container {
   position: absolute;
-  top: 540px;
+  top: 570px;
   height: 50px;
   width: 400px;
   background-color: white;

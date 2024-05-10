@@ -43,7 +43,7 @@ p {
 }
 .search-container {
   position: absolute;
-  top: 370px;
+  top: 400px;
   height: 90px;
   width: 800px;
   background-color: white;

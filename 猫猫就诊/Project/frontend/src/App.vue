@@ -6,7 +6,8 @@ import PatientA from './components/History/PatientA.vue';
 
 <template>
   <div id="app">
-    <PatientA></PatientA>
+    <HeaderNavigation></HeaderNavigation>
+    <NavBar></NavBar>
   </div>
 </template>
 

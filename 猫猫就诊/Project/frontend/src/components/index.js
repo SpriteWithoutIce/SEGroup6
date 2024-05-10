@@ -6,4 +6,5 @@ import PrescriptionDetails from "./Prescription/PrescriptionDetails.vue";
 import Navbar from "./Navigation/Navbar.vue";
 import BillList from "./Bills/BillList.vue";
 import BillDetails from "./Bills/BillDetails.vue";
-export {HeaderNavigation, MakePrescription, PrescriptionDetails, Navbar, BillList, BillDetails}
+import PatientA from "./History/PatientA.vue";
+export {HeaderNavigation, MakePrescription, PrescriptionDetails, Navbar, BillList, BillDetails,PatientA}

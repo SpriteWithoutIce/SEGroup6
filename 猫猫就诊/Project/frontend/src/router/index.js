@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import {HeaderNavigation, MakePrescription, PrescriptionDetails, Navbar, BillList, BillDetails} from '../components/index.js'
+import {HeaderNavigation, MakePrescription, PrescriptionDetails, Navbar, BillList, BillDetails,PatientA} from '../components/index.js'
 import { compileScript } from 'vue/compiler-sfc'
 
 const router = createRouter({
@@ -19,6 +19,11 @@ const router = createRouter({
       path: '/Prescription',
       name: 'Prescription',
       component: MakePrescription
+    },
+    {
+      path: '/PatientA',
+      name: 'PatientA',
+      component: PatientA
     }
   ]
 })

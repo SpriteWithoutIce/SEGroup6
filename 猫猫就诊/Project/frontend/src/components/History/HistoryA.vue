@@ -107,7 +107,7 @@ export default{
 }
 .container{
     position: absolute;
-    top: 600px;
+    top: 630px;
     width: 100%;
     min-height: 150vh;
     background-color: white;

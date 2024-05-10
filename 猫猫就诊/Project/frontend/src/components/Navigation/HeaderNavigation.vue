@@ -19,10 +19,10 @@
           <img class="designed-icon" src="../../assets/navigation/list1.1.png" alt="Image 1">
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 1">
         </a>
-        <a href="#link2" class="image-link" @mouseover="showSurroundImage(2)" @mouseleave="hideSurroundImage()">
+        <RouterLink to="/PatientA" class="image-link" @mouseover="showSurroundImage(2)" @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2">
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2">
-        </a>
+        </RouterLink>
         <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(3)"
           @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.3.png" alt="Image 3">
@@ -41,6 +41,7 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
 import BillList from '../Bills/BillList.vue'
+import PatientA from '../History/PatientA.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
 
 export default {

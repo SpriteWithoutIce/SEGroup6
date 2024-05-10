@@ -30,7 +30,7 @@ p {
 }
 .sign-container {
   position: absolute;
-  top: 480px;
+  top: 510px;
   height: 35px;
   width: 400px;
   background-color: rgb(232, 232, 238);
