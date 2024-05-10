@@ -1,6 +1,7 @@
 <template>
+    <DetailA ref="detail"> </DetailA>
     <div class="container">
-        <div class="card-container">
+        <div class="card-container"> 
             <el-card v-for="item in info" :key="item" style="width: 30%;min-height:400px;margin:1.6%;">
                 <div class="header">
                     <el-avatar :size="50" :src="circleUrl"/>
@@ -52,7 +53,7 @@
                 </div>
                 <el-divider class="divider" />        
                 <div class="button">
-                    <el-button type="primary" plain @click="showPrescriptionDetails(scope.row)" class="xiang">显示详情</el-button>
+                    <el-button type="primary" plain @click="showPrescriptionDetails" class="xiang">显示详情</el-button>
                     <el-button type="primary" plain  v-if="item.state === '已预约'">取消挂号</el-button>
                 </div>
             </el-card>
@@ -64,6 +65,7 @@
 
 </template>
 <script>
+import DetailA from "./DetailA.vue";
 export default{
     data(){
         return{
@@ -81,6 +83,15 @@ export default{
             circleUrl:'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
         }
     },
+    components: {
+        DetailA,
+    },
+    methods:{
+        showPrescriptionDetails() {
+            this.$refs.detail.openModal();
+        },
+    }
+    
 }
 </script>
 <style scoped>
