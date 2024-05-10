@@ -1,12 +1,12 @@
 <script setup>
 import HeaderNavigation from './components/Navigation/HeaderNavigation.vue';
 import NavBar from './components/Navigation/Navbar.vue'
+import PatientA from './components/History/PatientA.vue';
 </script>
 
 <template>
   <div id="app">
-    <HeaderNavigation />
-    <NavBar />
+    <PatientA></PatientA>
   </div>
 </template>
 
