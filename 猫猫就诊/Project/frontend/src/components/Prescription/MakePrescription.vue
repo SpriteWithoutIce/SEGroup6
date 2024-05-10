@@ -6,14 +6,14 @@
     <el-container>
       <el-aside width="200px">
         <!-- 下边的部分是选择菜单 -->
-        <el-menu class="aside my-menu"  default-active="1" :unique-opened="true">
+        <el-menu class="aside my-menu" default-active="1" :unique-opened="true">
           <el-sub-menu index="1">
             <template #title>
               <span>问诊列表</span>
             </template>
-            <el-menu-item index="1">今日</el-menu-item>
-            <el-menu-item index="2">昨日</el-menu-item>
-            <el-menu-item index="3">更早</el-menu-item>
+            <el-menu-item index="1" @click="selectFunc('1')">今日</el-menu-item>
+            <el-menu-item index="2" @click="selectFunc('2')">昨日</el-menu-item>
+            <el-menu-item index="3" @click="selectFunc('3')">更早</el-menu-item>
           </el-sub-menu>
         </el-menu>
       </el-aside>
@@ -23,16 +23,17 @@
         </el-header>
         <el-main class="main">
           <div>
-            <el-table :data="patient">
-              <!-- 可以加上一个问诊号 -->
+            <el-table :data="currentPatients">
+              <el-table-column prop="Id" label="排队号">
+              </el-table-column>
               <el-table-column prop="name" label="姓名">
               </el-table-column>
-              <!-- <el-table-column prop="age" label="年龄">
+              <el-table-column prop="age" label="年龄">
               </el-table-column>
               <el-table-column prop="sex" label="性别">
               </el-table-column>
               <el-table-column prop="date" style="background-color:black" label="问诊时间">
-              </el-table-column> -->
+              </el-table-column>
               <el-table-column style="text-align: right" label="操作">
                 <template #default="scope">
                   <el-button class="prescribe-button" @click="showPrescriptionDetails(scope.row)">开具处方</el-button>
@@ -40,9 +41,9 @@
               </el-table-column>
             </el-table>
             <!-- 分页组件 -->
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-              :current-page="currentPage" :page-sizes="[10, 20, 30, 40]" :page-size="pageSize"
-              layout="total, sizes, prev, pager, next, jumper" :total="totalItems" :hide-on-single-page="false">
+            <el-pagination class="page" :current-page="pagination.currentPage" :page-size="pagination.pageSize"
+              :total="pagination.total" :pager-count="3" background layout="prev, pager, next, total"
+              @update:current-page="handleCurrentChange">
             </el-pagination>
           </div>
         </el-main>
@@ -61,18 +62,122 @@ export default {
     return {
       desc: "问诊列表统计",
       //注意，函数里有日期比较逻辑，所以务必注意后端的日期数据格式！！！
-      // 把stus设置成数据库读取的内容就好
+      // 把patients设置成数据库读取的内容就好
       patient: [
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
       ],
       //这里设置数据初始化
       filteredPatients: [
       ],
+      currentPatients: [],
+      pagination: {
+        total: 0,
+        currentPage: 1,
+        pageSize: 10,
+      },
     }
   },
   components: {
     PrescriptionDetails,
   },
   methods: {
+    handleCurrentChange (e) {
+      this.pagination.currentPage = e;
+      const start = (this.pagination.currentPage - 1) * this.pagination.pageSize;
+      const end = start + this.pagination.pageSize;
+      this.currentPatients = this.filteredPatients.slice(start, end);
+      this.pagination.total = this.filteredPatients.length;
+    },
     getPatientsData: function () {
       let ts = this;
       this.$axios.get('/api/patients/list/')
@@ -101,6 +206,8 @@ export default {
             let parts = stu.date.split('年').join('-').split('月').join('-').split('日').join('').split('-');
             let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
             stuDate.setHours(0, 0, 0, 0);
+            this.pagination.total = this.filteredPatients.length;
+            this.handleCurrentChange(1);
             return stuDate.toDateString() === today.toDateString();
           });
           break;
@@ -110,6 +217,8 @@ export default {
             let parts = stu.date.split('年').join('-').split('月').join('-').split('日').join('').split('-');
             let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
             stuDate.setHours(0, 0, 0, 0);
+            this.pagination.total = this.filteredPatients.length;
+            this.handleCurrentChange(1);
             return stuDate.toDateString() === yesterday.toDateString();
           });
           break;
@@ -119,6 +228,8 @@ export default {
             let parts = stu.date.split('年').join('-').split('月').join('-').split('日').join('').split('-');
             let stuDate = new Date(parts[0], parts[1] - 1, parts[2]);
             stuDate.setHours(0, 0, 0, 0);
+            this.pagination.total = this.filteredPatients.length;
+            this.handleCurrentChange(1);
             return stuDate < yesterday;
           });
           break;
@@ -127,12 +238,12 @@ export default {
     },
   },
   mounted () {
-    this.getPatientsData();
+    /*this.getPatientsData();*/
+    /*this.handleCurrentChange(1);*/
     // 等待 DOM 更新后再执行筛选逻辑
     //唉我真吐了，1记得加上单引号
-    //this.$nextTick(() => {
-      //this.selectFunc('1');
-    //});
+    this.selectFunc('1');
+    this.handleCurrentChange(1);
   }
 }
 </script>
@@ -140,6 +251,12 @@ export default {
 
 
 <style scoped>
+.page {
+  margin-top: 2vh;
+  justify-content: center;
+  margin-bottom: 1vh;
+}
+
 .header {
   font-size: 30px;
   line-height: 80px;
