@@ -2,14 +2,42 @@
   <div class="modal-background" v-if="isVisible">
     <div class="modal-container">
       <div class="content">
-        <h3>就诊信息</h3>
+        <h3>添加药品</h3>
         <div class="line">
-          <p style="margin-left: 15px">就诊科室：</p>
-          <p>hello</p>
+          <p style="margin-left: 15px">药品名：</p>
+          <el-input
+            v-model="info.name"
+            style="width: 240px"
+            placeholder="请输入药品名称"
+            clearable
+          />
+        </div>
+        <div class="line">
+          <p style="margin-left: 15px">药品类型：</p>
+          <el-radio-group v-model="radio">
+            <el-radio :value="3">中药</el-radio>
+            <el-radio :value="6">中成药</el-radio>
+            <el-radio :value="9">西药</el-radio>
+          </el-radio-group>
+        </div>
+        <div class="line">
+          <p style="margin-left: 15px">价格：</p>
+          <el-input v-model="info.price" style="width: 240px" placeholder="请输入单价" clearable />
+        </div>
+        <div class="line">
+          <p style="margin-left: 15px">适应症状：</p>
+          <el-input
+            v-model="info.price"
+            style="width: 240px"
+            placeholder="用逗号分隔(例如：感冒，头痛)"
+            type="textarea"
+            clearable
+          />
         </div>
       </div>
       <div class="button">
-        <el-button @click="closeModal">退出</el-button>
+        <el-button @click="closeModal" plain>取消</el-button>
+        <el-button @click="closeModal" type="primary">确定</el-button>
       </div>
     </div>
   </div>
@@ -19,13 +47,27 @@ export default {
   name: 'DetailC',
   data() {
     return {
-      isVisible: false
+      isVisible: false,
+      inputName: '',
+      radio: '',
+      info: [
+        {
+          name: '感冒冲剂',
+          type: '中药',
+          use: '感冒',
+          price: '5.00'
+        }
+      ]
     }
   },
   methods: {
     openModal(row) {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
+      this.info.name = row.name
+      this.info.type = row.use
+      this.info.price = row.price
+      console.log(`传入的name是：${this.info.name}`)
     },
     closeModal() {
       this.isVisible = false
@@ -54,12 +96,15 @@ h3 {
 .line {
   display: flex;
   flex-direction: row;
+  margin-top: 10px;
 }
 .button {
-  width: 100%;
+  width: 20%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
+  margin-bottom: 15px;
+  margin-top: 20px;
 }
 p {
   line-height: 0.1; /* 降低行高，根据需要调整该值 */
