@@ -1,4 +1,5 @@
 <template>
+  <DetailC ref="detail"> </DetailC>
   <div class="container">
     <div class="m">
       <p style="margin-left: 50px; font-weight: bold; margin-right: 10px">首页</p>
@@ -27,9 +28,7 @@
           <el-table-column prop="use" label="适应症状" />
           <el-table-column label="操作">
             <template #default="scope">
-              <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-                修改
-              </el-button>
+              <el-button size="small" @click="showPrescriptionDetails(scope.row)"> 修改 </el-button>
               <el-button
                 size="small"
                 type="danger"
@@ -60,6 +59,12 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import DetailC from './DetailC.vue'
+const detail = ref(null)
+const showPrescriptionDetails = (row) => {
+  // 假设DetailC组件有一个名为openModal的方法
+  detail.value.openModal(row)
+}
 const handleEdit = (index, row) => {
   // 编辑操作的逻辑
   console.log('Edit row:', row)
