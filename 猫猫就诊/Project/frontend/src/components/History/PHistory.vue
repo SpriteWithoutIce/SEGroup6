@@ -208,14 +208,16 @@ p {
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
+  margin-bottom: 40px;
 }
 .footer {
-  position: relative;
   width: 100%;
   background-color: rgb(8, 3, 88);
   color: white;
   font-size: 17px;
   line-height: 30px;
   margin-top: 10px;
+  position: absolute;
+  bottom: 0;
 }
 </style>
