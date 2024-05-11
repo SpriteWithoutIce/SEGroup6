@@ -25,6 +25,21 @@
           <el-table-column prop="type" label="药物种类" width="180" />
           <el-table-column prop="price" label="药物价格" width="180" />
           <el-table-column prop="use" label="适应症状" />
+          <el-table-column label="操作">
+            <template #default="scope">
+              <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
+                修改
+              </el-button>
+              <el-button
+                size="small"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row)"
+                plain
+              >
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <el-pagination
           class="page"
@@ -45,10 +60,19 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+const handleEdit = (index, row) => {
+  // 编辑操作的逻辑
+  console.log('Edit row:', row)
+}
+
+const handleDelete = (index, row) => {
+  // 删除操作的逻辑
+  console.log('Delete row:', row)
+}
 const pagination = ref({
   total: 0,
   currentPage: 1,
-  pageSize: 10
+  pageSize: 9
 })
 const tableData = [
   {
