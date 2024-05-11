@@ -10,7 +10,7 @@
             <el-input
               v-model="input4"
               style="width: 300px; height: 40px"
-              placeholder="请输入就诊日期(例:05-09) 或 就诊科室"
+              placeholder="请输入就诊日期(例:2024-05-09) 或 就诊科室"
               class="shuru"
             >
               <template #prefix>
@@ -42,7 +42,7 @@ import { ref, onMounted, computed } from 'vue'
 const input4 = ref('')
 const info = ref([
   {
-    office: '心血管门诊',
+    office: '神经外科',
     orderNum: 'w0023',
     price: '0.00元',
     name: 'buaa',
@@ -54,7 +54,7 @@ const info = ref([
     doctor: '王玉'
   },
   {
-    office: '心血管门诊',
+    office: '消化内科',
     orderNum: 'w0024',
     price: '0.00元',
     name: 'buaa',
@@ -90,7 +90,7 @@ const info = ref([
     doctor: '王玉'
   },
   {
-    office: '心血管门诊',
+    office: '精神科',
     orderNum: 'w0026',
     price: '0.00元',
     name: 'hhh',
@@ -102,7 +102,7 @@ const info = ref([
     doctor: '王玉'
   },
   {
-    office: '心血管门诊',
+    office: '普通外科',
     orderNum: 'w0026',
     price: '0.00元',
     name: 'hhh',
@@ -133,8 +133,15 @@ const commitSearch = () => {
 }
 const filterInfo = computed(() => {
   return info.value.filter((item) => {
-    const dateInItem = item.time.split(' ')[0]
-    return input4.value ? dateInItem === input4.value : true
+    // 检查 input4 的第一个字符是否为数字
+    if (/^\d/.test(input4.value)) {
+      // 如果是数字，按照 time 字段进行过滤
+      const dateInItem = item.time.split(' ')[0]
+      return dateInItem === input4.value
+    } else {
+      // 如果不是数字，按照 office 字段进行过滤
+      return input4.value ? item.office === input4.value : true
+    }
   })
 })
 </script>
