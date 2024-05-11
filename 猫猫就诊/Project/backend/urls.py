@@ -23,4 +23,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", TemplateView.as_view(template_name="index.html")),
     path("api/treatments/list/", views.TreatmentView.as_view()),
+    path("api/duty/next_seven_days", views.OnDutyView.as_view()),
+    path("api/duty/date_doctor_unoccupied", views.OnDutyView.as_view()),
+    path("api/doctors/upload_avatar", views.DoctorView.as_view()),
 ]
