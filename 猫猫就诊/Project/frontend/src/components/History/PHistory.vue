@@ -170,7 +170,7 @@ export default {
   position: absolute;
   top: 630px;
   width: 100%;
-  min-height: 80vh;
+  min-height: 50vh;
   background-color: white;
 }
 .header {
