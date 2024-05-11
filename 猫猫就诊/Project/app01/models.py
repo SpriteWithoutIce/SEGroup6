@@ -37,7 +37,7 @@ class Doctors(models.Model):
     avatar = models.ImageField(verbose_name="医生头像", upload_to='doctor/', null=True, blank=True)
 
 class OnDuty(models.Model):
-    doctor = models.OneToOneField(verbose_name="医生编号", to="Doctors", to_field="id", primary_key=True, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", primary_key=True, on_delete=models.CASCADE)
     date = models.DateField(verbose_name="值班日期", default=django.utils.timezone.now)
     time_choices = (
         (1, "上午"),
@@ -50,7 +50,7 @@ class OnDuty(models.Model):
 class Register(models.Model):
     patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='patient_registers')
     register = models.ForeignKey(verbose_name="挂号者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='register_registers')
-    doctor = models.OneToOneField(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
+    doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
     time = models.DateTimeField(verbose_name="挂号时间")
 
 class Treatment(models.Model):

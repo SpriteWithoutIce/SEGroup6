@@ -136,7 +136,7 @@ export default {
       }
     };  
   }  ,
-  methods: {  
+  methods: { 
     toggleSquare(index) {  
       this.currentSquareIndex = index;   
       this.currentSquareIndex = 1;
