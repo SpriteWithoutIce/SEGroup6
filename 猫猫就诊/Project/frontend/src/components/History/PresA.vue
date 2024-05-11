@@ -16,7 +16,7 @@
             <el-input
               v-model="input4"
               style="width: 300px; height: 40px"
-              placeholder="请输入就诊日期(例:2024-05-09) 或 就诊科室"
+              placeholder="请输入就诊日期(例:2024-05-09) 或 科室"
               class="shuru"
             >
               <template #prefix>
