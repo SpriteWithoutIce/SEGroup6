@@ -25,7 +25,7 @@
           <div>
             <!-- filtered没问题，current出现了问题 -->
             <el-table :data="currentPatients">
-              <el-table-column prop="Id" label="排队号">
+              <el-table-column prop="Id" label="单号">
               </el-table-column>
               <el-table-column prop="name" label="姓名">
               </el-table-column>
@@ -241,7 +241,7 @@ export default {
     },
   },
   mounted () {
-    this.getTreatmentsData();
+    /*this.getTreatmentsData();*/
     // 等待 DOM 更新后再执行筛选逻辑
     //唉我真吐了，1记得加上单引号
     this.selectFunc('1');
