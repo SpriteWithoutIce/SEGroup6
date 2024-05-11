@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {HeaderNavigation, MakePrescription, PrescriptionDetails, Navbar, BillList, BillDetails, AppointmentRegistration, AppointmentRegistration2,
-  AppointmentRegistration3,AppointmentRegistration4,AppointmentRegistration5,AppointmentRegistration6,AppointmentRegistration7,AppointmentRegistration8,TableSearch
+  AppointmentRegistration3,AppointmentRegistration4,AppointmentRegistration5,AppointmentRegistration6,AppointmentRegistration7,AppointmentRegistration8,TableSearch,PatientA,PresA
 } from '../components/index.js'
 import { compileScript } from 'vue/compiler-sfc'
 
@@ -21,6 +21,16 @@ const router = createRouter({
       path: '/Prescription',
       name: 'Prescription',
       component: MakePrescription
+    },
+    {
+      path: '/PatientA',
+      name: 'PatientA',
+      component: PatientA
+    },
+    {
+      path: '/PresA',
+      name: 'PresA',
+      component: PresA
     },
     {
       path: '/AppointmentRegistration',

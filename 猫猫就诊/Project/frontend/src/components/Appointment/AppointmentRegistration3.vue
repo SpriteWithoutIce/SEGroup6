@@ -4,7 +4,7 @@
   <div class="notice-box">  
     <div class="container2" style="margin-bottom: 50px;">  
       <router-link to="/AppointmentRegistration2" class="button2 button-prev">上一步</router-link>
-      <router-link to="/AppointmentRegistration4" class="button2 button-next">下一步</router-link>
+      <router-link @click="submit" :to="{path:'/AppointmentRegistration4',query:{patient:submit_info}}" class="button2 button-next"  >下一步</router-link>
       <!-- <button class="button2 button-prev">上一步</button>  
       <button class="button2 button-next" v-if="checked && first" type="submit">下一步</button> 
       <button class="button2 button-next" v-if="checked && second" type="submit2">下一步</button>  -->
@@ -114,7 +114,7 @@ export default {
       info2:[
         "就诊须知","挂号类别","填写预约信息","选择科室","选择医生","选择时间地点","核对预约信息","预约成功"
       ],
-      first: 1,
+      first: 0,
       second: 0,
       form: {  
         name: '',  
@@ -133,12 +133,16 @@ export default {
         phone:'',
         number:'',
       },
-      people: {
+      submit_info:{
+        first:-1,
         name: '',  
+        paymentType: '' ,
         gender:'',
+        birthday:'',
         idType:'',
         phone:'',
         number:'',
+        addr:'',
       }
     };  
   }  ,
@@ -158,8 +162,34 @@ export default {
     submitForm2() {  
       // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
       console.log(this.form2); // 在控制台打印表单数据  
-    }  
-  }  
+    }, 
+    submit(){
+      this.submit_info.first=this.first?1:0;
+      if(this.first==1){
+        this.submit_info.name=this.form.name;
+        this.submit_info.paymentType=this.form.paymentType;
+        this.submit_info.gender=this.form.gender;
+        this.submit_info.birthday=this.form.birthday;
+        this.submit_info.idType=this.form.idType;
+        this.submit_info.phone=this.form.phone;
+        this.submit_info.number=this.form.number;
+        this.submit_info.addr=this.form.addr;
+      }
+      else{
+        this.submit_info.name=this.form2.name;
+        this.submit_info.gender=this.form2.gender;
+        this.submit_info.idType=this.form2.idType;
+        this.submit_info.phone=this.form2.phone;
+        this.submit_info.number=this.form2.number;
+      }
+    }
+  },
+  created(){
+    if(this.$route.query.select==0)
+      this.first=1;
+    else
+      this.second=1;
+  }
 };  
 </script>  
   
