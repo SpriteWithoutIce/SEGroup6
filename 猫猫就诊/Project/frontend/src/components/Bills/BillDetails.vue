@@ -6,8 +6,8 @@
         <el-form-item label="类型">
           {{ form.type }}
         </el-form-item>
-        <el-form-item label="具体事由">
-          {{ form.issue }}
+        <el-form-item label="开具科室">
+          {{ form.department }}
         </el-form-item>
         <el-form-item label="费用（元）">
           {{ form.price }}
@@ -36,7 +36,7 @@ export default {
       isVisible: false,
       form: {
         type: "",
-        issue: "",
+        department: "",
         price: 0,
         date: "",
         id: 0,
@@ -49,7 +49,7 @@ export default {
       this.isVisible = true;
       document.body.style.overflow = 'hidden'; // 禁止滚动
       this.form.type = row.type;
-      this.form.issue = row.issue;
+      this.form.department = row.department;
       this.form.price = row.price;
       this.form.date = row.date;
       this.form.id = row.id;
