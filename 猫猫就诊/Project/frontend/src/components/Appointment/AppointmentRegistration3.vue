@@ -4,30 +4,36 @@
   <div class="notice-box">  
     <div class="container2" style="margin-bottom: 50px;">  
       <router-link to="/AppointmentRegistration2" class="button2 button-prev">上一步</router-link>
-      <router-link @click="submit" :to="{path:'/AppointmentRegistration4',query:{patient:submit_info}}" class="button2 button-next"  >下一步</router-link>
-      <!-- <button class="button2 button-prev">上一步</button>  
-      <button class="button2 button-next" v-if="checked && first" type="submit">下一步</button> 
-      <button class="button2 button-next" v-if="checked && second" type="submit2">下一步</button>  -->
+      <router-link 
+        :to="{
+          path:'/AppointmentRegistration4',
+          query:{
+            name:formData.name,
+            paymentType:formData.paymentType
+          }
+        }" class="button2 button-next"  >
+        下一步
+      </router-link>
     </div> 
     <!-- 首诊信息 -->
     <div class="container3" v-if="first">
     <form @submit.prevent="submitForm">  
       <div class="form-group">  
-        <input type="text" id="name" name="name" class="form-control" placeholder="请输入姓名">  
-        <select id="paymentType" name="paymentType" class="form-control" placeholder="支付类型">  
+        <input type="text" id="name" name="name" class="form-control" placeholder="请输入姓名" v-model="formData.name">  
+        <select id="paymentType" name="paymentType" class="form-control" placeholder="支付类型" v-model="formData.paymentType">  
           <option value="医保">医保</option>  
           <option value="非医保">非医保</option>  
         </select>  
       </div>  
       <div class="form-group">  
-        <select id="gender" name="gender" class="form-control" placeholder="性别">  
+        <select id="gender" name="gender" class="form-control" placeholder="性别" v-model="formData.gender">  
           <option value="男">男</option>  
           <option value="女">女</option>  
         </select>  
-        <input type="date" id="birthday" name="birthday" class="form-control" placeholder="出生日期">  
+        <input type="date" id="birthday" name="birthday" class="form-control" placeholder="出生日期" v-model="formData.birthday">  
       </div>  
       <div class="form-group">  
-        <select id="idType" name="idType" class="form-control" placeholder="证件类型">
+        <select id="idType" name="idType" class="form-control" placeholder="证件类型" v-model="formData.idType">
           <option value="身份证">身份证</option>  
           <option value="医保卡">医保卡</option>  
           <option value="诊疗卡">诊疗卡</option>
@@ -35,13 +41,13 @@
           <option value="军官证">军官证</option>
           <option value="港澳通行证">港澳通行证</option>
         </select>  
-        <input type="tel" id="phone" name="phone" class="form-control" placeholder="联系电话">  
+        <input type="tel" id="phone" name="phone" class="form-control" placeholder="联系电话" v-model="formData.phone">  
       </div>   
       <div class="form-group">
-        <input type="text" id="number" name="number" class="form-control" placeholder="请输入证件号"> 
+        <input type="text" id="number" name="number" class="form-control" placeholder="请输入证件号" v-model="formData.number"> 
       </div>
       <div class="form-group">
-        <input type="text" id="addr" name="addr" class="form-control" placeholder="请输入住址"> 
+        <input type="text" id="addr" name="addr" class="form-control" placeholder="请输入住址" v-model="formData.addr"> 
       </div>
     </form>  
     </div>
@@ -49,14 +55,14 @@
     <div class="container3" v-if="second">
     <form @submit2.prevent="submitForm2">  
       <div class="form-group">  
-        <input type="text" id="name" name="name" class="form-control" placeholder="请输入姓名">  
-        <select id="gender" name="gender" class="form-control" placeholder="性别">  
+        <input type="text" id="name" name="name" class="form-control" placeholder="请输入姓名" v-model="formData.name">  
+        <select id="gender" name="gender" class="form-control" placeholder="性别" v-model="formData.gender">  
           <option value="男">男</option>  
           <option value="女">女</option>  
         </select>  
       </div>  
       <div class="form-group">  
-        <select id="idType" name="idType" class="form-control" placeholder="证件类型">
+        <select id="idType" name="idType" class="form-control" placeholder="证件类型" v-model="formData.idType">
           <option value="身份证">身份证</option>  
           <option value="医保卡">医保卡</option>  
           <option value="诊疗卡">诊疗卡</option>
@@ -65,10 +71,10 @@
           <option value="港澳通行证">港澳通行证</option>
           <!-- 可以继续添加其他选项 -->  
         </select>  
-        <input type="tel" id="phone" name="phone" class="form-control" placeholder="联系电话"> 
+        <input type="tel" id="phone" name="phone" class="form-control" placeholder="联系电话" v-model="formData.phone"> 
       </div>  
       <div class="form-group">
-        <input type="text" id="number" name="number" class="form-control" placeholder="请输入证件号"> 
+        <input type="text" id="number" name="number" class="form-control" placeholder="请输入证件号" v-model="formData.number"> 
       </div>
     </form>  
     </div>
@@ -80,6 +86,7 @@
       </div>  
     </div>
   </div>  
+  <div>{{ formData.name }}</div>
 </template>  
   
 <script>  
@@ -116,27 +123,10 @@ export default {
       ],
       first: 0,
       second: 0,
-      form: {  
-        name: '',  
-        paymentType: '' ,
-        gender:'',
-        birthday:'',
-        idType:'',
-        phone:'',
-        number:'',
-        addr:'',
-      },
-      form2: {  
-        name: '',  
-        gender:'',
-        idType:'',
-        phone:'',
-        number:'',
-      },
-      submit_info:{
-        first:-1,
-        name: '',  
-        paymentType: '' ,
+      formData:{
+        queryFirst:0,
+        name:'',
+        paymentType:'',
         gender:'',
         birthday:'',
         idType:'',
@@ -163,30 +153,12 @@ export default {
       // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
       console.log(this.form2); // 在控制台打印表单数据  
     }, 
-    submit(){
-      this.submit_info.first=this.first?1:0;
-      if(this.first==1){
-        this.submit_info.name=this.form.name;
-        this.submit_info.paymentType=this.form.paymentType;
-        this.submit_info.gender=this.form.gender;
-        this.submit_info.birthday=this.form.birthday;
-        this.submit_info.idType=this.form.idType;
-        this.submit_info.phone=this.form.phone;
-        this.submit_info.number=this.form.number;
-        this.submit_info.addr=this.form.addr;
-      }
-      else{
-        this.submit_info.name=this.form2.name;
-        this.submit_info.gender=this.form2.gender;
-        this.submit_info.idType=this.form2.idType;
-        this.submit_info.phone=this.form2.phone;
-        this.submit_info.number=this.form2.number;
-      }
-    }
   },
   created(){
-    if(this.$route.query.select==0)
+    if(this.$route.query.select==0){
       this.first=1;
+      this.formData.queryFirst=1;
+    }
     else
       this.second=1;
   }

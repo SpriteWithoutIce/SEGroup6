@@ -1,7 +1,6 @@
 <template>  
   <Header :squares2="squares2" />
   <div class="notice-box">  
-    <div>{{ this.submit_info.name }}</div>
     <div class="department-selector">  
       <div class="left-buttons">  
         <button  
@@ -23,9 +22,17 @@
           </div>  
           <div class="container2">  
             <router-link to="/AppointmentRegistration3" class="button2 button-prev">上一步</router-link>
-            <router-link to="/AppointmentRegistration5" class="button2 button-next">下一步</router-link>
-            <!-- <button class="button2 button-prev">上一步</button>  
-            <button class="button2 button-next" v-if="checked" type="submit">下一步</button>  -->
+            <router-link 
+              :to="{
+                path:'/AppointmentRegistration5',
+                query:{
+                  name:info.name,
+                  paymentType:info.paymentType,
+                  department:selectedDepartmentName
+                }
+              }" class="button2 button-next"  >
+              下一步
+            </router-link>
           </div> 
         </div>   
         <div class="sub-department-titles">  
@@ -93,16 +100,10 @@ export default {
       selectedDepartmentName: '', // 用于存储选中的部门名称
       selectedDepartmentRight:'',
       selectedSubDepartment: '',
-      submit_info:{
-        first:-1,
-        name: '',  
-        paymentType: '' ,
-        gender:'',
-        birthday:'',
-        idType:'',
-        phone:'',
-        number:'',
-        addr:'',
+      selectedSubDepartmentName:'',
+      info:{
+        name:'',
+        paymentType:''
       }
     };  
   }  ,
@@ -112,6 +113,7 @@ export default {
     },  
     selectSubDepartment(id){
       this.selectedDepartmentName=this.getSubDepartments(this.selectedDepartment)[id-1].name
+      
       this.selectedDepartmentRight=this.selectedDepartment
       this.selectedSubDepartment=this.getSubDepartments(this.selectedDepartment)[id-1].id
       this.checked=true
@@ -190,16 +192,13 @@ export default {
       // 添加其他科室的返回逻辑...  
     },  
     hoverButton() {  
-      // 假设我们在这里只改变当前hover的按钮样式，需要额外逻辑追踪hover的按钮  
-      // 这里仅作演示，实际项目中可能需要使用其他方法（如Vue的ref或者CSS的:hover）  
     },  
     mouseoutButton() {  
-      // 清除hover状态  
-      // this.hoveredButton = null; // 如果需要的话  
     },  
   }  ,
   created(){
-    this.submit_info=this.$route.query.patient
+    this.info.name=this.$route.query.name;
+    this.info.paymentType=this.$route.query.paymentType;
   }
 };  
 </script>  

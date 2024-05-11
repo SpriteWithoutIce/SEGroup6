@@ -4,16 +4,20 @@
   <div class="notice-box" style="height: 1500px;">  
     <!-- 上一步/下一步 -->
     <div class="container2">  
-      <router-link to="/AppointmentRegistration8" class="button2 button-next" @click="submit">确认</router-link>
+      <router-link :to="{
+          path:'/AppointmentRegistration8',
+          query:{
+            order:JSON.stringify(info)
+          }}" class="button2 button-next" @click="submit">确认</router-link>
       <!-- <button class="button2 button-next" @click="submit">确认</button>   -->
     </div> 
     <div class="doctor-item">
       <div class="doctor-header"> 
-        <img :src="doctor.avatar" alt="" class="avatar">
+        <img :src="info.doctorAvatar" alt="" class="avatar">
         <div class="info">  
-          <div class="name">{{ doctor.name }}</div>  
-          <div class="title">{{ doctor.title }}</div>  
-          <div class="research">{{ doctor.research }}</div>  
+          <div class="name">{{ info.doctorName }}</div>  
+          <div class="title">{{ info.doctorTitle }}</div>  
+          <div class="research">{{ info.doctorRearch }}</div>  
         </div>  
       </div>
       <div class="detail-container">
@@ -22,19 +26,19 @@
       </div>
       <div class="detail-container">
         <div class="detail-item ">科室：</div>
-        <div class="detail-item ">{{ department }}</div>
+        <div class="detail-item ">{{ info.department }}</div>
       </div>
       <div class="detail-container">
         <div class="detail-item ">就诊日期：</div>
-        <div class="detail-item ">2024-{{ this.selectTimeTable.time }}</div>
+        <div class="detail-item ">2024-{{ info.time }}</div>
       </div>
       <div class="detail-container">
         <div class="detail-item ">就诊时间：</div>
-        <div class="detail-item ">{{ this.selectTimeTable.startTime }}-{{ this.selectTimeTable.endTime }}</div>
+        <div class="detail-item ">{{ info.starttime }}-{{ info.endtime }}</div>
       </div>
       <div class="detail-container">
         <div class="detail-item ">医事服务费：</div>
-        <div class="detail-item ">{{ doctor.cost }}元</div>
+        <div class="detail-item ">{{ info.cost }}元</div>
       </div>
       <div class="detail-container">
         <div class="detail-item ">就诊人：</div>
@@ -61,15 +65,6 @@ export default {
   },
   data() {  
     return {  
-      squares: [  
-        { hovered: false },  
-        { hovered: true },  
-        { hovered: false },  
-        { hovered: false }  
-      ] ,
-      info: [
-        "出诊查询","网上预约看诊","预约流程","取消预约"
-      ],
       checked: false,  
       currentSquareIndex: 0,  
       squares2: [  
@@ -86,58 +81,21 @@ export default {
         "就诊须知","挂号类别","填写预约信息","选择科室","选择医生","选择时间地点","核对预约信息","预约成功"
       ],
       selectTime:1,
-      selectTimeTable:{time: '05-09(上午)', startTime:"08:00", endTime:"08:10"},
       isMedicalInsurance:true,
-      doctor:{  
-          name: '医生A',  
-          title: '主任医师',  
-          department: '心血管内科',
-          avatar: 'img/lsy.jpg', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-09(上午)',status:'empty', number: 10},
-          ],  
-          cost:100,
-          emptytime:[
-            {number: 1,status:'empty'},
-            {number: 2,status:'full'},
-            {number: 3,status:'empty'},
-            {number: 4,status:'empty'},
-            {number: 5,status:'full'},
-            {number: 6,status:'empty'},
-            {number: 7,status:'full'},
-            {number: 8,status:'full'},
-            {number: 9,status:'empty'},
-            {number: 10,status:'full'},
-            {number: 11,status:'full'},
-            {number: 12,status:'full'},
-            {number: 13,status:'empty'},
-            {number: 14,status:'empty'},
-            {number: 15,status:'full'},
-            {number: 16,status:'empty'},
-            {number: 17,status:'empty'},
-            {number: 18,status:'full'},
-            {number: 19,status:'empty'},
-            {number: 20,status:'full'},
-          ],
-          
-        },
-      department:'心血管内科',
-      people: {
-        name: '林艺涵',  
-        gender:'女',
-        idType:'身份证',
-        phone:'18518559617',
-        number:'370883200503160423',
-      },
-      form:{
-        address:'',
-        selectTimeTable:{},
-        order:0,
-        people: this.people,
-        isMedicalInsurance:this.isMedicalInsurance,
-        doctorname:'',
-        department:'心血管内科',
+      
+      info:{
+        name:'',
+        paymentType:'',
+        department:'',
+        time:'',
+        starttime:'',
+        endtime:'',
+        number:'',
+        doctorName:'',
+        doctorTitle:'',
+        doctorAvatar:'',
+        doctorRearch:'',
+        cost:''
       },
     };  
   }  ,
@@ -158,7 +116,21 @@ export default {
     togglePaymentType() {  
       this.isMedicalInsurance = !this.isMedicalInsurance; // 切换支付类型  
     },
-  }  
+  }  ,
+  created(){
+    this.info.name=this.$route.query.name;
+    this.info.paymentType=this.$route.query.paymentType;
+    this.info.department=this.$route.query.department;
+    this.info.time=this.$route.query.time;
+    this.info.starttime=this.$route.query.starttime;
+    this.info.endtime=this.$route.query.endtime;
+    this.info.number=this.$route.query.number;
+    this.info.doctorName=this.$route.query.doctorName;
+    this.info.doctorTitle=this.$route.query.doctorTitle;
+    this.info.doctorAvatar=this.$route.query.doctorAvatar;
+    this.info.doctorRearch=this.$route.query.doctorRearch;
+    this.info.cost=this.$route.query.cost;
+  }
 };  
 </script>  
   
