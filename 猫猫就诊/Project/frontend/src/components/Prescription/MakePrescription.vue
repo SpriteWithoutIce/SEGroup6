@@ -65,97 +65,97 @@ export default {
       //注意，函数里有日期比较逻辑，所以务必注意后端的日期数据格式！！！
       // 把patients设置成数据库读取的内容就好
       patient: [
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
-        {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
-        },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
+        // {
+        //   Id: '1',
+        //   name: '秋子夜',
+        //   age: '18',
+        //   sex: '男',
+        //   date: '2024年5月10日',
+        // },
       ],
       //这里设置数据初始化
       filteredPatients: [
@@ -179,11 +179,11 @@ export default {
       this.currentPatients = this.filteredPatients.slice(start, end);
       this.pagination.total = this.filteredPatients.length;
     },
-    getPatientsData: function () {
+    getTreatmentsData: function () {
       let ts = this;
-      this.$axios.get('/api/patients/list/')
+      this.$axios.get('/api/treatments/list/')
         .then(function (response) {
-          ts.patient = response.data['patients'];
+          ts.patient = response.data['treatments'];
         })
         .catch(function (error) {
           console.log(error);
@@ -236,7 +236,7 @@ export default {
     },
   },
   mounted () {
-    /*this.getPatientsData();*/
+    this.getTreatmentsData();
     /*this.handleCurrentChange(1);*/
     // 等待 DOM 更新后再执行筛选逻辑
     //唉我真吐了，1记得加上单引号

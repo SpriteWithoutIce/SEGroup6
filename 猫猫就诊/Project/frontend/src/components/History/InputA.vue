@@ -1,5 +1,3 @@
-<script setup></script>
-
 <template>
   <div class="input-container">
     <div class="chaxun">
@@ -21,10 +19,11 @@
         style="width: 80px; height: 40px"
         >查询</el-button
       >
+      <p>{{ input4 }}</p>
     </div>
   </div>
 </template>
-
+<script></script>
 <style scoped>
 .chaxun {
   height: 100%;
