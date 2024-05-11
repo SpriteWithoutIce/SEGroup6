@@ -149,13 +149,14 @@ export default {
         //   sex: '男',
         //   date: '2024年5月10日',
         // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
+        {
+          Id: '1',
+          name: '秋子夜',
+          age: '18',
+          sex: '男',
+          date: '2024年5月10日',
+        },
+
       ],
       //这里设置数据初始化
       filteredPatients: [
@@ -178,6 +179,8 @@ export default {
       const end = start + this.pagination.pageSize;
       this.currentPatients = this.filteredPatients.slice(start, end);
       this.pagination.total = this.filteredPatients.length;
+      console.log("看看这里能读吗1")
+      console.log(this.patient);
     },
     getTreatmentsData: function () {
       let ts = this;
@@ -188,6 +191,8 @@ export default {
         .catch(function (error) {
           console.log(error);
         })
+      console.log("看看这里能读吗2")
+      console.log(this.patient);
     },
 
 
@@ -237,7 +242,6 @@ export default {
   },
   mounted () {
     this.getTreatmentsData();
-    /*this.handleCurrentChange(1);*/
     // 等待 DOM 更新后再执行筛选逻辑
     //唉我真吐了，1记得加上单引号
     this.selectFunc('1');
