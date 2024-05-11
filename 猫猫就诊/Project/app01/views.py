@@ -1,4 +1,5 @@
 from datetime import timedelta
+from django.utils import timezone
 import re
 from django.forms import model_to_dict
 from django.http import JsonResponse
@@ -58,47 +59,57 @@ class DoctorView(APIView):
         return JsonResponse({"doctor": doctor})
 
 class OnDutyView(APIView):
-    def get(self, request):
-        action = request.POST.get('action')
-        if action == 'a':
+    def post(self, request):
+        data = json.loads(request.body)
+        action = data['action']
+        if action == 'getNextSevenDaysDuty':
             return self.getNextSevenDaysDuty(request)
         elif action == 'b':
-            return self
+            return self.getDateDoctorUnoccupied(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
     # 返回一个科室接下来七天内所有医生值班情况
     def getNextSevenDaysDuty(self, request):
         duty = []
-        seven_days_later = datetime.now() + timedelta(days=7)
-        department = request.POST.get('department')
-        for item in OnDuty.objects.filter(date__lte=seven_days_later).annotate(
+        seven_days_later = (timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+        department = json.loads(request.body)['department']
+        for item in OnDuty.objects.filter(date__lte=seven_days_later, doctor__department=department).annotate(
             doctor_name=F('doctor__name'),
             doctor_title=F('doctor__title'),
-            doctor_department=F('doctor__department'),
             doctor_research=F('doctor__research'),
             doctor_avatar=F('doctor__avatar')
-        ).values('date', 'time', 'state'):
+        ).values('doctor_id', 'doctor_name', 'doctor_title', 'date', 'doctor_research', 'doctor_avatar', 'time', 'state'):
             time = ""
             if (item['time'] == 1):
-                time = "上午"
+                time = "(上午)"
             elif (item['time'] == 2):
-                time = "下午"
+                time = "(下午)"
             else:
-                time = "晚上"
+                time = "(晚上)"
             rest = 0
             for i in range(20):
                 if not (item['state'] & (1<<i)):
                     rest += 1
-            duty.append({
-                "name": item['doctor_name'],
-                "title": item['doctor_title'],
-                "department": item['doctor_department'],
-                "research": item['doctor_research'],
-                "avatar": item['doctor_avatar'],
-                "time": item['date'].strftime('%Y年%m月%d日') + time,
-                "rest": rest
-            })
+            find = False
+            for d in duty:
+                if d['id'] == item['doctor_id']:
+                    d['schedule'].append({'time': item['date'].strftime('%m-%d') + time,
+                                        'status': 'full' if rest == 0 else 'empty',
+                                        'number': rest})
+                    find = True
+                    break
+            if not find:
+                duty.append({
+                    "id": item['doctor_id'],
+                    "name": item['doctor_name'],
+                    "title": item['doctor_title'],
+                    "research": item['doctor_research'],
+                    "avatar": item['doctor_avatar'],
+                    "schedule": [{'time': item['date'].strftime('%m-%d') + time,
+                                    'status': 'full' if rest == 0 else 'empty',
+                                    'number': rest}]
+                })
         return JsonResponse({"duty": duty})
     
     # 返回特定医生在特定日期的空闲号
