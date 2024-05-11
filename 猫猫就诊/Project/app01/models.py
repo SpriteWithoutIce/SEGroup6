@@ -1,4 +1,5 @@
 import datetime
+import django
 from django.db import models
 
 # Create your models here.
@@ -14,7 +15,7 @@ class Users(models.Model):
     user_type = models.SmallIntegerField(verbose_name="用户类型", choices=type_choices)
 
 class Patients(models.Model):
-    account = models.ForeignKey(verbose_name="患者账号", to="Users", to_field="account", on_delete=models.CASCADE)
+    account = models.OneToOneField(verbose_name="患者账号", to="Users", to_field="account", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="患者姓名", max_length=20)
     
     health_insurance_choices = (
@@ -29,7 +30,7 @@ class Patients(models.Model):
     )
     gender = models.SmallIntegerField(verbose_name="患者性别", choices=gender_choices)
     
-    birthday = models.DateField(verbose_name="患者生日", default=datetime.date.today)
+    birthday = models.DateField(verbose_name="患者生日", default=django.utils.timezone.now)
     phone_num = models.CharField(verbose_name="患者电话", max_length=15, default="")
     
     identity_choices = (
@@ -45,7 +46,7 @@ class Patients(models.Model):
     address = models.CharField(verbose_name="患者住址", max_length=128, default="")
 
 class Doctors(models.Model):
-    account = models.ForeignKey(verbose_name="医生账号", to="Users", to_field="account", on_delete=models.CASCADE)
+    account = models.OneToOneField(verbose_name="医生账号", to="Users", to_field="account", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="医生姓名", max_length=20)
     
     gender_choices = (
@@ -57,8 +58,8 @@ class Doctors(models.Model):
     research = models.CharField(verbose_name="研究方向", max_length=150, null=True, blank=True)
 
 class OnDuty(models.Model):
-    doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", primary_key=True, on_delete=models.CASCADE)
-    date = models.DateField(verbose_name="值班日期", default=datetime.date.today)
+    doctor = models.OneToOneField(verbose_name="医生编号", to="Doctors", to_field="id", primary_key=True, on_delete=models.CASCADE)
+    date = models.DateField(verbose_name="值班日期", default=django.utils.timezone.now)
     
     time_choices = (
         (1, "上午"),
@@ -70,15 +71,16 @@ class OnDuty(models.Model):
     state = models.IntegerField(verbose_name="预约状态")
 
 class Register(models.Model):
-    patient = models.ForeignKey(verbose_name="患者编号", to="Patients", to_field="id", on_delete=models.CASCADE)
-    doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
+    patient = models.OneToOneField(verbose_name="患者编号", to="Patients", to_field="id", on_delete=models.CASCADE)
+    doctor = models.OneToOneField(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
     time = models.DateTimeField(verbose_name="挂号时间")
 
 class Treatment(models.Model):
-    patient = models.ForeignKey(verbose_name="患者编号", to="Patients", to_field="id", on_delete=models.CASCADE)
-    doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
-    time = models.DateTimeField(verbose_name="就诊时间")
-    medicine = models.CharField(verbose_name="处方内容", max_length=200)
+    queue_id = models.IntegerField(verbose_name="排队号", default=1)
+    patient = models.OneToOneField(verbose_name="患者编号", to="Patients", to_field="id", on_delete=models.CASCADE)
+    doctor = models.OneToOneField(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
+    date = models.DateField(verbose_name="就诊日期", default=django.utils.timezone.now)
+    medicine = models.TextField(verbose_name="处方内容", max_length=1024)
     
     state_choices = (
         (1, "已缴费"),
@@ -87,7 +89,7 @@ class Treatment(models.Model):
     state = models.SmallIntegerField(verbose_name="处方状态", choices=state_choices)
 
 class Notice(models.Model):
-    patient = models.ForeignKey(verbose_name="患者编号", to="Patients", to_field="id", on_delete=models.CASCADE)
+    patient = models.OneToOneField(verbose_name="患者编号", to="Patients", to_field="id", on_delete=models.CASCADE)
     message = models.CharField(verbose_name="通知内容", max_length=200)
 
 class Medicine(models.Model):
