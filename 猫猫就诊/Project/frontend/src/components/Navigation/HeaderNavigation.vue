@@ -15,26 +15,70 @@
       <!-- 下边这段肯定可以简化 -->
       <!-- 改了会出bug导致的 -->
       <div class="clickable-images">
-        <a href="#link1" class="image-link" @mouseover="showSurroundImage(1)" @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../../assets/navigation/list1.1.png" alt="Image 1">
-          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 1">
-        </a>
-        <RouterLink to="/PatientA" class="image-link" @mouseover="showSurroundImage(2)" @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2">
-          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2">
+        <router-link
+          to="/AppointmentRegistration"
+          class="image-link"
+          @mouseover="showSurroundImage(1)"
+          @mouseleave="hideSurroundImage()"
+        >
+          <img class="designed-icon" src="../../assets/navigation/list1.1.png" alt="Image 1" />
+          <img
+            class="Surround-image"
+            src="../../assets/navigation/list1_bg.png"
+            alt="Surround Image 1"
+          />
+        </router-link>
+        <RouterLink
+          to="/PatientA"
+          class="image-link"
+          @mouseover="showSurroundImage(2)"
+          @mouseleave="hideSurroundImage()"
+        >
+          <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2" />
+          <img
+            class="Surround-image"
+            src="../../assets/navigation/list1_bg.png"
+            alt="Surround Image 2"
+          />
         </RouterLink>
-        <RouterLink to="/PresA" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../../assets/navigation/list1.5.png" alt="Image 5">
-          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 5">
+        <RouterLink
+          to="/PresA"
+          class="image-link"
+          @mouseover="showSurroundImage(3)"
+          @mouseleave="hideSurroundImage()"
+        >
+          <img class="designed-icon" src="../../assets/navigation/list1.5.png" alt="Image 5" />
+          <img
+            class="Surround-image"
+            src="../../assets/navigation/list1_bg.png"
+            alt="Surround Image 5"
+          />
         </RouterLink>
-        <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(4)"
-          @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../../assets/navigation/list1.3.png" alt="Image 3">
-          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 3">
+        <RouterLink
+          to="/Prescription"
+          class="image-link"
+          @mouseover="showSurroundImage(4)"
+          @mouseleave="hideSurroundImage()"
+        >
+          <img class="designed-icon" src="../../assets/navigation/list1.3.png" alt="Image 3" />
+          <img
+            class="Surround-image"
+            src="../../assets/navigation/list1_bg.png"
+            alt="Surround Image 3"
+          />
         </RouterLink>
-        <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(5)" @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../../assets/navigation/list1.4.png" alt="Image 4">
-          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 4">
+        <RouterLink
+          to="/Bill"
+          class="image-link"
+          @mouseover="showSurroundImage(5)"
+          @mouseleave="hideSurroundImage()"
+        >
+          <img class="designed-icon" src="../../assets/navigation/list1.4.png" alt="Image 4" />
+          <img
+            class="Surround-image"
+            src="../../assets/navigation/list1_bg.png"
+            alt="Surround Image 4"
+          />
         </RouterLink>
       </div>
     </el-header>
@@ -50,46 +94,52 @@ import Prescription from '../Prescription/MakePrescription.vue'
 
 export default {
   name: 'HeaderNavigation',
-  data () {
+  data() {
     return {
-      WebURL: "http://localhost:8080",
+      WebURL: 'http://localhost:8080',
       currentIndex: 0,
-      images: ['/static/img/navigation/banner1.jpg', '/static/img/navigation/banner2.jpg', '/static/img/navigation/banner3.jpg'],
-    };
+      images: [
+        '/static/img/navigation/banner1.jpg',
+        '/static/img/navigation/banner2.jpg',
+        '/static/img/navigation/banner3.jpg'
+      ]
+    }
   },
-  mounted () {
-    setInterval(this.changeBackground, 5000); // Change background every 5 seconds
+  mounted() {
+    setInterval(this.changeBackground, 5000) // Change background every 5 seconds
   },
   components: {
     RouterLink,
     RouterView
   },
   methods: {
-    changeBackground () {
-      this.currentIndex = (this.currentIndex + 1) % this.images.length;
-      let elements = document.getElementsByClassName('header-nav');
+    changeBackground() {
+      this.currentIndex = (this.currentIndex + 1) % this.images.length
+      let elements = document.getElementsByClassName('header-nav')
       for (let i = 0; i < elements.length; i++) {
-        elements[i].style.transition = 'background-image 2s ease-in-out';
-        elements[i].style.backgroundImage = 'url(' + this.images[this.currentIndex] + ')';
+        elements[i].style.transition = 'background-image 2s ease-in-out'
+        elements[i].style.backgroundImage = 'url(' + this.images[this.currentIndex] + ')'
       }
     },
-    showSurroundImage (index) {
-      const SurroundImage = document.querySelector(`.clickable-images a:nth-child(${index}) .Surround-image`);
+    showSurroundImage(index) {
+      const SurroundImage = document.querySelector(
+        `.clickable-images a:nth-child(${index}) .Surround-image`
+      )
       if (SurroundImage) {
-        SurroundImage.style.opacity = 1;
-        SurroundImage.style.animation = 'spin 10s linear infinite';
+        SurroundImage.style.opacity = 1
+        SurroundImage.style.animation = 'spin 10s linear infinite'
       }
     },
-    hideSurroundImage () {
-      const SurroundImages = document.querySelectorAll('.Surround-image');
-      SurroundImages.forEach(image => {
-        image.style.opacity = 0;
-        image.style.transform = 'rotate(0deg)';
-      });
-    },
+    hideSurroundImage() {
+      const SurroundImages = document.querySelectorAll('.Surround-image')
+      SurroundImages.forEach((image) => {
+        image.style.opacity = 0
+        image.style.transform = 'rotate(0deg)'
+      })
+    }
 
     /*下边的代码都是想实现图片轮播*/
-  },
+  }
 }
 </script>
 
@@ -139,7 +189,7 @@ export default {
 .header-nav::before {
   content: '';
   position: absolute;
-  top: 10px;
+  top: 20px;
   left: 30px;
   width: 300px;
   height: 150px;
@@ -223,7 +273,7 @@ export default {
 
 /*调整灰色矩形内可点击元素距离*/
 .clickable-images a {
-  margin: 0 95px;
+  margin: 0 11vw;
 
   position: relative;
 }
