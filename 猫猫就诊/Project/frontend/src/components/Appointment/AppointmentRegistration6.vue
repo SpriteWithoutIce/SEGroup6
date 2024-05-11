@@ -3,8 +3,26 @@
   <div class="notice-box" style="height: 1400px;">  
     <!-- 上一步/下一步 -->
     <div class="container2">  
-      <router-link to="/AppointmentRegistration5" class="button2 button-prev">上一步</router-link>
-      <router-link to="/AppointmentRegistration7" class="button2 button-next" v-if="checked">下一步</router-link>
+      <router-link to="/AppointmentRegistration5" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
+      <router-link 
+        :to="{
+          path:'/AppointmentRegistration7',
+          query:{
+            name:info.name,
+            paymentType:info.paymentType,
+            department:info.department,
+            time:info_time,
+            starttime:info_startTime,
+            endtime:info_endTime,
+            number:info_number,
+            doctorName:doctors[0].name,
+            doctorTitle:doctors[0].title,
+            doctorAvatar:doctors[0].avatar,
+            doctorRearch:doctors[0].research,
+            cost:doctors[0].cost
+          }
+        }" class="button2 button-next" v-if="checked" style="text-decoration: none;">
+        下一步</router-link>
       <!-- <button class="button2 button-prev">上一步</button>  
       <button class="button2 button-next" v-if="checked">下一步</button>   -->
     </div> 
@@ -22,12 +40,21 @@
     <div class="button-container">  
       <div v-for="(timeSlot, index) in doctors[0].emptytime" :key="index" class="button-row">  
         <button  
-          v-if="timeSlot.status === 'empty'"  
-          @click="selectTimeSlot(index)" 
+          v-if="timeSlot.status === 'empty' && (this.info_time.match(/\(.*?\)/) || [])[0]=='(上午)'"  
+          @click="selectTimeSlot(index,timetable_1[timeSlot.number-1].startTime,timetable_1[timeSlot.number-1].endTime)" 
           class="button-down" 
           :class="{selected:selectTime===index}"
         >  
-          {{ timetable_1[timeSlot.number].startTime }} - {{ timetable_1[timeSlot.number].endTime }}  
+          {{ timetable_1[timeSlot.number-1].startTime }} - {{ timetable_1[timeSlot.number-1].endTime }}  
+          <span>{{ index+1 }}&nbsp;号</span>  
+        </button>
+        <button  
+          v-if="timeSlot.status === 'empty' && (this.info_time.match(/\(.*?\)/) || [])[0]=='(下午)'"  
+          @click="selectTimeSlot(index,timetable_2[timeSlot.number-1].startTime,timetable_2[timeSlot.number-1].endTime)" 
+          class="button-down" 
+          :class="{selected:selectTime===index}"
+        >  
+          {{ timetable_2[timeSlot.number-1].startTime }} - {{ timetable_2[timeSlot.number-1].endTime }}  
           <span>{{ index+1 }}&nbsp;号</span>  
         </button>  
       </div>  
@@ -90,6 +117,28 @@ export default {
             {startTime:"11:00",endTime:"11:10"},
             {startTime:"11:10",endTime:"11:20"},
       ],
+      timetable_2:[
+            {startTime:"14:00",endTime:"14:10"},
+            {startTime:"14:10",endTime:"14:20"},
+            {startTime:"14:20",endTime:"14:30"},
+            {startTime:"14:30",endTime:"14:40"},
+            {startTime:"14:40",endTime:"14:50"},
+            {startTime:"14:50",endTime:"15:00"},
+            {startTime:"15:00",endTime:"15:10"},
+            {startTime:"15:10",endTime:"15:20"},
+            {startTime:"15:20",endTime:"15:30"},
+            {startTime:"15:30",endTime:"15:40"},
+            {startTime:"15:40",endTime:"15:50"},
+            {startTime:"15:50",endTime:"16:00"},
+            {startTime:"16:00",endTime:"16:10"},
+            {startTime:"16:10",endTime:"16:20"},
+            {startTime:"16:20",endTime:"16:30"},
+            {startTime:"16:30",endTime:"16:40"},
+            {startTime:"16:40",endTime:"16:50"},
+            {startTime:"16:50",endTime:"17:00"},
+            {startTime:"17:00",endTime:"17:10"},
+            {startTime:"17:10",endTime:"17:20"},
+      ],
       doctors: [  
         {  
           name: '医生A',  
@@ -121,20 +170,48 @@ export default {
             {number: 19,status:'empty'},
             {number: 20,status:'full'},
           ],
-          
+          cost:100,
         },
       ],
+      info:{
+        name:'',
+        paymentType:'',
+        department:'',
+      },
+      info_time:'',
+      timeOfDay:'',
+      info_startTime:'',
+      info_endTime:'',
+      info_number:0,
     };  
   }  ,
   methods: {  
     nextSquare(){
 
     },
-    selectTimeSlot(index){
+    selectTimeSlot(index,start,end){
       this.selectTime=index
       this.checked=true
-    }
-  }  
+      this.info_startTime=start
+      this.info_endTime=end
+      this.info_number=index+1
+    },
+    displayTime() {  
+      this.timeOfDay = (this.info_time.match(/\(.*?\)/) || []); // 提取括号内的内容  
+      if (timeOfDay == '(下午)') {  
+        return 1; 
+      } else if (timeOfDay == '(上午)' || !timeOfDay) { // 如果没有找到或上午  
+        return 0;
+      }  
+      return '未知的时间';  
+    },  
+  }  ,
+  created(){
+    this.info.name=this.$route.query.name;
+    this.info.paymentType=this.$route.query.paymentType;
+    this.info.department=this.$route.query.department;
+    this.info_time=this.$route.query.time;
+  }
 };  
 </script>  
   

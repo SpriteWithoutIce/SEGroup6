@@ -1,6 +1,22 @@
 <template>  
   <Header :squares2="squares2" />
-  <div class="notice-box" style="height: 1000px;">  
+  <div class="notice-box" style="height: 1000px;">
+    <div class="container2">
+      <router-link to="/AppointmentRegistration3" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
+      <router-link 
+        :to="{
+          path:'/AppointmentRegistration6',
+          query:{
+            name:info.name,
+            paymentType:info.paymentType,
+            department:info.department,
+            time:info_time
+          }
+        }" class="button2 button-next" v-if="checked" style="text-decoration: none;">
+        下一步
+      </router-link>
+    </div>
+    
     <!-- 顶部日期块 -->  
     <div class="date-blocks">
       <button   
@@ -40,21 +56,31 @@
             <div v-for="(daySchedule, dayIndex) in doctor.schedule"   
                     :key="dayIndex">
               <div v-if="dayHasScheduleForDate(daySchedule,selectedDate)">
-                <button class="schedule-item" v-if="daySchedule.status!='empty'">
+                <button class="schedule-item1" v-if="daySchedule.status!='empty'">
                   <div class="time-label">{{ daySchedule.time }}
                   </div>  
                   <div>
                     <div class="status">约满</div> 
                   </div>
                 </button>
-                <router-link to="/AppointmentRegistration6" v-else @mouseover="isHovered[dayIndex] = true "   
+                <button v-else @click="isClick(doctor.name,daySchedule.time)"
+                  @mouseover="hoverButton"  
+                  @mouseout="mouseoutButton" 
+                  class="schedule-item"
+                  :class="{ check : doctor.name===selectDoctor && daySchedule.time===selectDate}">
+                  <div class="time-label">{{ daySchedule.time }}</div>  
+                  <div>
+                    <div class="status" style="color: blue;">余&nbsp;{{ daySchedule.number }}</div> 
+                  </div>
+                </button>
+                <!-- <router-link to="/AppointmentRegistration6" v-else @mouseover="isHovered[dayIndex] = true "   
                   @mouseleave="isHovered[dayIndex] = false" 
                   class="schedule-item" :style="isHovered[dayIndex]? 'color: blue; background-color: #85c400;color:white;' : 'color: blue;'">
                   <div class="time-label">{{ daySchedule.time }}</div>  
                   <div>
                     <div class="status" style="color: blue;">余&nbsp;{{ daySchedule.number }}</div> 
                   </div>
-                </router-link>
+                </router-link> -->
                 <!-- <button v-else @mouseover="isHovered[dayIndex] = true "   
                   @mouseleave="isHovered[dayIndex] = false" 
                   class="schedule-item" :style="isHovered[dayIndex]? 'color: blue; background-color: #85c400;color:white;' : 'color: blue;'">
@@ -115,9 +141,12 @@ export default {
         {'status':'none'},
       ],
       selectedDate: null,
+      selectDoctor:'',
+      selectDate:'',
       today: new Date(), // 今天的日期  
       doctors: [  
         {  
+          id:0,
           name: '医生A',  
           title: '主任医师',  
           avatar: 'img/lsy.jpg', // 头像URL  
@@ -129,6 +158,7 @@ export default {
           cost:100,
         },
         {  
+          id:1,
           name: '医生B',  
           title: '副主任医师',  
           avatar: 'img/touxiang.png', // 头像URL  
@@ -140,6 +170,7 @@ export default {
           cost:60,
         }, 
         {  
+          id:2,
           name: '医生C',  
           title: '副主任医师',  
           avatar: 'img/touxiang (1).png', // 头像URL  
@@ -152,10 +183,22 @@ export default {
         }, 
         // ... 其他医生数据  
       ],  
-      isHovered:[false,false,false,false,false,false,false,false,false,false]
+      isHovered:[false,false,false,false,false,false,false,false,false,false],
+      info:{
+        name:'',
+        paymentType:'',
+        department:'',
+      },
+      info_time:'',
     };  
   }  ,
   methods: {  
+    isClick(doctor,time){
+      this.info_time=time;
+      this.checked=true;
+      this.selectDoctor=doctor;
+      this.selectDate=time;
+    },
     // 计算接下来7天的日期和周几  
     locatenextSevenDays() {  
       const days = [];  
@@ -191,6 +234,10 @@ export default {
     dayHasScheduleForDate(daySchedule, date) {  
       return daySchedule.time.includes(date);  
     },  
+    hoverButton() {  
+    },  
+    mouseoutButton() {  
+    },
   },  
   created() {
     this.nextSevenDays=this.locatenextSevenDays()
@@ -210,7 +257,10 @@ export default {
         });  
       });
     }
-  },
+    this.info.name=this.$route.query.name;
+    this.info.paymentType=this.$route.query.paymentType;
+    this.info.department=this.$route.query.department;
+  }
 };  
 </script>  
   
@@ -230,6 +280,7 @@ export default {
   display: flex;  
   flex-wrap: wrap;  
   justify-content: center;  
+  margin-bottom: 20px;
 }  
 .button2 {  
   border: none;
@@ -337,8 +388,27 @@ export default {
   height: 35px;
   border-radius: 5px;
   width: 550px;
+} 
+.schedule-item1 {  
+  display: flex;  
+  justify-content: space-between;  
+  align-items: center;  
+  margin-bottom: 5px;  
+  border: 1px solid #999;
+  background-color: white;
+  height: 35px;
+  border-radius: 5px;
+  width: 550px;
 }  
-  
+.schedule-item:hover {
+  background-color: #85c400;
+  color: white;
+  cursor: pointer;
+}
+.schedule-item.check{
+  background-color: #85c400;
+  color: white;
+}
 .time-label {  
   /* font-weight: bold;   */
   padding-left: 10px;
