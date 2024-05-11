@@ -2,20 +2,22 @@
 <!-- 感觉把边上那个按钮去掉吧,主要是图片不好看的原因 -->
 <!-- 功能修改成点击可以切换图片，图片也会进行轮播 https://blog.csdn.net/boxuestudio/article/details/129099623-->
 <template>
+  <Login ref="Login"> </Login>
   <div>
     <el-header class="header-nav">
       <nav>
         <!-- 导航链接可以根据需要添加 -->
         <!-- 这是需要加路由的，路由应该放在index里边 -->
         <a href="#unknown">首页</a>
-        <a href="#unknown">登录</a>
+        <a href="#unknown" @click="showLogin()">登录</a>
         <a href="#unknown">联系我们</a>
         <a href="#unknown">关于</a>
       </nav>
       <!-- 下边这段肯定可以简化 -->
       <!-- 改了会出bug导致的 -->
       <div class="clickable-images">
-        <router-link to="/AppointmentRegistration" class="image-link" @mouseover="showSurroundImage(1)" @mouseleave="hideSurroundImage()">
+        <router-link to="/AppointmentRegistration" class="image-link" @mouseover="showSurroundImage(1)"
+          @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.1.png" alt="Image 1">
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 1">
         </router-link>
@@ -42,7 +44,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import BillList from '../Bills/BillList.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
-
+import Login from '../LogIn/Login.vue'
 export default {
   name: 'HeaderNavigation',
   data () {
@@ -56,6 +58,7 @@ export default {
     setInterval(this.changeBackground, 5000); // Change background every 5 seconds
   },
   components: {
+    Login,
     RouterLink,
     RouterView
   },
@@ -82,8 +85,10 @@ export default {
         image.style.transform = 'rotate(0deg)';
       });
     },
-
-    /*下边的代码都是想实现图片轮播*/
+    showLogin () {
+      this.$refs.Login.openModal();
+      console.log("执行");
+    },
   },
 }
 </script>
