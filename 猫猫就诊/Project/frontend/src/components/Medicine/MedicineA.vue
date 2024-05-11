@@ -18,7 +18,11 @@
             <el-icon class="el-input__icon"><search /></el-icon>
           </template>
         </el-input>
-        <el-button type="primary" plain style="height: 40px; margin-left: 10px"
+        <el-button
+          type="primary"
+          plain
+          style="height: 40px; margin-left: 10px"
+          @click="showPrescriptionDetails('')"
           >+新建药物类型</el-button
         >
         <el-table :data="ftableData" style="width: 95%; max-height: 480px">
