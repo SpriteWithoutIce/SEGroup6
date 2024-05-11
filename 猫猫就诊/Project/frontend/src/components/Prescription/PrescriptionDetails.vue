@@ -43,14 +43,14 @@
       </el-form>
       <div class="button-group">
         <el-button @click="submitForm" type="primary">提交</el-button>
-        <el-button @click="closeModal">退出</el-button>
+        <el-button @click="cancelModal">退出</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
+import { ElMessage } from "element-plus";
 export default {
   name: 'PrescriptionDetails',
   data () {
@@ -88,10 +88,21 @@ export default {
       this.isVisible = false;
       document.body.style.overflow = ''; // 恢复滚动
     },
+    cancelModal () {
+      ElMessage({
+        type: "info",
+        message: "取消提交 ╮(╯▽╰)╭",
+        showClose: true,
+      }),
+        this.closeModal();
+    },
     submitForm () {
-      // 提交表单逻辑
+      ElMessage({
+        showClose: true,
+        message: "提交成功 ╰(*°▽°*)╯",
+        type: "success",
+      });
       console.log('提交表单');
-      // 提交后关闭弹窗
       this.closeModal();
     },
     addMedicine () {

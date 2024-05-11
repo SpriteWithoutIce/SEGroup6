@@ -7,36 +7,36 @@
       <div class="subline">您好，您已预约成功。订单详情如下</div>
       <div class="subline">
         <div>就诊人：</div>
-        <div class="detail">{{ this.form.people.name }}</div>
+        <div class="detail">{{ info.name }}</div>
       </div>
       <div class="subline">
         <div>医生：</div>
-        <div class="detail">{{ this.form.doctor }}</div>
+        <div class="detail">{{ info.doctorName }}</div>
       </div>
       <div class="subline">
         <div>就诊医院：</div>
-        <div class="detail">{{ this.form.address }}</div>
+        <div class="detail">猫猫就诊</div>
       </div>
       <div class="subline">
         <div>科室：</div>
-        <div class="detail">{{ this.form.department }}</div>
+        <div class="detail">{{ info.department }}</div>
       </div>
       <div class="subline">
         <div>就诊时段：</div>
-        <div class="detail">{{ this.form.selectTimeTable.time }}&nbsp;{{ this.form.selectTimeTable.startTime }}-{{ this.form.selectTimeTable.endTime }}</div>
+        <div class="detail">2024-{{ info.time }}&nbsp;{{ info.starttime }}-{{ info.endtime }}</div>
       </div>
       <div class="subline">
         <div class="detail">建议到诊时间：</div>
-        <div class="detail">{{ timeBeforeTenMinutes(this.form.selectTimeTable.startTime) }}</div>
+        <div class="detail">{{ timeBeforeTenMinutes(info.starttime) }}</div>
       </div>
       <div class="subline">
         <div>医事服务费：</div>
         <div class="detail" v-if="this.form.isMedicalInsurance">0元</div>
-        <div class="detail" v-else>{{ this.form.order }}元</div>
+        <div class="detail" v-else>{{ info.cost }}元</div>
       </div>
       <div class="subline">
         <div>就诊序号：</div>
-        <div class="detail">{{ this.form.num }}</div>
+        <div class="detail">{{ info.number }}</div>
       </div>
       <div class="subline">
         <div>挂号时间：</div>
@@ -77,15 +77,6 @@ export default {
   },
   data() {  
     return {  
-      squares: [  
-        { hovered: false },  
-        { hovered: true },  
-        { hovered: false },  
-        { hovered: false }  
-      ] ,
-      info: [
-        "出诊查询","网上预约看诊","预约流程","取消预约"
-      ],
       checked: false,  
       currentSquareIndex: 0,  
       squares2: [  
@@ -118,6 +109,7 @@ export default {
         num:15,
       },
       currentTime: '',
+      info:{},
     };  
   }  ,
   methods: {  
@@ -148,6 +140,10 @@ export default {
   },
   created(){
     this.updateCurrentTime();  
+    const orderStr = this.$route.query.order;  
+    if (orderStr) {  
+      this.info = JSON.parse(orderStr);  
+    }
   },
 };  
 </script>  

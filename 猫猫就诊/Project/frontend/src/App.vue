@@ -1,6 +1,7 @@
 <script setup>
 import HeaderNavigation from './components/Navigation/HeaderNavigation.vue'
 import NavBar from './components/Navigation/Navbar.vue'
+import readOnlyVue from './components/Main/ReadOnlyVue.vue'
 import PatientA from './components/History/PatientA.vue'
 import PresA from './components/History/PresA.vue'
 </script>
@@ -8,6 +9,7 @@ import PresA from './components/History/PresA.vue'
 <template>
   <div id="app">
     <HeaderNavigation></HeaderNavigation>
+    <!-- <readOnlyVue></readOnlyVue> -->
     <NavBar></NavBar>
   </div>
 </template>
