@@ -130,16 +130,18 @@ const tableData = [
     price: '10.00'
   }
 ]
+
 const ftableData = computed(() => {
-  const start = (pagination.currentPage - 1) * pagination.pageSize
-  const end = start + pagination.pageSize
-  pagination.total = tableData.length // 更新总条目数
+  const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
+  const end = start + pagination.value.pageSize
+  pagination.value.total = tableData.length // 更新总条目数
+  console.log(`值是：${pagination.value.total}`)
   return tableData.slice(start, end)
 })
 
 // 处理当前页码改变的事件
 const handleCurrentChange = (e) => {
-  pagination.currentPage = e
+  pagination.value.currentPage = e
   // filteredBillsDiv 会自动更新，因为是一个 computed 属性
 }
 onMounted(() => {
@@ -148,9 +150,10 @@ onMounted(() => {
 </script>
 <style scoped>
 .page {
-  margin-top: 2vh;
-  justify-content: center;
-  margin-bottom: 1vh;
+  position: absolute;
+  bottom: 5%;
+  transform: translateX(-50%);
+  left: 50%;
 }
 .input-with-select .el-input-group__prepend {
   background-color: var(--el-fill-color-blank);
