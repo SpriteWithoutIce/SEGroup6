@@ -47,10 +47,11 @@
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import Login from "../LogIn/Login.vue"
 import BillList from '../Bills/BillList.vue'
 import PatientA from '../History/PatientA.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
-import Login from '../LogIn/Login.vue'
+
 export default {
   name: 'HeaderNavigation',
   data () {
@@ -73,6 +74,10 @@ export default {
     RouterView
   },
   methods: {
+    showLogin () {
+      this.$refs.Login.openModal();
+      console.log("执行");
+    },
     changeBackground () {
       this.currentIndex = (this.currentIndex + 1) % this.images.length
       let elements = document.getElementsByClassName('header-nav')
@@ -91,15 +96,15 @@ export default {
       }
     },
     hideSurroundImage () {
-      const SurroundImages = document.querySelectorAll('.Surround-image');
-      SurroundImages.forEach(image => {
-        image.style.opacity = 0;
-        image.style.transform = 'rotate(0deg)';
-      });
-    },
+      const SurroundImages = document.querySelectorAll('.Surround-image')
+      SurroundImages.forEach((image) => {
+        image.style.opacity = 0
+        image.style.transform = 'rotate(0deg)'
+      })
+    }
 
     /*下边的代码都是想实现图片轮播*/
-  },
+  }
 }
 </script>
 
