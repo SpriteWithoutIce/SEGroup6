@@ -29,7 +29,7 @@
           />
         </router-link>
         <RouterLink
-          to="/PatientA"
+          to="/MedicineA"
           class="image-link"
           @mouseover="showSurroundImage(2)"
           @mouseleave="hideSurroundImage()"

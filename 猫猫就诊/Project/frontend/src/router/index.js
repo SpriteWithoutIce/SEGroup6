@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {HeaderNavigation, MakePrescription, PrescriptionDetails, Navbar, BillList, BillDetails, AppointmentRegistration, AppointmentRegistration2,
-  AppointmentRegistration3,AppointmentRegistration4,AppointmentRegistration5,AppointmentRegistration6,AppointmentRegistration7,AppointmentRegistration8,TableSearch,PatientA,PresA
+  AppointmentRegistration3,AppointmentRegistration4,AppointmentRegistration5,AppointmentRegistration6,AppointmentRegistration7,AppointmentRegistration8,TableSearch,PatientA,PresA,MedicineA
 } from '../components/index.js'
 import { compileScript } from 'vue/compiler-sfc'
 
@@ -76,6 +76,11 @@ const router = createRouter({
       path: '/TableSearch',
       name: 'TableSearch',
       component: TableSearch
+    },
+    {
+      path: '/MedicineA',
+      name: 'MedicineA',
+      component: MedicineA
     },
   ]
 })
