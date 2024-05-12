@@ -1,5 +1,5 @@
 <template>
-  <div>
+    <el-container style="height: 100vh;">
     <el-header class="Header">
       <img src='../../assets/main/readOnlybg.jpg' class="bg">
       <!-- <img src='../../assets/main/title.png' class="title"> -->
@@ -10,7 +10,7 @@
       <div class="square3"></div>
       <div class="square4"></div>
     </el-header>
-  </div>
+  </el-container>
 </template>
 
 <style>
