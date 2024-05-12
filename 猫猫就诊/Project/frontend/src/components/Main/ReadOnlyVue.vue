@@ -3,6 +3,7 @@
     <el-header>
       <img src='../../assets/main/readOnlybg.jpg' class="bg">
       <img src='../../assets/main/title.png' class="title">
+      <img src='../../assets/main/subtitle.png' class="subtitle">
       <img src='../../assets/main/logo.png' class="logo" alt="Logo">
       <div class="square1"></div>
       <div class="square2"></div>
@@ -41,7 +42,14 @@
     left:60px;
     width:260px;
   }
-
+  .subtitle{
+    position: absolute;
+    opacity:1;
+    z-index:3;
+    top:0px;
+    right:220px;
+    width:180px;
+  }
   .bg{
     position: absolute;
     top: 0;
@@ -110,5 +118,14 @@
 
   .square1:hover::before {
     background-image: url('../../../public/static/img/main/change1.png'); /* 悬停时的背景图片 */
+  }
+  .square2:hover::before {
+    background-image: url('../../../public/static/img/main/change2.png'); /* 悬停时的背景图片 */
+  }
+  .square3:hover::before {
+    background-image: url('../../../public/static/img/main/change3.png'); /* 悬停时的背景图片 */
+  }
+  .square4:hover::before {
+    background-image: url('../../../public/static/img/main/change4.png'); /* 悬停时的背景图片 */
   }
 </style>
