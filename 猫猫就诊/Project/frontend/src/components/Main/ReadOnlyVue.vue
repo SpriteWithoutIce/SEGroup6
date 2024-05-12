@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-header>
+    <el-header class="Header">
       <img src='../../assets/main/readOnlybg.jpg' class="bg">
-      <img src='../../assets/main/title.png' class="title">
+      <!-- <img src='../../assets/main/title.png' class="title"> -->
       <img src='../../assets/main/subtitle.png' class="subtitle">
       <img src='../../assets/main/logo.png' class="logo" alt="Logo">
       <div class="square1"></div>
@@ -21,6 +21,9 @@
     100% {
       transform: rotate(360deg);
     }
+  }
+  .Header{
+    position:relative;
   }
   .logo {
     border: none;
