@@ -83,6 +83,11 @@ const router = createRouter({
       name: 'TableSearch',
       component: TableSearch
     },
+    {
+      path: '/MedicineA',
+      name: 'MedicineA',
+      component: MedicineA
+    },
   ]
 })
 

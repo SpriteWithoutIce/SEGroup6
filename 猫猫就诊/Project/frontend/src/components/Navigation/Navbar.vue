@@ -1,35 +1,46 @@
 <template>
   <div class="navbar" :class="{ sticky: isSticky }">
+    <messagedrawer ref="messageBox" class="messageBox" />
     <a href="#" class="white-bold">首页</a>
     <a href="#" class="white-bold">登录</a>
-    <a href="#" class="white-bold">关于</a>
+    <a class="white-bold" @click="openMessageBox">消息</a>
     <a href="#" class="white-bold">联系我们</a>
+    <a href="#" class="white-bold">关于</a>
   </div>
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue'
+import messagedrawer from '../Message/MessageDrawer.vue'
 
 export default {
   name: 'NavBar',
-  setup () {
-    const isSticky = ref(false);
+  setup() {
+    const isSticky = ref(false)
 
     const checkScroll = () => {
-      isSticky.value = window.scrollY > 200;
-    };
+      isSticky.value = window.scrollY > 200
+    }
 
     onMounted(() => {
-      window.addEventListener('scroll', checkScroll);
-    });
+      window.addEventListener('scroll', checkScroll)
+    })
 
     onUnmounted(() => {
-      window.removeEventListener('scroll', checkScroll);
-    });
+      window.removeEventListener('scroll', checkScroll)
+    })
 
-    return { isSticky };
+    return { isSticky }
   },
-};
+  components: {
+    messagedrawer
+  },
+  methods: {
+    openMessageBox() {
+      this.$refs.messageBox.openDrawer()
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -53,6 +64,13 @@ export default {
   background-size: cover;
   background-repeat: no-repeat;
   z-index: 6;
+  visibility: visible;
+}
+
+@media (max-width: 700px) {
+  .navbar.sticky::before {
+    visibility: hidden;
+  }
 }
 
 .navbar.sticky {
@@ -68,18 +86,19 @@ export default {
   text-decoration: none;
   position: relative;
   top: 21px;
-  right: 42px;
-  font-size: large;
+  right: 20px;
+  font-size: 17px;
   font-weight: bold;
   color: white;
-  margin-left: 70px;
+  padding: 14px 20px;
+  width: 4em;
   /* 调整文本之间的间距 */
 }
 
 .white-bold::after {
   content: '';
   position: absolute;
-  top: 28px;
+  top: 40px;
   left: 50%;
   bottom: 0;
   height: 3px;
