@@ -42,8 +42,8 @@ p {
   top: 55%;
 }
 .search-container {
-  position: relative;
-  top: 0;
+  position: absolute;
+  top: 400px;
   height: 90px;
   width: 800px;
   background-color: white;

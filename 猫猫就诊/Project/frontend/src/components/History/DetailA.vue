@@ -55,7 +55,7 @@
         </div>
       </div>
       <div class="button">
-        <el-button v-if="form.state === '已预约'" @click="cancelModal">取消挂号</el-button>
+        <el-button v-if="form.state === '已预约'">取消挂号</el-button>
       </div>
       <div class="button">
         <el-button @click="closeModal">退出</el-button>
@@ -64,7 +64,6 @@
   </div>
 </template>
 <script>
-import { ElMessage } from 'element-plus'
 export default {
   name: 'DetailA',
   data() {
@@ -102,15 +101,6 @@ export default {
     closeModal() {
       this.isVisible = false
       document.body.style.overflow = '' // 恢复滚动
-    },
-    cancelModal() {
-      ElMessage({
-        type: 'info',
-        message: '取消挂号成功 ╮(╯▽╰)╭',
-        showClose: true
-      })
-      // 关闭弹窗
-      this.closeModal()
     }
   }
 }

@@ -2,86 +2,42 @@
 <!-- 感觉把边上那个按钮去掉吧,主要是图片不好看的原因 -->
 <!-- 功能修改成点击可以切换图片，图片也会进行轮播 https://blog.csdn.net/boxuestudio/article/details/129099623-->
 <template>
+  <Login ref="Login"> </Login>
   <div>
-    <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount"/>
-    <Login ref="Login"> </Login>
     <el-header class="header-nav">
       <nav>
         <!-- 导航链接可以根据需要添加 -->
         <!-- 这是需要加路由的，路由应该放在index里边 -->
         <a href="#unknown">首页</a>
         <a href="#unknown" @click="showLogin()">登录</a>
-        <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item" v-if="unreadCount!==0"></el-badge>
         <a href="#unknown">联系我们</a>
         <a href="#unknown">关于</a>
       </nav>
       <!-- 下边这段肯定可以简化 -->
       <!-- 改了会出bug导致的 -->
       <div class="clickable-images">
-        <router-link
-          to="/AppointmentRegistration"
-          class="image-link"
-          @mouseover="showSurroundImage(1)"
-          @mouseleave="hideSurroundImage()"
-        >
+        <router-link to="/AppointmentRegistration" class="image-link" @mouseover="showSurroundImage(1)"
+          @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.1.png" alt="Image 1" />
-          <img
-            class="Surround-image"
-            src="../../assets/navigation/list1_bg.png"
-            alt="Surround Image 1"
-          />
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 1" />
         </router-link>
-        <RouterLink
-          to="/MedicineA"
-          class="image-link"
-          @mouseover="showSurroundImage(2)"
-          @mouseleave="hideSurroundImage()"
-        >
+        <RouterLink to="/PatientA" class="image-link" @mouseover="showSurroundImage(2)"
+          @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2" />
-          <img
-            class="Surround-image"
-            src="../../assets/navigation/list1_bg.png"
-            alt="Surround Image 2"
-          />
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2" />
         </RouterLink>
-        <RouterLink
-          to="/PresA"
-          class="image-link"
-          @mouseover="showSurroundImage(3)"
-          @mouseleave="hideSurroundImage()"
-        >
+        <RouterLink to="/PresA" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.5.png" alt="Image 5" />
-          <img
-            class="Surround-image"
-            src="../../assets/navigation/list1_bg.png"
-            alt="Surround Image 5"
-          />
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 5" />
         </RouterLink>
-        <RouterLink
-          to="/Prescription"
-          class="image-link"
-          @mouseover="showSurroundImage(4)"
-          @mouseleave="hideSurroundImage()"
-        >
+        <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(4)"
+          @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.3.png" alt="Image 3" />
-          <img
-            class="Surround-image"
-            src="../../assets/navigation/list1_bg.png"
-            alt="Surround Image 3"
-          />
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 3" />
         </RouterLink>
-        <RouterLink
-          to="/Bill"
-          class="image-link"
-          @mouseover="showSurroundImage(5)"
-          @mouseleave="hideSurroundImage()"
-        >
+        <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(5)" @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.4.png" alt="Image 4" />
-          <img
-            class="Surround-image"
-            src="../../assets/navigation/list1_bg.png"
-            alt="Surround Image 4"
-          />
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 4" />
         </RouterLink>
       </div>
     </el-header>
@@ -91,15 +47,14 @@
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import Login from '../LogIn/Login.vue'
+import Login from "../LogIn/Login.vue"
 import BillList from '../Bills/BillList.vue'
 import PatientA from '../History/PatientA.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
-import messagedrawer from '../Message/MessageDrawer.vue'
 
 export default {
   name: 'HeaderNavigation',
-  data() {
+  data () {
     return {
       WebURL: 'http://localhost:8080',
       currentIndex: 0,
@@ -107,26 +62,23 @@ export default {
         '/static/img/navigation/banner1.jpg',
         '/static/img/navigation/banner2.jpg',
         '/static/img/navigation/banner3.jpg'
-      ],
-      unreadCount: 0
+      ]
     }
   },
-  mounted() {
+  mounted () {
     setInterval(this.changeBackground, 5000) // Change background every 5 seconds
-    this.$refs.messageBox.countUnread()
   },
   components: {
     Login,
     RouterLink,
-    RouterView,
-    messagedrawer
+    RouterView
   },
   methods: {
-    showLogin() {
-      this.$refs.Login.openModal()
-      console.log('执行')
+    showLogin () {
+      this.$refs.Login.openModal();
+      console.log("执行");
     },
-    changeBackground() {
+    changeBackground () {
       this.currentIndex = (this.currentIndex + 1) % this.images.length
       let elements = document.getElementsByClassName('header-nav')
       for (let i = 0; i < elements.length; i++) {
@@ -134,7 +86,7 @@ export default {
         elements[i].style.backgroundImage = 'url(' + this.images[this.currentIndex] + ')'
       }
     },
-    showSurroundImage(index) {
+    showSurroundImage (index) {
       const SurroundImage = document.querySelector(
         `.clickable-images a:nth-child(${index}) .Surround-image`
       )
@@ -143,19 +95,14 @@ export default {
         SurroundImage.style.animation = 'spin 10s linear infinite'
       }
     },
-    hideSurroundImage() {
+    hideSurroundImage () {
       const SurroundImages = document.querySelectorAll('.Surround-image')
       SurroundImages.forEach((image) => {
         image.style.opacity = 0
         image.style.transform = 'rotate(0deg)'
       })
-    },
-    openMessageBox() {
-      this.$refs.messageBox.openDrawer()
-    },
-    getUnreadCount(cnt) {
-      this.unreadCount = cnt
     }
+
     /*下边的代码都是想实现图片轮播*/
   }
 }
@@ -182,11 +129,6 @@ export default {
     transform: rotate(360deg);
   }
 }
-.item {
-  margin-top: 10px;
-  margin-left:-25px;
-  margin-right:25px;
-}
 
 .header-nav {
   background-color: #333;
@@ -212,7 +154,7 @@ export default {
 .header-nav::before {
   content: '';
   position: absolute;
-  top: 25px;
+  top: 20px;
   left: 30px;
   width: 300px;
   height: 150px;
@@ -231,14 +173,12 @@ export default {
 /*控制边角导航栏选项的*/
 .header-nav nav a {
   color: white;
-  padding: 14px 8px;
+  padding: 14px 20px;
   text-decoration: none;
   font-size: 17px;
   position: relative;
   width: 4em;
   text-align: center;
-  font-weight: bold;
-  text-shadow: 2px 2px 2px rgba(13, 65, 153, 0.941);
 }
 
 /*导航栏蓝色下划线代码*/
@@ -298,17 +238,13 @@ export default {
 
 /*调整灰色矩形内可点击元素距离*/
 .clickable-images a {
-  margin: 0 9vw;
+  margin: 0 11vw;
 
   position: relative;
 }
 
 .image-link {
   position: relative;
-}
-
-a:hover {
-  cursor: pointer;
 }
 
 /*非常困惑的一点就是clickable里边设置过的元素，在子类元素里边再设置会被无视，好反常识？？？*/

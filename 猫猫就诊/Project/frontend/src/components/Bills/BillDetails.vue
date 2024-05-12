@@ -1,13 +1,18 @@
 <template>
   <div class="modal-background" v-if="isVisible">
     <div class="modal-container">
-      <el-form :model="form" class="form" label-width="auto" style="max-width: 600px">
+      <el-form
+        :model="form"
+        class="form"
+        label-width="auto"
+        style="max-width: 600px"
+      >
         <el-form-header class="form-header">缴费详情</el-form-header>
         <el-form-item label="类型">
           {{ form.type }}
         </el-form-item>
-        <el-form-item label="开具科室">
-          {{ form.department }}
+        <el-form-item label="具体事由">
+          {{ form.issue }}
         </el-form-item>
         <el-form-item label="费用（元）">
           {{ form.price }}
@@ -17,7 +22,9 @@
         </el-form-item>
         <div class="button-group">
           <!-- 确认缴费按钮 -->
-          <el-button @click="submitForm" type="primary" :plain="true">确认缴费</el-button>
+          <el-button @click="submitForm" type="primary" :plain="true"
+            >确认缴费</el-button
+          >
           <!-- 取消缴费按钮 -->
           <el-button @click="cancelModal">取消</el-button>
         </div>
@@ -27,16 +34,16 @@
 </template>
 
 <script>
-import { ElMessage } from 'element-plus';
+import { ElMessage } from "element-plus";
 
 export default {
-  name: 'BillDetails',
-  data () {
+  name: "BillDetails",
+  data() {
     return {
       isVisible: false,
       form: {
         type: "",
-        department: "",
+        issue: "",
         price: 0,
         date: "",
         id: 0,
@@ -45,52 +52,51 @@ export default {
   },
   methods: {
     // 触发弹窗（在父组件中引用）
-    openModal (row) {
+    openModal(row) {
       this.isVisible = true;
-      document.body.style.overflow = 'hidden'; // 禁止滚动
+      document.body.style.overflow = "hidden"; // 禁止滚动
       this.form.type = row.type;
-      this.form.department = row.department;
+      this.form.issue = row.issue;
       this.form.price = row.price;
       this.form.date = row.date;
       this.form.id = row.id;
     },
     // 关闭弹窗
-    closeModal () {
+    closeModal() {
       this.isVisible = false;
-      document.body.style.overflow = ''; // 恢复滚动
+      document.body.style.overflow = ""; // 恢复滚动
     },
     // 取消按钮触发
-    cancelModal (){
+    cancelModal() {
       ElMessage({
-        type: 'info',
-        message: '取消缴费 ╮(╯▽╰)╭',
+        type: "info",
+        message: "取消缴费 ╮(╯▽╰)╭",
         showClose: true,
       });
       // 关闭弹窗
       this.closeModal();
     },
     // 确认缴费
-    submitForm () {
+    submitForm() {
       // 修改数据库（bug：这部分的数据库修改逻辑还没正确实现）
-      this.$emit('update:pay-status', this.form.id);
+      this.$emit("update:pay-status", this.form.id);
       ElMessage({
         showClose: true,
-        message: '缴费成功 ╰(*°▽°*)╯',
-        type: 'success',
-      })
+        message: "缴费成功 ╰(*°▽°*)╯",
+        type: "success",
+      });
       // 提交后关闭弹窗
       this.closeModal();
     },
-  }
+  },
 };
 </script>
-
 
 <style scoped>
 .form {
   padding: 20px;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
 }
 
 .el-form-item {

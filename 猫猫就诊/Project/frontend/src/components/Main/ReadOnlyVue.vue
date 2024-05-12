@@ -120,15 +120,15 @@
   }
 
   .square1:hover::before {
-    background-image: url('../../../public/static/img/main/change1.png'); /* 悬停时的背景图片 */
+    background-image: url('../../../static/img/main/change1.png'); /* 悬停时的背景图片 */
   }
   .square2:hover::before {
-    background-image: url('../../../public/static/img/main/change2.png'); /* 悬停时的背景图片 */
+    background-image: url('../../../static/img/main/change2.png'); /* 悬停时的背景图片 */
   }
   .square3:hover::before {
-    background-image: url('../../../public/static/img/main/change3.png'); /* 悬停时的背景图片 */
+    background-image: url('../../../static/img/main/change3.png'); /* 悬停时的背景图片 */
   }
   .square4:hover::before {
-    background-image: url('../../../public/static/img/main/change4.png'); /* 悬停时的背景图片 */
+    background-image: url('../../../static/img/main/change4.png'); /* 悬停时的背景图片 */
   }
 </style>

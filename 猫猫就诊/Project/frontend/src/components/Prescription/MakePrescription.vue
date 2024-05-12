@@ -241,7 +241,7 @@ export default {
     },
   },
   mounted () {
-    this.getTreatmentsData();
+    /*this.getTreatmentsData();*/
     // 等待 DOM 更新后再执行筛选逻辑
     //唉我真吐了，1记得加上单引号
     this.selectFunc('1');

@@ -10,7 +10,7 @@ import BillDetails from "./Bills/BillDetails.vue";
 
 import PatientA from "./History/PatientA.vue";
 import PresA from "./History/PresA.vue";
-import MedicineA from "./Medicine/MedicineA.vue";
+
 import AppointmentRegistration from "./Appointment/AppointmentRegistration.vue";
 import AppointmentRegistration2 from "./Appointment/AppointmentRegistration2.vue";
 import AppointmentRegistration3 from "./Appointment/AppointmentRegistration3.vue";
