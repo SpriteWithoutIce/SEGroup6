@@ -9,7 +9,6 @@ import PresA from './components/History/PresA.vue'
 <template>
   <div id="app">
     <HeaderNavigation></HeaderNavigation>
-    <!-- <readOnlyVue></readOnlyVue> -->
     <NavBar></NavBar>
   </div>
 </template>
