@@ -3,7 +3,7 @@
 <!-- 功能修改成点击可以切换图片，图片也会进行轮播 https://blog.csdn.net/boxuestudio/article/details/129099623-->
 <template>
   <div>
-    <messagedrawer ref="messageBox" class="messageBox" />
+    <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount"/>
     <Login ref="Login"> </Login>
     <el-header class="header-nav">
       <nav>
@@ -11,7 +11,7 @@
         <!-- 这是需要加路由的，路由应该放在index里边 -->
         <a href="#unknown">首页</a>
         <a href="#unknown" @click="showLogin()">登录</a>
-        <a @click="openMessageBox">消息</a>
+        <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item" v-if="unreadCount!==0"></el-badge>
         <a href="#unknown">联系我们</a>
         <a href="#unknown">关于</a>
       </nav>
@@ -107,17 +107,19 @@ export default {
         '/static/img/navigation/banner1.jpg',
         '/static/img/navigation/banner2.jpg',
         '/static/img/navigation/banner3.jpg'
-      ]
+      ],
+      unreadCount: 0
     }
   },
   mounted() {
     setInterval(this.changeBackground, 5000) // Change background every 5 seconds
+    this.$refs.messageBox.countUnread()
   },
   components: {
     Login,
     RouterLink,
     RouterView,
-    messagedrawer,
+    messagedrawer
   },
   methods: {
     showLogin() {
@@ -150,8 +152,10 @@ export default {
     },
     openMessageBox() {
       this.$refs.messageBox.openDrawer()
+    },
+    getUnreadCount(cnt) {
+      this.unreadCount = cnt
     }
-
     /*下边的代码都是想实现图片轮播*/
   }
 }
@@ -177,6 +181,11 @@ export default {
   100% {
     transform: rotate(360deg);
   }
+}
+.item {
+  margin-top: 10px;
+  margin-left:-25px;
+  margin-right:25px;
 }
 
 .header-nav {
@@ -228,8 +237,8 @@ export default {
   position: relative;
   width: 4em;
   text-align: center;
-  font-weight: bold; 
-  text-shadow: 2px 2px 2px rgba(13, 65, 153, 0.941); 
+  font-weight: bold;
+  text-shadow: 2px 2px 2px rgba(13, 65, 153, 0.941);
 }
 
 /*导航栏蓝色下划线代码*/

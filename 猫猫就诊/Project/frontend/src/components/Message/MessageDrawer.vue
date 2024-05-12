@@ -7,7 +7,7 @@
         <el-collapse v-model="activeNames" @change="handleChange">
           <el-collapse-item title="预约通知" name="1" class="collapseItem">
             <div class="messageList">
-              <el-table :data="resMes" style="width: 100%">
+              <el-table :data="resMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
                   <template #default="props">
                     <div v-if="props.row.type == '预约成功'" m="4">
@@ -24,7 +24,7 @@
                         <br />感谢您选择我院，祝您身体健康！
                       </p>
                       <p style="text-align: right">
-                        猫猫就诊 预约挂号服务中心<br />
+                        猫猫就诊ฅ 预约挂号服务中心<br />
                         {{ props.row.timetamp }}
                       </p>
                     </div>
@@ -48,6 +48,15 @@
                     </div>
                   </template>
                 </el-table-column>
+                <el-table-column label="已读?">
+                  <template #default="props">
+                    <div v-if="props.row.read === false">
+                      <el-button class="pay-button" @click="readMes(props.row)">确认</el-button>
+                    </div>
+                    <!-- 使用 v-else显示文本 -->
+                    <div v-else class="butAbanText">已读</div>
+                  </template>
+                </el-table-column>
                 <el-table-column label="类型" prop="type" />
                 <el-table-column label="患者姓名" prop="name" />
                 <el-table-column label="就诊时间" prop="time" />
@@ -57,7 +66,8 @@
 
           <el-collapse-item title="缴费通知" name="2">
             <div class="messageList">
-              <el-table :data="billMes" style="width: 100%">
+              <!-- <el-table :data="billMes" style="width: 100%" :row-class-name='success'> -->
+              <el-table :data="billMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
                   <template #default="props">
                     <div m="4" v-if="props.row.type == '处方缴费提醒'">
@@ -98,6 +108,15 @@
                     </div>
                   </template>
                 </el-table-column>
+                <el-table-column label="已读?">
+                  <template #default="props">
+                    <div v-if="props.row.read === false">
+                      <el-button class="pay-button" @click="readMes(props.row)">确认</el-button>
+                    </div>
+                    <!-- 使用 v-else显示文本 -->
+                    <div v-else class="butAbanText">已读</div>
+                  </template>
+                </el-table-column>
                 <el-table-column label="类型" prop="type" />
                 <el-table-column label="患者姓名" prop="name" />
                 <el-table-column label="时间" prop="time" />
@@ -116,30 +135,6 @@ export default {
     return {
       activeNames: ['1', '2'],
       table: false,
-      loading: false,
-      gridData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-      ],
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
-      formLabelWidth: '80px',
       timer: null,
       resMes: [
         {
@@ -149,7 +144,8 @@ export default {
           doctor: '李医生',
           time: '2024-5-12',
           id: '03230802',
-          timetamp: '2024-5-11'
+          timetamp: '2024-5-11',
+          read: true
         },
         {
           type: '取消预约',
@@ -158,7 +154,8 @@ export default {
           doctor: '李医生',
           time: '2024-5-12',
           id: '03230802',
-          timetamp: '2024-5-11'
+          timetamp: '2024-5-11',
+          read: false
         }
       ],
       billMes: [
@@ -170,7 +167,8 @@ export default {
           time: '2024-5-12',
           id: '03230802',
           timetamp: '2024-5-11',
-          price: 200
+          price: 200,
+          read: false
         },
         {
           type: '处方缴费成功',
@@ -180,7 +178,8 @@ export default {
           time: '2024-5-12',
           id: '03230802',
           timetamp: '2024-5-11',
-          price: 200
+          price: 200,
+          read: false
         }
       ]
     }
@@ -196,13 +195,37 @@ export default {
         left: 0,
         behavior: 'smooth'
       })
+    },
+    tableRowClassName({ row, rowIndex }) {
+      if (row.read === false) {
+        return 'warning-row'
+      } else if (row.read === true) {
+        return 'success-row'
+      }
+      return ''
+    },
+    countUnread() {
+      // 计算resMes中read为false的数量
+      const unreadResMesCount = this.resMes.filter((item) => item.read === false).length
+      // 计算billMes中read为false的数量
+      const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
+      // 返回两个数量的总和
+      // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
+      this.$emit('update:result', unreadResMesCount + unreadBillMesCount)
+    },
+    readMes(row) {
+      row.read = true;
+      this.countUnread();
     }
   }
 }
 </script>
 
 <style scoped>
-.myDrawer {
-  z-index: 8;
+.el-table >>> .warning-row {
+  --el-table-tr-bg-color: var(--el-color-warning-light-9);
+}
+.el-table >>> .success-row {
+  --el-table-tr-bg-color: var(--el-color-success-light-9);
 }
 </style>
