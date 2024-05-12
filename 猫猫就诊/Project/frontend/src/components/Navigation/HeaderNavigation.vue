@@ -203,7 +203,7 @@ export default {
 .header-nav::before {
   content: '';
   position: absolute;
-  top: 20px;
+  top: 25px;
   left: 30px;
   width: 300px;
   height: 150px;
@@ -222,12 +222,14 @@ export default {
 /*控制边角导航栏选项的*/
 .header-nav nav a {
   color: white;
-  padding: 14px 20px;
+  padding: 14px 8px;
   text-decoration: none;
   font-size: 17px;
   position: relative;
   width: 4em;
   text-align: center;
+  font-weight: bold; 
+  text-shadow: 2px 2px 2px rgba(13, 65, 153, 0.941); 
 }
 
 /*导航栏蓝色下划线代码*/
@@ -287,7 +289,7 @@ export default {
 
 /*调整灰色矩形内可点击元素距离*/
 .clickable-images a {
-  margin: 0 11vw;
+  margin: 0 9vw;
 
   position: relative;
 }

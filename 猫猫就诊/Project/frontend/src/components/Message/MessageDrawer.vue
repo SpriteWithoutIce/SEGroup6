@@ -73,7 +73,7 @@
                         请您<b>在30分钟内完成缴费</b>，以免影响您的就诊计划。
                         <br />感谢您的配合，祝您身体健康！
                       </p>
-                      <router-link to="/Bill" @click="table=false">缴费入口</router-link>
+                      <router-link to="/Bill" @click="turnToBill">缴费入口</router-link>
                       <p style="text-align: right">
                         猫猫就诊 缴费服务中心<br />
                         {{ props.row.timetamp }}
@@ -186,29 +186,16 @@ export default {
     }
   },
   methods: {
-    handleClose(done) {
-      if (this.loading) {
-        return
-      }
-      this.$confirm('确定要提交表单吗？')
-        .then((_) => {
-          this.loading = true
-          this.timer = setTimeout(() => {
-            done()
-            // 动画关闭需要一定的时间
-            setTimeout(() => {
-              this.loading = false
-            }, 400)
-          }, 2000)
-        })
-        .catch((_) => {})
-    },
-    cancelForm() {
-      this.loading = false
-      clearTimeout(this.timer)
-    },
     openDrawer() {
       this.table = true
+    },
+    turnToBill() {
+      this.table = false
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      })
     }
   }
 }
