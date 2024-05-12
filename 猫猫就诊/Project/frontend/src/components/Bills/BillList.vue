@@ -27,7 +27,7 @@
               <el-table :data="filteredBillsDiv" class="el-table">
                 <!-- 设置 prop 属性 - Element UI 自动将该属性对应字段的数据渲染到表格的每一行中 -->
                 <el-table-column prop="type" label="类型"> </el-table-column>
-                <el-table-column prop="issue" label="具体事由"> </el-table-column>
+                <el-table-column prop="department" label="开具科室"> </el-table-column>
                 <el-table-column prop="price" label="费用（元）"> </el-table-column>
                 <el-table-column prop="date" label="创建时间"> </el-table-column>
                 <el-table-column style="textalign: right" label="操作">
@@ -75,7 +75,7 @@ export default {
         {
           id: 1,
           type: '挂号',
-          issue: '皮肤科挂号',
+          department: '皮肤科',
           price: 10,
           date: '2024年3月15日',
           payStatus: true
@@ -83,7 +83,7 @@ export default {
         {
           id: 2,
           type: '处方',
-          issue: '眼科问诊处方药品开具',
+          department: '眼科',
           price: 200,
           date: '2024年2月15日',
           payStatus: false
@@ -91,7 +91,7 @@ export default {
         {
           id: 3,
           type: '挂号',
-          issue: '全科挂号',
+          department: '全科',
           price: 5,
           date: '2024年1月15日',
           payStatus: false
@@ -99,7 +99,7 @@ export default {
         {
           id: 3,
           type: '挂号',
-          issue: '全科挂号',
+          department: '全科',
           price: 5,
           date: '2024年1月15日',
           payStatus: false
@@ -107,7 +107,7 @@ export default {
         {
           id: 3,
           type: '挂号',
-          issue: '全科挂号',
+          department: '全科',
           price: 5,
           date: '2024年1月15日',
           payStatus: false
@@ -115,7 +115,7 @@ export default {
         {
           id: 3,
           type: '挂号',
-          issue: '全科挂号',
+          department: '全科',
           price: 5,
           date: '2024年1月15日',
           payStatus: false
@@ -123,7 +123,7 @@ export default {
         {
           id: 3,
           type: '挂号',
-          issue: '全科挂号',
+          department: '全科',
           price: 5,
           date: '2024年1月15日',
           payStatus: false
@@ -131,7 +131,7 @@ export default {
         {
           id: 3,
           type: '挂号',
-          issue: '全科挂号',
+          department: '全科',
           price: 5,
           date: '2024年1月15日',
           payStatus: false
@@ -139,7 +139,7 @@ export default {
         {
           id: 3,
           type: '挂号',
-          issue: '全科挂号',
+          department: '全科',
           price: 5,
           date: '2024年1月15日',
           payStatus: false
@@ -147,7 +147,7 @@ export default {
         {
           id: 3,
           type: '挂号',
-          issue: '全科挂号',
+          department: '全科',
           price: 5,
           date: '2024年1月15日',
           payStatus: false
@@ -155,7 +155,7 @@ export default {
         {
           id: 3,
           type: '挂号',
-          issue: '全科挂号',
+          department: '全科',
           price: 5,
           date: '2024年1月15日',
           payStatus: false
@@ -163,7 +163,7 @@ export default {
         {
           id: 3,
           type: '挂号',
-          issue: '全科挂号',
+          department: '全科',
           price: 5,
           date: '2024年1月15日',
           payStatus: false
