@@ -4,12 +4,15 @@
 <template>
   <Login ref="Login"> </Login>
   <div>
+    <messagedrawer ref="messageBox" class="messageBox" />
+    <Login ref="Login"> </Login>
     <el-header class="header-nav">
       <nav>
         <!-- 导航链接可以根据需要添加 -->
         <!-- 这是需要加路由的，路由应该放在index里边 -->
         <a href="#unknown">首页</a>
         <a href="#unknown" @click="showLogin()">登录</a>
+        <a @click="openMessageBox">消息</a>
         <a href="#unknown">联系我们</a>
         <a href="#unknown">关于</a>
       </nav>
@@ -71,7 +74,8 @@ export default {
   components: {
     Login,
     RouterLink,
-    RouterView
+    RouterView,
+    messagedrawer,
   },
   methods: {
     showLogin () {
@@ -101,6 +105,9 @@ export default {
         image.style.opacity = 0
         image.style.transform = 'rotate(0deg)'
       })
+    },
+    openMessageBox () {
+      this.$refs.messageBox.openDrawer()
     }
 
     /*下边的代码都是想实现图片轮播*/
@@ -179,6 +186,8 @@ export default {
   position: relative;
   width: 4em;
   text-align: center;
+  font-weight: bold;
+  text-shadow: 2px 2px 2px rgba(13, 65, 153, 0.941);
 }
 
 /*导航栏蓝色下划线代码*/
