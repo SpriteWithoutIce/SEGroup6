@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-container style="height: 100vh;">
     <el-header class="Header">
       <img src='../../assets/main/readOnlybg.jpg' class="bg">
       <!-- <img src='../../assets/main/title.png' class="title"> -->
@@ -10,7 +10,7 @@
       <div class="square3"></div>
       <div class="square4"></div>
     </el-header>
-  </div>
+  </el-container>
 </template>
 
 <style>
@@ -24,16 +24,17 @@
   }
   .Header{
     position:relative;
+    height:100vh;
   }
   .logo {
     border: none;
     user-select: none;
     opacity: 0.5;
     position: relative;
-    width: 500px;
-    height: 500px;
-    top: 100px;
-    left: 200px;
+    width: 550px;
+    height: 550px;
+    top: 50px;
+    left: 150px;
     z-index: 2;
     animation: rotate 50s linear infinite; 
   }
