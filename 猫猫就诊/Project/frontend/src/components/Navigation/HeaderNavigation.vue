@@ -2,14 +2,16 @@
 <!-- 感觉把边上那个按钮去掉吧,主要是图片不好看的原因 -->
 <!-- 功能修改成点击可以切换图片，图片也会进行轮播 https://blog.csdn.net/boxuestudio/article/details/129099623-->
 <template>
-  <Login ref="Login"> </Login>
   <div>
+    <messagedrawer ref="messageBox" class="messageBox" />
+    <Login ref="Login"> </Login>
     <el-header class="header-nav">
       <nav>
         <!-- 导航链接可以根据需要添加 -->
         <!-- 这是需要加路由的，路由应该放在index里边 -->
         <a href="#unknown">首页</a>
         <a href="#unknown" @click="showLogin()">登录</a>
+        <a @click="openMessageBox">消息</a>
         <a href="#unknown">联系我们</a>
         <a href="#unknown">关于</a>
       </nav>
@@ -93,6 +95,7 @@ import Login from '../LogIn/Login.vue'
 import BillList from '../Bills/BillList.vue'
 import PatientA from '../History/PatientA.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
+import messagedrawer from '../Message/MessageDrawer.vue'
 
 export default {
   name: 'HeaderNavigation',
@@ -113,7 +116,8 @@ export default {
   components: {
     Login,
     RouterLink,
-    RouterView
+    RouterView,
+    messagedrawer,
   },
   methods: {
     showLogin() {
@@ -143,6 +147,9 @@ export default {
         image.style.opacity = 0
         image.style.transform = 'rotate(0deg)'
       })
+    },
+    openMessageBox() {
+      this.$refs.messageBox.openDrawer()
     }
 
     /*下边的代码都是想实现图片轮播*/
@@ -287,6 +294,10 @@ export default {
 
 .image-link {
   position: relative;
+}
+
+a:hover {
+  cursor: pointer;
 }
 
 /*非常困惑的一点就是clickable里边设置过的元素，在子类元素里边再设置会被无视，好反常识？？？*/
