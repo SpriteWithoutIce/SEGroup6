@@ -7,10 +7,10 @@
       <!-- <img src='../../assets/main/title.png' class="title"> -->
       <img src='../../assets/main/subtitle.png' class="subtitle">
       <img src='../../assets/main/logo.png' class="logo" alt="Logo">
-      <div class="square1"></div>
-      <div class="square2"></div>
-      <div class="square3"></div>
-      <div class="square4"></div>
+      <div class="zqssquare1"></div>
+      <div class="zqssquare2"></div>
+      <div class="zqssquare3"></div>
+      <div class="zqssquare4"></div>
     </el-header>
   </el-container>
   <el-footer height="30px" align="center" class="footer">SE_GROUP_6</el-footer>
@@ -89,7 +89,7 @@
     width: 100%;
     height: 650px;
   }
-  .square1, .square2, .square3, .square4 {
+  .zqssquare1, .zqssquare2, .zqssquare3, .zqssquare4 {
     border-radius: 5px; /* 添加圆角框 */
     position: absolute;
     width: 230px;
@@ -97,41 +97,41 @@
     transition: transform 1.5s ease; /* 添加过渡效果 */
   }
 
-  .square1 {
+  .zqssquare1 {
     top: 80px;
     right: 330px;
     background-image: url('../../assets/main/1.jpg'); /* 默认背景图片 */
   }
 
-  .square2 {
+  .zqssquare2 {
     top: 80px;
     right: 80px;
     background-image: url('../../assets/main/2.jpg');
   }
 
-  .square3 {
+  .zqssquare3 {
     top: 330px;
     right: 330px;
     background-image: url('../../assets/main/3.jpg'); /* 默认背景图片 */
   }
 
-  .square4 {
+  .zqssquare4 {
     top: 330px;
     right: 80px;
     background-image: url('../../assets/main/4.jpg'); /* 默认背景图片 */
   }
 
-  .square1:hover,
-  .square2:hover,
-  .square3:hover,
-  .square4:hover {
+  .zqssquare1:hover,
+  .zqssquare2:hover,
+  .zqssquare3:hover,
+  .zqssquare4:hover {
     transform: scale(1.1); /* 悬停时放大 */
   }
 
-  .square1:hover::before,
-  .square2:hover::before,
-  .square3:hover::before,
-  .square4:hover::before {
+  .zqssquare1:hover::before,
+  .zqssquare2:hover::before,
+  .zqssquare3:hover::before,
+  .zqssquare4:hover::before {
     content: "";
     position: absolute;
     top: 0;
@@ -143,16 +143,16 @@
     z-index: 1;
   }
 
-  .square1:hover::before {
+  .zqssquare1:hover::before {
     background-image: url('../../../static/img/main/change1.png'); /* 悬停时的背景图片 */
   }
-  .square2:hover::before {
+  .zqssquare2:hover::before {
     background-image: url('../../../static/img/main/change2.png'); /* 悬停时的背景图片 */
   }
-  .square3:hover::before {
+  .zqssquare3:hover::before {
     background-image: url('../../../static/img/main/change3.png'); /* 悬停时的背景图片 */
   }
-  .square4:hover::before {
+  .zqssquare4:hover::before {
     background-image: url('../../../static/img/main/change4.png'); /* 悬停时的背景图片 */
   }
   .footer {
