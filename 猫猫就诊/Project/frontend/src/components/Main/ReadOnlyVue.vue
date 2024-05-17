@@ -1,6 +1,7 @@
 <template>
-  <el-container style="height: 100vh;">
-    <img src='../../assets/main/divider.jpg' class="divider">
+  <el-container style="height: 88vh;">
+    <div class="flowing-background"></div>
+    <!-- <img src='../../assets/main/divider.jpg' class="divider"> -->
     <el-header class="Header">
       <img src='../../assets/main/readOnlybg.jpg' class="bg">
       <!-- <img src='../../assets/main/title.png' class="title"> -->
@@ -12,10 +13,27 @@
       <div class="square4"></div>
     </el-header>
   </el-container>
+  <el-footer height="30px" align="center" class="footer">SE_GROUP_6</el-footer>
 </template>
 
 <style>
-/**/
+/*也就是说卡顿被我调整成了100s*一次，消除卡顿需要对高度px进行调整*/
+  .flowing-background {
+    width: 100%;
+    height: 8vh; 
+    background-image: url('../../assets/main/divider.jpg');
+    background-repeat: repeat-y; 
+    background-size: cover; 
+    animation: flow 100s linear infinite;
+  }
+  @keyframes flow {
+    0% {
+      background-position: 0 0; /* 初始位置 */
+    }
+    100% {
+      background-position: 0 -100vh; /* 向上移动100vh */
+    }
+  }
   @keyframes rotate {
     0% {
       transform: rotate(0deg);
@@ -136,5 +154,13 @@
   }
   .square4:hover::before {
     background-image: url('../../../static/img/main/change4.png'); /* 悬停时的背景图片 */
+  }
+  .footer {
+    position: relative;
+    background-color: rgb(8, 3, 88);
+    color: white;
+    font-size: 17px;
+    line-height: 30px;
+  
   }
 </style>

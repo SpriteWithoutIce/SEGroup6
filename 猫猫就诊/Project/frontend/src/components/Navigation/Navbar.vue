@@ -5,7 +5,6 @@
     <a href="#" class="white-bold">登录</a>
     <a class="white-bold" @click="openMessageBox">消息</a>
     <a @click="returnTop" class="white-bold">回到顶部</a>
-    <a href="#" class="white-bold">关于</a>
   </div>
 </template>
 

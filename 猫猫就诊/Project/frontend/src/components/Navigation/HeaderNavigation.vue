@@ -9,7 +9,6 @@
         <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
           v-if="unreadCount !== 0"></el-badge>
         <a href="#unknown">联系我们</a>
-        <a href="#unknown">关于</a>
       </nav>
       <div class="clickable-images">
         <router-link to="/AppointmentRegistration" class="image-link" @mouseover="showSurroundImage(1)"
@@ -169,7 +168,7 @@ export default {
   justify-content: flex-end;
   align-items: flex-start;
   padding-right: 0px;
-  animation: zoom 2s ease-in-out;
+  animation: zoom 1.5s ease-in-out;
   position: relative;
   margin-top: 0;
 }
