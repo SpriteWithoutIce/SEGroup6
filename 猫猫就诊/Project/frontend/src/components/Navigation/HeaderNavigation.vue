@@ -1,14 +1,9 @@
-<!-- 开侧边栏比如bingAI,会由于元素缩放问题（问题在旋转动画那里）导致关停 -->
-<!-- 感觉把边上那个按钮去掉吧,主要是图片不好看的原因 -->
-<!-- 功能修改成点击可以切换图片，图片也会进行轮播 https://blog.csdn.net/boxuestudio/article/details/129099623-->
 <template>
   <div>
     <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
     <Login ref="Login"> </Login>
-    <el-header class="header-nav">
+    <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
-        <!-- 导航链接可以根据需要添加 -->
-        <!-- 这是需要加路由的，路由应该放在index里边 -->
         <RouterLink to="/Main">首页</RouterLink>
         <a href="#unknown" @click="showLogin()">登录</a>
         <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
@@ -16,8 +11,6 @@
         <a href="#unknown">联系我们</a>
         <a href="#unknown">关于</a>
       </nav>
-      <!-- 下边这段肯定可以简化 -->
-      <!-- 改了会出bug导致的 -->
       <div class="clickable-images">
         <router-link to="/AppointmentRegistration" class="image-link" @mouseover="showSurroundImage(1)"
           @mouseleave="hideSurroundImage()">
@@ -67,12 +60,16 @@ export default {
         '/static/img/navigation/banner2.jpg',
         '/static/img/navigation/banner3.jpg'
       ],
-      unreadCount: 0
+      unreadCount: 0,
+      intervalId: null
     }
   },
   mounted () {
-    setInterval(this.changeBackground, 5000) // Change background every 5 seconds
+    this.startBackgroundRotation()
     this.$refs.messageBox.countUnread()
+  },
+  beforeDestroy () {
+    this.stopBackgroundRotation()
   },
   components: {
     Login,
@@ -85,6 +82,12 @@ export default {
       this.$refs.Login.openModal()
       console.log('执行')
     },
+    startBackgroundRotation () {
+      this.intervalId = setInterval(this.changeBackground, 5000) // Change background every 5 seconds
+    },
+    stopBackgroundRotation () {
+      clearInterval(this.intervalId)
+    },
     changeBackground () {
       this.currentIndex = (this.currentIndex + 1) % this.images.length
       let elements = document.getElementsByClassName('header-nav')
@@ -92,6 +95,11 @@ export default {
         elements[i].style.transition = 'background-image 2s ease-in-out'
         elements[i].style.backgroundImage = 'url(' + this.images[this.currentIndex] + ')'
       }
+    },
+    changeBackgroundOnClick () {
+      this.stopBackgroundRotation()
+      this.changeBackground()
+      this.startBackgroundRotation()
     },
     showSurroundImage (index) {
       const SurroundImage = document.querySelector(
@@ -115,7 +123,6 @@ export default {
     getUnreadCount (cnt) {
       this.unreadCount = cnt
     }
-    /*下边的代码都是想实现图片轮播*/
   }
 }
 </script>

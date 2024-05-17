@@ -1,5 +1,6 @@
 <template>
   <el-container style="height: 100vh;">
+    <img src='../../assets/main/divider.jpg' class="divider">
     <el-header class="Header">
       <img src='../../assets/main/readOnlybg.jpg' class="bg">
       <!-- <img src='../../assets/main/title.png' class="title"> -->
@@ -22,6 +23,9 @@
     100% {
       transform: rotate(360deg);
     }
+  }
+  .divider{
+    width:100%;
   }
   .Header{
     position:relative;
