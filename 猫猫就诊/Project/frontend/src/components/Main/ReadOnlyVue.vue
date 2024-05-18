@@ -50,13 +50,11 @@
     height:100vh;
   }
   .logo {
-    border: none;
-    user-select: none;
     opacity: 0.5;
     position: relative;
-    width: 550px;
-    height: 550px;
-    top: 50px;
+    width: 440px;
+    height: 440px;
+    top: 80px;
     left: 150px;
     z-index: 2;
     animation: rotate 50s linear infinite; 
