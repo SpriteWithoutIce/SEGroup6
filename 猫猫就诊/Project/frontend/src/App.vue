@@ -1,12 +1,15 @@
 <script setup>
-import HeaderNavigation from './components/Navigation/HeaderNavigation.vue';
+import HeaderNavigation from './components/Navigation/HeaderNavigation.vue'
 import NavBar from './components/Navigation/Navbar.vue'
+import readOnlyVue from './components/Main/ReadOnlyVue.vue'
+import PatientA from './components/History/PatientA.vue'
+import PresA from './components/History/PresA.vue'
 </script>
 
 <template>
   <div id="app">
-    <HeaderNavigation />
-    <NavBar />
+    <HeaderNavigation></HeaderNavigation>
+    <NavBar></NavBar>
   </div>
 </template>
 
