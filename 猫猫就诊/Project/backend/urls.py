@@ -27,4 +27,5 @@ urlpatterns = [
     path("api/duty/date_doctor_unoccupied/", views.OnDutyView.as_view()),
     path("api/doctors/upload_avatar/", views.DoctorView.as_view()),
     path("api/medicine/list/", views.MedicineView.as_view()),
+    path("api/duty/doctor_status/", views.OnDutyView.as_view()),
 ]

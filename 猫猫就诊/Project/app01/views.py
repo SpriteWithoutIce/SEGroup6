@@ -64,8 +64,6 @@ class OnDutyView(APIView):
         action = data['action']
         if action == 'getNextSevenDaysDuty':
             return self.getNextSevenDaysDuty(request)
-        elif action == 'b':
-            return self.getDateDoctorUnoccupied(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -94,12 +92,25 @@ class OnDutyView(APIView):
             find = False
             for d in duty:
                 if d['id'] == item['doctor_id']:
+                    emptytime = []
+                    for i in range(20):
+                        emptytime.append({
+                            "number": i + 1,
+                            "status": "empty" if not (item['state'] & (1<<i)) else 'full',
+                        })
                     d['schedule'].append({'time': item['date'].strftime('%m-%d') + time,
                                         'status': 'full' if rest == 0 else 'empty',
-                                        'number': rest})
+                                        'number': rest,
+                                        "emptytime": emptytime})
                     find = True
                     break
             if not find:
+                emptytime = []
+                for i in range(20):
+                    emptytime.append({
+                        "number": i + 1,
+                        "status": "empty" if not (item['state'] & (1<<i)) else 'full',
+                    })
                 duty.append({
                     "id": item['doctor_id'],
                     "name": item['doctor_name'],
@@ -108,31 +119,11 @@ class OnDutyView(APIView):
                     "avatar": item['doctor_avatar'],
                     "schedule": [{'time': item['date'].strftime('%m-%d') + time,
                                     'status': 'full' if rest == 0 else 'empty',
-                                    'number': rest}]
+                                    'number': rest,
+                                    "emptytime": emptytime}],
+                    
                 })
         return JsonResponse({"duty": duty})
-    
-    # 返回特定医生在特定日期的空闲号
-    def getDateDoctorUnoccupied(self, request):
-        unoccupied = []
-        date = request.POST.get('date')
-        doctor = request.POST.get('id')
-        pattern = r'(\d{4}年\d{1,2}月\d{1,2}日)(上午|下午|晚上)?'
-        match = re.match(pattern, date)
-        date = datetime.strptime(match.group(1), "%Y-%m-%d")
-        period = match.group(2)
-        time = 0
-        if period == "上午":
-            time = 1
-        elif period == "下午":
-            time = 2
-        else:
-            time = 3
-        for item in OnDuty.objects.filter(date=date, time=time, doctor=doctor).values('state'):
-            for i in range(19):
-                if not (item['state'] & (1<<i)):
-                    unoccupied.append(i + 1)
-        return JsonResponse({"unoccupied": unoccupied})
 
 class MedicineView(APIView):
     def get(self, request):
