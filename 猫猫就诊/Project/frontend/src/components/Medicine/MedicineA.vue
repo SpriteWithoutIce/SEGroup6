@@ -207,18 +207,18 @@ watch(input4, () => {
   updateTotal()
 })
 
-const getMedicineData = () => {
-  $axios
-    .get('/api/medicine/list/')
-    .then((response) => {
-      tableData = response.data['medicine']
-      pagination.value.total = tableData.length // 更新总条目数
-      console.log('Medicine data fetched:', tableData.value)
-    })
-    .catch((error) => {
-      console.error('Error fetching medicine data:', error)
-    })
-}
+// const getMedicineData = () => {
+//   $axios
+//     .get('/api/medicine/list/')
+//     .then((response) => {
+//       tableData = response.data['medicine']
+//       pagination.value.total = tableData.length // 更新总条目数
+//       console.log('Medicine data fetched:', tableData.value)
+//     })
+//     .catch((error) => {
+//       console.error('Error fetching medicine data:', error)
+//     })
+// }
 
 const ftableData = computed(() => {
   const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
