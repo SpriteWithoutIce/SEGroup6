@@ -128,7 +128,7 @@ class OnDutyView(APIView):
 class MedicineView(APIView):
     def get(self, request):
         medicine = []
-        for item in Medicine.objects.values('name', 'medicine_type', 'patient_birthday', 'symptom', 'price'):
+        for item in Medicine.objects.values('name', 'medicine_type', 'symptom', 'price'):
             type = ""
             if item['medicine_type'] == 1:
                 type = "中药"
