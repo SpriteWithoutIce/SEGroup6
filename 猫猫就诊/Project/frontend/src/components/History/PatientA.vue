@@ -128,8 +128,6 @@ const info = ref([
 ])
 const commitSearch = () => {
   console.log(`查询内容是：${input4.value}`)
-  // commitSearch 现在不需要做任何操作，因为 filterInfo 已经是计算属性
-  // 它会自动响应 input4.value 的变化
 }
 const filterInfo = computed(() => {
   return info.value.filter((item) => {

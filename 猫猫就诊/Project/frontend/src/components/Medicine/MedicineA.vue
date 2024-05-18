@@ -1,4 +1,6 @@
+<!--药物管理系统-->
 <template>
+  <DetailC ref="detail"> </DetailC>
   <div class="container">
     <div class="m">
       <p style="margin-left: 50px; font-weight: bold; margin-right: 10px">首页</p>
@@ -6,10 +8,10 @@
       <p style="font-weight: bold; margin-left: 10px">药品管理</p>
     </div>
     <div class="card-container">
-      <el-card style="height: 650px; width: 95%">
+      <el-card style="height: 660px; width: 95%">
         <el-input
           v-model="input4"
-          style="width: 400px; height: 40px"
+          style="width: 300px; height: 40px"
           placeholder="请输入药物名称"
           class="shuru"
         >
@@ -17,19 +19,33 @@
             <el-icon class="el-input__icon"><search /></el-icon>
           </template>
         </el-input>
-        <el-button type="primary" plain style="height: 40px; margin-left: 10px"
+        <el-button
+          type="primary"
+          plain
+          style="height: 40px; margin-left: 10px"
+          @click="showPrescriptionDetails('')"
           >+新建药物类型</el-button
         >
         <el-table :data="ftableData" style="width: 95%; max-height: 480px">
-          <el-table-column prop="name" label="药物名称" width="180" />
-          <el-table-column prop="type" label="药物种类" width="180" />
-          <el-table-column prop="price" label="药物价格" width="180" />
+          <el-table-column prop="name" label="药物名称" width="150" />
+          <el-table-column prop="type" label="药物种类" width="150" />
+          <el-table-column prop="price" label="药物价格" width="150" />
+          <el-table-column prop="num" label="药物库存" width="150">
+            <template #default="scope">
+              <div class="warn">
+                <span v-if="scope.row.num !== '0'">{{ scope.row.num }}</span>
+                <span v-else class="warn">
+                  <p>{{ scope.row.num }}</p>
+                  <el-icon style="color: red"><WarningFilled /></el-icon>
+                  <p style="color: red">库存数量不足</p>
+                </span>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="use" label="适应症状" />
           <el-table-column label="操作">
             <template #default="scope">
-              <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-                修改
-              </el-button>
+              <el-button size="small" @click="showPrescriptionDetails(scope.row)"> 修改 </el-button>
               <el-button
                 size="small"
                 type="danger"
@@ -59,7 +75,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import DetailC from './DetailC.vue'
+const detail = ref(null)
+const input4 = ref('')
+const showPrescriptionDetails = (row) => {
+  // 假设DetailC组件有一个名为openModal的方法
+  detail.value.openModal(row)
+}
 const handleEdit = (index, row) => {
   // 编辑操作的逻辑
   console.log('Edit row:', row)
@@ -74,117 +97,152 @@ const pagination = ref({
   currentPage: 1,
   pageSize: 9
 })
-const tableData = [
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00'
-  // },
-  // {
-  //   name: '阿司匹林片',
-  //   type: '西药',
-  //   use: '缓解疼痛，如头痛、牙痛，降低发热体温，预防血栓形成',
-  //   price: '2.50'
-  // },
-  // {
-  //   name: '布洛芬缓释胶囊',
-  //   type: '西药',
-  //   use: '减轻中度疼痛，如关节炎、扭伤等，缓解炎症',
-  //   price: '15.00'
-  // },
-  // {
-  //   name: '维生素C片',
-  //   type: '保健品',
-  //   use: '补充维生素C，增强免疫力，促进铁的吸收',
-  //   price: '8.00'
-  // },
-  // {
-  //   name: '胰岛素注射液',
-  //   type: '生物制品',
-  //   use: '治疗糖尿病，调节血糖水平',
-  //   price: '35.00'
-  // },
-  // {
-  //   name: '蒙脱石散',
-  //   type: '中药',
-  //   use: '治疗腹泻，缓解胃肠道不适',
-  //   price: '10.00'
-  // }
-]
+const tableData = ref([
+  {
+    name: '感冒冲剂',
+    type: '中药',
+    use: '感冒',
+    price: '5.00',
+    num: '10'
+  },
+  {
+    name: '感冒冲剂',
+    type: '中药',
+    use: '感冒',
+    price: '5.00',
+    num: '10'
+  },
+  {
+    name: '感冒冲剂',
+    type: '中药',
+    use: '感冒',
+    price: '5.00',
+    num: '10'
+  },
+  {
+    name: '感冒冲剂',
+    type: '中药',
+    use: '感冒',
+    price: '5.00',
+    num: '10'
+  },
+  {
+    name: '感冒冲剂',
+    type: '中药',
+    use: '感冒',
+    price: '5.00',
+    num: '10'
+  },
+  {
+    name: '感冒冲剂',
+    type: '中药',
+    use: '感冒',
+    price: '5.00',
+    num: '10'
+  },
+  {
+    name: '感冒冲剂',
+    type: '中药',
+    use: '感冒',
+    price: '5.00',
+    num: '10'
+  },
+  {
+    name: '感冒冲剂',
+    type: '中药',
+    use: '感冒',
+    price: '5.00',
+    num: '10'
+  },
+  {
+    name: '阿司匹林片',
+    type: '西药',
+    use: '缓解疼痛，如头痛、牙痛，降低发热体温，预防血栓形成',
+    price: '2.50',
+    num: '10'
+  },
+  {
+    name: '布洛芬缓释胶囊',
+    type: '西药',
+    use: '减轻中度疼痛，如关节炎、扭伤等，缓解炎症',
+    price: '15.00',
+    num: '10'
+  },
+  {
+    name: '维生素C片',
+    type: '西药',
+    use: '补充维生素C，增强免疫力，促进铁的吸收',
+    price: '8.00',
+    num: '0'
+  },
+  {
+    name: '胰岛素注射液',
+    type: '西药',
+    use: '治疗糖尿病，调节血糖水平',
+    price: '35.00',
+    num: '30'
+  },
+  {
+    name: '蒙脱石散',
+    type: '西药',
+    use: '治疗腹泻，缓解胃肠道不适',
+    price: '10.00',
+    num: '20'
+  }
+])
+
+const filterData = computed(() => {
+  return input4.value
+    ? tableData.value.filter((item) => item.name.includes(input4.value))
+    : tableData.value
+})
+
+// 更新分页总数的方法
+const updateTotal = () => {
+  pagination.value.total = filterData.value.length
+}
+
+// 观察 input4 的变化，当输入改变时更新过滤数据和分页总数
+watch(input4, () => {
+  updateTotal()
+})
 
 const getMedicineData = () => {
-  $axios.get('/api/medicine/list/')
-    .then(response => {
-      tableData = response.data['medicine'];
+  $axios
+    .get('/api/medicine/list/')
+    .then((response) => {
+      tableData = response.data['medicine']
       pagination.value.total = tableData.length // 更新总条目数
-      console.log("Medicine data fetched:", tableData.value);
+      console.log('Medicine data fetched:', tableData.value)
     })
-    .catch(error => {
-      console.error("Error fetching medicine data:", error);
+    .catch((error) => {
+      console.error('Error fetching medicine data:', error)
     })
 }
 
 const ftableData = computed(() => {
   const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
   const end = start + pagination.value.pageSize
-  console.log(`值是：${pagination.value.total}`)
-  return tableData.slice(start, end)
+  //pagination.value.total = filterData.value.length
+  return filterData.value.slice(start, end)
 })
-
 // 处理当前页码改变的事件
 const handleCurrentChange = (e) => {
   pagination.value.currentPage = e
-  // filteredBillsDiv 会自动更新，因为是一个 computed 属性
 }
 onMounted(() => {
-  getMedicineData()
+  updateTotal()
   handleCurrentChange(1)
 })
 </script>
 <style scoped>
+.warn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
 .page {
   position: absolute;
   bottom: 5%;
@@ -208,7 +266,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 650px;
+  height: 660px;
 }
 .el-card {
   position: relative;
