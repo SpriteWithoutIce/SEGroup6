@@ -1,49 +1,64 @@
+import datetime
+import django
 from django.db import models
 
 # Create your models here.
-class Users(models.Model):
-    account = models.CharField(verbose_name="用户账号", max_length=32, primary_key=True)
-    password = models.CharField(verbose_name="用户密码", max_length=64)
-    
-    type_choices = (
-        (1, "患者"),
-        (2, "医生"),
-        (3, "管理员"),
-    )
-    user_type = models.SmallIntegerField(verbose_name="用户类型", choices=type_choices)
-
 class Patients(models.Model):
-    account = models.ForeignKey(verbose_name="患者账号", to="Users", to_field="account", on_delete=models.CASCADE)
+    identity_choices = (
+        (1, "身份证"),
+        (2, "医保卡"),
+        (3, "诊疗卡"),
+        (4, "护照"),
+        (5, "军官证"),
+        (6, "港澳通行证"),
+    )
+    identity = models.SmallIntegerField(verbose_name="身份证明", choices=identity_choices, default=1)
+    identity_num = models.CharField(verbose_name="证件号", max_length=64, primary_key=True)
     name = models.CharField(verbose_name="患者姓名", max_length=20)
+    health_insurance_choices = (
+        (1, "医保"),
+        (2, "非医保"),
+    )
+    health_insurance = models.SmallIntegerField(verbose_name="医保情况", choices=health_insurance_choices, default=1)
+    gender_choices = (
+        (1, "男"),
+        (2, "女"),
+    )
+    gender = models.SmallIntegerField(verbose_name="患者性别", choices=gender_choices)
+    birthday = models.DateField(verbose_name="患者生日", default=django.utils.timezone.now)
+    phone_num = models.CharField(verbose_name="患者电话", max_length=15, default="")
+    address = models.CharField(verbose_name="患者住址", max_length=128, default="")
 
 class Doctors(models.Model):
-    account = models.ForeignKey(verbose_name="医生账号", to="Users", to_field="account", on_delete=models.CASCADE)
     name = models.CharField(verbose_name="医生姓名", max_length=20)
     title = models.CharField(verbose_name="医生职称", max_length=50)
-    section = models.CharField(verbose_name="医生科室", max_length=20)
-    speciality = models.CharField(verbose_name="医生特长", max_length=150)
+    department = models.CharField(verbose_name="医生科室", max_length=20)
+    research = models.CharField(verbose_name="研究方向", max_length=150, null=True, blank=True)
+    avatar = models.ImageField(verbose_name="医生头像", upload_to='doctor/', null=True, blank=True)
 
 class OnDuty(models.Model):
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", primary_key=True, on_delete=models.CASCADE)
-    start = models.DateTimeField(verbose_name="开始时间")
-    end = models.DateTimeField(verbose_name="结束时间")
-    
-    state_choices = (
-        (1, "已预约"),
-        (2, "空闲"),
+    date = models.DateField(verbose_name="值班日期", default=django.utils.timezone.now)
+    time_choices = (
+        (1, "上午"),
+        (2, "下午"),
+        (3, "晚上"),
     )
-    state = models.SmallIntegerField(verbose_name="预约状态", choices=state_choices)
+    time = models.SmallIntegerField(verbose_name="值班时间", choices=time_choices, default=1)
+    state = models.IntegerField(verbose_name="预约状态")
 
 class Register(models.Model):
-    patient = models.ForeignKey(verbose_name="患者编号", to="Patients", to_field="id", on_delete=models.CASCADE)
+    patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='patient_registers')
+    register = models.ForeignKey(verbose_name="挂号者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='register_registers')
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
     time = models.DateTimeField(verbose_name="挂号时间")
 
 class Treatment(models.Model):
-    patient = models.ForeignKey(verbose_name="患者编号", to="Patients", to_field="id", on_delete=models.CASCADE)
+    queue_id = models.IntegerField(verbose_name="排队号", default=1)
+    patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE)
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
-    time = models.DateTimeField(verbose_name="就诊时间")
-    medicine = models.CharField(verbose_name="处方内容", max_length=200)
+    date = models.DateField(verbose_name="就诊日期", default=django.utils.timezone.now)
+    medicine = models.TextField(verbose_name="处方内容", max_length=1024)
     
     state_choices = (
         (1, "已缴费"),
@@ -52,12 +67,12 @@ class Treatment(models.Model):
     state = models.SmallIntegerField(verbose_name="处方状态", choices=state_choices)
 
 class Notice(models.Model):
-    patient = models.ForeignKey(verbose_name="患者编号", to="Patients", to_field="id", on_delete=models.CASCADE)
+    patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='patient_notices')
+    register = models.ForeignKey(verbose_name="挂号者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='register_notices')
     message = models.CharField(verbose_name="通知内容", max_length=200)
 
 class Medicine(models.Model):
     name = models.CharField(verbose_name="药物名字", max_length=50)
-    
     medicine_choices = (
         (1, "中药"),
         (2, "中成药"),
@@ -66,3 +81,5 @@ class Medicine(models.Model):
     medicine_type = models.SmallIntegerField(verbose_name="药物种类", choices=medicine_choices)
     symptom = models.CharField(verbose_name="适应症状", max_length=200)
     price = models.DecimalField(verbose_name="药物价格", max_digits=5, decimal_places=2)
+    quantity = models.IntegerField(verbose_name="药物库存", default=0)
+    photo = models.ImageField(verbose_name="药物图片", upload_to='medicine/', null=True, blank=True)

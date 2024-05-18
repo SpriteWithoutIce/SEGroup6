@@ -1,30 +1,17 @@
-<template>
-  <PrescriptionDetails ref="prescriptionDetails"> </PrescriptionDetails>
-  <HeaderNavigation />
-  <MakePrescription />
-  <NavBar />
-</template>
-
-<script>
-import PrescriptionDetails from './components/Prescription/PrescriptionDetails.vue'
-import MakePrescription from './components/Prescription/MakePrescription.vue'
-import HeaderNavigation from './components/HeaderNavigation.vue';
+<script setup>
+import HeaderNavigation from './components/Navigation/HeaderNavigation.vue'
 import NavBar from './components/Navigation/Navbar.vue'
-export default {
-  name: 'App',
-  components: {
-    NavBar,
-    PrescriptionDetails,
-    MakePrescription,
-    HeaderNavigation,
-  },
-  methods: {
-    showPrescriptionDetails () {
-      this.$refs.prescriptionDetails.openModal();
-    }
-  }
-}
+import readOnlyVue from './components/Main/ReadOnlyVue.vue'
+import PatientA from './components/History/PatientA.vue'
+import PresA from './components/History/PresA.vue'
 </script>
+
+<template>
+  <div id="app">
+    <HeaderNavigation></HeaderNavigation>
+    <NavBar></NavBar>
+  </div>
+</template>
 
 <style>
 #app {
