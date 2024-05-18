@@ -1,16 +1,15 @@
 <template>
   <div class="modal-background" v-if="loginVisible">
+    <img src="../../assets/LogIn/碳治郎1.png" alt="中心图片" class="center-image">
     <div class="modal-container">
       <div class="top-section">
-        <img src="../../assets/navigation/banner1.jpg" alt="背景图片" class="background-image">
-        <!-- Place cancel button in the top right corner -->
+        <img src="../../assets/navigation/banner2.jpg" alt="背景图片" class="background-image">
         <div class="cancel-btn" @click="cancelModal">
           <div class="cancel-icon">X</div>
         </div>
       </div>
       <!-- 想在这里插入一个空区域让两边分割 -->
       <div class="mid-section">
-
       </div>
       <div class="bottom-section">
         <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form" label-width="auto">
@@ -20,10 +19,6 @@
           <el-form-item label="密码" prop="name" class="input-item">
             <el-input v-model="loginForm.name" type="password"></el-input>
           </el-form-item>
-          <div class="checkbox-group">
-            <el-checkbox v-model="loginForm.remember">记住密码</el-checkbox>
-            <el-checkbox v-model="loginForm.autoLogin">自动登录</el-checkbox>
-          </div>
         </el-form>
         <div class="button-group">
           <el-button type="primary" @click="handleLogin" class="input-item2">登录</el-button>
@@ -59,7 +54,7 @@ export default {
       this.loginForm.idCard = "";
       this.loginForm.name = "";
       this.loginVisible = true;
-      document.body.style.overflow = "hidden"; // 禁止滚动
+      document.body.style.overflow = "hidden";
     },
     closeModal () {
       this.loginVisible = false;
@@ -132,6 +127,17 @@ export default {
   object-fit: cover;
 }
 
+.center-image {
+  position: absolute;
+  top: 35%;
+  width: 7%;
+  z-index: 3;
+}
+
+.mid-section {
+  height: 15vh;
+}
+
 .bottom-section {
   height: 67%;
   padding: 20px;
@@ -139,14 +145,12 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  /* Center align all child elements horizontally */
 }
 
 .checkbox-group {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  /* Ensure checkboxes take full width */
 }
 
 .button-group {
@@ -157,10 +161,10 @@ export default {
 
 .cancel-btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  height: 30px;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
   border-radius: 50%;
   background-color: #007bff;
@@ -170,16 +174,17 @@ export default {
 }
 
 .cancel-btn:hover {
-  background-color: #000fb397;
+  background-color: #07070e97;
 }
 
 .cancel-icon {
-  font-size: 20px;
+  font-size: 12px;
   color: #fff;
 }
 
 .input-item2 {
   align-self: center;
-  width: 50%;
+  width: 40%;
+  height: 40px;
 }
 </style>
