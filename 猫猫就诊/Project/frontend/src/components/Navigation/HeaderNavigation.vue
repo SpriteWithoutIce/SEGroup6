@@ -1,30 +1,23 @@
-<!-- 开侧边栏比如bingAI,会由于元素缩放问题（问题在旋转动画那里）导致关停 -->
-<!-- 感觉把边上那个按钮去掉吧,主要是图片不好看的原因 -->
-<!-- 功能修改成点击可以切换图片，图片也会进行轮播 https://blog.csdn.net/boxuestudio/article/details/129099623-->
 <template>
   <Login ref="Login"> </Login>
   <div>
-    <messagedrawer ref="messageBox" class="messageBox" />
+    <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
     <Login ref="Login"> </Login>
-    <el-header class="header-nav">
+    <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
-        <!-- 导航链接可以根据需要添加 -->
-        <!-- 这是需要加路由的，路由应该放在index里边 -->
-        <a href="#unknown">首页</a>
+        <RouterLink to="/Main">首页</RouterLink>
         <a href="#unknown" @click="showLogin()">登录</a>
-        <a @click="openMessageBox">消息</a>
+        <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
+          v-if="unreadCount !== 0"></el-badge>
         <a href="#unknown">联系我们</a>
-        <a href="#unknown">关于</a>
       </nav>
-      <!-- 下边这段肯定可以简化 -->
-      <!-- 改了会出bug导致的 -->
       <div class="clickable-images">
         <router-link to="/AppointmentRegistration" class="image-link" @mouseover="showSurroundImage(1)"
           @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.1.png" alt="Image 1" />
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 1" />
         </router-link>
-        <RouterLink to="/PatientA" class="image-link" @mouseover="showSurroundImage(2)"
+        <RouterLink to="/MedicineA" class="image-link" @mouseover="showSurroundImage(2)"
           @mouseleave="hideSurroundImage()">
           <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2" />
           <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2" />
@@ -65,11 +58,17 @@ export default {
         '/static/img/navigation/banner1.jpg',
         '/static/img/navigation/banner2.jpg',
         '/static/img/navigation/banner3.jpg'
-      ]
+      ],
+      unreadCount: 0,
+      intervalId: null
     }
   },
   mounted () {
-    setInterval(this.changeBackground, 5000) // Change background every 5 seconds
+    this.startBackgroundRotation()
+    this.$refs.messageBox.countUnread()
+  },
+  beforeDestroy () {
+    this.stopBackgroundRotation()
   },
   components: {
     Login,
@@ -79,8 +78,14 @@ export default {
   },
   methods: {
     showLogin () {
-      this.$refs.Login.openModal();
-      console.log("执行");
+      this.$refs.Login.openModal()
+      console.log('执行')
+    },
+    startBackgroundRotation () {
+      this.intervalId = setInterval(this.changeBackground, 5000) // Change background every 5 seconds
+    },
+    stopBackgroundRotation () {
+      clearInterval(this.intervalId)
     },
     changeBackground () {
       this.currentIndex = (this.currentIndex + 1) % this.images.length
@@ -89,6 +94,11 @@ export default {
         elements[i].style.transition = 'background-image 2s ease-in-out'
         elements[i].style.backgroundImage = 'url(' + this.images[this.currentIndex] + ')'
       }
+    },
+    changeBackgroundOnClick () {
+      this.stopBackgroundRotation()
+      this.changeBackground()
+      this.startBackgroundRotation()
     },
     showSurroundImage (index) {
       const SurroundImage = document.querySelector(
@@ -108,15 +118,15 @@ export default {
     },
     openMessageBox () {
       this.$refs.messageBox.openDrawer()
+    },
+    getUnreadCount (cnt) {
+      this.unreadCount = cnt
     }
-
-    /*下边的代码都是想实现图片轮播*/
   }
 }
 </script>
 
 <style>
-/* 进行图片缩放的代码 非常奇怪，不知道哪里跳错了，没弄错参数，问题是开了侧边栏，需要网页全屏才能看的清楚*/
 @keyframes zoom {
   0% {
     background-size: 105%;
@@ -137,6 +147,12 @@ export default {
   }
 }
 
+.item {
+  margin-top: 10px;
+  margin-left: -25px;
+  margin-right: 25px;
+}
+
 .header-nav {
   background-color: #333;
   color: white;
@@ -152,7 +168,7 @@ export default {
   justify-content: flex-end;
   align-items: flex-start;
   padding-right: 0px;
-  animation: zoom 2s ease-in-out;
+  animation: zoom 1.5s ease-in-out;
   position: relative;
   margin-top: 0;
 }
