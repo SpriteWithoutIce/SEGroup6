@@ -135,6 +135,24 @@ class OnDutyView(APIView):
         return JsonResponse({"unoccupied": unoccupied})
 
 class MedicineView(APIView):
+    def get(self, request):
+        medicine = []
+        for item in Medicine.objects.values('name', 'medicine_type', 'patient_birthday', 'symptom', 'price'):
+            type = ""
+            if item['medicine_type'] == 1:
+                type = "中药"
+            elif item['medicine_type'] == 2:
+                type = "中成药"
+            else:
+                type = "西药"
+            medicine.append({
+                "name": item['name'],
+                "type": type,
+                "use": item['symptom'],
+                "price": item['price']
+            })
+        return JsonResponse({'medicine': medicine})
+    
     def post(self, request):
         action = request.POST.get('action')
         if action == 'upload_photo':

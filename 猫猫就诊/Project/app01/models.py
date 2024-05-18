@@ -82,4 +82,4 @@ class Medicine(models.Model):
     symptom = models.CharField(verbose_name="适应症状", max_length=200)
     price = models.DecimalField(verbose_name="药物价格", max_digits=5, decimal_places=2)
     quantity = models.IntegerField(verbose_name="药物库存", default=0)
-    photo = models.ImageField(verbose_name="药物图片", upload_to='medicine/', default="")
+    photo = models.ImageField(verbose_name="药物图片", upload_to='medicine/', null=True, blank=True)

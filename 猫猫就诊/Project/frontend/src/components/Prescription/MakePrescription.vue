@@ -182,17 +182,19 @@ export default {
       console.log("看看这里能读吗1")
       console.log(this.patient);
     },
-    getTreatmentsData: function () {
-      let ts = this;
-      this.$axios.get('/api/treatments/list/')
-        .then(function (response) {
-          ts.patient = response.data['treatments'];
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-      console.log("看看这里能读吗2")
-      console.log(this.patient);
+    getTreatmentsData() {
+      return new Promise((resolve, reject) => {
+        this.$axios.get('/api/treatments/list/')
+          .then(function (response) {
+            ts.patient = response.data['treatments'];
+            console.log(ts.doctors);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
     },
 
 
@@ -241,9 +243,10 @@ export default {
     },
   },
   mounted () {
-    //this.getTreatmentsData();
-    this.selectFunc('1');
-    this.handleCurrentChange(1);
+    this.getTreatmentsData().then(() => {
+      this.selectFunc('1');
+      this.handleCurrentChange(1);
+    });
   }
 }
 </script>

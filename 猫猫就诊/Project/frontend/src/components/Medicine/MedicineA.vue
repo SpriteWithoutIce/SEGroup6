@@ -75,90 +75,101 @@ const pagination = ref({
   pageSize: 9
 })
 const tableData = [
-  {
-    name: '感冒冲剂',
-    type: '中药',
-    use: '感冒',
-    price: '5.00'
-  },
-  {
-    name: '感冒冲剂',
-    type: '中药',
-    use: '感冒',
-    price: '5.00'
-  },
-  {
-    name: '感冒冲剂',
-    type: '中药',
-    use: '感冒',
-    price: '5.00'
-  },
-  {
-    name: '感冒冲剂',
-    type: '中药',
-    use: '感冒',
-    price: '5.00'
-  },
-  {
-    name: '感冒冲剂',
-    type: '中药',
-    use: '感冒',
-    price: '5.00'
-  },
-  {
-    name: '感冒冲剂',
-    type: '中药',
-    use: '感冒',
-    price: '5.00'
-  },
-  {
-    name: '感冒冲剂',
-    type: '中药',
-    use: '感冒',
-    price: '5.00'
-  },
-  {
-    name: '感冒冲剂',
-    type: '中药',
-    use: '感冒',
-    price: '5.00'
-  },
-  {
-    name: '阿司匹林片',
-    type: '西药',
-    use: '缓解疼痛，如头痛、牙痛，降低发热体温，预防血栓形成',
-    price: '2.50'
-  },
-  {
-    name: '布洛芬缓释胶囊',
-    type: '西药',
-    use: '减轻中度疼痛，如关节炎、扭伤等，缓解炎症',
-    price: '15.00'
-  },
-  {
-    name: '维生素C片',
-    type: '保健品',
-    use: '补充维生素C，增强免疫力，促进铁的吸收',
-    price: '8.00'
-  },
-  {
-    name: '胰岛素注射液',
-    type: '生物制品',
-    use: '治疗糖尿病，调节血糖水平',
-    price: '35.00'
-  },
-  {
-    name: '蒙脱石散',
-    type: '中药',
-    use: '治疗腹泻，缓解胃肠道不适',
-    price: '10.00'
-  }
+  // {
+  //   name: '感冒冲剂',
+  //   type: '中药',
+  //   use: '感冒',
+  //   price: '5.00'
+  // },
+  // {
+  //   name: '感冒冲剂',
+  //   type: '中药',
+  //   use: '感冒',
+  //   price: '5.00'
+  // },
+  // {
+  //   name: '感冒冲剂',
+  //   type: '中药',
+  //   use: '感冒',
+  //   price: '5.00'
+  // },
+  // {
+  //   name: '感冒冲剂',
+  //   type: '中药',
+  //   use: '感冒',
+  //   price: '5.00'
+  // },
+  // {
+  //   name: '感冒冲剂',
+  //   type: '中药',
+  //   use: '感冒',
+  //   price: '5.00'
+  // },
+  // {
+  //   name: '感冒冲剂',
+  //   type: '中药',
+  //   use: '感冒',
+  //   price: '5.00'
+  // },
+  // {
+  //   name: '感冒冲剂',
+  //   type: '中药',
+  //   use: '感冒',
+  //   price: '5.00'
+  // },
+  // {
+  //   name: '感冒冲剂',
+  //   type: '中药',
+  //   use: '感冒',
+  //   price: '5.00'
+  // },
+  // {
+  //   name: '阿司匹林片',
+  //   type: '西药',
+  //   use: '缓解疼痛，如头痛、牙痛，降低发热体温，预防血栓形成',
+  //   price: '2.50'
+  // },
+  // {
+  //   name: '布洛芬缓释胶囊',
+  //   type: '西药',
+  //   use: '减轻中度疼痛，如关节炎、扭伤等，缓解炎症',
+  //   price: '15.00'
+  // },
+  // {
+  //   name: '维生素C片',
+  //   type: '保健品',
+  //   use: '补充维生素C，增强免疫力，促进铁的吸收',
+  //   price: '8.00'
+  // },
+  // {
+  //   name: '胰岛素注射液',
+  //   type: '生物制品',
+  //   use: '治疗糖尿病，调节血糖水平',
+  //   price: '35.00'
+  // },
+  // {
+  //   name: '蒙脱石散',
+  //   type: '中药',
+  //   use: '治疗腹泻，缓解胃肠道不适',
+  //   price: '10.00'
+  // }
 ]
+
+const getMedicineData = () => {
+  $axios.get('/api/medicine/list/')
+    .then(response => {
+      tableData = response.data['medicine'];
+      pagination.value.total = tableData.length // 更新总条目数
+      console.log("Medicine data fetched:", tableData.value);
+    })
+    .catch(error => {
+      console.error("Error fetching medicine data:", error);
+    })
+}
 
 const ftableData = computed(() => {
   const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
   const end = start + pagination.value.pageSize
-  pagination.value.total = tableData.length // 更新总条目数
   console.log(`值是：${pagination.value.total}`)
   return tableData.slice(start, end)
 })
@@ -169,6 +180,7 @@ const handleCurrentChange = (e) => {
   // filteredBillsDiv 会自动更新，因为是一个 computed 属性
 }
 onMounted(() => {
+  getMedicineData()
   handleCurrentChange(1)
 })
 </script>

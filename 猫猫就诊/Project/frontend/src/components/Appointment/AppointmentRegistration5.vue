@@ -193,20 +193,24 @@ export default {
     };  
   }  ,
   methods: {  
-    getDutyData: function () {
-      let ts = this;
-      let requestData = {
-        action: 'getNextSevenDaysDuty',
-        department: this.$route.query.department,
-      };
-      this.$axios.post('/api/duty/next_seven_days/', requestData)
-        .then(function (response) {
-          ts.doctors = response.data['duty'];
-          console.log(ts.doctors);
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
+    getDutyData() {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          action: 'getNextSevenDaysDuty',
+          department: this.$route.query.department,
+        };
+        this.$axios.post('/api/duty/next_seven_days/', requestData)
+          .then(function (response) {
+            ts.doctors = response.data['duty'];
+            console.log(ts.doctors);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
     },
     isClick(doctor,time){
       this.info_time=time;
@@ -253,31 +257,35 @@ export default {
     },  
     mouseoutButton() {  
     },
-  },  
-  created() {
-    this.getDutyData();
-    this.nextSevenDays=this.locatenextSevenDays()
-    for (let i = 0; i < this.nextSevenDays.length; i++) {  
-      const day = this.nextSevenDays[i].date;
-      console.log(day)
-      this.dayStatus[i].status='none';
-      this.doctors.forEach(doctor => {  
-        doctor.schedule.forEach(scheduleItem => {  
-          if (scheduleItem.time.includes(day)) {  
-            if (scheduleItem.status === 'full' && this.dayStatus[i].status!='empty') {  
-              this.dayStatus[i].status='full';
-            } else if (scheduleItem.status === 'empty') {  
-              this.dayStatus[i].status='empty';
-            }  
-          }  
-        });  
-      });
-    }
-    this.info.name=this.$route.query.name;
-    this.info.paymentType=this.$route.query.paymentType;
-    this.info.department=this.$route.query.department;
-  }
-};  
+  },
+  mounted() {
+    this.getDutyData().then(() => {
+      console.log("111");
+      console.log(this.doctors);
+      this.nextSevenDays = this.locatenextSevenDays();
+      for (let i = 0; i < this.nextSevenDays.length; i++) {
+        const day = this.nextSevenDays[i].date;
+        this.dayStatus[i].status = 'none';
+        this.doctors.forEach(doctor => {
+          doctor.schedule.forEach(scheduleItem => {
+            if (scheduleItem.time.includes(day)) {
+              if (scheduleItem.status === 'full' && this.dayStatus[i].status != 'empty') {
+                this.dayStatus[i].status = 'full';
+              } else if (scheduleItem.status === 'empty') {
+                this.dayStatus[i].status = 'empty';
+              }
+            }
+            console.log(this.dayStatus[i].status);
+          });
+        });
+      }
+      this.info.name = this.$route.query.name;
+      this.info.paymentType = this.$route.query.paymentType;
+      this.info.department = this.$route.query.department;
+      console.log(this.doctors);
+    });
+  },
+}
 </script>  
   
 <style scoped>  
