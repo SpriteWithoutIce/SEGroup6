@@ -3,6 +3,24 @@
     <div class="modal-container">
       <div class="content">
         <h3>添加药品</h3>
+
+        <div class="upload">
+          <p style="margin-left: 15px; font-size: 14px; font-weight: 500; color: grey">
+            点击导入本地药物图片
+          </p>
+          <el-upload
+            class="avatar-uploader"
+            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          </el-upload>
+        </div>
+
+        <el-divider />
         <div class="line">
           <p style="margin-left: 15px">药品名：</p>
           <el-input
@@ -25,9 +43,13 @@
           <el-input v-model="info.price" style="width: 240px" placeholder="请输入单价" clearable />
         </div>
         <div class="line">
+          <p style="margin-left: 15px">库存：</p>
+          <el-input v-model="info.num" style="width: 240px" placeholder="请输入库存" clearable />
+        </div>
+        <div class="line">
           <p style="margin-left: 15px">适应症状：</p>
           <el-input
-            v-model="info.price"
+            v-model="info.use"
             style="width: 240px"
             placeholder="用逗号分隔(例如：感冒，头痛)"
             type="textarea"
@@ -52,10 +74,11 @@ export default {
       radio: '',
       info: [
         {
-          name: '感冒冲剂',
-          type: '中药',
-          use: '感冒',
-          price: '5.00'
+          name: '',
+          type: '',
+          use: '',
+          price: '',
+          num: ''
         }
       ]
     }
@@ -65,8 +88,16 @@ export default {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
       this.info.name = row.name
-      this.info.type = row.use
+      if (row.type === '中药') {
+        this.radio = 3
+      } else if (row.type === '中成药') {
+        this.radio = 6
+      } else {
+        this.radio = 9
+      }
+      this.info.use = row.use
       this.info.price = row.price
+      this.info.num = row.num
       console.log(`传入的name是：${this.info.name}`)
     },
     closeModal() {
@@ -76,7 +107,43 @@ export default {
   }
 }
 </script>
+
 <style scoped>
+.avatar-uploader .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+  margin-left: 15px;
+  margin-top: 10px;
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
+}
+</style>
+<style scoped>
+.upload {
+  display: flex;
+  flex-direction: column;
+}
 .el-button {
   height: 40px;
 }
