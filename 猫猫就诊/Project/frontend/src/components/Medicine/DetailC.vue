@@ -5,18 +5,22 @@
         <h3>添加药品</h3>
 
         <div class="upload">
-          <p style="margin-left: 15px; font-size: 14px; font-weight: 500; color: grey">
+          <p style="margin-bottom: 20px; font-size: 14px; font-weight: 500; color: grey">
             点击导入本地药物图片
           </p>
           <el-upload
-            class="avatar-uploader"
+            v-model:file-list="fileList"
+            class="upload-demo"
             action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
+            :on-preview="handlePreview"
+            :on-remove="handleRemove"
+            :on-success="handleSuccess"
+            list-type="picture"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+            <el-button type="primary">Click to upload</el-button>
+            <template #tip>
+              <div class="el-upload__tip">jpg/png files with a size less than 500kb</div>
+            </template>
           </el-upload>
         </div>
 
@@ -65,10 +69,17 @@
   </div>
 </template>
 <script>
+import { ref } from 'vue'
 export default {
   name: 'DetailC',
   data() {
     return {
+      fileList: ref([
+        {
+          name: 'food.jpeg',
+          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        }
+      ]),
       isVisible: false,
       inputName: '',
       radio: '',
@@ -84,6 +95,28 @@ export default {
     }
   },
   methods: {
+    handleSuccess(response, file, fileList) {
+      // 假设后端API返回了文件上传成功的响应
+      if (response.success) {
+        // 更新fileList，添加新上传的文件信息
+        this.fileList.push({
+          name: file.name,
+          url: response.data.url // 假设后端返回文件的URL
+          // 其他需要的属性...
+        })
+      } else {
+        // 处理错误情况
+        console.error('文件上传失败:', response.message)
+      }
+    },
+    // 合并之前的handleRemove函数
+    handleRemove(uploadFile, uploadFiles) {
+      console.log(uploadFile, uploadFiles)
+    },
+    // 合并之前的handlePreview函数
+    handlePreview(file) {
+      console.log(file)
+    },
     openModal(row) {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
@@ -141,8 +174,10 @@ export default {
 </style>
 <style scoped>
 .upload {
+  position: relative;
   display: flex;
   flex-direction: column;
+  margin-left: 15px;
 }
 .el-button {
   height: 40px;

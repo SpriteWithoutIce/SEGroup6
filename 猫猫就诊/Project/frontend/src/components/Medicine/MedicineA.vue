@@ -8,7 +8,7 @@
       <p style="font-weight: bold; margin-left: 10px">药品管理</p>
     </div>
     <div class="card-container">
-      <el-card style="height: 720px; width: 95%">
+      <el-card style="height: 660px; width: 95%">
         <el-input
           v-model="input4"
           style="width: 300px; height: 40px"
@@ -26,11 +26,6 @@
           @click="showPrescriptionDetails('')"
           >+新建药物类型</el-button
         >
-        <div class="grey">
-          <el-button type="info" plain>中药</el-button>
-          <el-button type="info" plain>中成药</el-button>
-          <el-button type="info" plain>西药</el-button>
-        </div>
         <el-table :data="ftableData" style="width: 95%; max-height: 480px">
           <el-table-column prop="name" label="药物名称" width="150" />
           <el-table-column prop="type" label="药物种类" width="150" />
@@ -235,10 +230,6 @@ onMounted(() => {
   width: 100%;
   height: 100%;
 }
-.grey {
-  position: relative;
-  margin-top: 15px;
-}
 .page {
   position: absolute;
   bottom: 5%;
@@ -262,7 +253,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 720px;
+  height: 660px;
 }
 .el-card {
   position: relative;
@@ -279,7 +270,7 @@ onMounted(() => {
   position: relative;
   top: 0;
   width: 100%;
-  min-height: 110vh;
+  min-height: 100vh;
   background-color: white;
 }
 .footer {
