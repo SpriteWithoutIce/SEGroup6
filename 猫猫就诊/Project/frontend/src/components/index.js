@@ -8,6 +8,7 @@ import Navbar from "./Navigation/Navbar.vue";
 import BillList from "./Bills/BillList.vue";
 import BillDetails from "./Bills/BillDetails.vue";
 
+import ReadOnlyVue from "./Main/ReadOnlyVue.vue";
 import PatientA from "./History/PatientA.vue";
 import PresA from "./History/PresA.vue";
 
@@ -21,6 +22,6 @@ import AppointmentRegistration7 from "./Appointment/AppointmentRegistration7.vue
 import AppointmentRegistration8 from "./Appointment/AppointmentRegistration8.vue";
 import TableSearch from "./Table/TableSearch.vue";
 export {
-  HeaderNavigation, MakePrescription, PrescriptionDetails, ReadOnlyVue, Navbar, BillList, BillDetails, AppointmentRegistration, AppointmentRegistration2,
-  AppointmentRegistration3, AppointmentRegistration4, AppointmentRegistration5, AppointmentRegistration6, AppointmentRegistration7, AppointmentRegistration8, TableSearch, PatientA, PresA
+  ReadOnlyVue, HeaderNavigation, MakePrescription, PrescriptionDetails, Navbar, BillList, BillDetails, AppointmentRegistration, AppointmentRegistration2,
+  AppointmentRegistration3, AppointmentRegistration4, AppointmentRegistration5, AppointmentRegistration6, AppointmentRegistration7, AppointmentRegistration8, TableSearch, PatientA, PresA, MedicineA
 }

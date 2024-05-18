@@ -1,6 +1,7 @@
 <!--患者的处方查询页面-->
 <template>
-  <div class="container">
+  <!-- <div class="container"> -->
+  <el-container style="height: 100vh;">
     <scroll>
       <div class="all-container" width="100%">
         <div class="search-container">
@@ -13,31 +14,23 @@
         <SignA></SignA>
         <div class="input-container">
           <div class="chaxun">
-            <el-input
-              v-model="input4"
-              style="width: 300px; height: 40px"
-              placeholder="请输入就诊日期(例:2024-05-09) 或 科室"
-              class="shuru"
-            >
+            <el-input v-model="input4" style="width: 300px; height: 40px" placeholder="请输入就诊日期(例:2024-05-09) 或 科室"
+              class="shuru">
               <template #prefix>
-                <el-icon class="el-input__icon"><search /></el-icon>
+                <el-icon class="el-input__icon">
+                  <search />
+                </el-icon>
               </template>
             </el-input>
-            <el-button
-              color="#DBA979"
-              :dark="isDark"
-              plain
-              class="searchButton"
-              style="width: 80px; height: 40px"
-              >查询</el-button
-            >
+            <el-button color="#DBA979" :dark="isDark" plain class="searchButton"
+              style="width: 80px; height: 40px">查询</el-button>
             <p>{{ input4 }}</p>
           </div>
         </div>
         <PHistory :filterInfo="filterInfo"></PHistory>
       </div>
     </scroll>
-  </div>
+  </el-container>
 </template>
 <script setup>
 import CarouselA from './CarouselA.vue'
@@ -162,17 +155,21 @@ const filterInfo = computed(() => {
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: row; /* 将组件横向排列 */
+  flex-direction: row;
+  /* 将组件横向排列 */
   align-items: center;
 }
+
 .shuru {
   position: absolute;
   left: 0%;
 }
+
 .searchButton {
   position: absolute;
   left: 80%;
 }
+
 .input-container {
   position: absolute;
   top: 570px;
@@ -185,36 +182,44 @@ const filterInfo = computed(() => {
   align-items: center;
   left: 50%;
 }
+
 .wenzi {
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: row; /* 将组件横向排列 */
+  flex-direction: row;
+  /* 将组件横向排列 */
   align-items: center;
 }
+
 .guahao {
   position: absolute;
   font-size: 25px;
   left: 50%;
   transform: translateX(-50%);
 }
+
 p {
   color: #e9c874;
 }
+
 .back {
   font-size: 15px;
   position: absolute;
   left: 80%;
 }
+
 p {
   font-weight: bold;
 }
+
 .divider {
   position: absolute;
   width: 50%;
   left: 25%;
   top: 55%;
 }
+
 .search-container {
   position: absolute;
   top: 400px;
@@ -226,11 +231,13 @@ p {
   transform: translateX(-50%);
   left: 50%;
 }
-.container {
+
+/*.container {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
 }
+*/
 </style>

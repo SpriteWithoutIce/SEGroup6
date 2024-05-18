@@ -1,9 +1,10 @@
 <template>
   <div class="navbar" :class="{ sticky: isSticky }">
-    <a href="#" class="white-bold">首页</a>
+    <messagedrawer ref="messageBox" class="messageBox" />
+    <RouterLink to="/Main" @click="returnTop" class="white-bold">首页</RouterLink>
     <a href="#" class="white-bold">登录</a>
-    <a href="#" class="white-bold">关于</a>
-    <a href="#" class="white-bold">联系我们</a>
+    <a class="white-bold" @click="openMessageBox">消息</a>
+    <a @click="returnTop" class="white-bold">回到顶部</a>
   </div>
 </template>
 
@@ -13,7 +14,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
 export default {
   name: 'NavBar',
   setup () {
-    const isSticky = ref(false);
+    const isSticky = ref(false)
 
     const checkScroll = () => {
       requestAnimationFrame(() => {
@@ -31,7 +32,21 @@ export default {
 
     return { isSticky };
   },
-};
+  components: {
+    messagedrawer
+  },
+  methods: {
+    returnTop () {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    },
+    openMessageBox () {
+      this.$refs.messageBox.openDrawer()
+    }
+  }
+}
 </script>
 
 <style scoped>
