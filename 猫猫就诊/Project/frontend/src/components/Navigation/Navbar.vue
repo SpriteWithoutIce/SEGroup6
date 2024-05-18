@@ -17,9 +17,7 @@ export default {
     const isSticky = ref(false)
 
     const checkScroll = () => {
-      requestAnimationFrame(() => {
-        isSticky.value = window.scrollY > 200;
-      });
+      isSticky.value = window.scrollY > 200;
     };
 
     onMounted(() => {
@@ -51,7 +49,6 @@ export default {
 
 <style scoped>
 .navbar {
-  position: absolute;
   width: 100%;
   height: 70px;
   transition: all 0.2s;

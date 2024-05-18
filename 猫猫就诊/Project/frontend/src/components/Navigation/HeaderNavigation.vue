@@ -73,7 +73,8 @@ export default {
   components: {
     Login,
     RouterLink,
-    RouterView
+    RouterView,
+    messagedrawer,
   },
   methods: {
     showLogin () {
@@ -201,6 +202,8 @@ export default {
   position: relative;
   width: 4em;
   text-align: center;
+  font-weight: bold;
+  text-shadow: 2px 2px 2px rgba(13, 65, 153, 0.941);
 }
 
 /*导航栏蓝色下划线代码*/
