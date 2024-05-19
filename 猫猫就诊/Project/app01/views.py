@@ -145,7 +145,7 @@ class BillView(APIView):
 class MedicineView(APIView):
     def get(self, request):
         medicine = []
-        for item in Medicine.objects.values('name', 'medicine_type', 'symptom', 'price'):
+        for item in Medicine.objects.values('name', 'medicine_type', 'symptom', 'price', 'quantity'):
             type = ""
             if item['medicine_type'] == 1:
                 type = "中药"
@@ -157,7 +157,8 @@ class MedicineView(APIView):
                 "name": item['name'],
                 "type": type,
                 "use": item['symptom'],
-                "price": item['price']
+                "price": item['price'],
+                "num": item['quantity']
             })
         return JsonResponse({'medicine': medicine})
     
