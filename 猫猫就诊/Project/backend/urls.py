@@ -29,5 +29,7 @@ urlpatterns = [
     path("api/medicine/list/", views.MedicineView.as_view()),
     path("api/duty/doctor_status/", views.OnDutyView.as_view()),
     path("api/bills/list/", views.BillView.as_view()),
-    path("api/notice/list/", views.NoticeView.as_view())
+    path("api/notice/list/", views.NoticeView.as_view()),
+    path("api/login", views.PatientView.as_view()),
+    path("api/login/register", views.PatientView.as_view()),
 ]

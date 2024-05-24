@@ -14,6 +14,7 @@ class Patients(models.Model):
     )
     identity = models.SmallIntegerField(verbose_name="身份证明", choices=identity_choices, default=1)
     identity_num = models.CharField(verbose_name="证件号", max_length=64, primary_key=True)
+    password = models.CharField(verbose_name="用户密码", max_length=64)
     name = models.CharField(verbose_name="患者姓名", max_length=20)
     health_insurance_choices = (
         (1, "医保"),
