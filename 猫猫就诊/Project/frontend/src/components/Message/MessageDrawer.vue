@@ -136,55 +136,76 @@ export default {
       activeNames: ['1', '2'],
       table: false,
       timer: null,
-      resMes: [
-        {
-          type: '预约成功',
-          name: '小黄',
-          department: '精神科',
-          doctor: '李医生',
-          time: '2024-5-12',
-          id: '03230802',
-          timetamp: '2024-5-11',
-          read: true
-        },
-        {
-          type: '取消预约',
-          name: '小黄',
-          department: '精神科',
-          doctor: '李医生',
-          time: '2024-5-12',
-          id: '03230802',
-          timetamp: '2024-5-11',
-          read: false
-        }
-      ],
-      billMes: [
-        {
-          type: '处方缴费提醒',
-          name: '小黄',
-          department: '精神科',
-          doctor: '李医生',
-          time: '2024-5-12',
-          id: '03230802',
-          timetamp: '2024-5-11',
-          price: 200,
-          read: false
-        },
-        {
-          type: '处方缴费成功',
-          name: '小黄',
-          department: '精神科',
-          doctor: '李医生',
-          time: '2024-5-12',
-          id: '03230802',
-          timetamp: '2024-5-11',
-          price: 200,
-          read: false
-        }
-      ]
+      // resMes: [
+      //   {
+      //     type: '预约成功',
+      //     name: '小黄',
+      //     department: '精神科',
+      //     doctor: '李医生',
+      //     time: '2024-5-12',
+      //     id: '03230802',
+      //     timetamp: '2024-5-11',
+      //     read: true
+      //   },
+      //   {
+      //     type: '取消预约',
+      //     name: '小黄',
+      //     department: '精神科',
+      //     doctor: '李医生',
+      //     time: '2024-5-12',
+      //     id: '03230802',
+      //     timetamp: '2024-5-11',
+      //     read: false
+      //   }
+      // ],
+      // billMes: [
+      //   {
+      //     type: '处方缴费提醒',
+      //     name: '小黄',
+      //     department: '精神科',
+      //     doctor: '李医生',
+      //     time: '2024-5-12',
+      //     id: '03230802',
+      //     timetamp: '2024-5-11',
+      //     price: 200,
+      //     read: false
+      //   },
+      //   {
+      //     type: '处方缴费成功',
+      //     name: '小黄',
+      //     department: '精神科',
+      //     doctor: '李医生',
+      //     time: '2024-5-12',
+      //     id: '03230802',
+      //     timetamp: '2024-5-11',
+      //     price: 200,
+      //     read: false
+      //   }
+      // ]
     }
   },
   methods: {
+    // post请求，请求数据体中包含用户证件号identity_num
+    // url为api/notice/list/
+    // 返回数据为resMes和billMes两个字典数组
+    getMesData(){
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        //注意：需要前端传入当前登录用户的证件号
+        this.$axios.post('api/notice/list/', {identity_num: "123"})
+          .then(function (response) {
+            ts.resMes = response.data['resMes'];
+            ts.billMes = response.data['billMes'];
+            console.log(ts.resMes);
+            console.log(ts.billMes);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
     openDrawer() {
       this.table = true
     },
@@ -210,12 +231,14 @@ export default {
       // 计算billMes中read为false的数量
       const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
       // 返回两个数量的总和
-      // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
       this.$emit('update:result', unreadResMesCount + unreadBillMesCount)
     },
     readMes(row) {
       row.read = true;
       this.countUnread();
+    },
+    mounted() {
+      this.getMesData();
     }
   }
 }
@@ -223,11 +246,11 @@ export default {
 
 <style scoped>
 ::v-deep .el-drawer{
-  background: rgba(249, 246, 246, 0.5) url("../../assets/message/message-back.jpg");
+  background: url("../../assets/message/message-back.jpg");
   background-size: cover;
 }
 ::v-deep .el-drawer__title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
   text-shadow: 2px 2px 3px rgba(13, 65, 153, 0.941);
   text-align: left;
