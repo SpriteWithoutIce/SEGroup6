@@ -8,16 +8,14 @@
           <div class="cancel-icon">X</div>
         </div>
       </div>
-      <!-- 想在这里插入一个空区域让两边分割 -->
-      <div class="mid-section">
-      </div>
+      <div class="mid-section"></div>
       <div class="bottom-section">
         <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form" label-width="auto">
           <el-form-item label="身份证号" prop="idCard" class="input-item">
             <el-input v-model="loginForm.idCard"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="name" class="input-item">
-            <el-input v-model="loginForm.name" type="password"></el-input>
+          <el-form-item label="密码" prop="password" class="input-item">
+            <el-input v-model="loginForm.password" type="password"></el-input>
           </el-form-item>
         </el-form>
         <div class="button-group">
@@ -30,29 +28,32 @@
 
 <script>
 import { ElMessage } from "element-plus";
+
 export default {
   data () {
     return {
       loginVisible: false,
       loginForm: {
         idCard: "",
-        name: "",
+        password: "",
         remember: false,
         autoLogin: false,
       },
+      users: [],
       rules: {
         idCard: [
           { required: true, message: "请输入账号", trigger: "blur" },
           { pattern: /^\d{6,20}$/, message: "账号必须为6~20位数字", trigger: "blur" },
         ],
-        name: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
       },
     };
   },
   methods: {
     openModal () {
+      //在这里读取把User数组中的数据更新为数据库的内容
       this.loginForm.idCard = "";
-      this.loginForm.name = "";
+      this.loginForm.password = "";
       this.loginVisible = true;
       document.body.style.overflow = "hidden";
     },
@@ -71,13 +72,34 @@ export default {
     handleLogin () {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          // 验证通过后的逻辑...
-          ElMessage({
-            showClose: true,
-            message: "登录成功 (๑˃̵ᴗ˂̵)",
-            type: "success",
-          });
-          this.closeModal();
+          const { idCard, password } = this.loginForm;
+          let user = this.findUser(idCard);
+
+          if (user) {
+            if (user.password === password) {
+              ElMessage({
+                showClose: true,
+                message: "登录成功 (๑˃̵ᴗ˂̵)",
+                type: "success",
+              });
+              this.closeModal();
+            } else {
+              ElMessage({
+                showClose: true,
+                message: "密码错误 ╮(╯▽╰)╭",
+                type: "error",
+              });
+            }
+          } else {
+            //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
+            this.users.push({ id: idCard, password });
+            ElMessage({
+              showClose: true,
+              message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
+              type: "success",
+            });
+            this.closeModal();
+          }
         } else {
           ElMessage({
             type: "info",
@@ -86,6 +108,9 @@ export default {
           });
         }
       });
+    },
+    findUser (idCard) {
+      return this.users.find((user) => user.id === idCard);
     },
   },
 };
