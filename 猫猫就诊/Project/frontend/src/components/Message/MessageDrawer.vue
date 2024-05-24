@@ -1,11 +1,11 @@
 <template>
   <!-- 侧边抽屉 -->
   <div class="myDrawer">
-    <el-drawer v-model="table" title="消息列表" direction="rtl" size="40%">
+    <el-drawer v-model="table" title="消息列表" direction="rtl" size="40%" >
       <!-- 折叠面板实现消息种类分类 -->
       <div class="demo-collapse">
         <el-collapse v-model="activeNames" @change="handleChange">
-          <el-collapse-item title="预约通知" name="1" class="collapseItem">
+          <el-collapse-item title="&nbsp;&nbsp;&nbsp;预约通知" name="1" class="collapseItem1">
             <div class="messageList">
               <el-table :data="resMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
@@ -64,7 +64,7 @@
             </div>
           </el-collapse-item>
 
-          <el-collapse-item title="缴费通知" name="2">
+          <el-collapse-item title="&nbsp;&nbsp;&nbsp;缴费通知" name="2" class="collapseItem2">
             <div class="messageList">
               <!-- <el-table :data="billMes" style="width: 100%" :row-class-name='success'> -->
               <el-table :data="billMes" style="width: 100%" :row-class-name="tableRowClassName">
@@ -226,6 +226,29 @@ export default {
 </script>
 
 <style scoped>
+::v-deep .el-drawer{
+  background: rgba(249, 246, 246, 0.5) url("../../assets/message/message-back.jpg");
+  background-size: cover;
+}
+::v-deep .el-drawer__title {
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: 2px 2px 3px rgba(13, 65, 153, 0.941);
+  text-align: left;
+  color:rgb(255, 254, 254)
+}
+.collapseItem1,.collapseItem2{
+  padding: 3px;
+  background: linear-gradient(#f0f0f0, #fff);
+  border: 1px solid #ccc;
+  box-shadow: 
+    2px 2px 5px rgba(0, 0, 0, 0.3), 
+    inset -2px -2px 5px rgba(255, 255, 255, 0.6), 
+    inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+.collapseItem1{
+  margin-bottom:10px
+}
 .el-table >>> .warning-row {
   --el-table-tr-bg-color: var(--el-color-warning-light-9);
 }
