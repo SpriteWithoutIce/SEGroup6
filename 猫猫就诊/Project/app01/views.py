@@ -64,8 +64,6 @@ class OnDutyView(APIView):
         action = data['action']
         if action == 'getNextSevenDaysDuty':
             return self.getNextSevenDaysDuty(request)
-        elif action == 'b':
-            return self.getDateDoctorUnoccupied(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -94,12 +92,25 @@ class OnDutyView(APIView):
             find = False
             for d in duty:
                 if d['id'] == item['doctor_id']:
+                    emptyTime = []
+                    for i in range(20):
+                        emptyTime.append({
+                            "number": i + 1,
+                            "status": "empty" if not (item['state'] & (1<<i)) else 'full',
+                        })
                     d['schedule'].append({'time': item['date'].strftime('%m-%d') + time,
                                         'status': 'full' if rest == 0 else 'empty',
-                                        'number': rest})
+                                        'number': rest,
+                                        "emptytime": emptyTime})
                     find = True
                     break
             if not find:
+                emptyTime = []
+                for i in range(20):
+                    emptyTime.append({
+                        "number": i + 1,
+                        "status": "empty" if not (item['state'] & (1<<i)) else 'full',
+                    })
                 duty.append({
                     "id": item['doctor_id'],
                     "name": item['doctor_name'],
@@ -108,33 +119,49 @@ class OnDutyView(APIView):
                     "avatar": item['doctor_avatar'],
                     "schedule": [{'time': item['date'].strftime('%m-%d') + time,
                                     'status': 'full' if rest == 0 else 'empty',
-                                    'number': rest}]
+                                    'number': rest,
+                                    "emptytime": emptyTime}],
+                    
                 })
         return JsonResponse({"duty": duty})
-    
-    # 返回特定医生在特定日期的空闲号
-    def getDateDoctorUnoccupied(self, request):
-        unoccupied = []
-        date = request.POST.get('date')
-        doctor = request.POST.get('id')
-        pattern = r'(\d{4}年\d{1,2}月\d{1,2}日)(上午|下午|晚上)?'
-        match = re.match(pattern, date)
-        date = datetime.strptime(match.group(1), "%Y-%m-%d")
-        period = match.group(2)
-        time = 0
-        if period == "上午":
-            time = 1
-        elif period == "下午":
-            time = 2
-        else:
-            time = 3
-        for item in OnDuty.objects.filter(date=date, time=time, doctor=doctor).values('state'):
-            for i in range(19):
-                if not (item['state'] & (1<<i)):
-                    unoccupied.append(i + 1)
-        return JsonResponse({"unoccupied": unoccupied})
+
+class BillView(APIView):
+    def post(self, request):
+        bill = []
+        identity_num = json.loads(request.body)['identity_num']
+        for item in Bill.objects.filter(patient=identity_num):
+            department = item.register.doctor.department if item.type == 1 else item.treatment.doctor.department
+            date = item.register.time.date() if item.type == 1 else item.treatment.date
+            bill.append({
+                "id": item.id,
+                "type": '挂号' if item.type == 1 else '处方',
+                "department": department,
+                "price": item.price,
+                "date": date.strftime('%Y年%m月%d日'),
+                "payStatus": item.state
+            })
+        return JsonResponse({"bill": bill})
 
 class MedicineView(APIView):
+    def get(self, request):
+        medicine = []
+        for item in Medicine.objects.values('name', 'medicine_type', 'symptom', 'price', 'quantity'):
+            type = ""
+            if item['medicine_type'] == 1:
+                type = "中药"
+            elif item['medicine_type'] == 2:
+                type = "中成药"
+            else:
+                type = "西药"
+            medicine.append({
+                "name": item['name'],
+                "type": type,
+                "use": item['symptom'],
+                "price": item['price'],
+                "num": item['quantity']
+            })
+        return JsonResponse({'medicine': medicine})
+    
     def post(self, request):
         action = request.POST.get('action')
         if action == 'upload_photo':
