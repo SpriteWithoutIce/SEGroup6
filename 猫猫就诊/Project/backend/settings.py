@@ -83,7 +83,7 @@ DATABASES = {
         "NAME": "SEProject",
         "USER": "root",
         "PASSWORD": "22371468Se",
-        "HOST": "172.21.0.12",
+        "HOST": "bj-cynosdbmysql-grp-8do8ws2a.sql.tencentcdb.com",
         "PORT": 3306,
     }
 }
