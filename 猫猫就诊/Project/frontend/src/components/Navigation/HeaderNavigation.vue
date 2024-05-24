@@ -47,9 +47,9 @@ export default {
       unreadCount: 0,
       intervalId: null,
       currentUser: {
-        idCardNumber: '123456789',
-        password: 'password123',
-        userType: 'doctor' // Example user type (doctor, patient, admin, etc.)
+        idCardNumber: '',
+        password: '',
+        userType: '' // Example user type (doctor, patient, admin, etc.)
       },
     }
   },
@@ -135,7 +135,11 @@ export default {
             { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' },
           ]
         default:
-          return []
+          return [{ link: '/AppointmentRegistration', icon: '/static/img/navigation/list1_1.png', alt: 'Image1' },
+          { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
+          { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
+          { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' },
+          { link: '/Bill', icon: '/static/img/navigation/list1_4.png', alt: 'Image 4' }]
       }
     },
 
