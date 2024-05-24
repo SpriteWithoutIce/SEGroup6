@@ -92,22 +92,22 @@ class OnDutyView(APIView):
             find = False
             for d in duty:
                 if d['id'] == item['doctor_id']:
-                    emptytime = []
+                    emptyTime = []
                     for i in range(20):
-                        emptytime.append({
+                        emptyTime.append({
                             "number": i + 1,
                             "status": "empty" if not (item['state'] & (1<<i)) else 'full',
                         })
                     d['schedule'].append({'time': item['date'].strftime('%m-%d') + time,
                                         'status': 'full' if rest == 0 else 'empty',
                                         'number': rest,
-                                        "emptytime": emptytime})
+                                        "emptytime": emptyTime})
                     find = True
                     break
             if not find:
-                emptytime = []
+                emptyTime = []
                 for i in range(20):
-                    emptytime.append({
+                    emptyTime.append({
                         "number": i + 1,
                         "status": "empty" if not (item['state'] & (1<<i)) else 'full',
                     })
@@ -120,15 +120,77 @@ class OnDutyView(APIView):
                     "schedule": [{'time': item['date'].strftime('%m-%d') + time,
                                     'status': 'full' if rest == 0 else 'empty',
                                     'number': rest,
-                                    "emptytime": emptytime}],
+                                    "emptytime": emptyTime}],
                     
                 })
         return JsonResponse({"duty": duty})
 
+class BillView(APIView):
+    def post(self, request):
+        bill = []
+        identity_num = json.loads(request.body)['identity_num']
+        for item in Bill.objects.filter(patient=identity_num):
+            department = item.register.doctor.department if item.type == 1 else item.treatment.doctor.department
+            date = item.register.time.date() if item.type == 1 else item.treatment.date
+            bill.append({
+                "id": item.id,
+                "type": '挂号' if item.type == 1 else '处方',
+                "department": department,
+                "price": item.price,
+                "date": date.strftime('%Y年%m月%d日'),
+                "payStatus": item.state
+            })
+        return JsonResponse({"bill": bill})
+
+class NoticeView(APIView):
+    def post(self, request):
+        resMes = []
+        billMes = []
+        identity_num = json.loads(request.body)['identity_num']
+        for item in Notice.objects.filter(patient=identity_num).annotate(
+            doctor_name=F('doctor__name'),
+            patient_name=F('patient__name'),
+            doctor_department=F('doctor__department'),
+        ).values('patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'date', 'isRead'):
+            type = ""
+            if item['msg_type'] == 1:
+                type = "预约成功"
+            elif item['msg_type'] == 2:
+                type = "取消预约"
+            elif item['msg_type'] == 3:
+                type = "处方缴费提醒"
+            else:
+                type = "处方缴费成功"
+            if item['msg_type'] == 1 or item['msg_type'] == 2:
+                register = Register.objects.get(id=item['register'])
+                resMes.append({
+                    "type": type,
+                    "name": item['patient_name'],
+                    "department": item['doctor_department'],
+                    "doctor": item['doctor_name'],
+                    "time": register.time.date().strftime('%Y-%m-%d'),
+                    "id": item['patient'],
+                    "timetamp": item['date'],
+                    "read": item['isRead']
+                })
+            else:
+                treatment = Treatment.objects.get(id=item['treatment'])
+                billMes.append({
+                    "type": type,
+                    "name": item['patient_name'],
+                    "department": item['doctor_department'],
+                    "doctor": item['doctor_name'],
+                    "time": treatment.date.strftime('%Y-%m-%d'),
+                    "id": item['patient'],
+                    "timetamp": item['date'],
+                    "price": treatment.price,
+                    "read": item['isRead']
+                })
+        return JsonResponse({"resMes": resMes, "billMes": billMes})
 class MedicineView(APIView):
     def get(self, request):
         medicine = []
-        for item in Medicine.objects.values('name', 'medicine_type', 'symptom', 'price'):
+        for item in Medicine.objects.values('name', 'medicine_type', 'symptom', 'price', 'quantity'):
             type = ""
             if item['medicine_type'] == 1:
                 type = "中药"
@@ -140,7 +202,8 @@ class MedicineView(APIView):
                 "name": item['name'],
                 "type": type,
                 "use": item['symptom'],
-                "price": item['price']
+                "price": item['price'],
+                "num": item['quantity']
             })
         return JsonResponse({'medicine': medicine})
     
