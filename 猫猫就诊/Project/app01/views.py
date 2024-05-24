@@ -23,6 +23,35 @@ class MyCore(MiddlewareMixin):
             response["Access-Control-Allow-Methods"] = 'POST, DELETE, PUT'
         return response
 
+class PatientView(APIView):
+    def post(self, request):
+        action = request.POST.get('action')
+        if action == 'login':
+            return self.login(request)
+        elif action == 'register':
+            return self.register(request)
+        else:
+            return JsonResponse({'error': 'Invalid action'}, status=400)
+    
+    def login(self, request):
+        identity_num = request.POST.get("idCard")
+        pwd = request.Post.get("password")
+        patient = Patients.objects.get(identity_num=identity_num)
+        if patient.password == pwd:
+            return JsonResponse({'msg': 'Successfully Login'})
+        else:
+            return JsonResponse({'msg': 'Wrong Password'})
+    
+    def register(self, request):
+        identity_num = request.POST.get("idCard")
+        pwd = request.Post.get("password")
+        patient = Patients(
+            identity_num = identity_num,
+            password = pwd
+        )
+        patient.save()
+        return JsonResponse({'msg': 'Successfully Register'})
+
 class TreatmentView(APIView):
     # 返回所有就诊记录
     def get(self, request):

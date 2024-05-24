@@ -50,6 +50,11 @@ export default {
     };
   },
   methods: {
+    // 下面的两个post请求写法基本相同
+    // post数据体中需要传三个参数，分别是idCard, password和action
+    // action表示需要进行什么操作，值可选login和register
+    // 返回值是一个{'msg':''}字典，值为Successfully Login，Wrong Password和Successfully Register
+    // 登录操作的url是api/login，注册操作是api/login/register
     openModal () {
       //在这里读取把User数组中的数据更新为数据库的内容
       this.loginForm.idCard = "";
