@@ -23,35 +23,6 @@ class MyCore(MiddlewareMixin):
             response["Access-Control-Allow-Methods"] = 'POST, DELETE, PUT'
         return response
 
-class PatientView(APIView):
-    def post(self, request):
-        action = request.POST.get('action')
-        if action == 'login':
-            return self.login(request)
-        elif action == 'register':
-            return self.register(request)
-        else:
-            return JsonResponse({'error': 'Invalid action'}, status=400)
-    
-    def login(self, request):
-        identity_num = request.POST.get("idCard")
-        pwd = request.Post.get("password")
-        patient = Patients.objects.get(identity_num=identity_num)
-        if patient.password == pwd:
-            return JsonResponse({'msg': 'Successfully Login'})
-        else:
-            return JsonResponse({'msg': 'Wrong Password'})
-    
-    def register(self, request):
-        identity_num = request.POST.get("idCard")
-        pwd = request.Post.get("password")
-        patient = Patients(
-            identity_num = identity_num,
-            password = pwd
-        )
-        patient.save()
-        return JsonResponse({'msg': 'Successfully Register'})
-
 class TreatmentView(APIView):
     # 返回所有就诊记录
     def get(self, request):
@@ -171,51 +142,6 @@ class BillView(APIView):
             })
         return JsonResponse({"bill": bill})
 
-class NoticeView(APIView):
-    def post(self, request):
-        resMes = []
-        billMes = []
-        identity_num = json.loads(request.body)['identity_num']
-        for item in Notice.objects.filter(patient=identity_num).annotate(
-            doctor_name=F('doctor__name'),
-            patient_name=F('patient__name'),
-            doctor_department=F('doctor__department'),
-        ).values('patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'date', 'isRead'):
-            type = ""
-            if item['msg_type'] == 1:
-                type = "预约成功"
-            elif item['msg_type'] == 2:
-                type = "取消预约"
-            elif item['msg_type'] == 3:
-                type = "处方缴费提醒"
-            else:
-                type = "处方缴费成功"
-            if item['msg_type'] == 1 or item['msg_type'] == 2:
-                register = Register.objects.get(id=item['register'])
-                resMes.append({
-                    "type": type,
-                    "name": item['patient_name'],
-                    "department": item['doctor_department'],
-                    "doctor": item['doctor_name'],
-                    "time": register.time.date().strftime('%Y-%m-%d'),
-                    "id": item['patient'],
-                    "timetamp": item['date'],
-                    "read": item['isRead']
-                })
-            else:
-                treatment = Treatment.objects.get(id=item['treatment'])
-                billMes.append({
-                    "type": type,
-                    "name": item['patient_name'],
-                    "department": item['doctor_department'],
-                    "doctor": item['doctor_name'],
-                    "time": treatment.date.strftime('%Y-%m-%d'),
-                    "id": item['patient'],
-                    "timetamp": item['date'],
-                    "price": treatment.price,
-                    "read": item['isRead']
-                })
-        return JsonResponse({"resMes": resMes, "billMes": billMes})
 class MedicineView(APIView):
     def get(self, request):
         medicine = []

@@ -100,7 +100,6 @@ export default {
         message: "提交成功 ╰(*°▽°*)╯",
         type: "success"
       });
-      /*这里进行提交逻辑的书写，需要返回数据：订单号，药品（数组）+数量+总价，医师建议（字符串），*/
       console.log('提交表单', this.form);
       this.closeModal();
     },

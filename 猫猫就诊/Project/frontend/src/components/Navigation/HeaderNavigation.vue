@@ -11,14 +11,29 @@
         <a href="#unknown">联系我们</a>
       </nav>
       <div class="clickable-images">
-        <template v-for="(image, index) in getClickableImages()">
-          <RouterLink :to="image.link" class="image-link" @mouseover="showSurroundImage(index + 1)"
-            @mouseleave="hideSurroundImage()">
-            <img class="designed-icon" :src="image.icon" :alt="image.alt" />
-
-            <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image" />
-          </RouterLink>
-        </template>
+        <router-link to="/AppointmentRegistration" class="image-link" @mouseover="showSurroundImage(1)"
+          @mouseleave="hideSurroundImage()">
+          <img class="designed-icon" src="../../assets/navigation/list1.1.png" alt="Image 1" />
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 1" />
+        </router-link>
+        <RouterLink to="/MedicineA" class="image-link" @mouseover="showSurroundImage(2)"
+          @mouseleave="hideSurroundImage()">
+          <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2" />
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2" />
+        </RouterLink>
+        <RouterLink to="/PresA" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
+          <img class="designed-icon" src="../../assets/navigation/list1.5.png" alt="Image 5" />
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 5" />
+        </RouterLink>
+        <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(4)"
+          @mouseleave="hideSurroundImage()">
+          <img class="designed-icon" src="../../assets/navigation/list1.3.png" alt="Image 3" />
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 3" />
+        </RouterLink>
+        <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(5)" @mouseleave="hideSurroundImage()">
+          <img class="designed-icon" src="../../assets/navigation/list1.4.png" alt="Image 4" />
+          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 4" />
+        </RouterLink>
       </div>
     </el-header>
     <RouterView />
@@ -45,12 +60,7 @@ export default {
         '/static/img/navigation/banner3.jpg'
       ],
       unreadCount: 0,
-      intervalId: null,
-      currentUser: {
-        idCardNumber: '',
-        password: '',
-        userType: '' // Example user type (doctor, patient, admin, etc.)
-      },
+      intervalId: null
     }
   },
   mounted () {
@@ -111,38 +121,7 @@ export default {
     },
     getUnreadCount (cnt) {
       this.unreadCount = cnt
-    },
-    getClickableImages () {
-      switch (this.currentUser.userType) {
-        case 'doctor':
-          return [
-            { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
-            { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
-            { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' },
-          ]
-        case 'patient':
-          return [
-            { link: '/AppointmentRegistration', icon: '/static/img/navigation/list1_1.png', alt: 'Image1' },
-            { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
-            { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
-            { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' },
-            { link: '/Bill', icon: '/static/img/navigation/list1_4.png', alt: 'Image 4' }
-          ]
-        case 'admin':
-          return [
-            { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
-            { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
-            { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' },
-          ]
-        default:
-          return [{ link: '/AppointmentRegistration', icon: '/static/img/navigation/list1_1.png', alt: 'Image1' },
-          { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
-          { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
-          { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' },
-          { link: '/Bill', icon: '/static/img/navigation/list1_4.png', alt: 'Image 4' }]
-      }
-    },
-
+    }
   }
 }
 </script>
@@ -179,7 +158,6 @@ export default {
   color: white;
   padding: 0;
   text-align: center;
-  background-image: url('../../assets/navigation/list1_1.png');
   background-image: url('../../assets/navigation/banner1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
