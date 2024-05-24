@@ -1,0 +1,78 @@
+*** Starting uWSGI 2.0.25.1 (64bit) on [Sat May 25 00:40:39 2024] ***
+compiled with version: 11.2.0 on 24 May 2024 14:41:03
+os: Linux-5.15.0-86-generic #96-Ubuntu SMP Wed Sep 20 08:23:49 UTC 2023
+nodename: VM-8-9-ubuntu
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 2
+current working directory: /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+writing pidfile to uwsgi.pid
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+your processes number limit is 7402
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to TCP address 127.0.0.1:5000 fd 3
+Python version: 3.10.12 (main, Jun 11 2023, 05:26:28) [GCC 11.4.0]
+Python main interpreter initialized at 0x55ccf0b125f0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 1031270 bytes (1007 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x55ccf0b125f0 pid: 69355 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 69355)
+spawned uWSGI worker 1 (pid: 69359, cores: 2)
+spawned uWSGI worker 2 (pid: 69360, cores: 2)
+spawned uWSGI worker 3 (pid: 69362, cores: 2)
+spawned uWSGI worker 4 (pid: 69363, cores: 2)
+SIGINT/SIGTERM received...killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: pidfile removed.
+*** Starting uWSGI 2.0.25.1 (64bit) on [Sat May 25 00:42:16 2024] ***
+compiled with version: 11.2.0 on 24 May 2024 14:41:03
+os: Linux-5.15.0-86-generic #96-Ubuntu SMP Wed Sep 20 08:23:49 UTC 2023
+nodename: VM-8-9-ubuntu
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 2
+current working directory: /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+writing pidfile to uwsgi.pid
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+your processes number limit is 7402
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to TCP address 127.0.0.1:5000 fd 3
+Python version: 3.10.12 (main, Jun 11 2023, 05:26:28) [GCC 11.4.0]
+Python main interpreter initialized at 0x555dd3fa85f0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 1031270 bytes (1007 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x555dd3fa85f0 pid: 69867 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 69867)
+spawned uWSGI worker 1 (pid: 69868, cores: 2)
+spawned uWSGI worker 2 (pid: 69869, cores: 2)
+spawned uWSGI worker 3 (pid: 69871, cores: 2)
+spawned uWSGI worker 4 (pid: 69872, cores: 2)
+SIGINT/SIGTERM received...killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: pidfile removed.
