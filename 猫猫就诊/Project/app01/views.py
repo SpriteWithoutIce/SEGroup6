@@ -142,6 +142,51 @@ class BillView(APIView):
             })
         return JsonResponse({"bill": bill})
 
+class NoticeView(APIView):
+    def post(self, request):
+        resMes = []
+        billMes = []
+        identity_num = json.loads(request.body)['identity_num']
+        for item in Notice.objects.filter(patient=identity_num).annotate(
+            doctor_name=F('doctor__name'),
+            patient_name=F('patient__name'),
+            doctor_department=F('doctor__department'),
+        ).values('patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'date', 'isRead'):
+            type = ""
+            if item['msg_type'] == 1:
+                type = "预约成功"
+            elif item['msg_type'] == 2:
+                type = "取消预约"
+            elif item['msg_type'] == 3:
+                type = "处方缴费提醒"
+            else:
+                type = "处方缴费成功"
+            if item['msg_type'] == 1 or item['msg_type'] == 2:
+                register = Register.objects.get(id=item['register'])
+                resMes.append({
+                    "type": type,
+                    "name": item['patient_name'],
+                    "department": item['doctor_department'],
+                    "doctor": item['doctor_name'],
+                    "time": register.time.date().strftime('%Y-%m-%d'),
+                    "id": item['patient'],
+                    "timetamp": item['date'],
+                    "read": item['isRead']
+                })
+            else:
+                treatment = Treatment.objects.get(id=item['treatment'])
+                billMes.append({
+                    "type": type,
+                    "name": item['patient_name'],
+                    "department": item['doctor_department'],
+                    "doctor": item['doctor_name'],
+                    "time": treatment.date.strftime('%Y-%m-%d'),
+                    "id": item['patient'],
+                    "timetamp": item['date'],
+                    "price": treatment.price,
+                    "read": item['isRead']
+                })
+        return JsonResponse({"resMes": resMes, "billMes": billMes})
 class MedicineView(APIView):
     def get(self, request):
         medicine = []

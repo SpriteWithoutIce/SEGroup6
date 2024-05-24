@@ -185,6 +185,10 @@ export default {
     }
   },
   methods: {
+
+    // post请求，请求数据体中包含用户证件号identity_num
+    // url为api/notice/list/
+    // 返回数据为resMes和billMes两个字典数组
     openDrawer() {
       this.table = true
     },
