@@ -11,22 +11,35 @@
       {{ info[index] }}  
     </router-link>
   </div>
-  <div style="display: flex;justify-content: center;align-items: center;">  
-    <el-autocomplete  
-      v-model="search"  
-      :fetch-suggestions="querySearch"  
-      placeholder="请输入医生姓名"  
-      @select="handleSelect"  
-    >  
-      <template #default="{ item }">  
-        <div>{{ item.name }}</div>  
-      </template>  
-      
-    </el-autocomplete>  
-    <p>{{ search }}</p>
-  </div>  
-  <div>{{queryString}}</div>
-  <div>  
+  
+  
+  <div class="container2">  
+    <div class="input-container" style="width: 500px;height: 100px;margin: auto auto;">
+      <div class="chaxun">  
+        <el-autocomplete  
+          v-model="search"  
+          :fetch-suggestions="querySearch"  
+          placeholder="请输入医生姓名"  
+          @select="handleSelect"  
+          style="width: 300px; height: 40px"
+        >  
+          <template #default="{ item }">  
+            <div class="el-input__icon">{{ item.name }}</div>  
+          </template>  
+          
+        </el-autocomplete>  
+        <el-button
+          color="#DBA979"
+          :dark="isDark"
+          plain
+          class="searchButton"
+          style="width: 80px; height: 40px"
+          >查询</el-button
+        >
+        <p>{{ search }}</p>
+      </div>  
+    </div>
+
     <div class="doctor-intro">  
       <div   
         v-for="doctor in filteredDoctors(square_selected)"   
@@ -269,6 +282,12 @@ export default {
 </script>  
   
 <style scoped>  
+.container2{
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 .container {  
   flex-wrap: wrap;  
 }  
@@ -397,4 +416,34 @@ export default {
   width: 500px; /* 可选，设置固定宽度或最大宽度 */  
   text-align: center; /* 文本居中（对于非 Flexbox 布局或内部元素）*/  
 }  
+
+.searchTable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  width: 200px;
+}
+
+.chaxun {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row; /* 将组件横向排列 */
+  align-items: center;
+}
+.shuru {
+  position: relative;
+}
+.searchButton {
+  position: relative;
+  margin-left:10px;
+}
+.input-container {
+  background-color: white;
+  display: flex;
+  flex-direction: row; 
+  align-items: center;
+  
+}
 </style>
