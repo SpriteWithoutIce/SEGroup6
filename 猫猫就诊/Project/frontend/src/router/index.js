@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import {
   HeaderNavigation, MakePrescription, PrescriptionDetails, Navbar, BillList, BillDetails, AppointmentRegistration, AppointmentRegistration2,
-  AppointmentRegistration3, AppointmentRegistration4, AppointmentRegistration5, AppointmentRegistration6, AppointmentRegistration7, AppointmentRegistration8, TableSearch, PatientA, PresA, MedicineA
+  AppointmentRegistration3, AppointmentRegistration4, AppointmentRegistration5, AppointmentRegistration6, AppointmentRegistration7, AppointmentRegistration8, TableSearch, PatientA, PresA, MedicineA,PharmaCist
 } from '../components/index.js'
 import { compileScript } from 'vue/compiler-sfc'
 import ReadOnlyVue from '@/components/Main/ReadOnlyVue.vue'
@@ -88,6 +88,11 @@ const router = createRouter({
       path: '/MedicineA',
       name: 'MedicineA',
       component: MedicineA
+    },
+    {
+      path: '/PharmaCist',
+      name: 'PharmaCist',
+      component: PharmaCist
     },
   ]
 })

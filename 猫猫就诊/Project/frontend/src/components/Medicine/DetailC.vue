@@ -1,3 +1,4 @@
+<!--药物录入细节-->
 <template>
   <div class="modal-background" v-if="isVisible">
     <div class="modal-container">

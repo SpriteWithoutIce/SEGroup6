@@ -99,97 +99,13 @@ const pagination = ref({
   pageSize: 9
 })
 const tableData = ref([
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00',
-  //   num: '10'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00',
-  //   num: '10'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00',
-  //   num: '10'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00',
-  //   num: '10'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00',
-  //   num: '10'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00',
-  //   num: '10'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00',
-  //   num: '10'
-  // },
-  // {
-  //   name: '感冒冲剂',
-  //   type: '中药',
-  //   use: '感冒',
-  //   price: '5.00',
-  //   num: '10'
-  // },
-  // {
-  //   name: '阿司匹林片',
-  //   type: '西药',
-  //   use: '缓解疼痛，如头痛、牙痛，降低发热体温，预防血栓形成',
-  //   price: '2.50',
-  //   num: '10'
-  // },
-  // {
-  //   name: '布洛芬缓释胶囊',
-  //   type: '西药',
-  //   use: '减轻中度疼痛，如关节炎、扭伤等，缓解炎症',
-  //   price: '15.00',
-  //   num: '10'
-  // },
-  // {
-  //   name: '维生素C片',
-  //   type: '西药',
-  //   use: '补充维生素C，增强免疫力，促进铁的吸收',
-  //   price: '8.00',
-  //   num: '0'
-  // },
-  // {
-  //   name: '胰岛素注射液',
-  //   type: '西药',
-  //   use: '治疗糖尿病，调节血糖水平',
-  //   price: '35.00',
-  //   num: '30'
-  // },
-  // {
-  //   name: '蒙脱石散',
-  //   type: '西药',
-  //   use: '治疗腹泻，缓解胃肠道不适',
-  //   price: '10.00',
-  //   num: '20'
-  // }
+  {
+    name: '感冒冲剂',
+    type: '中药',
+    use: '感冒',
+    price: '5.00',
+    num: '10'
+  }
 ])
 
 const filterData = computed(() => {
@@ -210,18 +126,19 @@ watch(input4, () => {
 
 const getMedicineData = () => {
   return new Promise((resolve, reject) => {
-    axios.get('/api/medicine/list/')
+    axios
+      .get('/api/medicine/list/')
       .then((response) => {
         tableData.value = response.data['medicine']
         pagination.value.total = tableData.value.length // 更新总条目数
         console.log('Medicine data fetched:', tableData.value)
-        resolve(); // 数据获取完成，resolve Promise
+        resolve() // 数据获取完成，resolve Promise
       })
       .catch((error) => {
         console.error('Error fetching medicine data:', error)
-        reject(error); // 数据获取失败，reject Promise
+        reject(error) // 数据获取失败，reject Promise
       })
-    });
+  })
 }
 
 const ftableData = computed(() => {
