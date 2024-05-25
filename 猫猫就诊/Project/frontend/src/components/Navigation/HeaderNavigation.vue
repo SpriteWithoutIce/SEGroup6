@@ -76,7 +76,7 @@ export default {
       console.log("用户类型更新完毕");
     },
     showLogin () {
-      this.$refs.Login.openModal(this.currentUser.idCard);
+      this.$refs.Login.openModal(this.currentUser.idCard, this.currentUser.userType);
     },
     startBackgroundRotation () {
       this.intervalId = setInterval(this.changeBackground, 5000) // Change background every 5 seconds

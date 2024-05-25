@@ -29,9 +29,9 @@
       </div>
       <div class="bottom-section" v-if="notLogin">
         <div class="user-info">
-          <p>当前用户信息：</p>
+          <title>当前用户信息</title>
           <p>身份证号：{{ receivedidCard }}</p>
-          <p>用户类型：{{ currentUserType }}</p>
+          <p>用户类型：{{ receivedtype }}</p>
         </div>
         <div class="button-group">
           <el-button type="danger" @click="logout" class="input-item2">退出登录</el-button>
@@ -47,6 +47,7 @@ export default {
   data () {
     return {
       receivedidCard: "",
+      receivedtype: "",
       loginVisible: false,
       isLogin: "",
       notLogin: "",
@@ -69,8 +70,9 @@ export default {
     };
   },
   methods: {
-    openModal (id) {
+    openModal (id, type) {
       this.receivedidCard = id;
+      this.receivedtype = type;
       if (id != "") {
         this.isLogin = false;
         this.notLogin = true;
@@ -92,7 +94,7 @@ export default {
     cancelModal () {
       ElMessage({
         type: "info",
-        message: "取消登录 ╮(╯▽╰)╭",
+        message: "取消 ╮(╯▽╰)╭",
         showClose: true,
       });
       this.closeModal();
