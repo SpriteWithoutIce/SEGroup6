@@ -1,5 +1,5 @@
 <template>  
-  <div class="container" style="display: flex; justify-content: center; align-items: center; height: 180px;">  
+  <div class="containerlyh" style="display: flex; justify-content: center; align-items: center; height: 180px;">  
     <router-link 
       v-for="(square, index) in squares"  
       :key="index"  
@@ -76,9 +76,9 @@ export default {
         { hovered: false }  
       ] ,
       info: [
-        "出诊查询","网上预约看诊","预约流程","取消预约"
+        "出诊查询","网上预约看诊","预约流程","医生查询"
       ],
-      link:['/TableSearch','/AppointmentRegistration','/AppointmentRegistration','/AppointmentRegistration'],
+      link:['/TableSearch','/AppointmentRegistration','/AppointmentRegistration','/DoctorSearch'],
 
       departments: [  
         { id:0, name: '心血管内科', pinyin:'Xinxueguanneike' },  
@@ -217,7 +217,7 @@ export default {
 </script>  
   
 <style scoped>  
-.container {  
+.containerlyh {  
   flex-wrap: wrap;  
 }  
   
@@ -234,6 +234,7 @@ export default {
   color: #000000;  
   cursor: pointer;  
   transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  text-decoration: none;
 }  
   
 .square-hovered {  

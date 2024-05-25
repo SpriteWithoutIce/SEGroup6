@@ -61,9 +61,7 @@ export default {
         medicines: [{ name: '', quantity: 0, price: 0, totalPrice: 0 }]
       },
       medicinesDB: [
-        { name: '阿司匹林', stock: 100, price: 2.5, symptoms: ['发热', '疼痛'] },
-        { name: '头孢', stock: 50, price: 10.0, symptoms: ['感染'] },
-        { name: '布洛芬', stock: 80, price: 5.0, symptoms: ['发热', '炎症'] }
+        // { name: '布洛芬', stock 改成num: 80, price: 5.0, use: ['发热', '炎症'] }
         // 可以添加更多药物数据
       ]
     };
@@ -76,6 +74,21 @@ export default {
     }
   },
   methods: {
+    getMedicineData () {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        this.$axios.get('/api/medicine/list/')
+          .then(function (response) {
+            ts.medicinesDB = response.data['medicine'];
+            console.log(ts.medicinesDB);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
     openModal (row) {
       this.isVisible = true;
       document.body.style.overflow = 'hidden'; // 禁止滚动
@@ -146,6 +159,12 @@ export default {
         }
       };
     }
+  },
+
+  mounted () {
+    this.getMedicineData().then(() => {
+      console.log("111"+medicinesDB);
+    });
   }
 };
 </script>

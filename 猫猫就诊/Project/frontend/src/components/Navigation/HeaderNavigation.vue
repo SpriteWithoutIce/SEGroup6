@@ -1,35 +1,24 @@
 <template>
   <div>
     <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
-    <Login
-      @update:currentUserCard="updateUserCard"
-      @update:currentUserType="updateUserType"
-      ref="Login"
-    >
+    <Login @update:currentUserCard="updateUserCard" @update:currentUserType="updateUserType" ref="Login">
     </Login>
+    <Sign ref="Sign"> </Sign>
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
         <RouterLink to="/Main">首页</RouterLink>
         <a href="#unknown" @click="showLogin()">登录</a>
-        <a @click="openMessageBox">消息</a
-        ><el-badge :value="unreadCount" class="item" v-if="unreadCount !== 0"></el-badge>
-        <a href="#unknown">联系我们</a>
+        <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
+          v-if="unreadCount !== 0"></el-badge>
+        <a href="#unknown" @click="showSign()">系统介绍</a>
       </nav>
       <div class="clickable-images">
         <template v-for="(image, index) in getClickableImages()">
-          <RouterLink
-            :to="image.link"
-            class="image-link"
-            @mouseover="showSurroundImage(index + 1)"
-            @mouseleave="hideSurroundImage()"
-          >
+          <RouterLink :to="image.link" class="image-link" @mouseover="showSurroundImage(index + 1)"
+            @mouseleave="hideSurroundImage()">
             <img class="designed-icon" :src="image.icon" :alt="image.alt" />
 
-            <img
-              class="Surround-image"
-              src="../../assets/navigation/list1_bg.png"
-              alt="Surround Image"
-            />
+            <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image" />
           </RouterLink>
         </template>
       </div>
@@ -40,14 +29,16 @@
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import Navbar from './Navbar.vue'
 import Login from '../LogIn/Login.vue'
+import Sign from '../LogIn/Sign.vue'
 import BillList from '../Bills/BillList.vue'
 import PatientA from '../History/PatientA.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
 import messagedrawer from '../Message/MessageDrawer.vue'
 export default {
   name: 'HeaderNavigation',
-  data() {
+  data () {
     return {
       WebURL: 'http://localhost:8080',
       currentIndex: 0,
@@ -65,39 +56,44 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.startBackgroundRotation()
     this.$refs.messageBox.countUnread()
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.stopBackgroundRotation()
   },
   components: {
+    Navbar,
     Login,
+    Sign,
     RouterLink,
     RouterView,
     messagedrawer
   },
   methods: {
-    updateUserCard(id) {
+    updateUserCard (id) {
       this.currentUser.idCard = id
       console.log('用户id更新完毕')
     },
-    updateUserType(userType) {
+    updateUserType (userType) {
       this.currentUser.userType = userType
       this.$forceUpdate()
       console.log('用户类型更新完毕')
     },
-    showLogin() {
+    showLogin () {
       this.$refs.Login.openModal(this.currentUser.idCard, this.currentUser.userType)
     },
-    startBackgroundRotation() {
+    showSign () {
+      this.$refs.Sign.openModal()
+    },
+    startBackgroundRotation () {
       this.intervalId = setInterval(this.changeBackground, 5000) // Change background every 5 seconds
     },
-    stopBackgroundRotation() {
+    stopBackgroundRotation () {
       clearInterval(this.intervalId)
     },
-    changeBackground() {
+    changeBackground () {
       this.currentIndex = (this.currentIndex + 1) % this.images.length
       let elements = document.getElementsByClassName('header-nav')
       for (let i = 0; i < elements.length; i++) {
@@ -105,12 +101,12 @@ export default {
         elements[i].style.backgroundImage = 'url(' + this.images[this.currentIndex] + ')'
       }
     },
-    changeBackgroundOnClick() {
+    changeBackgroundOnClick () {
       this.stopBackgroundRotation()
       this.changeBackground()
       this.startBackgroundRotation()
     },
-    showSurroundImage(index) {
+    showSurroundImage (index) {
       const SurroundImage = document.querySelector(
         `.clickable-images a:nth-child(${index}) .Surround-image`
       )
@@ -119,20 +115,20 @@ export default {
         SurroundImage.style.animation = 'spin 10s linear infinite'
       }
     },
-    hideSurroundImage() {
+    hideSurroundImage () {
       const SurroundImages = document.querySelectorAll('.Surround-image')
       SurroundImages.forEach((image) => {
         image.style.opacity = 0
         image.style.transform = 'rotate(0deg)'
       })
     },
-    openMessageBox() {
+    openMessageBox () {
       this.$refs.messageBox.openDrawer()
     },
-    getUnreadCount(cnt) {
+    getUnreadCount (cnt) {
       this.unreadCount = cnt
     },
-    getClickableImages() {
+    getClickableImages () {
       switch (this.currentUser.userType) {
         case '医生':
           return [

@@ -2,7 +2,7 @@
   <Header :squares2="squares2" />
   <div class="notice-box" style="height: 1000px;">
     <div class="container2">
-      <router-link to="/AppointmentRegistration3" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
+      <router-link to="/AppointmentRegistration4" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
       <router-link 
         :to="{
           path:'/AppointmentRegistration6',
