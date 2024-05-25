@@ -1,7 +1,7 @@
 <template>
   <div>
     <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
-    <Login ref="Login"> </Login>
+    <Login @update:currentUserCard="updateUserCard" @update:currentUserType="updateUserType" ref="Login"> </Login>
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
         <RouterLink to="/Main">首页</RouterLink>
@@ -47,7 +47,7 @@ export default {
       intervalId: null,
       currentUser: {
         userType: "医生",
-        idCard: "",
+        idCard: "123",
         password: "",
       },
     }
@@ -66,17 +66,17 @@ export default {
     messagedrawer
   },
   methods: {
-    updateCurrentUser (userData) {
-      console.log("更新完毕");
-      console.log(this.currentUser.userType);
-      this.currentUser = {
-        ...this.currentUser,
-        ...userData
-      };
+    updateUserCard (id) {
+      this.currentUser.idCard = id;
+      console.log("用户id更新完毕");
     },
-
+    updateUserType (userType) {
+      this.currentUser.userType = userType;
+      this.$forceUpdate();
+      console.log("用户类型更新完毕");
+    },
     showLogin () {
-      this.$refs.Login.openModal()
+      this.$refs.Login.openModal(this.currentUser.idCard);
     },
     startBackgroundRotation () {
       this.intervalId = setInterval(this.changeBackground, 5000) // Change background every 5 seconds

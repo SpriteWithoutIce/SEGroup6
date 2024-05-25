@@ -9,7 +9,7 @@
         </div>
       </div>
       <div class="mid-section"></div>
-      <div class="bottom-section">
+      <div class="bottom-section" v-if="isLogin">
         <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form" label-width="auto">
           <el-form-item label="身份证号" prop="idCard" class="input-item">
             <el-input v-model="loginForm.idCard"></el-input>
@@ -17,9 +17,24 @@
           <el-form-item label="密码" prop="password" class="input-item">
             <el-input v-model="loginForm.password" type="password"></el-input>
           </el-form-item>
+          <el-select v-model="loginForm.userType" placeholder="身份选择" class="input-item3">
+            <el-option label="医生" value="医生"></el-option>
+            <el-option label="普通用户" value="普通用户"></el-option>
+            <el-option label="管理员" value="管理员"></el-option>
+          </el-select>
         </el-form>
         <div class="button-group">
           <el-button type="primary" @click="handleLogin" class="input-item2">登录</el-button>
+        </div>
+      </div>
+      <div class="bottom-section" v-if="notLogin">
+        <div class="user-info">
+          <p>当前用户信息：</p>
+          <p>身份证号：{{ receivedidCard }}</p>
+          <p>用户类型：{{ currentUserType }}</p>
+        </div>
+        <div class="button-group">
+          <el-button type="danger" @click="logout" class="input-item2">退出登录</el-button>
         </div>
       </div>
     </div>
@@ -28,18 +43,22 @@
 
 <script>
 import { ElMessage } from "element-plus";
-
 export default {
   data () {
     return {
+      receivedidCard: "",
       loginVisible: false,
+      isLogin: "",
+      notLogin: "",
       loginForm: {
         idCard: "",
         password: "",
+        userType: "",
         remember: false,
         autoLogin: false,
       },
       users: [],
+
       rules: {
         idCard: [
           { required: true, message: "请输入账号", trigger: "blur" },
@@ -50,7 +69,16 @@ export default {
     };
   },
   methods: {
-    openModal () {
+    openModal (id) {
+      this.receivedidCard = id;
+      if (id != "") {
+        this.isLogin = false;
+        this.notLogin = true;
+      }
+      else {
+        this.isLogin = true;
+        this.notLogin = false;
+      }
       //在这里读取把User数组中的数据更新为数据库的内容
       this.loginForm.idCard = "";
       this.loginForm.password = "";
@@ -72,7 +100,7 @@ export default {
     handleLogin () {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          const { idCard, password } = this.loginForm;
+          const { idCard, password, userType } = this.loginForm;
           let user = this.findUser(idCard);
 
           if (user) {
@@ -82,6 +110,8 @@ export default {
                 message: "登录成功 (๑˃̵ᴗ˂̵)",
                 type: "success",
               });
+              this.$emit('update:currentUserCard', this.loginForm.idCard);
+              this.$emit('update:currentUserType', this.loginForm.userType);
               this.closeModal();
             } else {
               ElMessage({
@@ -92,12 +122,14 @@ export default {
             }
           } else {
             //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
-            this.users.push({ id: idCard, password });
+            this.users.push({ id: idCard, password, userType });
             ElMessage({
               showClose: true,
               message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
               type: "success",
             });
+            this.$emit('update:currentUserCard', this.loginForm.idCard);
+            this.$emit('update:currentUserType', this.loginForm.userType);
             this.closeModal();
           }
         } else {
@@ -107,6 +139,20 @@ export default {
             showClose: true,
           });
         }
+      });
+    },
+    logout () {
+      this.receivedidCard = '';
+      this.currentUserType = '';
+      this.$emit('update:currentUserCard', this.loginForm.idCard);
+      this.$emit('update:currentUserType', this.loginForm.userType);
+      this.isLogin = false;
+      this.notLogin = true;
+      this.closeModal();
+      ElMessage({
+        type: 'success',
+        message: '已退出登录 (๑˃̵ᴗ˂̵)',
+        showClose: true,
       });
     },
     findUser (idCard) {
@@ -154,7 +200,7 @@ export default {
 
 .center-image {
   position: absolute;
-  top: 35%;
+  top: 32%;
   width: 7%;
   z-index: 3;
 }
@@ -164,6 +210,7 @@ export default {
 }
 
 .bottom-section {
+  z-index: 5;
   height: 67%;
   padding: 20px;
   display: flex;
@@ -210,6 +257,12 @@ export default {
 .input-item2 {
   align-self: center;
   width: 40%;
+  height: 40px;
+}
+
+.input-item3 {
+  left: 28%;
+  width: 70%;
   height: 40px;
 }
 </style>
