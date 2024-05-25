@@ -79,7 +79,7 @@ export default {
         let ts = this;
         this.$axios.get('/api/medicine/list/')
           .then(function (response) {
-            ts.medicinesDB = response.data['medicineDB'];
+            ts.medicinesDB = response.data['medicine'];
             console.log(ts.medicinesDB);
             resolve(); // 数据获取完成，resolve Promise
           })
@@ -163,7 +163,7 @@ export default {
 
   mounted () {
     this.getMedicineData().then(() => {
-
+      console.log("111" + medicinesDB);
     });
   }
 };
