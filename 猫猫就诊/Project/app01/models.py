@@ -13,6 +13,7 @@ class Patients(models.Model):
     )
     identity = models.SmallIntegerField(verbose_name="身份证明", choices=identity_choices, default=1)
     identity_num = models.CharField(verbose_name="证件号", max_length=64, primary_key=True)
+    password = models.CharField(verbose_name="用户密码", max_length=64)
     name = models.CharField(verbose_name="患者姓名", max_length=20)
     health_insurance_choices = (
         (1, "医保"),
@@ -29,6 +30,7 @@ class Patients(models.Model):
     address = models.CharField(verbose_name="患者住址", max_length=128, default="")
 
 class Doctors(models.Model):
+    identity_num = models.CharField(verbose_name="证件号", max_length=64)
     name = models.CharField(verbose_name="医生姓名", max_length=20)
     title = models.CharField(verbose_name="医生职称", max_length=50)
     department = models.CharField(verbose_name="医生科室", max_length=20)
@@ -58,6 +60,7 @@ class Treatment(models.Model):
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
     date = models.DateField(verbose_name="就诊日期", default=django.utils.timezone.now)
     medicine = models.TextField(verbose_name="处方内容", max_length=1024)
+    price = models.DecimalField(verbose_name="处方总价", max_digits=5, decimal_places=2)
 
 class Bill(models.Model):
     type_choices = (
@@ -75,7 +78,19 @@ class Bill(models.Model):
 class Notice(models.Model):
     patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='patient_notices')
     register = models.ForeignKey(verbose_name="挂号者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='register_notices')
-    message = models.CharField(verbose_name="通知内容", max_length=200)
+    doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
+    
+    type_choices1 = (
+        (1, "预约成功"),
+        (2, "取消预约"),
+        (3, "处方缴费提醒"),
+        (4, "处方缴费成功"),
+    )
+    msg_type = models.SmallIntegerField(verbose_name="消息类型", choices=type_choices1)
+    date = models.DateField(verbose_name="通知日期")
+    treatment = models.ForeignKey(verbose_name="处方编号", to="Treatment", to_field="id", on_delete=models.CASCADE, null=True, blank=True)
+    register = models.ForeignKey(verbose_name="挂号编号", to="Register", to_field="id", on_delete=models.CASCADE, null=True, blank=True)
+    isRead = models.BooleanField(verbose_name="已读未读", default=False)
 
 class Medicine(models.Model):
     name = models.CharField(verbose_name="药物名字", max_length=50)
