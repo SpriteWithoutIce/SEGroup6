@@ -104,7 +104,7 @@ export default {
 .item {
   margin-top: 10px;
   margin-left:-25px;
-  margin-right:40px;
+  margin-right:25px;
 }
 
 .white-bold {
@@ -117,6 +117,7 @@ export default {
   color: white;
   padding: 0px 8px;
   width: 4em;
+  text-align: center;
   /* 调整文本之间的间距 */
 }
 
@@ -124,10 +125,10 @@ export default {
   content: '';
   position: absolute;
   top: 40px;
-  left: 70%;
+  left: 50%;
   bottom: 0;
   height: 3px;
-  width: 130%;
+  width: 100%;
   background-color: rgba(13, 65, 153, 0.941);
   transform: translateX(-50%) scaleX(0);
   transition: transform 0.3s;
