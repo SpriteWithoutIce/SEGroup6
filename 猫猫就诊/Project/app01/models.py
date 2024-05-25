@@ -6,8 +6,7 @@ from django.db import models
 class Patients(models.Model):
     identity_choices = (
         (1, "身份证"),
-        (2, "医保卡"),
-        (3, "诊疗卡"),
+        (2, "医保卡"),        (3, "诊疗卡"),
         (4, "护照"),
         (5, "军官证"),
         (6, "港澳通行证"),
