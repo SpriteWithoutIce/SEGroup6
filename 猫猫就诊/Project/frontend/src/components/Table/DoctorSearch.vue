@@ -5,13 +5,59 @@
       :key="index"  
       :to="link[index]"
       class="square"  
-      :class="{ 'square-hovered': (square.hovered || index===0) }"  
+      :class="{ 'square-hovered': (square.hovered || index==3) }"  
       @mouseover="square.hovered = true"  
       @mouseout="square.hovered = false">
       {{ info[index] }}  
     </router-link>
   </div>
-  <div>  
+  
+  
+  <div class="container2">  
+    <div class="input-container" style="width: 500px;height: 100px;margin: auto auto;">
+      <div class="chaxun">  
+        <el-autocomplete  
+          v-model="search"  
+          :fetch-suggestions="querySearch"  
+          placeholder="请输入医生姓名"  
+          @select="handleSelect"  
+          style="width: 300px; height: 40px"
+        >  
+          <template #default="{ item }">  
+            <div class="el-input__icon">{{ item.name }}</div>  
+          </template>  
+          
+        </el-autocomplete>  
+        <el-button
+          color="#DBA979"
+          :dark="isDark"
+          plain
+          class="searchButton"
+          style="width: 80px; height: 40px"
+          >查询</el-button
+        >
+        <p>{{ search }}</p>
+      </div>  
+    </div>
+
+    <div class="doctor-intro">  
+      <div   
+        v-for="doctor in filteredDoctors(square_selected)"   
+        :key="doctor.name"  
+        class="doctor-item"
+      >  
+        <div class="doctor-header"> 
+          <img :src="doctor.avatar" alt="" class="avatar">
+          <div class="info">  
+            <div style="display: flex;  align-items: center;">
+              <div class="name">{{ doctor.name }}</div>  
+              <div style="font-size: 12px;">{{ doctor.title }}</div>  
+            </div>
+            <div class="research">{{ doctor.research }}</div>  
+          </div>  
+        </div>  
+      </div>
+    </div>
     <!-- 圆形按钮 -->  
     <div class="circle-buttons">  
       <button  
@@ -23,7 +69,7 @@
         {{ label }}  
       </button>  
     </div>  
-  
+    
     <!-- 方形按钮 -->  
     <div class="square-buttons">  
       <div  
@@ -33,47 +79,27 @@
       >  
         <button class="department-button" :class="{'department-button-selected':department.id==square_selected}">{{ department.name }}</button>  
       </div>  
-    </div>  
-  </div>  
-  
-  <!-- 出诊表格 -->
-  <div class="doctors-table-container" v-if="select" id="targetDiv">  
-    <table class="doctors-table">  
-      <thead>  
-        <tr>  
-          <th>科室</th>  
-          <th>姓名</th>  
-          <th>专长</th>  
-          <th>出诊时间</th>  
-          <th>门诊限号</th>  
-        </tr>  
-      </thead>  
-      <tbody>  
-        <tr v-for="doctor in filteredDoctors(square_selected)" :key="doctor.name">  
-          <td>{{ doctor.department.name }}</td>  
-          <td>{{ doctor.name }}</td>  
-          <td>{{ doctor.research }}</td>  
-          <td>{{ doctor.schedule.map(s => s.time).join(', ') }}</td>  
-          <td>{{ doctor.schedule.length * 20 }}</td>  
-        </tr>  
-      </tbody>  
-    </table>  
+    </div> 
+    
+    
   </div>  
 </template>  
   
 <script>  
 import Header from './Appointments/AppointmentHeader.vue'
+import { ref } from 'vue';  
 export default {  
   components: {
     Header,
   },
   data() {  
+    
     return {  
       squares: [  
-        { hovered: true },  
         { hovered: false },  
         { hovered: false },  
-        { hovered: false }  
+        { hovered: false },  
+        { hovered: true }  
       ] ,
       info: [
         "出诊查询","网上预约看诊","预约流程","医生查询"
@@ -132,37 +158,52 @@ export default {
       ],
       doctors: [  
         {  
+          id:0,
           name: '医生A',  
           title: '主任医师',  
           department:{id:0,name:'心血管内科'},
+          avatar: 'img/avatar/lsy.jpg', // 头像URL  
           research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-09(上午)',status:'empty', number: 10},
-            {time: '05-07(下午) ',status: 'full'},
-          ],  
-          cost:100,
         },
         {  
+          id:1,
           name: '医生B',  
           title: '副主任医师',  
+          avatar: 'img/avatar/touxiang.png', // 头像URL  
           department:{id:1,name:'呼吸与危重症医学科'},
           research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-08(上午)',status:'full'},
-            {time: '05-09(下午) ',status: 'empty',number:5},
-          ],  
-          cost:60,
         }, 
         {  
+          id:2,
           name: '医生C',  
           title: '副主任医师',  
+          avatar: 'img/avatar/touxiang (1).png', // 头像URL  
           department:{id:0,name:'心血管内科'},
           research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-06(上午)',status:'full'},
-            {time: '05-10(下午) ',status: 'full'},
-          ],  
-          cost:60,
+        }, 
+        {  
+          id:3,
+          name: '医生A',  
+          title: '主任医师',  
+          department:{id:0,name:'心血管内科'},
+          avatar: 'img/avatar/lsy.jpg', // 头像URL  
+          research: '生物信息', // 主要研究方向  
+        },
+        {  
+          id:4,
+          name: '医生B',  
+          title: '副主任医师',  
+          avatar: 'img/avatar/touxiang.png', // 头像URL  
+          department:{id:1,name:'呼吸与危重症医学科'},
+          research: '生物信息', // 主要研究方向  
+        }, 
+        { 
+          id:5, 
+          name: '医生C',  
+          title: '副主任医师',  
+          avatar: 'img/avatar/touxiang (1).png', // 头像URL  
+          department:{id:0,name:'心血管内科'},
+          research: '生物信息', // 主要研究方向  
         }, 
         // ... 其他医生数据  
       ],     
@@ -171,11 +212,14 @@ export default {
       selectedLetterIndex: -1, 
       square_selected:-1, 
       select:false,
+
+      search:'',
+      search_name_id:-1,
     };  
   }  ,
   computed: {  
     // 根据当前选中的索引来过滤科室  
-    filteredDepartments() {  
+    filteredDepartments() {   
       if (this.selectedLetterIndex === -1) {  
         // 如果选择了“全部”，则显示所有科室  
         return this.departments;  
@@ -186,8 +230,7 @@ export default {
           department.pinyin[0].toUpperCase() === letter  
         );  
       }  
-    },  
-
+    }
   },  
   methods: {  
     // 选中科室的方法  
@@ -206,17 +249,45 @@ export default {
     square_select(index){
       this.square_selected=index;
       this.select=true;
+      this.search_name_id=-1;
     },
     filteredDoctors(id) {  
+      if(this.search_name_id!=-1){
+        return this.doctors.filter(doctor =>
+        doctor.id===this.search_name_id
+      );
+      }
       return this.doctors.filter(doctor =>
         doctor.department.id===id
       );
     },  
+    querySearch(queryString, cb) {   
+      console.log(queryString)
+      const results = this.doctors.filter(doctor =>  
+        doctor.name.includes(queryString)  
+      );       // 调用 callback 返回建议列表的数据  
+      console.log(results)
+      cb(results);  
+    },  
+    handleSelect(item) {  
+      this.search_name_id=item.id;
+
+      // 选中某个建议项时的回调函数  
+      console.log(item);  
+      input.value = item.name;
+      // 你可以在这里处理选中项的逻辑，比如跳转到医生详情页面  
+    }  
   }  
 };  
 </script>  
   
 <style scoped>  
+.container2{
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 .containerlyh {  
   flex-wrap: wrap;  
 }  
@@ -295,30 +366,84 @@ export default {
   cursor: pointer;
 }  
 .department-button-selected{
-  background-color: yellow;
+  background-color: orange;
 
 }
-.doctors-table-container {  
-  width: 1000px;  
-  margin: 0 auto; /* 水平居中 */  
+
+.doctor-intro {  
+  display: flex;  
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}  
+.doctor-header {  
+  display: flex;  
+  align-items: center;  
+  margin-bottom: 10px;  
 }  
   
-.doctors-table {  
-  width: 100%;  
-  border-collapse: collapse; /* 合并相邻边框 */  
-  background-color: lightblue; /* 表格背景色 */  
+.avatar {  
+  width: 60px;  
+  height: 60px;  
+  border-radius: 50%;  
+  background-size: cover;  
+  background-position: center;  
+  margin-right: 10px;  
 }  
   
-.doctors-table th,  
-.doctors-table td {  
-  border: 1px solid white; /* 表格线 */  
-  padding: 8px; /* 单元格内边距 */  
-  text-align: center; /* 文字对齐方式 */  
-  color: black; /* 表格文字颜色 */  
+.info {  
+  flex: 1;  
 }  
   
-.doctors-table th {  
-  background-color: blue; /* 表头背景色 */  
-  color: white; /* 表头文字颜色 */  
+.name {  
+  font-size: 18px;  
+  font-weight: bold;  
+  margin-bottom: 5px;  
+  margin-right: 20px;
 }  
+  
+.title, .research {  
+  font-size: 14px;  
+}  
+
+.doctor-item {  
+  /* 每个医生框的样式 */  
+  border: 1px solid #ccc; /* 边框 */  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 阴影 */  
+  padding: 10px; /* 可选，添加一些内边距 */  
+  margin: 10px; /* 可选，添加一些外边距以防止它们靠得太近 */  
+  width: 500px; /* 可选，设置固定宽度或最大宽度 */  
+  text-align: center; /* 文本居中（对于非 Flexbox 布局或内部元素）*/  
+}  
+
+.searchTable {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  width: 200px;
+}
+
+.chaxun {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row; /* 将组件横向排列 */
+  align-items: center;
+}
+.shuru {
+  position: relative;
+}
+.searchButton {
+  position: relative;
+  margin-left:10px;
+}
+.input-container {
+  background-color: white;
+  display: flex;
+  flex-direction: row; 
+  align-items: center;
+  
+}
 </style>
