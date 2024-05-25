@@ -25,13 +25,13 @@ export default {
   data() {  
     return {  
       squares: [  
-        { hovered: true },  
         { hovered: false },  
         { hovered: false },  
-        { hovered: false }  
+        { hovered: false },  
+        { hovered: true }  
       ] ,
       info: [
-        "出诊查询","网上预约看诊","预约流程","取消预约"
+        "出诊查询","网上预约看诊","预约流程","医生查询"
       ],
       checked: false,  
       currentSquareIndex: 0,  
@@ -72,6 +72,7 @@ export default {
   color: #000000;  
   cursor: pointer;  
   transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  text-decoration: none;
 }  
   
 .square-hovered {  
