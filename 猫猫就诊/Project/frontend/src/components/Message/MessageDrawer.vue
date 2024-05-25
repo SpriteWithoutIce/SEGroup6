@@ -1,13 +1,13 @@
 <template>
   <!-- 侧边抽屉 -->
   <div class="myDrawer">
-    <el-drawer v-model="table" title="消息列表" direction="rtl" size="40%">
+    <el-drawer v-model="table" title="消息列表" direction="rtl" size="40%" >
       <!-- 折叠面板实现消息种类分类 -->
       <div class="demo-collapse">
         <el-collapse v-model="activeNames" @change="handleChange">
-          <el-collapse-item title="预约通知" name="1" class="collapseItem">
+          <el-collapse-item title="&nbsp;&nbsp;&nbsp;预约通知" name="1" class="collapseItem1">
             <div class="messageList">
-              <el-table :data="resMes" style="width: 100%">
+              <el-table :data="resMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
                   <template #default="props">
                     <div v-if="props.row.type == '预约成功'" m="4">
@@ -24,7 +24,7 @@
                         <br />感谢您选择我院，祝您身体健康！
                       </p>
                       <p style="text-align: right">
-                        猫猫就诊 预约挂号服务中心<br />
+                        猫猫就诊ฅ 预约挂号服务中心<br />
                         {{ props.row.timetamp }}
                       </p>
                     </div>
@@ -48,6 +48,15 @@
                     </div>
                   </template>
                 </el-table-column>
+                <el-table-column label="已读?">
+                  <template #default="props">
+                    <div v-if="props.row.read === false">
+                      <el-button class="pay-button" @click="readMes(props.row)">确认</el-button>
+                    </div>
+                    <!-- 使用 v-else显示文本 -->
+                    <div v-else class="butAbanText">已读</div>
+                  </template>
+                </el-table-column>
                 <el-table-column label="类型" prop="type" />
                 <el-table-column label="患者姓名" prop="name" />
                 <el-table-column label="就诊时间" prop="time" />
@@ -55,9 +64,10 @@
             </div>
           </el-collapse-item>
 
-          <el-collapse-item title="缴费通知" name="2">
+          <el-collapse-item title="&nbsp;&nbsp;&nbsp;缴费通知" name="2" class="collapseItem2">
             <div class="messageList">
-              <el-table :data="billMes" style="width: 100%">
+              <!-- <el-table :data="billMes" style="width: 100%" :row-class-name='success'> -->
+              <el-table :data="billMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
                   <template #default="props">
                     <div m="4" v-if="props.row.type == '处方缴费提醒'">
@@ -98,6 +108,15 @@
                     </div>
                   </template>
                 </el-table-column>
+                <el-table-column label="已读?">
+                  <template #default="props">
+                    <div v-if="props.row.read === false">
+                      <el-button class="pay-button" @click="readMes(props.row)">确认</el-button>
+                    </div>
+                    <!-- 使用 v-else显示文本 -->
+                    <div v-else class="butAbanText">已读</div>
+                  </template>
+                </el-table-column>
                 <el-table-column label="类型" prop="type" />
                 <el-table-column label="患者姓名" prop="name" />
                 <el-table-column label="时间" prop="time" />
@@ -112,97 +131,145 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       activeNames: ['1', '2'],
       table: false,
-      loading: false,
-      gridData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-      ],
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      },
-      formLabelWidth: '80px',
       timer: null,
       resMes: [
-        {
-          type: '预约成功',
-          name: '小黄',
-          department: '精神科',
-          doctor: '李医生',
-          time: '2024-5-12',
-          id: '03230802',
-          timetamp: '2024-5-11'
-        },
-        {
-          type: '取消预约',
-          name: '小黄',
-          department: '精神科',
-          doctor: '李医生',
-          time: '2024-5-12',
-          id: '03230802',
-          timetamp: '2024-5-11'
-        }
+        // {
+        //   type: '预约成功',
+        //   name: '小黄',
+        //   department: '精神科',
+        //   doctor: '李医生',
+        //   time: '2024-5-12',
+        //   id: '03230802',
+        //   timetamp: '2024-5-11',
+        //   read: true
+        // },
+        // {
+        //   type: '取消预约',
+        //   name: '小黄',
+        //   department: '精神科',
+        //   doctor: '李医生',
+        //   time: '2024-5-12',
+        //   id: '03230802',
+        //   timetamp: '2024-5-11',
+        //   read: false
+        // }
       ],
       billMes: [
-        {
-          type: '处方缴费提醒',
-          name: '小黄',
-          department: '精神科',
-          doctor: '李医生',
-          time: '2024-5-12',
-          id: '03230802',
-          timetamp: '2024-5-11',
-          price: 200
-        },
-        {
-          type: '处方缴费成功',
-          name: '小黄',
-          department: '精神科',
-          doctor: '李医生',
-          time: '2024-5-12',
-          id: '03230802',
-          timetamp: '2024-5-11',
-          price: 200
-        }
+        // {
+        //   type: '处方缴费提醒',
+        //   name: '小黄',
+        //   department: '精神科',
+        //   doctor: '李医生',
+        //   time: '2024-5-12',
+        //   id: '03230802',
+        //   timetamp: '2024-5-11',
+        //   price: 200,
+        //   read: false
+        // },
+        // {
+        //   type: '处方缴费成功',
+        //   name: '小黄',
+        //   department: '精神科',
+        //   doctor: '李医生',
+        //   time: '2024-5-12',
+        //   id: '03230802',
+        //   timetamp: '2024-5-11',
+        //   price: 200,
+        //   read: false
+        // }
       ]
     }
   },
   methods: {
-    openDrawer () {
+    // post请求，请求数据体中包含用户证件号identity_num
+    // url为api/notice/list/
+    // 返回数据为resMes和billMes两个字典数组
+    getMesData(){
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        //注意：需要前端传入当前登录用户的证件号
+        this.$axios.post('api/notice/list/', {identity_num: "123"})
+          .then(function (response) {
+            ts.resMes = response.data['resMes'];
+            ts.billMes = response.data['billMes'];
+            console.log(ts.resMes);
+            console.log(ts.billMes);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
+    openDrawer() {
       this.table = true
     },
-    turnToBill () {
+    turnToBill() {
       this.table = false
       window.scrollTo({
         top: 0,
         left: 0,
         behavior: 'smooth'
       })
+    },
+    tableRowClassName({ row, rowIndex }) {
+      if (row.read === false) {
+        return 'warning-row'
+      } else if (row.read === true) {
+        return 'success-row'
+      }
+      return ''
+    },
+    countUnread() {
+      // 计算resMes中read为false的数量
+      const unreadResMesCount = this.resMes.filter((item) => item.read === false).length
+      // 计算billMes中read为false的数量
+      const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
+      // 返回两个数量的总和
+      // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
+      this.$emit('update:result', unreadResMesCount + unreadBillMesCount)
+    },
+    readMes(row) {
+      row.read = true;
+      this.countUnread();
     }
   }
 }
 </script>
 
 <style scoped>
-.myDrawer {
-  z-index: 8;
+::v-deep .el-drawer{
+  background: url("../../assets/message/message-back.jpg");
+  background-size: cover;
+}
+::v-deep .el-drawer__title {
+  font-size: 22px;
+  font-weight: bold;
+  text-shadow: 2px 2px 3px rgba(13, 65, 153, 0.941);
+  text-align: left;
+  color:rgb(255, 254, 254)
+}
+.collapseItem1,.collapseItem2{
+  padding: 3px;
+  background: linear-gradient(#f0f0f0, #fff);
+  border: 1px solid #ccc;
+  box-shadow: 
+    2px 2px 5px rgba(0, 0, 0, 0.3), 
+    inset -2px -2px 5px rgba(255, 255, 255, 0.6), 
+    inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+.collapseItem1{
+  margin-bottom:10px
+}
+.el-table >>> .warning-row {
+  --el-table-tr-bg-color: var(--el-color-warning-light-9);
+}
+.el-table >>> .success-row {
+  --el-table-tr-bg-color: var(--el-color-success-light-9);
 }
 </style>

@@ -1,40 +1,26 @@
 <template>
-  <Login ref="Login"> </Login>
   <div>
     <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
-    <Login ref="Login"> </Login>
+    <Login @update:currentUserCard="updateUserCard" @update:currentUserType="updateUserType" ref="Login">
+    </Login>
+    <Sign ref="Sign"> </Sign>
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
         <RouterLink to="/Main">首页</RouterLink>
         <a href="#unknown" @click="showLogin()">登录</a>
         <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
           v-if="unreadCount !== 0"></el-badge>
-        <a href="#unknown">联系我们</a>
+        <a href="#unknown" @click="showSign()">系统介绍</a>
       </nav>
       <div class="clickable-images">
-        <router-link to="/AppointmentRegistration" class="image-link" @mouseover="showSurroundImage(1)"
-          @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../../assets/navigation/list1.1.png" alt="Image 1" />
-          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 1" />
-        </router-link>
-        <RouterLink to="/MedicineA" class="image-link" @mouseover="showSurroundImage(2)"
-          @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../../assets/navigation/list1.2.png" alt="Image 2" />
-          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 2" />
-        </RouterLink>
-        <RouterLink to="/PresA" class="image-link" @mouseover="showSurroundImage(3)" @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../../assets/navigation/list1.5.png" alt="Image 5" />
-          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 5" />
-        </RouterLink>
-        <RouterLink to="/Prescription" class="image-link" @mouseover="showSurroundImage(4)"
-          @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../../assets/navigation/list1.3.png" alt="Image 3" />
-          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 3" />
-        </RouterLink>
-        <RouterLink to="/Bill" class="image-link" @mouseover="showSurroundImage(5)" @mouseleave="hideSurroundImage()">
-          <img class="designed-icon" src="../../assets/navigation/list1.4.png" alt="Image 4" />
-          <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image 4" />
-        </RouterLink>
+        <template v-for="(image, index) in getClickableImages()">
+          <RouterLink :to="image.link" class="image-link" @mouseover="showSurroundImage(index + 1)"
+            @mouseleave="hideSurroundImage()">
+            <img class="designed-icon" :src="image.icon" :alt="image.alt" />
+
+            <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image" />
+          </RouterLink>
+        </template>
       </div>
     </el-header>
     <RouterView />
@@ -43,11 +29,13 @@
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import Login from "../LogIn/Login.vue"
+import Navbar from './Navbar.vue'
+import Login from '../LogIn/Login.vue'
+import Sign from '../LogIn/Sign.vue'
 import BillList from '../Bills/BillList.vue'
 import PatientA from '../History/PatientA.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
-
+import messagedrawer from '../Message/MessageDrawer.vue'
 export default {
   name: 'HeaderNavigation',
   data () {
@@ -60,7 +48,12 @@ export default {
         '/static/img/navigation/banner3.jpg'
       ],
       unreadCount: 0,
-      intervalId: null
+      intervalId: null,
+      currentUser: {
+        userType: '',
+        idCard: '',
+        password: ''
+      }
     }
   },
   mounted () {
@@ -71,15 +64,28 @@ export default {
     this.stopBackgroundRotation()
   },
   components: {
+    Navbar,
     Login,
+    Sign,
     RouterLink,
     RouterView,
-    messagedrawer,
+    messagedrawer
   },
   methods: {
+    updateUserCard (id) {
+      this.currentUser.idCard = id
+      console.log('用户id更新完毕')
+    },
+    updateUserType (userType) {
+      this.currentUser.userType = userType
+      this.$forceUpdate()
+      console.log('用户类型更新完毕')
+    },
     showLogin () {
-      this.$refs.Login.openModal()
-      console.log('执行')
+      this.$refs.Login.openModal(this.currentUser.idCard, this.currentUser.userType)
+    },
+    showSign () {
+      this.$refs.Sign.openModal()
     },
     startBackgroundRotation () {
       this.intervalId = setInterval(this.changeBackground, 5000) // Change background every 5 seconds
@@ -121,6 +127,44 @@ export default {
     },
     getUnreadCount (cnt) {
       this.unreadCount = cnt
+    },
+    getClickableImages () {
+      switch (this.currentUser.userType) {
+        case '医生':
+          return [
+            { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
+            { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
+            { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' }
+          ]
+        case '普通用户':
+          return [
+            {
+              link: '/AppointmentRegistration',
+              icon: '/static/img/navigation/list1_1.png',
+              alt: 'Image1'
+            },
+            { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
+            { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
+            { link: '/Bill', icon: '/static/img/navigation/list1_4.png', alt: 'Image 4' }
+          ]
+        case '管理员':
+          return [
+            { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
+            { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
+            { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' }
+          ]
+        default:
+          return [
+            {
+              link: '/AppointmentRegistration',
+              icon: '/static/img/navigation/list1_1.png',
+              alt: 'Image1'
+            },
+            { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
+            { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
+            { link: '/Bill', icon: '/static/img/navigation/list1_4.png', alt: 'Image 4' }
+          ]
+      }
     }
   }
 }
@@ -158,6 +202,7 @@ export default {
   color: white;
   padding: 0;
   text-align: center;
+  background-image: url('../../assets/navigation/list1_1.png');
   background-image: url('../../assets/navigation/banner1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
@@ -177,7 +222,7 @@ export default {
 .header-nav::before {
   content: '';
   position: absolute;
-  top: 20px;
+  top: 25px;
   left: 30px;
   width: 300px;
   height: 150px;
@@ -196,7 +241,7 @@ export default {
 /*控制边角导航栏选项的*/
 .header-nav nav a {
   color: white;
-  padding: 14px 20px;
+  padding: 14px 8px;
   text-decoration: none;
   font-size: 17px;
   position: relative;
@@ -263,13 +308,17 @@ export default {
 
 /*调整灰色矩形内可点击元素距离*/
 .clickable-images a {
-  margin: 0 11vw;
+  margin: 0 9vw;
 
   position: relative;
 }
 
 .image-link {
   position: relative;
+}
+
+a:hover {
+  cursor: pointer;
 }
 
 /*非常困惑的一点就是clickable里边设置过的元素，在子类元素里边再设置会被无视，好反常识？？？*/

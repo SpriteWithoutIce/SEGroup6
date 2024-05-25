@@ -2,7 +2,7 @@
   <Header :squares2="squares2" />
   <div class="notice-box" style="height: 1000px;">
     <div class="container2">
-      <router-link to="/AppointmentRegistration3" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
+      <router-link to="/AppointmentRegistration4" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
       <router-link 
         :to="{
           path:'/AppointmentRegistration6',
@@ -145,42 +145,42 @@ export default {
       selectDate:'',
       today: new Date(), // 今天的日期  
       doctors: [  
-        {  
-          id:0,
-          name: '医生A',  
-          title: '主任医师',  
-          avatar: 'img/lsy.jpg', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-11(上午)',status:'empty', number: 10},
-            {time: '05-12(下午) ',status: 'full'},
-          ],  
-          cost:100,
-        },
-        {  
-          id:1,
-          name: '医生B',  
-          title: '副主任医师',  
-          avatar: 'img/touxiang.png', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-13(上午)',status:'full'},
-            {time: '05-12(下午) ',status: 'empty',number:5},
-          ],  
-          cost:60,
-        }, 
-        {  
-          id:2,
-          name: '医生C',  
-          title: '副主任医师',  
-          avatar: 'img/touxiang (1).png', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-11(上午)',status:'full'},
-            {time: '05-14(下午) ',status: 'full'},
-          ],  
-          cost:60,
-        }, 
+        // {  
+        //   id:0,
+        //   name: '医生A',  
+        //   title: '主任医师',  
+        //   avatar: 'img/lsy.jpg', // 头像URL  
+        //   research: '生物信息', // 主要研究方向  
+        //   schedule: [  
+        //     {time: '05-11(上午)',status:'empty', number: 10},
+        //     {time: '05-12(下午) ',status: 'full'},
+        //   ],  
+        //   cost:100,
+        // },
+        // {  
+        //   id:1,
+        //   name: '医生B',  
+        //   title: '副主任医师',  
+        //   avatar: 'img/touxiang.png', // 头像URL  
+        //   research: '生物信息', // 主要研究方向  
+        //   schedule: [  
+        //     {time: '05-13(上午)',status:'full'},
+        //     {time: '05-12(下午) ',status: 'empty',number:5},
+        //   ],  
+        //   cost:60,
+        // }, 
+        // {  
+        //   id:2,
+        //   name: '医生C',  
+        //   title: '副主任医师',  
+        //   avatar: 'img/touxiang (1).png', // 头像URL  
+        //   research: '生物信息', // 主要研究方向  
+        //   schedule: [  
+        //     {time: '05-11(上午)',status:'full'},
+        //     {time: '05-14(下午) ',status: 'full'},
+        //   ],  
+        //   cost:60,
+        // }, 
         // ... 其他医生数据  
       ],  
       isHovered:[false,false,false,false,false,false,false,false,false,false],
@@ -193,6 +193,25 @@ export default {
     };  
   }  ,
   methods: {  
+    getDutyData() {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          action: 'getNextSevenDaysDuty',
+          department: this.$route.query.department,
+        };
+        this.$axios.post('/api/duty/next_seven_days/', requestData)
+          .then(function (response) {
+            ts.doctors = response.data['duty'];
+            console.log(ts.doctors);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
     isClick(doctor,time){
       this.info_time=time;
       this.checked=true;
@@ -238,30 +257,35 @@ export default {
     },  
     mouseoutButton() {  
     },
-  },  
-  created() {
-    this.nextSevenDays=this.locatenextSevenDays()
-    for (let i = 0; i < this.nextSevenDays.length; i++) {  
-      const day = this.nextSevenDays[i].date;
-      console.log(day)
-      this.dayStatus[i].status='none';
-      this.doctors.forEach(doctor => {  
-        doctor.schedule.forEach(scheduleItem => {  
-          if (scheduleItem.time.includes(day)) {  
-            if (scheduleItem.status === 'full' && this.dayStatus[i].status!='empty') {  
-              this.dayStatus[i].status='full';
-            } else if (scheduleItem.status === 'empty') {  
-              this.dayStatus[i].status='empty';
-            }  
-          }  
-        });  
-      });
-    }
-    this.info.name=this.$route.query.name;
-    this.info.paymentType=this.$route.query.paymentType;
-    this.info.department=this.$route.query.department;
-  }
-};  
+  },
+  mounted() {
+    this.getDutyData().then(() => {
+      console.log("111");
+      console.log(this.doctors);
+      this.nextSevenDays = this.locatenextSevenDays();
+      for (let i = 0; i < this.nextSevenDays.length; i++) {
+        const day = this.nextSevenDays[i].date;
+        this.dayStatus[i].status = 'none';
+        this.doctors.forEach(doctor => {
+          doctor.schedule.forEach(scheduleItem => {
+            if (scheduleItem.time.includes(day)) {
+              if (scheduleItem.status === 'full' && this.dayStatus[i].status != 'empty') {
+                this.dayStatus[i].status = 'full';
+              } else if (scheduleItem.status === 'empty') {
+                this.dayStatus[i].status = 'empty';
+              }
+            }
+            console.log(this.dayStatus[i].status);
+          });
+        });
+      }
+      this.info.name = this.$route.query.name;
+      this.info.paymentType = this.$route.query.paymentType;
+      this.info.department = this.$route.query.department;
+      console.log(this.doctors);
+    });
+  },
+}
 </script>  
   
 <style scoped>  

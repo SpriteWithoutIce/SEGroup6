@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-9d(@z+^#ndq-#(x$(88=mahim#gsmbl=qgihen!06s$i3=n$5s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['101.42.36.160']
 
 
 # Application definition
@@ -46,7 +46,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -82,9 +82,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "SEProject",
         "USER": "root",
-        "PASSWORD": "22371468mysql",
-        "HOST": "localhost",
-        "PORT": 3306,
+        "PASSWORD": "22371468Se",
+        "HOST": "bj-cynosdbmysql-grp-8do8ws2a.sql.tencentcdb.com",
+        "PORT": 24621,
     }
 }
 
@@ -131,3 +131,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'app01/static/media')

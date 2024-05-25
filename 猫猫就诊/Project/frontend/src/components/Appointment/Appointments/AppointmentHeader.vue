@@ -1,6 +1,6 @@
 <template>  
   <!-- 上面的四个框 -->
-  <div class="container" style="display: flex; justify-content: center; align-items: center; height: 180px;">  
+  <div class="containerlyh">  
     <router-link 
       v-for="(square, index) in squares"  
       :key="index"  
@@ -71,14 +71,14 @@ export default {
         { hovered: false }  
       ] ,
       info: [
-        "出诊查询","网上预约看诊","预约流程","取消预约"
+        "出诊查询","网上预约看诊","预约流程","医生查询"
       ],
       checked: false,  
       currentSquareIndex: 0,  
       info2:[
         "就诊须知","挂号类别","填写预约信息","选择科室","选择医生","选择时间地点","核对预约信息","预约成功"
       ],
-      link:['/TableSearch','/AppointmentRegistration','/AppointmentRegistration','/AppointmentRegistration'],
+      link:['/TableSearch','/AppointmentRegistration','/AppointmentRegistration','/DoctorSearch'],
     };  
   }  ,
   methods: {  
@@ -95,8 +95,12 @@ export default {
 </script>  
   
 <style scoped>  
-.container {  
+.containerlyh {  
   flex-wrap: wrap;  
+  height: 180px;
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
 }  
   
 .square {  
@@ -113,6 +117,7 @@ export default {
   color: #000000;  
   cursor: pointer;  
   transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  text-decoration: none;
 }  
   
 .square-hovered {  

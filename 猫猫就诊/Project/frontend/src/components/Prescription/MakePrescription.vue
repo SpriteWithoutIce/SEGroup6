@@ -65,90 +65,6 @@ export default {
       //注意，函数里有日期比较逻辑，所以务必注意后端的日期数据格式！！！
       // 把patients设置成数据库读取的内容就好
       patient: [
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
-        // {
-        //   Id: '1',
-        //   name: '秋子夜',
-        //   age: '18',
-        //   sex: '男',
-        //   date: '2024年5月10日',
-        // },
         {
           Id: '1',
           name: '秋子夜',
@@ -182,17 +98,20 @@ export default {
       console.log("看看这里能读吗1")
       console.log(this.patient);
     },
-    getTreatmentsData: function () {
-      let ts = this;
-      this.$axios.get('/api/treatments/list/')
-        .then(function (response) {
-          ts.patient = response.data['treatments'];
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-      console.log("看看这里能读吗2")
-      console.log(this.patient);
+    getTreatmentsData () {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        this.$axios.get('/api/treatments/list/')
+          .then(function (response) {
+            ts.patient = response.data['treatments'];
+            console.log(ts.patient);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
     },
 
 
@@ -241,9 +160,10 @@ export default {
     },
   },
   mounted () {
-    //this.getTreatmentsData();
-    this.selectFunc('1');
-    this.handleCurrentChange(1);
+    this.getTreatmentsData().then(() => {
+      this.selectFunc('1');
+      this.handleCurrentChange(1);
+    });
   }
 }
 </script>

@@ -1,0 +1,421 @@
+*** Starting uWSGI 2.0.25.1 (64bit) on [Sat May 25 00:40:39 2024] ***
+compiled with version: 11.2.0 on 24 May 2024 14:41:03
+os: Linux-5.15.0-86-generic #96-Ubuntu SMP Wed Sep 20 08:23:49 UTC 2023
+nodename: VM-8-9-ubuntu
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 2
+current working directory: /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+writing pidfile to uwsgi.pid
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+your processes number limit is 7402
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to TCP address 127.0.0.1:5000 fd 3
+Python version: 3.10.12 (main, Jun 11 2023, 05:26:28) [GCC 11.4.0]
+Python main interpreter initialized at 0x55ccf0b125f0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 1031270 bytes (1007 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x55ccf0b125f0 pid: 69355 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 69355)
+spawned uWSGI worker 1 (pid: 69359, cores: 2)
+spawned uWSGI worker 2 (pid: 69360, cores: 2)
+spawned uWSGI worker 3 (pid: 69362, cores: 2)
+spawned uWSGI worker 4 (pid: 69363, cores: 2)
+SIGINT/SIGTERM received...killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: pidfile removed.
+*** Starting uWSGI 2.0.25.1 (64bit) on [Sat May 25 00:42:16 2024] ***
+compiled with version: 11.2.0 on 24 May 2024 14:41:03
+os: Linux-5.15.0-86-generic #96-Ubuntu SMP Wed Sep 20 08:23:49 UTC 2023
+nodename: VM-8-9-ubuntu
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 2
+current working directory: /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+writing pidfile to uwsgi.pid
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+your processes number limit is 7402
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to TCP address 127.0.0.1:5000 fd 3
+Python version: 3.10.12 (main, Jun 11 2023, 05:26:28) [GCC 11.4.0]
+Python main interpreter initialized at 0x555dd3fa85f0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 1031270 bytes (1007 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x555dd3fa85f0 pid: 69867 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 69867)
+spawned uWSGI worker 1 (pid: 69868, cores: 2)
+spawned uWSGI worker 2 (pid: 69869, cores: 2)
+spawned uWSGI worker 3 (pid: 69871, cores: 2)
+spawned uWSGI worker 4 (pid: 69872, cores: 2)
+SIGINT/SIGTERM received...killing workers...
+worker 1 buried after 1 seconds
+worker 2 buried after 1 seconds
+worker 3 buried after 1 seconds
+worker 4 buried after 1 seconds
+goodbye to uWSGI.
+VACUUM: pidfile removed.
+*** Starting uWSGI 2.0.25.1 (64bit) on [Sat May 25 01:00:05 2024] ***
+compiled with version: 11.2.0 on 24 May 2024 14:41:03
+os: Linux-5.15.0-86-generic #96-Ubuntu SMP Wed Sep 20 08:23:49 UTC 2023
+nodename: VM-8-9-ubuntu
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 2
+current working directory: /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+writing pidfile to uwsgi.pid
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+your processes number limit is 7402
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to TCP address 127.0.0.1:5000 fd 3
+Python version: 3.10.12 (main, Jun 11 2023, 05:26:28) [GCC 11.4.0]
+Python main interpreter initialized at 0x55f3cc9925f0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 1031270 bytes (1007 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x55f3cc9925f0 pid: 75514 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 75514)
+spawned uWSGI worker 1 (pid: 75515, cores: 2)
+spawned uWSGI worker 2 (pid: 75516, cores: 2)
+spawned uWSGI worker 3 (pid: 75518, cores: 2)
+spawned uWSGI worker 4 (pid: 75519, cores: 2)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 75519|app: 0|req: 1/1] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:00:09 2024] GET /api/treatments/list/ => generated 58477 bytes in 192 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+*** Starting uWSGI 2.0.25.1 (64bit) on [Sat May 25 01:04:04 2024] ***
+compiled with version: 11.2.0 on 24 May 2024 14:41:03
+os: Linux-5.15.0-86-generic #96-Ubuntu SMP Wed Sep 20 08:23:49 UTC 2023
+nodename: VM-8-9-ubuntu
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 2
+current working directory: /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+writing pidfile to uwsgi.pid
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+your processes number limit is 7402
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+uwsgi socket 0 bound to TCP address 127.0.0.1:8000 fd 3
+Python version: 3.10.12 (main, Jun 11 2023, 05:26:28) [GCC 11.4.0]
+Python main interpreter initialized at 0x55f33cfb55f0
+python threads support enabled
+your server socket listen backlog is limited to 100 connections
+your mercy for graceful operations on workers is 60 seconds
+mapped 1031270 bytes (1007 KB) for 8 cores
+*** Operational MODE: preforking+threaded ***
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x55f33cfb55f0 pid: 76756 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 76756)
+spawned uWSGI worker 1 (pid: 76757, cores: 2)
+spawned uWSGI worker 2 (pid: 76758, cores: 2)
+spawned uWSGI worker 3 (pid: 76760, cores: 2)
+spawned uWSGI worker 4 (pid: 76761, cores: 2)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76758|app: 0|req: 1/1] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:04:25 2024] GET /api/treatments/list/ => generated 58477 bytes in 78 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76758|app: 0|req: 2/2] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:06:52 2024] GET /api/treatments/list/ => generated 58477 bytes in 19 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 1)
+*** Starting uWSGI 2.0.25.1 (64bit) on [Sat May 25 01:10:54 2024] ***
+compiled with version: 11.2.0 on 24 May 2024 14:41:03
+os: Linux-5.15.0-86-generic #96-Ubuntu SMP Wed Sep 20 08:23:49 UTC 2023
+nodename: VM-8-9-ubuntu
+machine: x86_64
+clock source: unix
+detected number of CPU cores: 2
+current working directory: /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+writing pidfile to uwsgi.pid
+detected binary path: /usr/local/bin/uwsgi
+!!! no internal routing support, rebuild with pcre support !!!
+chdir() to /home/ubuntu/seProject/SEGroup6/猫猫就诊/Project
+your processes number limit is 7402
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread robust mutexes
+thunder lock: disabled (you can enable it with --thunder-lock)
+probably another instance of uWSGI is running on the same address (127.0.0.1:8000).
+bind(): Address already in use [core/socket.c line 769]
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76760|app: 0|req: 1/3] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:11:12 2024] GET /api/treatments/list/ => generated 58477 bytes in 130 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76760|app: 0|req: 2/4] 219.239.227.188 () {38 vars in 739 bytes} [Fri May 24 17:11:21 2024] GET /api/treatments/list/ => generated 58565 bytes in 19 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 1)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76760|app: 0|req: 3/5] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:12:52 2024] GET /api/treatments/list/ => generated 58477 bytes in 20 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76760|app: 0|req: 4/6] 219.239.227.188 () {40 vars in 770 bytes} [Fri May 24 17:13:47 2024] GET /api/treatments/list/ => generated 58702 bytes in 19 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 1)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76761|app: 0|req: 1/7] 219.239.227.188 () {40 vars in 770 bytes} [Fri May 24 17:13:49 2024] GET /api/treatments/list/ => generated 58702 bytes in 74 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76761|app: 0|req: 2/8] 219.239.227.188 () {40 vars in 770 bytes} [Fri May 24 17:13:51 2024] GET /api/treatments/list/ => generated 58702 bytes in 25 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 1)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76757|app: 0|req: 1/9] 219.239.227.188 () {40 vars in 770 bytes} [Fri May 24 17:13:52 2024] GET /api/treatments/list/ => generated 58702 bytes in 75 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76760|app: 0|req: 5/10] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:14:49 2024] GET /api/treatments/list/ => generated 58477 bytes in 19 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76760|app: 0|req: 6/11] 219.239.227.188 () {38 vars in 739 bytes} [Fri May 24 17:14:59 2024] GET /api/treatments/list/ => generated 58565 bytes in 20 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 1)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76761|app: 0|req: 3/12] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:17:06 2024] GET /api/treatments/list/ => generated 58477 bytes in 20 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76761|app: 0|req: 4/13] 219.239.227.188 () {38 vars in 739 bytes} [Fri May 24 17:17:12 2024] GET /api/treatments/list/ => generated 58565 bytes in 19 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 1)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76760|app: 0|req: 7/14] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:19:09 2024] GET /api/treatments/list/ => generated 58477 bytes in 19 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76761|app: 0|req: 5/15] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:19:26 2024] GET /api/treatments/list/ => generated 58477 bytes in 19 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76761|app: 0|req: 6/16] 219.239.227.188 () {38 vars in 739 bytes} [Fri May 24 17:19:33 2024] GET /api/treatments/list/ => generated 58565 bytes in 20 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 1)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76761|app: 0|req: 7/17] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:21:07 2024] GET /api/treatments/list/ => generated 58477 bytes in 19 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76757|app: 0|req: 2/18] 219.239.227.188 () {38 vars in 651 bytes} [Fri May 24 17:22:54 2024] GET /api/treatments/list/ => generated 58477 bytes in 21 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 1)
+Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/utils/deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/django/http/request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '101.42.36.160'. You may need to add '101.42.36.160' to ALLOWED_HOSTS.
+Bad Request: /api/treatments/list/
+[pid: 76758|app: 0|req: 3/19] 219.239.227.188 () {38 vars in 739 bytes} [Fri May 24 17:22:58 2024] GET /api/treatments/list/ => generated 58565 bytes in 20 msecs (HTTP/1.1 400) 5 headers in 186 bytes (1 switches on core 0)
