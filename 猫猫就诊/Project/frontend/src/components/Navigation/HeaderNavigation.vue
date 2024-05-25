@@ -3,13 +3,14 @@
     <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
     <Login @update:currentUserCard="updateUserCard" @update:currentUserType="updateUserType" ref="Login">
     </Login>
+    <Sign ref="Sign"> </Sign>
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
         <RouterLink to="/Main">首页</RouterLink>
         <a href="#unknown" @click="showLogin()">登录</a>
         <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
           v-if="unreadCount !== 0"></el-badge>
-        <a href="#unknown">联系我们</a>
+        <a href="#unknown" @click="showSign()">系统介绍</a>
       </nav>
       <div class="clickable-images">
         <template v-for="(image, index) in getClickableImages()">
@@ -30,6 +31,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import Navbar from './Navbar.vue'
 import Login from '../LogIn/Login.vue'
+import Sign from '../LogIn/Sign.vue'
 import BillList from '../Bills/BillList.vue'
 import PatientA from '../History/PatientA.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
@@ -64,6 +66,7 @@ export default {
   components: {
     Navbar,
     Login,
+    Sign,
     RouterLink,
     RouterView,
     messagedrawer
@@ -80,6 +83,9 @@ export default {
     },
     showLogin () {
       this.$refs.Login.openModal(this.currentUser.idCard, this.currentUser.userType)
+    },
+    showSign () {
+      this.$refs.Sign.openModal()
     },
     startBackgroundRotation () {
       this.intervalId = setInterval(this.changeBackground, 5000) // Change background every 5 seconds
