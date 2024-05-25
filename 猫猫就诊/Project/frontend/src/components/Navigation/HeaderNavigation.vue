@@ -46,8 +46,8 @@ export default {
       unreadCount: 0,
       intervalId: null,
       currentUser: {
-        userType: "医生",
-        idCard: "123",
+        userType: "",
+        idCard: "",
         password: "",
       },
     }
