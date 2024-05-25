@@ -216,6 +216,10 @@ export default {
         this.handleCurrentChange(1)
     },
     // bug：这里目前无法从根本上实现属性的修改，页面一重新挂载就会恢复，后续链接后端时再修正逻辑
+    /* TODO
+      1.根据当前用户id和item对应的id更改对应订单的缴费状态（未缴费->已缴费） 【link-backend！】
+      2.重新获取数据，刷新界面
+    */
     updatePayStatus(id) {
       // 找到 bill 数组中对应的对象，并更新 payStatus
       const index = this.bill.findIndex((item) => item.id === id)
