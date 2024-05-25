@@ -184,11 +184,10 @@ export default {
     },
     getTreatmentsData() {
       return new Promise((resolve, reject) => {
-        let ts = this;
         this.$axios.get('/api/treatments/list/')
           .then(function (response) {
             ts.patient = response.data['treatments'];
-            console.log(ts.patient);
+            console.log(ts.doctors);
             resolve(); // 数据获取完成，resolve Promise
           })
           .catch(function (error) {

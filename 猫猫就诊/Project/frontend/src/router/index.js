@@ -94,11 +94,6 @@ const router = createRouter({
       name: 'MedicineA',
       component: MedicineA
     },
-    {
-      path: '/PharmaCist',
-      name: 'PharmaCist',
-      component: PharmaCist
-    },
   ]
 })
 
