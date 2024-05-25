@@ -61,7 +61,7 @@ export default {
         medicines: [{ name: '', quantity: 0, price: 0, totalPrice: 0 }]
       },
       medicinesDB: [
-        // { name: '布洛芬', stock 改成num: 80, price: 5.0, use: ['发热', '炎症'] }
+        // { name: '布洛芬', stock 改成num: 80, price: 5.0, use: ['发热','炎症'] }
         // 可以添加更多药物数据
       ]
     };
@@ -132,7 +132,7 @@ export default {
     querySearch (queryString, cb) {
       const medicines = this.medicinesDB.map(item => ({
         value: item.name,
-        symptoms: item.symptoms
+        symptoms: item.use
       }));
       const results = queryString
         ? medicines.filter(this.createFilter(queryString))
@@ -163,6 +163,7 @@ export default {
 
   mounted () {
     this.getMedicineData().then(() => {
+
     });
   }
 };
