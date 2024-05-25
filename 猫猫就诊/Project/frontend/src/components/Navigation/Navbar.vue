@@ -1,9 +1,10 @@
 <template>
   <div class="navbar" :class="{ sticky: isSticky }">
-    <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount"/>
+    <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
     <RouterLink to="/Main" @click="returnTop" class="white-bold">首页</RouterLink>
     <a href="#" class="white-bold">登录</a>
-    <a class="white-bold" @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item" v-if="unreadCount!==0"></el-badge>
+    <a class="white-bold" @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
+      v-if="unreadCount !== 0"></el-badge>
     <a @click="returnTop" class="white-bold">回到顶部</a>
   </div>
 </template>
@@ -31,8 +32,8 @@ export default {
 
     return { isSticky }
   },
-  data(){
-    return{
+  data () {
+    return {
       unreadCount: 0
     }
   },
@@ -40,21 +41,22 @@ export default {
     messagedrawer
   },
   methods: {
-    openMessageBox() {
+
+    openMessageBox () {
       this.$refs.messageBox.openDrawer()
     },
-    getUnreadCount(cnt) {
+    getUnreadCount (cnt) {
       this.unreadCount = cnt
     },
-    returnTop(){
+    returnTop () {
       window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
     }
   },
-  mounted() {
+  mounted () {
     this.$refs.messageBox.countUnread()
   },
 }
@@ -103,8 +105,8 @@ export default {
 
 .item {
   margin-top: 10px;
-  margin-left:-25px;
-  margin-right:25px;
+  margin-left: -25px;
+  margin-right: 25px;
 }
 
 .white-bold {
