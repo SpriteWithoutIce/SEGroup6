@@ -98,7 +98,7 @@ export default {
       console.log("看看这里能读吗1")
       console.log(this.patient);
     },
-    getTreatmentsData () {
+    getTreatmentsData() {
       return new Promise((resolve, reject) => {
         let ts = this;
         this.$axios.get('/api/treatments/list/')
