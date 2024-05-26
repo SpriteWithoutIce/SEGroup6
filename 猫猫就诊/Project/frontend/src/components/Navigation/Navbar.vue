@@ -1,8 +1,9 @@
 <template>
+  <HeaderNavigation ref="HeaderNavigation" />
   <div class="navbar" :class="{ sticky: isSticky }">
     <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
     <RouterLink to="/Main" @click="returnTop" class="white-bold">首页</RouterLink>
-    <a href="#" class="white-bold">登录</a>
+    <a @click="NavbarLogin" class="white-bold">登录</a>
     <a class="white-bold" @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
       v-if="unreadCount !== 0"></el-badge>
     <a @click="returnTop" class="white-bold">回到顶部</a>
@@ -12,7 +13,8 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
 import messagedrawer from '../Message/MessageDrawer.vue'
-
+import HeaderNavigation from './HeaderNavigation.vue'
+import { Navbar } from '..'
 export default {
   name: 'NavBar',
   setup () {
@@ -38,10 +40,17 @@ export default {
     }
   },
   components: {
-    messagedrawer
+    messagedrawer,
+    HeaderNavigation
   },
   methods: {
-
+    NavbarLogin () {
+      if (this.$refs.HeaderNavigation && this.$refs.HeaderNavigation.showLogin) {
+        this.$refs.HeaderNavigation.showLogin()
+      } else {
+        console.error("HeaderNavigation component is not properly initialized.");
+      }
+    },
     openMessageBox () {
       this.$refs.messageBox.openDrawer()
     },
@@ -57,7 +66,7 @@ export default {
     }
   },
   mounted () {
-    this.$refs.messageBox.countUnread()
+    this.$refs.messageBox.countUnread();
   },
 }
 </script>

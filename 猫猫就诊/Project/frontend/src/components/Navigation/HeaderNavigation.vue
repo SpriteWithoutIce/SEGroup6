@@ -29,7 +29,7 @@
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import Navbar from './Navbar.vue'
+// import Navbar from './Navbar.vue'
 import Login from '../LogIn/Login.vue'
 import Sign from '../LogIn/Sign.vue'
 import BillList from '../Bills/BillList.vue'
@@ -64,7 +64,7 @@ export default {
     this.stopBackgroundRotation()
   },
   components: {
-    Navbar,
+    // Navbar,
     Login,
     Sign,
     RouterLink,

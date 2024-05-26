@@ -1,6 +1,6 @@
 <template>
   <div class="modal-background" v-if="loginVisible">
-    <img src="../../assets/LogIn/碳治郎1.png" alt="中心图片" class="center-image">
+    <!-- <img src="../../assets/LogIn/碳治郎1.png" alt="中心图片" class="center-image"> -->
     <div class="modal-container">
       <div class="top-section">
         <img src="../../assets/navigation/banner2.jpg" alt="背景图片" class="background-image">
@@ -17,11 +17,13 @@
           <el-form-item label="密码" prop="password" class="input-item">
             <el-input v-model="loginForm.password" type="password"></el-input>
           </el-form-item>
-          <el-select v-model="loginForm.userType" placeholder="身份选择" class="input-item3">
-            <el-option label="医生" value="医生"></el-option>
-            <el-option label="普通用户" value="普通用户"></el-option>
-            <el-option label="管理员" value="管理员"></el-option>
-          </el-select>
+          <el-form-item label="身份" prop="idCard" class="input-item3">
+            <el-select v-model="loginForm.userType" placeholder="身份选择" class="input-item3">
+              <el-option label="医生" value="医生"></el-option>
+              <el-option label="普通用户" value="普通用户"></el-option>
+              <el-option label="管理员" value="管理员"></el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
         <div class="button-group">
           <el-button type="primary" @click="handleLogin" class="input-item2">登录</el-button>
@@ -156,7 +158,7 @@ export default {
         message: '已退出登录 (๑˃̵ᴗ˂̵)',
         showClose: true,
       });
-      this.$emit('update:refresh');
+
     },
     findUser (idCard) {
       return this.users.find((user) => user.id === idCard);
@@ -264,8 +266,7 @@ export default {
 }
 
 .input-item3 {
-  left: 28%;
-  width: 70%;
+  width: 100%;
   height: 40px;
 }
 </style>
