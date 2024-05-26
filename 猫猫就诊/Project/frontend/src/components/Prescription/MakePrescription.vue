@@ -108,7 +108,7 @@ export default {
             resolve(); // 数据获取完成，resolve Promise
           })
           .catch(function (error) {
-            console.log(error);
+            console.log(error.response);
             reject(error); // 数据获取失败，reject Promise
           });
       });
