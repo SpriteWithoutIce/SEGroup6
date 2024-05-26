@@ -156,6 +156,7 @@ export default {
         message: '已退出登录 (๑˃̵ᴗ˂̵)',
         showClose: true,
       });
+      this.$emit('update:refresh');
     },
     findUser (idCard) {
       return this.users.find((user) => user.id === idCard);

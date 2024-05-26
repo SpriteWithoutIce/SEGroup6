@@ -1,8 +1,8 @@
 <template>
   <div>
     <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
-    <Login @update:currentUserCard="updateUserCard" @update:currentUserType="updateUserType" ref="Login">
-    </Login>
+    <Login @update:refresh="refreshPage" @update:currentUserCard="updateUserCard"
+      @update:currentUserType="updateUserType" ref="Login"></Login>
     <Sign ref="Sign"> </Sign>
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
@@ -72,6 +72,13 @@ export default {
     messagedrawer
   },
   methods: {
+    refreshPage () {
+      this.currentUser.idCard = "";
+      this.currentUser.userType = "";
+      this.currentUser.password = "";
+      console.log("HeaderNavigarion refreshPage done");
+      this.$forceUpdate();
+    },
     updateUserCard (id) {
       this.currentUser.idCard = id
       console.log('用户id更新完毕')
