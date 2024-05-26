@@ -163,7 +163,6 @@ export default {
 
   mounted () {
     this.getMedicineData().then(() => {
-      console.log("111"+medicinesDB);
     });
   }
 };
