@@ -98,7 +98,7 @@ export default {
       console.log("看看这里能读吗1")
       console.log(this.patient);
     },
-    getTreatmentsData () {
+    getTreatmentsData() {
       return new Promise((resolve, reject) => {
         let ts = this;
         this.$axios.get('/api/treatments/list/')
@@ -108,7 +108,7 @@ export default {
             resolve(); // 数据获取完成，resolve Promise
           })
           .catch(function (error) {
-            console.log(error);
+            console.log(error.response);
             reject(error); // 数据获取失败，reject Promise
           });
       });
