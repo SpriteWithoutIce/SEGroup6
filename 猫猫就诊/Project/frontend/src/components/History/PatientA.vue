@@ -1,9 +1,15 @@
 <!--患者的挂号查询页面-->
 <template>
-  <div class="container">
+  <el-container style="height: 100vh">
     <scroll>
       <div class="all-container" width="100%">
-        <SearchA></SearchA>
+        <div class="search-container">
+          <div class="wenzi">
+            <p class="guahao">挂号查询</p>
+            <p class="back">首页 > 挂号查询</p>
+          </div>
+          <el-divider class="divider" />
+        </div>
         <SignA></SignA>
         <div class="input-container">
           <div class="chaxun">
@@ -32,7 +38,7 @@
         <HistoryA :filterInfo="filterInfo"></HistoryA>
       </div>
     </scroll>
-  </div>
+  </el-container>
 </template>
 <script setup>
 import SearchA from './SearchA.vue'
@@ -42,16 +48,16 @@ import { ref, onMounted, computed } from 'vue'
 const input4 = ref('')
 const info = ref([
   {
-    office: '神经外科',
-    orderNum: 'w0023',
-    price: '0.00元',
-    name: 'buaa',
-    cardNum: '001741',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-14 下午 14:10-14:20',
-    line: '37',
-    state: '已预约',
-    doctor: '王玉'
+    office: '神经外科', //科室
+    orderNum: 'w0023', //订单号
+    price: '0.00元', //订单费用
+    name: 'buaa', //患者姓名
+    cardNum: '001741', //卡号
+    position: '门诊楼三层内科二诊区', //门诊位置
+    time: '2024-05-14 下午 14:10-14:20', //就诊时间
+    line: '37', //排队号
+    state: '已预约', //订单状态；“已预约”或“已就诊”
+    doctor: '王玉' //医生
   },
   {
     office: '消化内科',
@@ -145,6 +151,50 @@ const filterInfo = computed(() => {
 </script>
 
 <style scoped>
+.wenzi {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  /* 将组件横向排列 */
+  align-items: center;
+}
+p {
+  color: #e9c874;
+}
+
+.back {
+  font-size: 15px;
+  position: absolute;
+  left: 80%;
+}
+
+p {
+  font-weight: bold;
+}
+.divider {
+  position: absolute;
+  width: 50%;
+  left: 25%;
+  top: 55%;
+}
+.guahao {
+  position: absolute;
+  font-size: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.search-container {
+  position: absolute;
+  top: 400px;
+  height: 90px;
+  width: 800px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgb(212, 206, 206);
+  border-radius: 35px;
+  transform: translateX(-50%);
+  left: 50%;
+}
 .container {
   position: absolute;
   top: 0;

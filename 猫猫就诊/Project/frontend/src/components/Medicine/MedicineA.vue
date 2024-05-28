@@ -23,7 +23,7 @@
           type="primary"
           plain
           style="height: 40px; margin-left: 10px"
-          @click="showPrescriptionDetails('')"
+          @click="showPrescriptionDetails('', 'add')"
           >+新建药物类型</el-button
         >
         <el-table :data="ftableData" style="width: 95%; max-height: 480px">
@@ -45,7 +45,9 @@
           <el-table-column prop="use" label="适应症状" />
           <el-table-column label="操作">
             <template #default="scope">
-              <el-button size="small" @click="showPrescriptionDetails(scope.row)"> 修改 </el-button>
+              <el-button size="small" @click="showPrescriptionDetails(scope.row, 'alter')">
+                修改
+              </el-button>
               <el-button
                 size="small"
                 type="danger"
@@ -80,9 +82,9 @@ import DetailC from './DetailC.vue'
 import axios from 'axios'
 const detail = ref(null)
 const input4 = ref('')
-const showPrescriptionDetails = (row) => {
+const showPrescriptionDetails = (row, sign) => {
   // 假设DetailC组件有一个名为openModal的方法
-  detail.value.openModal(row)
+  detail.value.openModal(row, sign)
 }
 const handleEdit = (index, row) => {
   // 编辑操作的逻辑
@@ -102,7 +104,7 @@ const tableData = ref([
   {
     name: '感冒冲剂',
     type: '中药',
-    use: '感冒',
+    use: '感冒', //症状，用英文逗号分隔（例如：感冒,头晕)
     price: '5.00',
     num: '10'
   }

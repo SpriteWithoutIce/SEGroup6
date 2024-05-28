@@ -1,7 +1,7 @@
 <!--患者的处方查询页面-->
 <template>
   <!-- <div class="container"> -->
-  <el-container style="height: 100vh;">
+  <el-container style="height: 100vh">
     <scroll>
       <div class="all-container" width="100%">
         <div class="search-container">
@@ -14,16 +14,26 @@
         <SignA></SignA>
         <div class="input-container">
           <div class="chaxun">
-            <el-input v-model="input4" style="width: 300px; height: 40px" placeholder="请输入就诊日期(例:2024-05-09) 或 科室"
-              class="shuru">
+            <el-input
+              v-model="input4"
+              style="width: 300px; height: 40px"
+              placeholder="请输入就诊日期(例:2024-05-09) 或 科室"
+              class="shuru"
+            >
               <template #prefix>
                 <el-icon class="el-input__icon">
                   <search />
                 </el-icon>
               </template>
             </el-input>
-            <el-button color="#DBA979" :dark="isDark" plain class="searchButton"
-              style="width: 80px; height: 40px">查询</el-button>
+            <el-button
+              color="#DBA979"
+              :dark="isDark"
+              plain
+              class="searchButton"
+              style="width: 80px; height: 40px"
+              >查询</el-button
+            >
             <p>{{ input4 }}</p>
           </div>
         </div>
@@ -40,21 +50,41 @@ import SignA from './SignA.vue'
 import InputA from './InputA.vue'
 import PHistory from './PHistory.vue'
 import { ref, onMounted, computed } from 'vue'
+
+const getTreatmentData = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get('/api/treatment/data')
+      .then((response) => {
+        info.value = response.data['info']
+        console.log(info.value)
+        resolve() // 数据获取完成，resolve Promise
+      })
+      .catch((error) => {
+        console.error('Error fetching medicine data:', error)
+        reject(error) // 数据获取失败，reject Promise
+      })
+  })
+}
 const input4 = ref('')
 const info = ref([
   {
-    office: '心血管门诊',
-    time: '2024-05-14 下午 14:10-14:20',
-    advice: '心跳过快',
+    office: '心血管门诊', //科室
+    time: '2024-05-14 下午 14:10-14:20', //就诊时间
+    patient: 'buaa', //患者姓名
+    doctor: '士小信', //医生
+    advice: '心跳过快', //医生诊断(比较短,不是很长的那种建议)
     medicine: [
-      { name: '金莲花软件囊', time: 3, cnt: 1, use: '口服', fre: 'Tid', price: '5.98' },
-      { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', fre: 'Tid', price: 1.09 },
-      { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', fre: 'Tid', price: 1.09 }
+      { name: '金莲花软件囊', time: 3, cnt: 1, use: '口服', price: '5.98' }, //time:疗程,cnt:开的药的数量,use:使用方法,price:单价
+      { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', price: 1.09 },
+      { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', price: 1.09 }
     ]
   },
   {
     office: '心血管门诊',
     orderNum: 'w0024',
+    patient: 'buaa',
+    doctor: '士小信',
     price: '0.00元',
     name: 'buaa',
     cardNum: '001741',
@@ -68,6 +98,8 @@ const info = ref([
   {
     office: '心血管门诊',
     orderNum: 'w0025',
+    patient: 'buaa',
+    doctor: '士小信',
     price: '0.00元',
     name: 'hhh',
     cardNum: '001742',
@@ -81,6 +113,8 @@ const info = ref([
   {
     office: '心血管门诊',
     orderNum: 'w0026',
+    patient: 'buaa',
+    doctor: '士小信',
     price: '0.00元',
     name: 'hhh',
     cardNum: '001742',
@@ -94,6 +128,8 @@ const info = ref([
   {
     office: '心血管门诊',
     orderNum: 'w0026',
+    patient: 'buaa',
+    doctor: '士小信',
     price: '0.00元',
     name: 'hhh',
     cardNum: '001742',
@@ -107,6 +143,8 @@ const info = ref([
   {
     office: '心血管门诊',
     orderNum: 'w0026',
+    patient: 'buaa',
+    doctor: '士小信',
     price: '0.00元',
     name: 'hhh',
     cardNum: '001742',
@@ -120,6 +158,8 @@ const info = ref([
   {
     office: '心血管门诊',
     orderNum: 'w0026',
+    patient: 'buaa',
+    doctor: '士小信',
     price: '0.00元',
     name: 'hhh',
     cardNum: '001742',

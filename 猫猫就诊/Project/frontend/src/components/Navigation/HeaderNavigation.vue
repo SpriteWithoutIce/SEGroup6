@@ -1,24 +1,36 @@
 <template>
   <div>
     <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
-    <Login @update:refresh="refreshPage" @update:currentUserCard="updateUserCard"
-      @update:currentUserType="updateUserType" ref="Login"></Login>
+    <Login
+      @update:refresh="refreshPage"
+      @update:currentUserCard="updateUserCard"
+      @update:currentUserType="updateUserType"
+      ref="Login"
+    ></Login>
     <Sign ref="Sign"> </Sign>
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
         <RouterLink to="/Main">首页</RouterLink>
         <a href="#unknown" @click="showLogin()">登录</a>
-        <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
-          v-if="unreadCount !== 0"></el-badge>
+        <a @click="openMessageBox">消息</a
+        ><el-badge :value="unreadCount" class="item" v-if="unreadCount !== 0"></el-badge>
         <a href="#unknown" @click="showSign()">系统介绍</a>
       </nav>
       <div class="clickable-images">
         <template v-for="(image, index) in getClickableImages()">
-          <RouterLink :to="image.link" class="image-link" @mouseover="showSurroundImage(index + 1)"
-            @mouseleave="hideSurroundImage()">
+          <RouterLink
+            :to="image.link"
+            class="image-link"
+            @mouseover="showSurroundImage(index + 1)"
+            @mouseleave="hideSurroundImage()"
+          >
             <img class="designed-icon" :src="image.icon" :alt="image.alt" />
 
-            <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image" />
+            <img
+              class="Surround-image"
+              src="../../assets/navigation/list1_bg.png"
+              alt="Surround Image"
+            />
           </RouterLink>
         </template>
       </div>
@@ -38,7 +50,7 @@ import Prescription from '../Prescription/MakePrescription.vue'
 import messagedrawer from '../Message/MessageDrawer.vue'
 export default {
   name: 'HeaderNavigation',
-  data () {
+  data() {
     return {
       WebURL: 'http://localhost:8080',
       currentIndex: 0,
@@ -56,11 +68,11 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.startBackgroundRotation()
     this.$refs.messageBox.countUnread()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.stopBackgroundRotation()
   },
   components: {
@@ -72,35 +84,35 @@ export default {
     messagedrawer
   },
   methods: {
-    refreshPage () {
-      this.currentUser.idCard = "";
-      this.currentUser.userType = "";
-      this.currentUser.password = "";
-      console.log("HeaderNavigarion refreshPage done");
-      this.$forceUpdate();
+    refreshPage() {
+      this.currentUser.idCard = ''
+      this.currentUser.userType = ''
+      this.currentUser.password = ''
+      console.log('HeaderNavigarion refreshPage done')
+      this.$forceUpdate()
     },
-    updateUserCard (id) {
+    updateUserCard(id) {
       this.currentUser.idCard = id
       console.log('用户id更新完毕')
     },
-    updateUserType (userType) {
+    updateUserType(userType) {
       this.currentUser.userType = userType
       this.$forceUpdate()
       console.log('用户类型更新完毕')
     },
-    showLogin () {
+    showLogin() {
       this.$refs.Login.openModal(this.currentUser.idCard, this.currentUser.userType)
     },
-    showSign () {
+    showSign() {
       this.$refs.Sign.openModal()
     },
-    startBackgroundRotation () {
+    startBackgroundRotation() {
       this.intervalId = setInterval(this.changeBackground, 5000) // Change background every 5 seconds
     },
-    stopBackgroundRotation () {
+    stopBackgroundRotation() {
       clearInterval(this.intervalId)
     },
-    changeBackground () {
+    changeBackground() {
       this.currentIndex = (this.currentIndex + 1) % this.images.length
       let elements = document.getElementsByClassName('header-nav')
       for (let i = 0; i < elements.length; i++) {
@@ -108,12 +120,12 @@ export default {
         elements[i].style.backgroundImage = 'url(' + this.images[this.currentIndex] + ')'
       }
     },
-    changeBackgroundOnClick () {
+    changeBackgroundOnClick() {
       this.stopBackgroundRotation()
       this.changeBackground()
       this.startBackgroundRotation()
     },
-    showSurroundImage (index) {
+    showSurroundImage(index) {
       const SurroundImage = document.querySelector(
         `.clickable-images a:nth-child(${index}) .Surround-image`
       )
@@ -122,20 +134,20 @@ export default {
         SurroundImage.style.animation = 'spin 10s linear infinite'
       }
     },
-    hideSurroundImage () {
+    hideSurroundImage() {
       const SurroundImages = document.querySelectorAll('.Surround-image')
       SurroundImages.forEach((image) => {
         image.style.opacity = 0
         image.style.transform = 'rotate(0deg)'
       })
     },
-    openMessageBox () {
+    openMessageBox() {
       this.$refs.messageBox.openDrawer()
     },
-    getUnreadCount (cnt) {
+    getUnreadCount(cnt) {
       this.unreadCount = cnt
     },
-    getClickableImages () {
+    getClickableImages() {
       switch (this.currentUser.userType) {
         case '医生':
           return [
@@ -167,7 +179,7 @@ export default {
               icon: '/static/img/navigation/list1_1.png',
               alt: 'Image1'
             },
-            { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
+            { link: '/PatientA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
             { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
             { link: '/Bill', icon: '/static/img/navigation/list1_4.png', alt: 'Image 4' }
           ]
@@ -331,8 +343,8 @@ a:hover {
 /*非常困惑的一点就是clickable里边设置过的元素，在子类元素里边再设置会被无视，好反常识？？？*/
 .clickable-images img {
   /*width: 30px;
-  height: 30px;
-  */
+    height: 30px;
+    */
   position: absolute;
   transition: all 0.3s ease;
 }

@@ -82,6 +82,7 @@ export default {
         }
       ]),
       isVisible: false,
+      sign: '',
       inputName: '',
       radio: '',
       info: [
@@ -118,7 +119,7 @@ export default {
     handlePreview(file) {
       console.log(file)
     },
-    openModal(row) {
+    openModal(row, sign) {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
       this.info.name = row.name
@@ -132,7 +133,8 @@ export default {
       this.info.use = row.use
       this.info.price = row.price
       this.info.num = row.num
-      console.log(`传入的name是：${this.info.name}`)
+      this.sign = sign
+      console.log(`传入的sign是：${this.sign}`)
     },
     closeModal() {
       this.isVisible = false
