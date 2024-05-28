@@ -89,7 +89,6 @@ export default {
     cancelRegister() {
       return new Promise((resolve, reject) => {
         let ts = this;
-        //注意：在PatientA中的info里同时返回了id字段，在这里需要传入待取消预约的id
         let requestData = {
           action: 'cancelRegister',
           id: this.form.id,

@@ -74,7 +74,7 @@ class Treatment(models.Model):
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
     time = models.DateTimeField(verbose_name="挂号时间")
     advice = models.CharField(verbose_name="诊断结果", max_length=256)
-    medicine = models.TextField(verbose_name="开具药物", max_length=1024)
+    medicine = models.TextField(verbose_name="开具药物")
     price = models.DecimalField(verbose_name="处方总价", max_digits=5, decimal_places=2)
 
 class Bill(models.Model):

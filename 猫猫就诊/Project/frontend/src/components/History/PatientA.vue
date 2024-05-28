@@ -133,12 +133,13 @@ const info = ref([
   // }
 ])
 
+const { proxy } = getCurrentInstance()
+
 const getRegistersData = () => {
   return new Promise((resolve, reject) => {
-    // 注意：需要前端传入当前用户证件号
     let requestData = {
       action: 'getRegistersData',
-      identity_num: "123456",
+      identity_num: proxy.appContext.config.globalProperties.$identity_num,
     };
     axios.post('/api/registers/list/', requestData).then((response) => {
       info.value = response.data['registers']

@@ -14,6 +14,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 app.config.globalProperties.$axios = axios
+app.config.globalProperties.$identity_num = '';
 app.config.productionTip = false;
 
 app.use(router)

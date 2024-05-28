@@ -144,6 +144,41 @@ class TreatmentView(APIView):
                 "date": datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').date().strftime('%Y年%m月%d日')
             })
         return JsonResponse({'treatments': treatments})
+    
+    def post(self, request):
+        treatments = []
+        identity_num = json.loads(request.body)['identity_num']
+        user = User.objects.get(identity_num=identity_num)
+        if user.type == 1:
+            filter = {'doctor__identity_num': identity_num}
+        elif user.type == 2:
+            filter = {'patient': identity_num}
+        for item in Register.objects.filter(**filter).annotate(
+            patient_name=F('patient__name'),
+            doctor_department=F('doctor__department'),
+            doctor_name=F('doctor__name')
+        ).values('patient_name', 'doctor_department',
+                'doctor_name', 'time', 'advice', 'medicine'):
+            CHINESE_AM = '上午'
+            CHINESE_PM = '下午'
+            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M')
+            end_time = start_time + timedelta(minutes=10)
+            end_time = end_time.strftime('%H:%M')
+            formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
+            if start_time.hour < 12:
+                middle_index = len(formatted_datetime) // 2
+                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_AM + formatted_datetime[middle_index:]
+            else:
+                middle_index = len(formatted_datetime) // 2
+                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_PM + formatted_datetime[middle_index:]
+            treatments.append({'office': item['doctor_department'],
+                            'time': formatted_datetime,
+                            'patient': item['patient_name'],
+                            'doctor': item['doctor_name'],
+                            'advice': item['advice'],
+                            'medicine': json.loads(item['medicine']),
+            })
+        return JsonResponse({'treatments': treatments})
 
 class DoctorView(APIView):
     def post(self, request):
@@ -306,6 +341,7 @@ class NoticeView(APIView):
                     "read": item['isRead']
                 })
         return JsonResponse({"resMes": resMes, "billMes": billMes})
+
 class MedicineView(APIView):
     def get(self, request):
         medicine = []

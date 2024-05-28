@@ -200,8 +200,8 @@ export default {
     getMesData(){
       return new Promise((resolve, reject) => {
         let ts = this;
-        //注意：需要前端传入当前登录用户的证件号
-        this.$axios.post('api/notice/list/', {identity_num: "123"})
+        const proxy = getCurrentInstance();
+        this.$axios.post('api/notice/list/', {identity_num: proxy.appContext.config.globalProperties.$identity_num })
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.billMes = response.data['billMes'];
@@ -247,8 +247,9 @@ export default {
       
     },
     mounted() {
-      this.getMesData();
-      this.intervalId = setInterval(this.payOverTimeQuery, 30000);
+      this.getMesData().then(() => {
+        this.intervalId = setInterval(this.payOverTimeQuery, 30000);
+      })
     },
     beforeDestroy() {
       // 组件销毁时清除定时器
