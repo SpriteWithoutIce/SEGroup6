@@ -130,8 +130,10 @@
 </template>
 
 <script>
+import { inject } from 'vue'
 export default {
-  data() {
+  setup() {
+    const identityNum = inject('$identity_num')
     return {
       activeNames: ['1', '2'],
       table: false,
@@ -200,8 +202,7 @@ export default {
     getMesData(){
       return new Promise((resolve, reject) => {
         let ts = this;
-        const proxy = getCurrentInstance();
-        this.$axios.post('api/notice/list/', {identity_num: proxy.appContext.config.globalProperties.$identity_num })
+        this.$axios.post('api/notice/list/', {identity_num: identityNum})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.billMes = response.data['billMes'];
@@ -247,6 +248,10 @@ export default {
       
     },
     mounted() {
+      if (identityNum == '0') {
+        console.log("未登录");
+        return;
+      }
       this.getMesData().then(() => {
         this.intervalId = setInterval(this.payOverTimeQuery, 30000);
       })

@@ -45,7 +45,7 @@ import SearchA from './SearchA.vue'
 import SignA from './SignA.vue'
 import HistoryA from './HistoryA.vue'
 import axios from 'axios'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, inject } from 'vue'
 const input4 = ref('')
 const info = ref([
   // {
@@ -134,13 +134,13 @@ const info = ref([
   // }
 ])
 
-const { proxy } = getCurrentInstance()
+const identityNum = inject('$identity_num')
 
 const getRegistersData = () => {
   return new Promise((resolve, reject) => {
     let requestData = {
       action: 'getRegistersData',
-      identity_num: proxy.appContext.config.globalProperties.$identity_num,
+      identity_num: identityNum,
     };
     axios.post('/api/registers/list/', requestData).then((response) => {
       info.value = response.data['registers']
@@ -170,6 +170,10 @@ const filterInfo = computed(() => {
   })
 })
 onMounted(() => {
+  if (identityNum == '0') {
+    console.log("未登录")
+    return
+  }
   getRegistersData().then(() => {
   })
 })

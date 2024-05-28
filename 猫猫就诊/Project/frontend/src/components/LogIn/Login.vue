@@ -46,10 +46,12 @@
 <script>
 import CryptoJS from 'crypto-js';
 import { ElMessage } from "element-plus";
-import { getCurrentInstance } from 'vue'
+import { inject } from 'vue'
 export default {
   data () {
     return {
+      identityNum: inject('$identity_num'),
+
       receivedidCard: "",
       receivedtype: "",
       loginVisible: false,
@@ -141,8 +143,7 @@ export default {
                 message: "登录成功 (๑˃̵ᴗ˂̵)",
                 type: "success",
               });
-              const proxy = getCurrentInstance();
-              proxy.appContext.config.globalProperties.$identity_num = idCard;
+              this.identityNum = idCard;
               this.$emit('update:currentUserCard', this.loginForm.idCard);
               this.$emit('update:currentUserType', this.loginForm.userType);
               this.closeModal();
@@ -160,8 +161,7 @@ export default {
                 message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
                 type: "success",
               });
-              const proxy = getCurrentInstance();
-              proxy.appContext.config.globalProperties.$identity_num = idCard;
+              this.identityNum = idCard;
               this.$emit('update:currentUserCard', this.loginForm.idCard);
               this.$emit('update:currentUserType', this.loginForm.userType);
               this.closeModal();
@@ -189,8 +189,7 @@ export default {
         message: '已退出登录 (๑˃̵ᴗ˂̵)',
         showClose: true,
       });
-      const proxy = getCurrentInstance();
-      proxy.appContext.config.globalProperties.$identity_num = '';
+      this.identityNum = '0';
     },
     // findUser (idCard) {
     //   return this.users.find((user) => user.id === idCard);

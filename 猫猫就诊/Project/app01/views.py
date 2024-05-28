@@ -1,4 +1,7 @@
+import asyncio
 from datetime import timedelta
+import os
+from urllib.parse import quote, unquote
 from django.utils import timezone
 import re
 from django.forms import model_to_dict
@@ -345,7 +348,7 @@ class NoticeView(APIView):
 class MedicineView(APIView):
     def get(self, request):
         medicine = []
-        for item in Medicine.objects.values('id', 'name', 'medicine_type', 'symptom', 'price', 'quantity'):
+        for item in Medicine.objects.values('id', 'name', 'medicine_type', 'symptom', 'price', 'quantity', 'photo_name'):
             type = ""
             if item['medicine_type'] == 1:
                 type = "中药"
@@ -359,7 +362,8 @@ class MedicineView(APIView):
                 "type": type,
                 "use": item['symptom'],
                 "price": item['price'],
-                "num": item['quantity']
+                "num": item['quantity'],
+                "photo_name": item['photo_name'],
             })
         return JsonResponse({'medicine': medicine})
     
@@ -367,6 +371,12 @@ class MedicineView(APIView):
         action = json.loads(request.body)['action']
         if action == 'deleteMedicine':
             return self.deleteMedicine(request)
+        elif action == 'removePhoto':
+            return self.removePhoto(request)
+        elif action == 'addMedicine':
+            return self.addMedicine(request)
+        elif action == 'alterMedicine':
+            return self.alterMedicine(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
     
@@ -375,9 +385,58 @@ class MedicineView(APIView):
         Medicine.objects.get(id=id).delete()
         return self.get(request)
     
-    # 上传药物图片
-    def upload_photo(self, request):
-        medicine = Medicine.objects.get(id=request.POST.get("id"))
-        medicine.photo = request.FILES.get('photo')
-        medicine.save()
-        return JsonResponse({"medicine": medicine})
+    def removePhoto(self, request):
+        photo_name = json.loads(request.body)['photo_name']
+        file_path = os.path.join(settings.MEDICINE_PHOTO_ROOT, photo_name)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        return JsonResponse({'msg': "Successfully removed photo"})
+    
+    def addMedicine(self, request):
+        data = json.loads(request.body)
+        try:
+            medicine = Medicine()
+            medicine.name = data['name']
+            if data['type'] == '中药':
+                medicine.medicine_type = 1
+            elif data['type'] == '中成药':
+                medicine.medicine_type = 2
+            else:
+                medicine.medicine_type = 3
+            medicine.symptom = data['symptom']
+            medicine.price = data['price']
+            medicine.quantity = data['quantity']
+            medicine.photo_name = data['photo_name']
+            medicine.save()
+            return JsonResponse({'msg': "Successfully add medicine data"})
+        except Medicine.DoesNotExist:
+            return JsonResponse({'msg': "Medicine with id {} not found".format(id)}, status=404)
+    
+    def alterMedicine(self, request):
+        data = json.loads(request.body)
+        try:
+            medicine = Medicine.objects.get(id=id)
+            medicine.name = data['name']
+            if data['type'] == '中药':
+                medicine.medicine_type = 1
+            elif data['type'] == '中成药':
+                medicine.medicine_type = 2
+            else:
+                medicine.medicine_type = 3
+            medicine.symptom = data['symptom']
+            medicine.price = data['price']
+            medicine.quantity = data['quantity']
+            medicine.photo_name = data['photo_name']
+            medicine.save()
+            return JsonResponse({'msg': "Successfully altered medicine data"})
+        except Medicine.DoesNotExist:
+            return JsonResponse({'msg': "Medicine with id {} not found".format(id)}, status=404)
+
+class UploadPhotoView(APIView):
+    def post(self, request):
+        file = request.FILES.get('file')
+        file_path = os.path.join(settings.MEDICINE_PHOTO_ROOT, file.name)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, 'wb+') as f:
+            f.write(file.read())
+        return JsonResponse({'msg': "Successfully uploaded photo", 'name': file.name, 'url': '/api/medicine/photo/' + file.name})

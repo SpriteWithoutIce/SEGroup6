@@ -50,13 +50,13 @@ import SignA from './SignA.vue'
 import InputA from './InputA.vue'
 import PHistory from './PHistory.vue'
 import axios from 'axios'
-import { ref, onMounted, computed, getCurrentInstance } from 'vue'
+import { ref, onMounted, computed, inject } from 'vue'
 
-const {proxy} = getCurrentInstance()
+const identityNum = inject('$identity_num')
 
 const getTreatmentsData = () => {
   return new Promise((resolve, reject) => {
-    axios.post('/api/treatments/list/', {identity_num: proxy.appContext.config.globalProperties.$identity_num })
+    axios.post('/api/treatments/list/', {identity_num: identityNum })
     .then((response) => {
       info.value = response.data['treatments']
       console.log('Treatments data fetched:', info.value)
@@ -192,6 +192,10 @@ const filterInfo = computed(() => {
   })
 })
 onMounted(() => {
+  if (identityNum == '0') {
+    console.log("未登录")
+    return
+  }
   getTreatmentsData().then(() => {
   })
 })
