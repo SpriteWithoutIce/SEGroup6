@@ -71,6 +71,7 @@ export default {
     return {
       isVisible: false,
       form: {
+        id: '',
         office: '',
         orderNum: '',
         price: '',
@@ -85,9 +86,29 @@ export default {
     }
   },
   methods: {
+    cancelRegister() {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        //注意：在PatientA中的info里同时返回了id字段，在这里需要传入待取消预约的id
+        let requestData = {
+          action: 'cancelRegister',
+          id: this.form.id,
+        };
+        this.$axios.post('/api/registers/cancel/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg']);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
     openModal(item) {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
+      this.form.id = item.id  //传入id对预约进行标识
       this.form.office = item.office
       this.form.orderNum = item.orderNum
       this.form.price = item.price
@@ -104,13 +125,15 @@ export default {
       document.body.style.overflow = '' // 恢复滚动
     },
     cancelModal() {
-      ElMessage({
-        type: 'info',
-        message: '取消挂号成功 ╮(╯▽╰)╭',
-        showClose: true
+      this.cancelRegister().then(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消挂号成功 ╮(╯▽╰)╭',
+          showClose: true
+        })
+        // 关闭弹窗
+        this.closeModal()
       })
-      // 关闭弹窗
-      this.closeModal()
     }
   }
 }

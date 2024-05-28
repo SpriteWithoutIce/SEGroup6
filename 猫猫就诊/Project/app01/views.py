@@ -51,6 +51,80 @@ class PatientView(APIView):
             user.save()
             return JsonResponse({'msg': 'Successfully Register'})
 
+class RegisterView(APIView):
+    def post(self, request):
+        action = json.loads(request.body)['action']
+        if action == 'getRegistersData':
+            return self.getRegistersData(request)
+        elif action == 'cancelRegister':
+            return self.cancelRegister(request)
+        else:
+            return JsonResponse({'error': 'Invalid action'}, status=400)
+        
+    def getRegistersData(self, request):
+        identity_num = json.loads(request.body)['identity_num']
+        registers = []
+        user = User.objects.get(identity_num=identity_num)
+        if user.type == 1:
+            filter = {'doctor__identity_num': identity_num}
+        elif user.type == 2:
+            filter = {'patient': identity_num}
+        for item in Register.objects.filter(**filter).annotate(
+            patient_name=F('patient__name'),
+            doctor_department=F('doctor__department'),
+            doctor_name=F('doctor__name')
+        ).values('id', 'queue_id', 'patient', 'patient_name', 'doctor_department',
+                'doctor_name', 'time', 'position'):
+            CHINESE_AM = '上午'
+            CHINESE_PM = '下午'
+            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M')
+            end_time = start_time + timedelta(minutes=10)
+            end_time = end_time.strftime('%H:%M')
+            formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
+            if start_time.hour < 12:
+                middle_index = len(formatted_datetime) // 2
+                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_AM + formatted_datetime[middle_index:]
+            else:
+                middle_index = len(formatted_datetime) // 2
+                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_PM + formatted_datetime[middle_index:]
+            
+            state = ""
+            current_time = timezone.now()
+            if start_time > current_time:
+                state = "已就诊"
+            else:
+                state = "已预约"
+            
+            bill = Bill.objects.get(register=item['id']).values('price')
+            registers.append({'id': item['id'],
+                            'office': item['doctor_department'],
+                            'orderNum': item['id'],
+                            'price': bill['price'],
+                            'name': item['patient_name'],
+                            'cardNum': item['patient'],
+                            'position': item['position'],
+                            'time': formatted_datetime + '-' + end_time,
+                            'line': item['queue_id'],
+                            'state': state,
+                            'doctor': item['doctor_name']})
+        return JsonResponse({'registers': registers})
+
+    def cancelRegister(self, request):
+        id = json.loads(request.body)['id']
+        item = Register.objects.get(id=id)
+        Bill.objects.get(register=id).delete()
+        notice = Notice()
+        notice.patient = item.patient
+        notice.register = item.register
+        notice.doctor = item.doctor
+        notice.msg_type = 2
+        notice.date = datetime.date.today()
+        notice.register = id
+        notice.save()
+        item.delete()
+        return JsonResponse({'msg': "Successfully cancel register"})
+
+
 class TreatmentView(APIView):
     # 返回所有就诊记录
     def get(self, request):
@@ -60,14 +134,14 @@ class TreatmentView(APIView):
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
             patient_gender=F('patient__gender')
-        ).values('queue_id', 'patient_name', 'patient_birthday', 'patient_gender', 'date'):
+        ).values('queue_id', 'patient_name', 'patient_birthday', 'patient_gender', 'time'):
             age = current_date.year - item['patient_birthday'].year - ((current_date.month, current_date.day) < (item['patient_birthday'].month, item['patient_birthday'].day))
             treatments.append({
                 "Id": item['queue_id'],
                 "name": item['patient_name'],
                 "age": age,
                 "sex": "男" if item['patient_gender'] == 1 else "女",
-                "date": item['date'].strftime('%Y年%m月%d日')
+                "date": datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').date().strftime('%Y年%m月%d日')
             })
         return JsonResponse({'treatments': treatments})
 
@@ -168,7 +242,7 @@ class BillView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         for item in Bill.objects.filter(patient=identity_num):
             department = item.register.doctor.department if item.type == 1 else item.treatment.doctor.department
-            date = item.register.time.date() if item.type == 1 else item.treatment.date
+            date = item.register.time.date() if item.type == 1 else item.treatment.time.date()
             bill.append({
                 "id": item.id,
                 "type": '挂号' if item.type == 1 else '处方',
@@ -225,7 +299,7 @@ class NoticeView(APIView):
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": treatment.date.strftime('%Y-%m-%d'),
+                    "time": treatment.time.date().strftime('%Y-%m-%d'),
                     "id": item['patient'],
                     "timetamp": item['date'],
                     "price": treatment.price,
