@@ -114,23 +114,6 @@ watch(input4, () => {
   updateTotal()
 })
 
-const getMedicineData = () => {
-  return new Promise((resolve, reject) => {
-    axios
-      .get('/api/medicine/list/')
-      .then((response) => {
-        tableData.value = response.data['medicine']
-        pagination.value.total = tableData.value.length // 更新总条目数
-        console.log('Medicine data fetched:', tableData.value)
-        resolve() // 数据获取完成，resolve Promise
-      })
-      .catch((error) => {
-        console.error('Error fetching medicine data:', error)
-        reject(error) // 数据获取失败，reject Promise
-      })
-  })
-}
-
 const ftableData = computed(() => {
   const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
   const end = start + pagination.value.pageSize
@@ -142,10 +125,10 @@ const handleCurrentChange = (e) => {
   pagination.value.currentPage = e
 }
 onMounted(() => {
-  getMedicineData().then(() => {
+  // getDoctorsData().then(() => {
     updateTotal()
     handleCurrentChange(1)
-  })
+  // })
 })
 </script>
 <style scoped>

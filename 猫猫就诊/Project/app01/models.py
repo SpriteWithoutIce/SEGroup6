@@ -46,6 +46,7 @@ class Doctors(models.Model):
     title = models.CharField(verbose_name="医生职称", max_length=50)
     department = models.CharField(verbose_name="医生科室", max_length=20)
     research = models.CharField(verbose_name="研究方向", max_length=150, null=True, blank=True)
+    cost = models.DecimalField(verbose_name="出诊费", max_digits=5, decimal_places=2)
     avatar = models.ImageField(verbose_name="医生头像", upload_to='doctor/', null=True, blank=True)
 
 class OnDuty(models.Model):
@@ -60,17 +61,20 @@ class OnDuty(models.Model):
     state = models.IntegerField(verbose_name="预约状态")
 
 class Register(models.Model):
+    queue_id = models.IntegerField(verbose_name="排队号", default=1)
     patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='patient_registers')
     register = models.ForeignKey(verbose_name="挂号者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='register_registers')
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
     time = models.DateTimeField(verbose_name="挂号时间")
+    position = models.CharField(verbose_name="门诊位置", max_length=128)
 
 class Treatment(models.Model):
     queue_id = models.IntegerField(verbose_name="排队号", default=1)
     patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE)
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
-    date = models.DateField(verbose_name="就诊日期", default=django.utils.timezone.now)
-    medicine = models.TextField(verbose_name="处方内容", max_length=1024)
+    time = models.DateTimeField(verbose_name="挂号时间")
+    advice = models.CharField(verbose_name="诊断结果", max_length=256)
+    medicine = models.TextField(verbose_name="开具药物", max_length=1024)
     price = models.DecimalField(verbose_name="处方总价", max_digits=5, decimal_places=2)
 
 class Bill(models.Model):

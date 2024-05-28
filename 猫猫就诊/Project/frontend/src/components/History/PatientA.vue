@@ -41,91 +41,110 @@ import HistoryA from './HistoryA.vue'
 import { ref, onMounted, computed } from 'vue'
 const input4 = ref('')
 const info = ref([
-  {
-    office: '神经外科',
-    orderNum: 'w0023',
-    price: '0.00元',
-    name: 'buaa',
-    cardNum: '001741',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-14 下午 14:10-14:20',
-    line: '37',
-    state: '已预约',
-    doctor: '王玉'
-  },
-  {
-    office: '消化内科',
-    orderNum: 'w0024',
-    price: '0.00元',
-    name: 'buaa',
-    cardNum: '001741',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-15 下午 14:10-14:20',
-    line: '38',
-    state: '已就诊',
-    doctor: '王玉'
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0025',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-16 下午 14:10-14:20',
-    line: '39',
-    state: '已预约',
-    doctor: '王玉'
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    doctor: '王玉'
-  },
-  {
-    office: '精神科',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    doctor: '王玉'
-  },
-  {
-    office: '普通外科',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    doctor: '王玉'
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    doctor: '王玉'
-  }
+  // {
+  //   office: '神经外科',
+  //   orderNum: 'w0023',
+  //   price: '0.00元',
+  //   name: 'buaa',
+  //   cardNum: '001741',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-14 下午 14:10-14:20',
+  //   line: '37',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '消化内科',
+  //   orderNum: 'w0024',
+  //   price: '0.00元',
+  //   name: 'buaa',
+  //   cardNum: '001741',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-15 下午 14:10-14:20',
+  //   line: '38',
+  //   state: '已就诊',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0025',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-16 下午 14:10-14:20',
+  //   line: '39',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0026',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '精神科',
+  //   orderNum: 'w0026',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '普通外科',
+  //   orderNum: 'w0026',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0026',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // }
 ])
+
+const getRegistersData = () => {
+  return new Promise((resolve, reject) => {
+    // 注意：需要前端传入当前用户证件号
+    let requestData = {
+      action: 'getRegistersData',
+      identity_num: "123456",
+    };
+    axios.post('/api/registers/list/', requestData).then((response) => {
+      info.value = response.data['registers']
+      console.log('Registers data fetched:', info.value)
+      resolve() // 数据获取完成，resolve Promise
+    }).catch((error) => {
+      console.error('Error fetching registers data:', error)
+      reject(error) // 数据获取失败，reject Promise
+    })
+  })
+}
+
 const commitSearch = () => {
   console.log(`查询内容是：${input4.value}`)
 }
@@ -140,6 +159,10 @@ const filterInfo = computed(() => {
       // 如果不是数字，按照 office 字段进行过滤
       return input4.value ? item.office === input4.value : true
     }
+  })
+})
+onMounted(() => {
+  getRegistersData().then(() => {
   })
 })
 </script>
