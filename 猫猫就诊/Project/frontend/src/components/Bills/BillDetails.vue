@@ -71,7 +71,7 @@ export default {
     },
     // 确认缴费
     submitForm () {
-      // 修改数据库（bug：这部分的数据库修改逻辑还没正确实现）
+      // 修改数据库
       this.$emit('update:pay-status', this.form.id);
       ElMessage({
         showClose: true,

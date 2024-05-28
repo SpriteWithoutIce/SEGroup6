@@ -156,6 +156,15 @@ class OnDutyView(APIView):
 
 class BillView(APIView):
     def post(self, request):
+        action = json.loads(request.body)['action']
+        if action == 'getBillsData':
+            return self.getBillsData(request)
+        elif action == 'changeBillStatus':
+            return self.changeBillStatus(request)
+        else:
+            return JsonResponse({'error': 'Invalid action'}, status=400)
+    
+    def getBillsData(self, request):
         bill = []
         identity_num = json.loads(request.body)['identity_num']
         for item in Bill.objects.filter(patient=identity_num):
@@ -170,6 +179,14 @@ class BillView(APIView):
                 "payStatus": item.state
             })
         return JsonResponse({"bill": bill})
+    
+    def changeBillStatus(self, request):
+        data = json.loads(request.body)
+        item_id = data['item_id']
+        item = Bill.objects.get(id=item_id)
+        item.state = True
+        item.save()
+        return self.getBillsData(request)
 
 class NoticeView(APIView):
     def post(self, request):

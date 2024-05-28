@@ -186,7 +186,7 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         //注意：需要前端传入当前登录用户的证件号
-        this.$axios.post('/api/bills/list/', {identity_num: "123"})
+        this.$axios.post('/api/bills/list/', {identity_num: "123", action: "getBillsData"})
           .then(function (response) {
             ts.bill = response.data['bill'];
             console.log(ts.bill);
@@ -215,19 +215,32 @@ export default {
       })),
         this.handleCurrentChange(1)
     },
-    // bug：这里目前无法从根本上实现属性的修改，页面一重新挂载就会恢复，后续链接后端时再修正逻辑
-    /* TODO
-      1.根据当前用户id和item对应的id更改对应订单的缴费状态（未缴费->已缴费） 【link-backend！】
-      2.重新获取数据，刷新界面
-    */
+    changeBillStatus(id) {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        //注意：需要前端传入当前登录用户的证件号
+        this.$axios.post('/api/bills/list/', {identity_num: "123", action: "changeBillStatus", item_id: id})
+          .then(function (response) {
+            ts.bill = response.data['bill'];
+            console.log(ts.bill);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
     updatePayStatus(id) {
       // 找到 bill 数组中对应的对象，并更新 payStatus
-      const index = this.bill.findIndex((item) => item.id === id)
-      if (index !== -1) {
-        this.bill[index].payStatus = true
-      }
-      // 更新 filteredBills
-      this.selectFunc(false)
+      // const index = this.bill.findIndex((item) => item.id === id)
+      // if (index !== -1) {
+      //   this.bill[index].payStatus = true
+      // }
+      this.changeBillStatus(id).then(() => {
+        // 更新 filteredBills
+        this.selectFunc(false)
+      })
     }
   },
   mounted() {

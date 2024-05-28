@@ -132,7 +132,7 @@ export default {
     querySearch (queryString, cb) {
       const medicines = this.medicinesDB.map(item => ({
         value: item.name,
-        symptoms: item.symptoms
+        symptoms: item.use
       }));
       const results = queryString
         ? medicines.filter(this.createFilter(queryString))
