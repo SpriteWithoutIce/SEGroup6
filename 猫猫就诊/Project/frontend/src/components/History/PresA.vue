@@ -49,6 +49,7 @@ import SearchA from './SearchA.vue'
 import SignA from './SignA.vue'
 import InputA from './InputA.vue'
 import PHistory from './PHistory.vue'
+import axios from 'axios'
 import { ref, onMounted, computed, getCurrentInstance } from 'vue'
 
 const {proxy} = getCurrentInstance()

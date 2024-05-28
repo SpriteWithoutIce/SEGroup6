@@ -345,7 +345,7 @@ class NoticeView(APIView):
 class MedicineView(APIView):
     def get(self, request):
         medicine = []
-        for item in Medicine.objects.values('name', 'medicine_type', 'symptom', 'price', 'quantity'):
+        for item in Medicine.objects.values('id', 'name', 'medicine_type', 'symptom', 'price', 'quantity'):
             type = ""
             if item['medicine_type'] == 1:
                 type = "中药"
@@ -353,7 +353,8 @@ class MedicineView(APIView):
                 type = "中成药"
             else:
                 type = "西药"
-            medicine.append({
+            medicine.append({ 
+                'id': item['id'],
                 "name": item['name'],
                 "type": type,
                 "use": item['symptom'],
@@ -363,12 +364,17 @@ class MedicineView(APIView):
         return JsonResponse({'medicine': medicine})
     
     def post(self, request):
-        action = request.POST.get('action')
-        if action == 'upload_photo':
-            return self.upload_photo(request)
+        action = json.loads(request.body)['action']
+        if action == 'deleteMedicine':
+            return self.deleteMedicine(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
-        
+    
+    def deleteMedicine(self, request):
+        id = json.loads(request.body)['id']
+        Medicine.objects.get(id=id).delete()
+        return self.get(request)
+    
     # 上传药物图片
     def upload_photo(self, request):
         medicine = Medicine.objects.get(id=request.POST.get("id"))

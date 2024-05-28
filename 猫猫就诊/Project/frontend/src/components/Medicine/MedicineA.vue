@@ -93,7 +93,8 @@ const handleEdit = (index, row) => {
 
 const handleDelete = (index, row) => {
   // 删除操作的逻辑
-  console.log('Delete row:', row)
+  deleteMedicine(row).then(() => {
+  })
 }
 const pagination = ref({
   total: 0,
@@ -128,9 +129,7 @@ watch(input4, () => {
 
 const getMedicineData = () => {
   return new Promise((resolve, reject) => {
-    axios
-      .get('/api/medicine/list/')
-      .then((response) => {
+    axios.get('/api/medicine/list/').then((response) => {
         tableData.value = response.data['medicine']
         pagination.value.total = tableData.value.length // 更新总条目数
         console.log('Medicine data fetched:', tableData.value)
@@ -138,6 +137,21 @@ const getMedicineData = () => {
       })
       .catch((error) => {
         console.error('Error fetching medicine data:', error)
+        reject(error) // 数据获取失败，reject Promise
+      })
+  })
+}
+
+const deleteMedicine = (row) => {
+  return new Promise((resolve, reject) => {
+    axios.post('/api/medicine/delete/', {id: row.id, action: "deleteMedicine"}).then((response) => {
+        tableData.value = response.data['medicine']
+        pagination.value.total = tableData.value.length // 更新总条目数
+        console.log('Medicine data deleted')
+        resolve() // 数据获取完成，resolve Promise
+      })
+      .catch((error) => {
+        console.error('Error deleting medicine data:', error)
         reject(error) // 数据获取失败，reject Promise
       })
   })

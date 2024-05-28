@@ -44,6 +44,7 @@
 import SearchA from './SearchA.vue'
 import SignA from './SignA.vue'
 import HistoryA from './HistoryA.vue'
+import axios from 'axios'
 import { ref, onMounted, computed } from 'vue'
 const input4 = ref('')
 const info = ref([
