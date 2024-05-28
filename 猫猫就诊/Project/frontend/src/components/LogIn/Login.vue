@@ -71,7 +71,25 @@ export default {
       },
     };
   },
+  mounted () {
+    /*this.getUsersData();*/
+  },
   methods: {
+    getUsersData () {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        this.$axios.get('/api/Users/list/')
+          .then(function (response) {
+            ts.users = response.data['treatments'];
+            console.log(ts.users);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error.response);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
     openModal (id, type) {
       this.receivedidCard = id;
       this.receivedtype = type;
@@ -108,7 +126,7 @@ export default {
           let user = this.findUser(idCard);
 
           if (user) {
-            if (user.password === password) {
+            if (user.password === password && user.userType === userType) {
               ElMessage({
                 showClose: true,
                 message: "登录成功 (๑˃̵ᴗ˂̵)",
@@ -120,13 +138,14 @@ export default {
             } else {
               ElMessage({
                 showClose: true,
-                message: "密码错误 ╮(╯▽╰)╭",
+                message: "密码错误或用户类型错误 ╮(╯▽╰)╭",
                 type: "error",
               });
             }
           } else {
             //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
-            this.users.push({ id: idCard, password, userType });
+            this.users.push({ idCard, password, userType });
+            // TODO: 将新用户数据写回数据库
             ElMessage({
               showClose: true,
               message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
@@ -161,8 +180,12 @@ export default {
 
     },
     findUser (idCard) {
-      return this.users.find((user) => user.id === idCard);
-    },
+      if (!Array.isArray(this.users)) {
+        console.log("users is a null array");
+        return null;
+      }
+      return this.users.find((user) => user.idCard);
+    }
   },
 };
 </script>
