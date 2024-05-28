@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import CryptoJS from 'crypto-js';
 import { ElMessage } from "element-plus";
 export default {
   data () {
@@ -60,7 +61,9 @@ export default {
         remember: false,
         autoLogin: false,
       },
-      users: [],
+      // 不需要users，使用一条返回信息即可
+      // users: [],
+      msg: "",
 
       rules: {
         idCard: [
@@ -72,6 +75,26 @@ export default {
     };
   },
   methods: {
+    getUserData(idCard, password, userType) {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          idCard: idCard,
+          password: CryptoJS.SHA256(password).toString(),
+          userType: userType
+        };
+        this.$axios.post('api/login', requestData)
+          .then(function (response) {
+            ts.msg = response.data['msg'];
+            console.log(ts.msg);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
     openModal (id, type) {
       this.receivedidCard = id;
       this.receivedtype = type;
@@ -83,7 +106,6 @@ export default {
         this.isLogin = true;
         this.notLogin = false;
       }
-      //在这里读取把User数组中的数据更新为数据库的内容
       this.loginForm.idCard = "";
       this.loginForm.password = "";
       this.loginVisible = true;
@@ -105,10 +127,11 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           const { idCard, password, userType } = this.loginForm;
-          let user = this.findUser(idCard);
-
-          if (user) {
-            if (user.password === password) {
+          // let user = this.findUser(idCard);
+          // 不能从数据库直接读用户信息，不安全
+          // 把用户证件号和使用SHA256加密后的密码传入后端进行比对
+          this.getUserData(idCard, password, userType).then(() => {
+            if (this.msg === "Successfully Login") {
               ElMessage({
                 showClose: true,
                 message: "登录成功 (๑˃̵ᴗ˂̵)",
@@ -117,25 +140,25 @@ export default {
               this.$emit('update:currentUserCard', this.loginForm.idCard);
               this.$emit('update:currentUserType', this.loginForm.userType);
               this.closeModal();
-            } else {
+            } else if (this.msg === "Wrong Password") {
               ElMessage({
                 showClose: true,
                 message: "密码错误 ╮(╯▽╰)╭",
                 type: "error",
               });
+            } else {
+              //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
+              // this.users.push({ id: idCard, password, userType });
+              ElMessage({
+                showClose: true,
+                message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
+                type: "success",
+              });
+              this.$emit('update:currentUserCard', this.loginForm.idCard);
+              this.$emit('update:currentUserType', this.loginForm.userType);
+              this.closeModal();
             }
-          } else {
-            //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
-            this.users.push({ id: idCard, password, userType });
-            ElMessage({
-              showClose: true,
-              message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
-              type: "success",
-            });
-            this.$emit('update:currentUserCard', this.loginForm.idCard);
-            this.$emit('update:currentUserType', this.loginForm.userType);
-            this.closeModal();
-          }
+          })
         } else {
           ElMessage({
             type: "info",
@@ -160,9 +183,9 @@ export default {
       });
 
     },
-    findUser (idCard) {
-      return this.users.find((user) => user.id === idCard);
-    },
+    // findUser (idCard) {
+    //   return this.users.find((user) => user.id === idCard);
+    // },
   },
 };
 </script>

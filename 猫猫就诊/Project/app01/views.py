@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, HttpResponse
 from rest_framework.views import APIView
 from django.db.models import F
+from django.contrib.auth.hashers import check_password
 
 import json
 
@@ -25,32 +26,30 @@ class MyCore(MiddlewareMixin):
 
 class PatientView(APIView):
     def post(self, request):
-        action = request.POST.get('action')
-        if action == 'login':
-            return self.login(request)
-        elif action == 'register':
-            return self.register(request)
+        data = json.loads(request.body)
+        identity_num = data["idCard"]
+        pwd = data["password"]
+        type = data['userType']
+        if type == "医生":
+            type = 1
+        elif type == "普通用户":
+            type = 2
         else:
-            return JsonResponse({'error': 'Invalid action'}, status=400)
-    
-    def login(self, request):
-        identity_num = request.POST.get("idCard")
-        pwd = request.Post.get("password")
-        patient = Patients.objects.get(identity_num=identity_num)
-        if patient.password == pwd:
-            return JsonResponse({'msg': 'Successfully Login'})
-        else:
-            return JsonResponse({'msg': 'Wrong Password'})
-    
-    def register(self, request):
-        identity_num = request.POST.get("idCard")
-        pwd = request.Post.get("password")
-        patient = Patients(
-            identity_num = identity_num,
-            password = pwd
-        )
-        patient.save()
-        return JsonResponse({'msg': 'Successfully Register'})
+            type = 3
+        try:
+            user = User.objects.get(identity_num=identity_num)
+            if pwd == user.password and type == user.type:
+                return JsonResponse({'msg': 'Successfully Login'})
+            else:
+                return JsonResponse({'msg': 'Wrong Password'})
+        except User.DoesNotExist:
+            user = User(
+                identity_num = identity_num,
+                password = pwd,
+                type = type,
+            )
+            user.save()
+            return JsonResponse({'msg': 'Successfully Register'})
 
 class TreatmentView(APIView):
     # 返回所有就诊记录
@@ -74,7 +73,7 @@ class TreatmentView(APIView):
 
 class DoctorView(APIView):
     def post(self, request):
-        action = request.POST.get('action')
+        action = json.loads(request.body)['action']
         if action == 'upload_avatar':
             return self.upload_avatar(request)
         else:
