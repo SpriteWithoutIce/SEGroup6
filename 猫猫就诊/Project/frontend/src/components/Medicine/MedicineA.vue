@@ -1,6 +1,6 @@
 <!--药物管理系统-->
 <template>
-  <DetailC ref="detail"> </DetailC>
+  <DetailC ref="detail" @updateData="refreshMedicineData"> </DetailC>
   <div class="container">
     <div class="m">
       <p style="margin-left: 50px; font-weight: bold; margin-right: 10px">首页</p>
@@ -77,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch} from 'vue'
 import DetailC from './DetailC.vue'
 import axios from 'axios'
 const detail = ref(null)
@@ -86,10 +86,18 @@ const showPrescriptionDetails = (row, sign) => {
   // 假设DetailC组件有一个名为openModal的方法
   detail.value.openModal(row, sign)
 }
-const handleEdit = (index, row) => {
-  // 编辑操作的逻辑
-  console.log('Edit row:', row)
-}
+// const handleEdit = (index, row) => {
+//   // 编辑操作的逻辑
+//   console.log('Edit row:', row)
+// }
+
+// closeModal后刷新数据
+const refreshMedicineData = () => {
+  getMedicineData().then(() => {
+    updateTotal();
+    handleCurrentChange(pagination.value.currentPage);
+  });
+};
 
 const handleDelete = (index, row) => {
   // 删除操作的逻辑

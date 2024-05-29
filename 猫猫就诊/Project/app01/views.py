@@ -5,7 +5,7 @@ from urllib.parse import quote, unquote
 from django.utils import timezone
 import re
 from django.forms import model_to_dict
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import render, HttpResponse
 from rest_framework.views import APIView
 from django.db.models import F
@@ -397,9 +397,9 @@ class MedicineView(APIView):
         try:
             medicine = Medicine()
             medicine.name = data['name']
-            if data['type'] == '中药':
+            if data['type'] == '3':
                 medicine.medicine_type = 1
-            elif data['type'] == '中成药':
+            elif data['type'] == '6':
                 medicine.medicine_type = 2
             else:
                 medicine.medicine_type = 3
@@ -415,11 +415,11 @@ class MedicineView(APIView):
     def alterMedicine(self, request):
         data = json.loads(request.body)
         try:
-            medicine = Medicine.objects.get(id=id)
+            medicine = Medicine.objects.get(id=data['id'])
             medicine.name = data['name']
-            if data['type'] == '中药':
+            if data['type'] == '3':
                 medicine.medicine_type = 1
-            elif data['type'] == '中成药':
+            elif data['type'] == '6':
                 medicine.medicine_type = 2
             else:
                 medicine.medicine_type = 3
@@ -433,10 +433,19 @@ class MedicineView(APIView):
             return JsonResponse({'msg': "Medicine with id {} not found".format(id)}, status=404)
 
 class UploadPhotoView(APIView):
+    def get(self, request, filename, *args, **kwargs):
+        photo_path = os.path.join(settings.MEDICINE_PHOTO_ROOT, filename)
+        if os.path.exists(photo_path):
+            with open(photo_path, 'rb') as f:
+                return HttpResponse(f.read(), content_type='image/jpeg')  # 根据实际图片类型调整 content_type
+        else:
+            raise Http404("Photo not found")
+    
     def post(self, request):
         file = request.FILES.get('file')
         file_path = os.path.join(settings.MEDICINE_PHOTO_ROOT, file.name)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         with open(file_path, 'wb+') as f:
             f.write(file.read())
-        return JsonResponse({'msg': "Successfully uploaded photo", 'name': file.name, 'url': '/api/medicine/photo/' + file.name})
+        url = '/api/medicine/photo/' + file.name
+        return JsonResponse({'msg': "Successfully uploaded photo", 'name': file.name, 'url': url})

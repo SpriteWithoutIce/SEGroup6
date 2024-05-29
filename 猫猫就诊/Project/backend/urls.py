@@ -19,6 +19,7 @@ from django.urls import path, re_path
 from panel import serve
 from app01 import views
 from django.views.generic.base import TemplateView
+from django.conf.urls.static import static
 
 from backend import settings
 
@@ -43,5 +44,5 @@ urlpatterns = [
     path("api/login", views.PatientView.as_view()),
     path("api/login/register", views.PatientView.as_view()),
 
-    re_path(r'^medicine/photo(?P<path>.*)$', serve, {'document_root': settings.MEDICINE_PHOTO_ROOT}),
+    re_path(r'^api/medicine/photo/(?P<filename>[\w.-]+)$', views.UploadPhotoView.as_view()),
 ]

@@ -14,9 +14,10 @@
             class="upload-demo"
             action="/api/medicine/uploadPhoto/"
             :before-upload="handleBeforeUpload"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
             :on-success="handleSuccess"
+            :on-preview="handlePreview"
+            :before-remove="handleBeforeRemove"
+            :on-remove="handleRemove"
             list-type="picture"
           >
             <el-button type="primary">Click to upload</el-button>
@@ -87,7 +88,6 @@ export default {
         {
           id: '',
           name: '',
-          type: '',
           use: '',
           price: '',
           num: ''
@@ -102,14 +102,14 @@ export default {
         let requestData = {
           id: this.info.id,
           name: this.info.name,
-          type: this.info.type,
+          type: this.radio,
           symptom: this.info.use,
           price: this.info.price,
           quantity: this.info.num,
-          photo_name: this.fileList[0].name,
+          photo_name: this.fileList.length === 0 ? '' : this.fileList[0].name,
           action: this.sign == 'add' ? 'addMedicine' : 'alterMedicine',
         };
-        this.$axios.post('/api/medicine/setData', requestData)
+        this.$axios.post('/api/medicine/setData/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
             resolve(); // 数据获取完成，resolve Promise
@@ -134,29 +134,39 @@ export default {
       });
     },
     handleBeforeUpload(file) {
-      file.formData = { id: this.info.id };
-      return true;
+      if (this.fileList.length === 0) {
+        file.formData = { id: this.info.id };
+        return true;
+      } else {
+        this.removePhoto().then(() => {
+          file.formData = { id: this.info.id };
+          return true;
+        });
+      }
     },
-    handleSuccess(response, file, fileList) {
+    handleSuccess(res) {
       // if (response.data['msg'] == "Successfully uploaded photo") {
       //   this.fileList[0].name = data['name'];
       //   this.fileList[0].url = data['url'];
       // } else {
       //   console.error('文件上传失败');
       // }
-      // 这个地方的同步请求处理没有找到可行的方法，所以直接使用前端数据了
       if (this.fileList.length === 0) {
-        this.fileList.push({name: file.name, url: '/api/medicine/photo/' + file.name});
+        this.fileList.push({ name: res.name, url: res.url });
       } else {
-        this.fileList[0].name = file.name;
-        this.fileList[0].url = '/api/medicine/photo/' + file.name;
+        this.fileList = []
+        this.fileList.push({ name: res.name, url: res.url });
       }
+      console.log(this.fileList);
+    },
+    handleBeforeRemove() {
+      this.removePhoto().then(() => {
+        return true;
+      });
     },
     // 合并之前的handleRemove函数
-    handleRemove(uploadFile, uploadFiles) {
-      this.removePhoto().then(() => {
-        this.fileList.splice(0, 1);
-      })
+    handleRemove() {
+      this.fileList = []
     },
     // 合并之前的handlePreview函数
     handlePreview(file) {
@@ -166,7 +176,6 @@ export default {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
       this.info.name = row.name
-      this.info.type = row.type
       if (row.type === '中药') {
         this.radio = 3
       } else if (row.type === '中成药') {
@@ -179,26 +188,30 @@ export default {
       this.info.price = row.price
       this.info.num = row.num
       this.sign = sign
-      if (row.photo_name !== undefined && row.photo_name !== null)
-        this.fileList.push({name: row.photo_name, url: '/api/medicine/photo/' + row.photo_name});
+      this.fileList = []
+      if (row.photo_name !== undefined && row.photo_name != '')
+        this.fileList.push({ name: row.photo_name, url: '/api/medicine/photo/' + row.photo_name })
       console.log(`传入的sign是：${this.sign}`)
     },
     closeModal() {
-      if (this.fileList[0].url != '') {
+      if (this.fileList.length !== 0) {
         this.removePhoto().then(() => {
           this.isVisible = false
           document.body.style.overflow = '' // 恢复滚动
+          this.$emit('updateData'); // 触发自定义事件
         })
       }
       else {
         this.isVisible = false
         document.body.style.overflow = '' // 恢复滚动
+        this.$emit('updateData'); // 触发自定义事件
       }
     },
     setDataAndCloseModal() {
       this.setMedicineData().then(() => {
         this.isVisible = false
         document.body.style.overflow = '' // 恢复滚动
+        this.$emit('updateData'); // 触发自定义事件
       })
     }
   }
