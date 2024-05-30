@@ -4,7 +4,7 @@
     <el-drawer v-model="table" title="消息列表" direction="rtl" size="40%" >
       <!-- 折叠面板实现消息种类分类 -->
       <div class="demo-collapse">
-        <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse v-model="activeNames">
           <el-collapse-item title="&nbsp;&nbsp;&nbsp;预约通知" name="1" class="collapseItem1">
             <div class="messageList">
               <el-table :data="resMes" style="width: 100%" :row-class-name="tableRowClassName">
@@ -133,10 +133,13 @@
 import { inject } from 'vue'
 export default {
   inject: ['$identity_num'],
+  created() {
+    this.identityNum = this.$identity_num;
+    // console.log("获取的identityNum为：",this.identityNum); 
+  },
   data() {
-    // const identityNum = inject('$identity_num')
     return {
-      identity_num: this.$identity_num,
+      identityNum: 0,
       activeNames: ['1', '2'],
       table: false,
       timer: null,
@@ -199,13 +202,13 @@ export default {
       // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
       this.$emit('update:result', unreadResMesCount + unreadBillMesCount)
     },
-    // post请求，请求数据体中包含用户证件号identity_num
+    // post请求，请求数据体中包含用户证件号identityNum
     // url为api/notice/list/
     // 返回数据为resMes和billMes两个字典数组
     getMesData(){
       return new Promise((resolve, reject) => {
         let ts = this;
-        this.$axios.post('api/notice/list/', {identity_num: this.$identityNum})
+        this.$axios.post('api/notice/list/', {identity_num: this.identityNum})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.oriBillMes = response.data['billMes'];
@@ -219,6 +222,7 @@ export default {
             console.log(error);
             reject(error); // 数据获取失败，reject Promise
           });
+          console.log('发送的请求参数:', {identity_num: this.identityNum});
       });
     },
     openDrawer() {
