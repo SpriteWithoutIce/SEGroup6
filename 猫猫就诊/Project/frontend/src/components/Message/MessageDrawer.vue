@@ -132,8 +132,9 @@
 <script>
 import { inject } from 'vue'
 export default {
-  setup() {
-    const identityNum = inject('$identity_num')
+  inject: ['$identity_num'],
+  data() {
+    // const identityNum = inject('$identity_num')
     return {
       activeNames: ['1', '2'],
       table: false,
@@ -202,7 +203,7 @@ export default {
     getMesData(){
       return new Promise((resolve, reject) => {
         let ts = this;
-        this.$axios.post('api/notice/list/', {identity_num: identityNum})
+        this.$axios.post('api/notice/list/', {identity_num: this.$identityNum})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.billMes = response.data['billMes'];
@@ -248,7 +249,7 @@ export default {
       
     },
     mounted() {
-      if (identityNum == '0') {
+      if (this.$identityNum === '0') {
         console.log("未登录");
         return;
       }
