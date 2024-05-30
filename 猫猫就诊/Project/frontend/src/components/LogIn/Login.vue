@@ -3,7 +3,7 @@
     <!-- <img src="../../assets/LogIn/碳治郎1.png" alt="中心图片" class="center-image"> -->
     <div class="modal-container">
       <div class="top-section">
-        <img src="../../assets/navigation/banner2.jpg" alt="背景图片" class="background-image">
+        <img src="../../assets/navigation/banner2.jpg" alt="背景图片" class="background-image" />
         <div class="cancel-btn" @click="cancelModal">
           <div class="cancel-icon">X</div>
         </div>
@@ -46,95 +46,96 @@
 </template>
 
 <script>
-import CryptoJS from 'crypto-js';
-import { ElMessage } from "element-plus";
+import CryptoJS from 'crypto-js'
+import { ElMessage } from 'element-plus'
 import { inject } from 'vue'
 export default {
-  data () {
+  data() {
     return {
       identityNum: inject('$identity_num'),
 
-      receivedidCard: "",
-      receivedtype: "",
+      receivedidCard: '',
+      receivedtype: '',
       loginVisible: false,
-      isLogin: "",
-      notLogin: "",
+      isLogin: '',
+      notLogin: '',
       loginForm: {
-        idCard: "",
-        userType: "", password: "",
-        userType: "",
+        idCard: '',
+        userType: '',
+        password: '',
+        userType: '',
         remember: false,
-        autoLogin: false,
+        autoLogin: false
       },
       // 不需要users，使用一条返回信息即可
       // users: [],
-      msg: "",
+      msg: '',
 
       rules: {
         idCard: [
-          { required: true, message: "请输入账号", trigger: "blur" },
-          { pattern: /^\d{6,20}$/, message: "账号必须为6~20位数字", trigger: "blur" },
+          { required: true, message: '请输入账号', trigger: 'blur' },
+          { pattern: /^\d{6,20}$/, message: '账号必须为6~20位数字', trigger: 'blur' }
         ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-      },
-    };
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
+      }
+    }
   },
-  mounted () {
+  mounted() {
     /*this.getUsersData();*/
   },
   methods: {
-    getUserData (idCard, password, userType) {
+    getUserData(idCard, password, userType) {
       return new Promise((resolve, reject) => {
-        let ts = this;
+        let ts = this
         let requestData = {
           idCard: idCard,
           password: CryptoJS.SHA256(password).toString(),
           userType: userType
-        };
-        this.$axios.post('/api/login/', requestData)
+        }
+        this.$axios
+          .post('/api/login/', requestData)
           .then(function (response) {
-            ts.msg = response.data['msg'];
-            console.log(ts.msg);
-            resolve(); // 数据获取完成，resolve Promise
+            ts.msg = response.data['msg']
+            console.log(ts.msg)
+            resolve() // 数据获取完成，resolve Promise
           })
           .catch(function (error) {
-            console.log(error);
-            reject(error); // 数据获取失败，reject Promise
-          });
-      });
+            console.log(error)
+            reject(error) // 数据获取失败，reject Promise
+          })
+      })
     },
-    openModal (id, type) {
-      this.receivedidCard = id;
-      this.receivedtype = type;
-      if (id != "") {
-        this.isLogin = false;
-        this.notLogin = true;
+    openModal(id, type) {
+      this.receivedidCard = id
+      this.receivedtype = type
+      if (id != '') {
+        this.isLogin = false
+        this.notLogin = true
+      } else {
+        this.isLogin = true
+        this.notLogin = false
       }
-      else {
-        this.isLogin = true;
-        this.notLogin = false;
-      }
-      this.loginForm.idCard = "";
-      this.loginForm.password = "";
-      this.loginVisible = true;
-      document.body.style.overflow = "hidden";
+      this.loginForm.idCard = ''
+      this.loginForm.password = ''
+      this.loginVisible = true
+      document.body.style.overflow = 'hidden'
     },
-    closeModal () {
-      this.loginVisible = false;
-      document.body.style.overflow = "";
+    closeModal() {
+      this.loginVisible = false
+      document.body.style.overflow = ''
     },
-    cancelModal () {
+    cancelModal() {
       ElMessage({
-        type: "info",
-        message: "取消 ╮(╯▽╰)╭",
-        showClose: true,
-      });
-      this.closeModal();
+        type: 'info',
+        message: '取消 ╮(╯▽╰)╭',
+        showClose: true
+      })
+      this.closeModal()
     },
-    handleLogin () {
+    handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          const { idCard, password, userType } = this.loginForm;
+          const { idCard, password, userType } = this.loginForm
           // let user = this.findUser(idCard);
           // 不能从数据库直接读用户信息，不安全
           // 把用户证件号和使用SHA256加密后的密码传入后端进行比对
@@ -144,80 +145,79 @@ export default {
           //   type: "success",
           // });
 
-
           // /*连数据库注释下边四行*/
-          // this.identityNum = idCard;
-          // this.$emit('update:currentUserCard', this.loginForm.idCard);
-          // this.$emit('update:currentUserType', this.loginForm.userType);
-          // this.closeModal();
+          this.identityNum = idCard
+          this.$emit('update:currentUserCard', this.loginForm.idCard)
+          this.$emit('update:currentUserType', this.loginForm.userType)
+          this.closeModal()
 
-          this.getUserData(idCard, password, userType).then(() => {
-            if (this.msg === "Successfully Login") {
-              ElMessage({
-                showClose: true,
-                message: "登录成功 (๑˃̵ᴗ˂̵)",
-                type: "success",
-              });
-              this.identityNum = idCard;
-              this.$emit('update:currentUserCard', this.loginForm.idCard);
-              this.$emit('update:currentUserType', this.loginForm.userType);
-              this.closeModal();
-            } else if (this.msg === "Wrong Password") {
-              ElMessage({
-                showClose: true,
-                message: "密码错误或用户类型错误 ╮(╯▽╰)╭",
-                type: "error",
-              });
-            } else {
-              //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
-              // this.users.push({ id: idCard, password, userType });
-              ElMessage({
-                showClose: true,
-                message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
-                type: "success",
-              });
-              this.identityNum = idCard;
-              this.$emit('update:currentUserCard', this.loginForm.idCard);
-              this.$emit('update:currentUserType', this.loginForm.userType);
-              this.closeModal();
-            }
-          })
+          // this.getUserData(idCard, password, userType).then(() => {
+          //   if (this.msg === "Successfully Login") {
+          //     ElMessage({
+          //       showClose: true,
+          //       message: "登录成功 (๑˃̵ᴗ˂̵)",
+          //       type: "success",
+          //     });
+          //     this.identityNum = idCard;
+          //     this.$emit('update:currentUserCard', this.loginForm.idCard);
+          //     this.$emit('update:currentUserType', this.loginForm.userType);
+          //     this.closeModal();
+          //   } else if (this.msg === "Wrong Password") {
+          //     ElMessage({
+          //       showClose: true,
+          //       message: "密码错误或用户类型错误 ╮(╯▽╰)╭",
+          //       type: "error",
+          //     });
+          //   } else {
+          //     //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
+          //     // this.users.push({ id: idCard, password, userType });
+          //     ElMessage({
+          //       showClose: true,
+          //       message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
+          //       type: "success",
+          //     });
+          //     this.identityNum = idCard;
+          //     this.$emit('update:currentUserCard', this.loginForm.idCard);
+          //     this.$emit('update:currentUserType', this.loginForm.userType);
+          //     this.closeModal();
+          //   }
+          // })
         } else {
           ElMessage({
-            type: "info",
-            message: "信息错误 ╮(╯▽╰)╭",
-            showClose: true,
-          });
+            type: 'info',
+            message: '信息错误 ╮(╯▽╰)╭',
+            showClose: true
+          })
         }
-      });
+      })
     },
-    logout () {
-      this.identityNum = '0';
-      this.receivedidCard = '';
-      this.currentUserType = '';
-      this.loginForm.userType = '';
-      this.$emit('update:currentUserCard', "");
-      this.$emit('update:currentUserType', "");
-      this.isLogin = false;
-      this.notLogin = true;
-      this.closeModal();
+    logout() {
+      this.identityNum = '0'
+      this.receivedidCard = ''
+      this.currentUserType = ''
+      this.loginForm.userType = ''
+      this.$emit('update:currentUserCard', '')
+      this.$emit('update:currentUserType', '')
+      this.isLogin = false
+      this.notLogin = true
+      this.closeModal()
       ElMessage({
         type: 'success',
         message: '已退出登录 (๑˃̵ᴗ˂̵)',
-        showClose: true,
-      });
+        showClose: true
+      })
 
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: 'smooth',
-      });
-    },
+        behavior: 'smooth'
+      })
+    }
     // findUser (idCard) {
     //   return this.users.find((user) => user.id === idCard);
     // },
-  },
-};
+  }
+}
 </script>
 
 <style scoped>
