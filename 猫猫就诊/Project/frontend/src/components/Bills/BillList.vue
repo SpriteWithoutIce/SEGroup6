@@ -213,10 +213,10 @@ export default {
     },
     selectFunc(payStatus) {
       // 根据传入的 payStatus 筛选患者数据
-      ;(this.filteredBills = this.bill.filter((stu) => {
+      this.filteredBills = this.bill.filter((stu) => {
         return stu.payStatus === payStatus
-      })),
-        this.handleCurrentChange(1)
+      }),
+      this.handleCurrentChange(1)
     },
     changeBillStatus(id) {
       return new Promise((resolve, reject) => {
