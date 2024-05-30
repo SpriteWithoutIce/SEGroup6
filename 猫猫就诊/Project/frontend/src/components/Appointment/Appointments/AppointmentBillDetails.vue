@@ -79,7 +79,7 @@ export default {
     // 确认缴费
     submitForm () {
       // 修改数据库
-      this.$emit('update:pay-status', this.form.id);
+      this.$emit('billDetailsUpdated', true);
       ElMessage({
         showClose: true,
         message: "缴费成功 ╰(*°▽°*)╯",

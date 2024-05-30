@@ -146,42 +146,42 @@ export default {
 
 
           // /*连数据库注释下边四行*/
-          // this.identityNum = idCard;
-          // this.$emit('update:currentUserCard', this.loginForm.idCard);
-          // this.$emit('update:currentUserType', this.loginForm.userType);
-          // this.closeModal();
+          this.identityNum = idCard;
+          this.$emit('update:currentUserCard', this.loginForm.idCard);
+          this.$emit('update:currentUserType', this.loginForm.userType);
+          this.closeModal();
 
-          this.getUserData(idCard, password, userType).then(() => {
-            if (this.msg === "Successfully Login") {
-              ElMessage({
-                showClose: true,
-                message: "登录成功 (๑˃̵ᴗ˂̵)",
-                type: "success",
-              });
-              this.identityNum = idCard;
-              this.$emit('update:currentUserCard', this.loginForm.idCard);
-              this.$emit('update:currentUserType', this.loginForm.userType);
-              this.closeModal();
-            } else if (this.msg === "Wrong Password") {
-              ElMessage({
-                showClose: true,
-                message: "密码错误或用户类型错误 ╮(╯▽╰)╭",
-                type: "error",
-              });
-            } else {
-              //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
-              // this.users.push({ id: idCard, password, userType });
-              ElMessage({
-                showClose: true,
-                message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
-                type: "success",
-              });
-              this.identityNum = idCard;
-              this.$emit('update:currentUserCard', this.loginForm.idCard);
-              this.$emit('update:currentUserType', this.loginForm.userType);
-              this.closeModal();
-            }
-          })
+          // this.getUserData(idCard, password, userType).then(() => {
+          //   if (this.msg === "Successfully Login") {
+          //     ElMessage({
+          //       showClose: true,
+          //       message: "登录成功 (๑˃̵ᴗ˂̵)",
+          //       type: "success",
+          //     });
+          //     this.identityNum = idCard;
+          //     this.$emit('update:currentUserCard', this.loginForm.idCard);
+          //     this.$emit('update:currentUserType', this.loginForm.userType);
+          //     this.closeModal();
+          //   } else if (this.msg === "Wrong Password") {
+          //     ElMessage({
+          //       showClose: true,
+          //       message: "密码错误或用户类型错误 ╮(╯▽╰)╭",
+          //       type: "error",
+          //     });
+          //   } else {
+          //     //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
+          //     // this.users.push({ id: idCard, password, userType });
+          //     ElMessage({
+          //       showClose: true,
+          //       message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
+          //       type: "success",
+          //     });
+          //     this.identityNum = idCard;
+          //     this.$emit('update:currentUserCard', this.loginForm.idCard);
+          //     this.$emit('update:currentUserType', this.loginForm.userType);
+          //     this.closeModal();
+          //   }
+          // })
         } else {
           ElMessage({
             type: "info",
