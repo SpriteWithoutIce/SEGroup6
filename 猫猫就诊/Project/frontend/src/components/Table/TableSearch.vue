@@ -50,7 +50,7 @@
       </thead>  
       <tbody>  
         <tr v-for="doctor in filteredDoctors(square_selected)" :key="doctor.name">  
-          <td>{{ doctor.department.name }}</td>  
+          <td>{{ doctor.department }}</td>  
           <td>{{ doctor.name }}</td>  
           <td>{{ doctor.research }}</td>  
           <td>{{ doctor.schedule.map(s => s.time).join(', ') }}</td>  
@@ -134,7 +134,7 @@ export default {
         {  
           name: '医生A',  
           title: '主任医师',  
-          department:{id:0,name:'心血管内科'},
+          department:'心血管内科',
           research: '生物信息', // 主要研究方向  
           schedule: [  
             {time: '05-09(上午)',status:'empty', number: 10},
@@ -145,7 +145,7 @@ export default {
         {  
           name: '医生B',  
           title: '副主任医师',  
-          department:{id:1,name:'呼吸与危重症医学科'},
+          department:'呼吸与危重症医学科',
           research: '生物信息', // 主要研究方向  
           schedule: [  
             {time: '05-08(上午)',status:'full'},
@@ -156,7 +156,7 @@ export default {
         {  
           name: '医生C',  
           title: '副主任医师',  
-          department:{id:0,name:'心血管内科'},
+          department:'心血管内科',
           research: '生物信息', // 主要研究方向  
           schedule: [  
             {time: '05-06(上午)',status:'full'},
@@ -209,7 +209,7 @@ export default {
     },
     filteredDoctors(id) {  
       return this.doctors.filter(doctor =>
-        doctor.department.id===id
+        doctor.department===this.departments[id].name
       );
     }, 
     getDutyData() {
