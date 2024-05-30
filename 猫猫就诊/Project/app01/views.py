@@ -240,6 +240,8 @@ class DoctorView(APIView):
         action = json.loads(request.body)['action']
         if action == 'upload_avatar':
             return self.upload_avatar(request)
+        elif action == 'getDoctorsData':
+            return self.getDoctorsData(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -249,6 +251,18 @@ class DoctorView(APIView):
         doctor.avatar = request.FILES.get('avatar')
         doctor.save()
         return JsonResponse({"doctor": doctor})
+    def getDoctorsData(self, request):
+        doctors = []
+        for item in Doctors.objects.values('id', 'name', 'department', 'title', 'research', 'avatar_name'):
+            doctors.append({
+                'id': item['id'],
+                'name': item['name'],
+                'department': item['department'],
+                'title': item['title'],
+                'research': item['research'],
+                'avatar': '/api/doctor/avatar/' + item['avatar_name']
+            }) 
+        return JsonResponse({'doctors': doctors})
 
 class OnDutyView(APIView):
     def post(self, request):
@@ -256,6 +270,8 @@ class OnDutyView(APIView):
         action = data['action']
         if action == 'getNextSevenDaysDuty':
             return self.getNextSevenDaysDuty(request)
+        elif action == 'getAllNextSevenDaysDuty':
+            return self.getAllNextSevenDaysDuty(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -268,8 +284,8 @@ class OnDutyView(APIView):
             doctor_name=F('doctor__name'),
             doctor_title=F('doctor__title'),
             doctor_research=F('doctor__research'),
-            doctor_avatar=F('doctor__avatar')
-        ).values('doctor_id', 'doctor_name', 'doctor_title', 'date', 'doctor_research', 'doctor_avatar', 'time', 'state'):
+            doctor_avatar_name=F('doctor__avatar_name')
+        ).values('doctor_id', 'doctor_name', 'doctor_title', 'date', 'doctor_research', 'doctor_avatar_name', 'time', 'state'):
             time = ""
             if (item['time'] == 1):
                 time = "(上午)"
@@ -308,12 +324,72 @@ class OnDutyView(APIView):
                     "name": item['doctor_name'],
                     "title": item['doctor_title'],
                     "research": item['doctor_research'],
-                    "avatar": item['doctor_avatar'],
+                    "avatar": '/api/doctor/avatar/' + item['doctor_avatar_name'],
                     "schedule": [{'time': item['date'].strftime('%m-%d') + time,
                                     'status': 'full' if rest == 0 else 'empty',
                                     'number': rest,
                                     "emptytime": emptyTime}],
                     
+                })
+        return JsonResponse({"duty": duty})
+    
+    def getAllNextSevenDaysDuty(self, request):
+        duty = []
+        seven_days_later = (timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+        for item in OnDuty.objects.filter(date__lte=seven_days_later).annotate(
+            doctor_name=F('doctor__name'),
+            doctor_title=F('doctor__title'),
+            doctor_research=F('doctor__research'),
+            doctor_department=F('doctor__department'),
+            doctor_avatar_name=F('doctor__avatar_name'),
+            doctor_cost=F('doctor__cost')
+        ).values('doctor_id', 'doctor_name', 'doctor_title', 'doctor_department', 'doctor_cost',
+                'date', 'doctor_research', 'doctor_avatar_name', 'time', 'state'):
+            time = ""
+            if (item['time'] == 1):
+                time = "(上午)"
+            elif (item['time'] == 2):
+                time = "(下午)"
+            else:
+                time = "(晚上)"
+            rest = 0
+            for i in range(20):
+                if not (item['state'] & (1<<i)):
+                    rest += 1
+            find = False
+            for d in duty:
+                if d['id'] == item['doctor_id']:
+                    emptyTime = []
+                    for i in range(20):
+                        emptyTime.append({
+                            "number": i + 1,
+                            "status": "empty" if not (item['state'] & (1<<i)) else 'full',
+                        })
+                    d['schedule'].append({'time': item['date'].strftime('%m-%d') + time,
+                                        'status': 'full' if rest == 0 else 'empty',
+                                        'number': rest,
+                                        "emptytime": emptyTime})
+                    find = True
+                    break
+            if not find:
+                emptyTime = []
+                for i in range(20):
+                    emptyTime.append({
+                        "number": i + 1,
+                        "status": "empty" if not (item['state'] & (1<<i)) else 'full',
+                    })
+                duty.append({
+                    "id": item['doctor_id'],
+                    "name": item['doctor_name'],
+                    "title": item['doctor_title'],
+                    "department": item['doctor_department'],
+                    "research": item['doctor_research'],
+                    "avatar": '/api/doctor/avatar/' + item['doctor_avatar_name'],
+                    "schedule": [{'time': item['date'].strftime('%m-%d') + time,
+                                    'status': 'full' if rest == 0 else 'empty',
+                                    'number': rest,
+                                    "emptytime": emptyTime}],
+                    "cost": item['doctor_cost']
                 })
         return JsonResponse({"duty": duty})
 
@@ -518,4 +594,22 @@ class UploadPhotoView(APIView):
         with open(file_path, 'wb+') as f:
             f.write(file.read())
         url = '/api/medicine/photo/' + file.name
+        return JsonResponse({'msg': "Successfully uploaded photo", 'name': file.name, 'url': url})
+    
+class UploadAvatarView(APIView):
+    def get(self, request, filename, *args, **kwargs):
+        photo_path = os.path.join(settings.DOCTOR_AVATAR_ROOT, filename)
+        if os.path.exists(photo_path):
+            with open(photo_path, 'rb') as f:
+                return HttpResponse(f.read(), content_type='image/jpeg')  # 根据实际图片类型调整 content_type
+        else:
+            raise Http404("Photo not found")
+    
+    def post(self, request):
+        file = request.FILES.get('file')
+        file_path = os.path.join(settings.DOCTOR_AVATAR_ROOT, file.name)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, 'wb+') as f:
+            f.write(file.read())
+        url = '/api/doctor/avatar/' + file.name
         return JsonResponse({'msg': "Successfully uploaded photo", 'name': file.name, 'url': url})
