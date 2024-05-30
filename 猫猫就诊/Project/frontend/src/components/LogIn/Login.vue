@@ -194,6 +194,7 @@ export default {
       });
     },
     logout () {
+      this.identityNum = '0';
       this.receivedidCard = '';
       this.currentUserType = '';
       this.loginForm.userType = ''
