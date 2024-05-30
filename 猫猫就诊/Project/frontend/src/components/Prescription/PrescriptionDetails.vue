@@ -68,7 +68,7 @@ export default {
       },
       medicinesDB: [
         // { name: '布洛芬', stock 改成num: 80, price: 5.0, use: ['发热', '炎症'] }
-        { name: '布洛芬', num: 80, price: 5.0, use: ['发热', '炎症'] }
+        // { name: '布洛芬', num: 80, price: 5.0, use: '发热,炎症' }
         // 可以添加更多药物数据
       ]
     };
@@ -183,9 +183,7 @@ export default {
     createFilter (queryString) {
       return medicine => {
         const nameMatch = medicine.value.toLowerCase().includes(queryString.toLowerCase());
-        const symptomMatch = medicine.symptoms.some(symptom =>
-          symptom.toLowerCase().includes(queryString.toLowerCase())
-        );
+        const symptomMatch = medicine.symptoms.toLowerCase().includes(queryString.toLowerCase());
         return nameMatch || symptomMatch;
       };
     },
@@ -241,8 +239,8 @@ export default {
     },
   },
   mounted () {
-    // this.getMedicineData().then(() => {
-    // });
+    this.getMedicineData().then(() => {
+    });
   },
 };
 </script>
