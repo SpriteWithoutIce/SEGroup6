@@ -131,10 +131,12 @@
 
 <script>
 import { inject } from 'vue'
+import { GlobalState } from '../../global.js';
 export default {
-  inject: ['$identity_num'],
+  // inject: ['$identity_num'],
   created() {
-    this.identityNum = this.$identity_num;
+    // this.identityNum = this.$identity_num;
+    this.identityNum = GlobalState.identityNum;
     // console.log("获取的identityNum为：",this.identityNum); 
   },
   data() {
@@ -208,7 +210,7 @@ export default {
     getMesData(){
       return new Promise((resolve, reject) => {
         let ts = this;
-        this.$axios.post('api/notice/list/', {identity_num: this.identityNum})
+        this.$axios.post('api/notice/list/', {identity_num: this.identityNum, action: "getMesData"})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.oriBillMes = response.data['billMes'];
@@ -253,10 +255,11 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         //TODO:需要后端在Notice的api里添加action"readMes"，根据传入的item_id找到对应数据将其item['isRead']改为true，不用后端返回更新后的数据，前端直接再调用一次getMesData()就可以
-        this.$axios.post('api/notice/list/', {identity_num: this.$identityNum, action: "readMes", item_id: row.id})
+        this.$axios.post('api/notice/list/', {action: "readMes", item_id: row.item_id})
           .then(function (response) {
-            ts.getMesData();
-            resolve(); // 数据获取完成，resolve Promise
+            ts.getMesData().then(() => {
+                resolve(); // 数据获取完成，resolve Promise
+            })
           })
           .catch(function (error) {
             console.log(error);
@@ -284,7 +287,7 @@ export default {
       });
     },
     mounted() {
-      if (this.$identityNum === '0') {
+      if (this.identityNum === '0') {
         console.log("未登录");
         return;
       }

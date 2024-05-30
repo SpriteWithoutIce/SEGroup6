@@ -29,11 +29,16 @@ urlpatterns = [
     path('api/patient/add/', views.PatientView.as_view()),
     path("api/registers/list/", views.RegisterView.as_view()),
     path("api/registers/cancel/", views.RegisterView.as_view()),
+    path("api/appointment/add/", views.RegisterView.as_view()),
     path("api/treatments/list/", views.TreatmentView.as_view()),
     path("api/duty/next_seven_days/", views.OnDutyView.as_view()),
+    path("api/duty/all_next_seven_days/", views.OnDutyView.as_view()),
     path("api/duty/date_doctor_unoccupied/", views.OnDutyView.as_view()),
-    path("api/doctors/upload_avatar/", views.DoctorView.as_view()),
     path("api/doctors/list/", views.DoctorView.as_view()),
+    path("api/doctors/setData/", views.DoctorView.as_view()),
+    path("api/doctors/removeAvatar/", views.DoctorView.as_view()),
+    path("api/doctors/delete/", views.DoctorView.as_view()),
+    path("api/doctors/uploadAvatar/", views.UploadAvatarView.as_view()),
     path("api/medicine/list/", views.MedicineView.as_view()),
     path("api/medicine/delete/", views.MedicineView.as_view()),
     path("api/medicine/uploadPhoto/", views.UploadPhotoView.as_view()),
@@ -44,4 +49,5 @@ urlpatterns = [
     path("api/notice/list/", views.NoticeView.as_view()),
 
     re_path(r'^api/medicine/photo/(?P<filename>[\w.-]+)$', views.UploadPhotoView.as_view()),
+    re_path(r'^api/doctor/avatar/(?P<filename>[\w.-]+)$', views.UploadAvatarView.as_view()),
 ]

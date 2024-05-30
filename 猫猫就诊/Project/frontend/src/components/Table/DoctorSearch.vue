@@ -281,11 +281,11 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         let requestData = {
-          action: 'getAllNextSevenDaysDuty',
+          action: 'getDoctorsData',
         };
-        this.$axios.post('/api/duty/all_next_seven_days/', requestData)
+        this.$axios.post('api/doctors/list/', requestData)
           .then(function (response) {
-            ts.doctors = response.data['duty'];
+            ts.doctors = response.data['doctors'];
             console.log(ts.doctors);
             resolve(); // 数据获取完成，resolve Promise
           })
