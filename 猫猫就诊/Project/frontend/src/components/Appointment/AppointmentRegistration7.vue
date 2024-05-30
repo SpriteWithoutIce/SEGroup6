@@ -88,18 +88,19 @@ export default {
       isMedicalInsurance:true,
       
       info:{
-        name:'',
+        name:'',//就诊人
         paymentType:'',
         department:'',
-        time:'',
-        starttime:'',
+        time:'',//日期05-30
+        starttime:'',//开始时间
         endtime:'',
-        number:'',
-        doctorName:'',
-        doctorTitle:'',
-        doctorAvatar:'',
-        doctorRearch:'',
-        cost:''
+        number:'',//挂号序号
+        doctorName:'',//医生名字
+        doctorTitle:'',//医生title
+        doctorAvatar:'',//医生头像
+        doctorRearch:'',//医生领域
+        cost:'',//医生的挂号费
+        inumber:'',
       },
     };  
   }  ,
@@ -149,6 +150,7 @@ export default {
     this.info.doctorAvatar=this.$route.query.doctorAvatar;
     this.info.doctorRearch=this.$route.query.doctorRearch;
     this.info.cost=this.$route.query.cost;
+    this.info.inumber=this.$route.query.inumber;
   }
 };  
 </script>  

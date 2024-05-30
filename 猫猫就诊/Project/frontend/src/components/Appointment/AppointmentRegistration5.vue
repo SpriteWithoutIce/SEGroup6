@@ -10,6 +10,7 @@
             name:info.name,
             paymentType:info.paymentType,
             department:info.department,
+            inumber:info.inumber,
             time:info_time
           }
         }" class="button2 button-next" style="text-decoration: none;">
@@ -188,6 +189,7 @@ export default {
         name:'',
         paymentType:'',
         department:'',
+        inumber:'',
       },
       info_time:'',
     };  
@@ -292,6 +294,7 @@ export default {
     this.info.name = this.$route.query.name;
     this.info.paymentType = this.$route.query.paymentType;
     this.info.department = this.$route.query.department;
+    this.info.inumber=this.$route.query.inumber;
     console.log(this.info.department)
   }
 }

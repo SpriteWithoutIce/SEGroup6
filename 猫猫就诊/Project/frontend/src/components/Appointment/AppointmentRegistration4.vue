@@ -35,6 +35,7 @@
                 query:{
                   name:info.name,
                   paymentType:info.paymentType,
+                  inumber:info.inumber,
                   department:selectedDepartmentName
                 }
               }" class="button2 button-next"  v-if="checked">
@@ -110,7 +111,8 @@ export default {
       selectedSubDepartmentName:'',
       info:{
         name:'',
-        paymentType:''
+        paymentType:'',
+        inumber:'',
       },
       selected:0,
     };  
@@ -208,6 +210,7 @@ export default {
     this.info.name=this.$route.query.name;
     this.info.paymentType=this.$route.query.paymentType;
     this.selected=this.$route.query.selected;
+    this.info.inumber=this.$route.query.number;
   }
 };  
 </script>  

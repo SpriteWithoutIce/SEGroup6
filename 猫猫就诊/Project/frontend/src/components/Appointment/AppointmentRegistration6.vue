@@ -11,6 +11,7 @@
             name:info.name,
             paymentType:info.paymentType,
             department:info.department,
+            inumber:info.inumber,
             time:info_time,
             starttime:info_startTime,
             endtime:info_endTime,
@@ -177,6 +178,7 @@ export default {
         name:'',
         paymentType:'',
         department:'',
+        inumber:'',
       },
       info_time:'',
       timeOfDay:'',
@@ -211,6 +213,7 @@ export default {
     this.info.paymentType=this.$route.query.paymentType;
     this.info.department=this.$route.query.department;
     this.info_time=this.$route.query.time;
+    this.info.inumber=this.$route.query.inumber;
   }
 };  
 </script>  

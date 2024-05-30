@@ -9,6 +9,7 @@
           path:'/AppointmentRegistration4',
           query:{
             name:formData.name,
+            number:formData.number,
             paymentType:formData.paymentType,
             selected:select
           }
