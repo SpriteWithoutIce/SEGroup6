@@ -103,7 +103,7 @@ class Notice(models.Model):
         (4, "处方缴费成功"),
     )
     msg_type = models.SmallIntegerField(verbose_name="消息类型", choices=type_choices1)
-    time = models.DateTimeField(verbose_name="通知日期")
+    time = models.DateTimeField(verbose_name="通知时间")
     treatment = models.ForeignKey(verbose_name="处方编号", to="Treatment", to_field="id", on_delete=models.CASCADE, null=True, blank=True)
     register = models.ForeignKey(verbose_name="挂号编号", to="Register", to_field="id", on_delete=models.CASCADE, null=True, blank=True)
     isRead = models.BooleanField(verbose_name="已读未读", default=False)

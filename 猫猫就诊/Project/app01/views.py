@@ -101,6 +101,8 @@ class RegisterView(APIView):
             return self.getRegistersData(request)
         elif action == 'cancelRegister':
             return self.cancelRegister(request)
+        elif action == 'getDoctorRegisters':
+            return self.getDoctorRegisters(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -166,6 +168,25 @@ class RegisterView(APIView):
         notice.save()
         item.delete()
         return JsonResponse({'msg': "Successfully cancel register"})
+    
+    def getDoctorRegisters(self, request):
+        identity_num = json.loads(request.body)['identity_num']
+        registers = []
+        current_date = datetime.date.today()
+        for item in Register.objects.filter(**{'doctor__identity_num': identity_num}).annotate(
+            patient_name=F('patient__name'),
+            patient_birthday=F('patient__birthday'),
+            patient_gender=F('patient__gender')
+        ).values('queue_id', 'patient_name', 'patient_birthday', 'patient_gender', 'time'):
+            age = current_date.year - item['patient_birthday'].year - ((current_date.month, current_date.day) < (item['patient_birthday'].month, item['patient_birthday'].day))
+            registers.append({
+                "Id": item['queue_id'],
+                "name": item['patient_name'],
+                "age": age,
+                "sex": "男" if item['patient_gender'] == 1 else "女",
+                "date": datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').date().strftime('%Y年%m月%d日')
+            })
+        return JsonResponse({'registers': registers})
 
 
 class TreatmentView(APIView):
@@ -226,8 +247,9 @@ class TreatmentView(APIView):
 class DoctorView(APIView):
     def get(self, request):
         doctors = []
-        for item in Doctors.objects.values('name', 'department', 'title', 'research', 'cost'):
+        for item in Doctors.objects.values('identity_num', 'name', 'department', 'title', 'research', 'cost'):
             doctors.append({
+                'id': item['identity_num'],
                 'name': item['name'],
                 'office': item['department'],
                 'title': item['title'],
@@ -242,6 +264,14 @@ class DoctorView(APIView):
             return self.upload_avatar(request)
         elif action == 'getDoctorsData':
             return self.getDoctorsData(request)
+        elif action == 'deleteDoctor':
+            return self.deleteDoctor(request)
+        elif action == 'removeAvatar':
+            return self.removeAvatar(request)
+        elif action == 'addDoctor':
+            return self.addDoctor(request)
+        elif action == 'alterDoctor':
+            return self.alterDoctor(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -251,6 +281,7 @@ class DoctorView(APIView):
         doctor.avatar = request.FILES.get('avatar')
         doctor.save()
         return JsonResponse({"doctor": doctor})
+    
     def getDoctorsData(self, request):
         doctors = []
         for item in Doctors.objects.values('id', 'name', 'department', 'title', 'research', 'avatar_name'):
@@ -263,6 +294,51 @@ class DoctorView(APIView):
                 'avatar': '/api/doctor/avatar/' + item['avatar_name']
             }) 
         return JsonResponse({'doctors': doctors})
+    
+    def deleteDoctor(self, request):
+        id = json.loads(request.body)['id']
+        Doctors.objects.get(id=id).delete()
+        return self.get(request)
+    
+    def removeAvatar(self, request):
+        avatar_name = json.loads(request.body)['avatar_name']
+        file_path = os.path.join(settings.DOCTOR_AVATAR_ROOT, avatar_name)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        return JsonResponse({'msg': "Successfully removed avatar"})
+    
+    def addDoctor(self, request):
+        data = json.loads(request.body)
+        try:
+            doctor = Doctors()
+            doctor.name = data['name']
+            doctor.title = data['title']
+            doctor.department = data['department']
+            doctor.cost = data['cost']
+            doctor.identity_num = data['id']
+            doctor.research = data['research']
+            doctor.avatar = '/api/doctor/avatar/' + data['avatar_name']
+            doctor.avatar_name = data['avatar_name']
+            return JsonResponse({'msg': "Successfully add doctor data"})
+        except Doctors.DoesNotExist:
+            return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
+    
+    def alterDoctor(self, request):
+        data = json.loads(request.body)
+        try:
+            doctor = Doctors.objects.get(identity_num=data['id'])
+            doctor.name = data['name']
+            doctor.title = data['title']
+            doctor.department = data['department']
+            doctor.cost = data['cost']
+            doctor.identity_num = data['id']
+            doctor.research = data['research']
+            doctor.avatar = '/api/doctor/avatar/' + data['avatar_name']
+            doctor.avatar_name = data['avatar_name']
+            doctor.save()
+            return JsonResponse({'msg': "Successfully altered doctor data"})
+        except Medicine.DoesNotExist:
+            return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
 
 class OnDutyView(APIView):
     def post(self, request):
@@ -284,8 +360,10 @@ class OnDutyView(APIView):
             doctor_name=F('doctor__name'),
             doctor_title=F('doctor__title'),
             doctor_research=F('doctor__research'),
-            doctor_avatar_name=F('doctor__avatar_name')
-        ).values('doctor_id', 'doctor_name', 'doctor_title', 'date', 'doctor_research', 'doctor_avatar_name', 'time', 'state'):
+            doctor_avatar_name=F('doctor__avatar_name'),
+            doctor_cost=F('doctor__cost')
+        ).values('doctor_id', 'doctor_name', 'doctor_title', 'doctor_cost',
+                'date', 'doctor_research', 'doctor_avatar_name', 'time', 'state'):
             time = ""
             if (item['time'] == 1):
                 time = "(上午)"
@@ -325,6 +403,7 @@ class OnDutyView(APIView):
                     "title": item['doctor_title'],
                     "research": item['doctor_research'],
                     "avatar": '/api/doctor/avatar/' + item['doctor_avatar_name'],
+                    "cost": item['doctor_cost'],
                     "schedule": [{'time': item['date'].strftime('%m-%d') + time,
                                     'status': 'full' if rest == 0 else 'empty',
                                     'number': rest,
@@ -445,7 +524,7 @@ class NoticeView(APIView):
             doctor_name=F('doctor__name'),
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
-        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'date', 'isRead'):
+        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
             type = ""
             if item['msg_type'] == 1:
                 type = "预约成功"
@@ -456,30 +535,29 @@ class NoticeView(APIView):
             else:
                 type = "处方缴费成功"
             if item['msg_type'] == 1 or item['msg_type'] == 2:
-                register = Register.objects.get(id=item['register'])
                 resMes.append({
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": register.time.date().strftime('%Y-%m-%d'),
+                    "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
                     "timetamp": item['date'],
                     "read": item['isRead']
                 })
             else:
-                treatment = Treatment.objects.get(id=item['treatment'])
+                treatment = Treatment.objects.get(id=item['treatment']).value('price')
                 billMes.append({
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": treatment.time.date().strftime('%Y-%m-%d'),
+                    "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
                     "timetamp": item['date'],
-                    "price": treatment.price,
+                    "price": treatment['price'],
                     "read": item['isRead']
                 })
         return JsonResponse({"resMes": resMes, "billMes": billMes})
