@@ -110,7 +110,7 @@ export default {
           title: this.info.title,
           cost: this.info.cost,
           research: this.info.research,
-          photo_name: this.fileList.length === 0 ? '' : this.fileList[0].name,
+          avatar_name: this.fileList.length === 0 ? '' : this.fileList[0].name,
           action: this.sign == 'add' ? 'addDoctor' : 'alterDoctor'
         }
         this.$axios
