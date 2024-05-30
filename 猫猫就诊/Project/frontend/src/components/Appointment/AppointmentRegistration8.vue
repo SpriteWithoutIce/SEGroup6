@@ -2,7 +2,7 @@
   <Header :squares2="squares2"/> 
   <div class="notice-box" style="height: 1400px;">  
     <!-- 上一步/下一步 -->
-     
+    
     <div style="width: 800px;margin: 20px auto;"> 
       <div class="subline">您好，您已预约成功。订单详情如下</div>
       <div class="subline">

@@ -138,20 +138,18 @@ export default {
           // let user = this.findUser(idCard);
           // 不能从数据库直接读用户信息，不安全
           // 把用户证件号和使用SHA256加密后的密码传入后端进行比对
-          ElMessage({
-            showClose: true,
-            message: "登录成功 (๑˃̵ᴗ˂̵)",
-            type: "success",
-          });
+          // ElMessage({
+          //   showClose: true,
+          //   message: "登录成功 (๑˃̵ᴗ˂̵)",
+          //   type: "success",
+          // });
 
 
-          /*连数据库注释下边四行*/
+          // /*连数据库注释下边四行*/
           // this.identityNum = idCard;
           // this.$emit('update:currentUserCard', this.loginForm.idCard);
           // this.$emit('update:currentUserType', this.loginForm.userType);
           // this.closeModal();
-
-
 
           this.getUserData(idCard, password, userType).then(() => {
             if (this.msg === "Successfully Login") {
