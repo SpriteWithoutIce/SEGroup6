@@ -14,10 +14,10 @@
       </nav>
       <div class="clickable-images">
         <template v-for="(image, index) in getClickableImages()">
-          <RouterLink :to="image.link" class="image-link" @mouseover="showSurroundImage(index + 1)"
-            @mouseleave="hideSurroundImage()">
+          <!-- RouterLink里边必须加一个跳转地址 -->
+          <RouterLink class="image-link" to="/Main" @mouseover="showSurroundImage(index + 1)"
+            @mouseleave="hideSurroundImage()" @click.prevent="handleImageClick(image.link, $event)">
             <img class="designed-icon" :src="image.icon" :alt="image.alt" />
-
             <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image" />
           </RouterLink>
         </template>
@@ -72,6 +72,14 @@ export default {
     messagedrawer
   },
   methods: {
+    handleImageClick (link, event) {
+      if (this.currentUser.userType === '') {
+        this.showLogin();
+      }
+      else {
+        this.$router.push(link);
+      }
+    },
     refreshPage () {
       this.currentUser.idCard = ''
       this.currentUser.userType = ''
@@ -136,6 +144,9 @@ export default {
       this.unreadCount = cnt
     },
     getClickableImages () {
+      const defaultClickHandler = () => {
+        this.showLogin();
+      };
       switch (this.currentUser.userType) {
         case '医生':
           return [
