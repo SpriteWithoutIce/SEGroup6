@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import globalStateManagement from '../../globalStateManagement.js';
 import CryptoJS from 'crypto-js'
 import { ElMessage } from 'element-plus'
 import { inject } from 'vue'
@@ -83,6 +84,9 @@ export default {
     /*this.getUsersData();*/
   },
   methods: {
+    updateIdentityNum(newId) {
+      globalStateManagement.updateIdentityNum(newId);
+    },
     getUserData(idCard, password, userType) {
       return new Promise((resolve, reject) => {
         let ts = this
@@ -176,6 +180,7 @@ export default {
                 type: 'success'
               })
               this.identityNum = idCard
+              this.updateIdentityNum(idCard)
               this.$emit('update:currentUserCard', this.loginForm.idCard)
               this.$emit('update:currentUserType', this.loginForm.userType)
               this.closeModal()
