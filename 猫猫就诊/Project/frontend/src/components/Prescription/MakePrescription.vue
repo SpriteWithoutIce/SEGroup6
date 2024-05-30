@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import { GlobalState } from '../../global.js';
 import PrescriptionDetails from './PrescriptionDetails.vue'
 export default {
   data () {
@@ -98,11 +99,11 @@ export default {
       console.log("看看这里能读吗1")
       console.log(this.patient);
     },
-    getRegisterData() {
+    getRegisterData () {
       return new Promise((resolve, reject) => {
         let ts = this;
         // 需要传入当前用户的identity_num
-        this.$axios.post('/api/registers/list/', {action: "getDoctorRegisters", identity_num: "000001"})
+        this.$axios.post('/api/registers/list/', { action: "getDoctorRegisters", identity_num: GlobalState.identityNum })
           .then(function (response) {
             ts.patient = response.data['registers'];
             console.log(ts.patient);
