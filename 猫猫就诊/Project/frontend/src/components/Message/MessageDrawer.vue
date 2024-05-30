@@ -134,14 +134,8 @@ import { inject } from 'vue'
 import { GlobalState } from '../../global.js';
 export default {
   // inject: ['$identity_num'],
-  created() {
-    // this.identityNum = this.$identity_num;
-    this.identityNum = GlobalState.identityNum;
-    console.log("MesDrawer获取的identityNum为：",this.identityNum); 
-  },
   data() {
     return {
-      identityNum: 0,
       activeNames: ['1', '2'],
       table: false,
       timer: null,
@@ -210,7 +204,7 @@ export default {
     getMesData(){
       return new Promise((resolve, reject) => {
         let ts = this;
-        this.$axios.post('api/notice/list/', {identity_num: this.identityNum, action: "getMesData"})
+        this.$axios.post('api/notice/list/', {identity_num: GlobalState.identityNum, action: "getMesData"})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.oriBillMes = response.data['billMes'];
@@ -224,7 +218,7 @@ export default {
             console.log(error);
             reject(error); // 数据获取失败，reject Promise
           });
-          console.log('MesDrawer发送的请求参数:', {identity_num: this.identityNum});
+          console.log('MesDrawer发送的请求参数:', {identity_num: GlobalState.identityNum});
       });
     },
     openDrawer() {
@@ -287,7 +281,7 @@ export default {
       });
     },
     mounted() {
-      if (this.identityNum === '0') {
+      if (GlobalState.identityNum === '0') {
         console.log("未登录");
         return;
       }
