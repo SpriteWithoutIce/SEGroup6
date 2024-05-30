@@ -136,6 +136,7 @@ export default {
   data() {
     // const identityNum = inject('$identity_num')
     return {
+      identity_num: this.$identity_num,
       activeNames: ['1', '2'],
       table: false,
       timer: null,
@@ -147,7 +148,7 @@ export default {
         //   doctor: '李医生',
         //   time: '2024-5-12',
         //   id: '03230802',
-        //   timetamp: '2024-5-11',
+        //   timetamp: '2024-5-11 23:59:59', //用MySQL中的DATETIME类型就可以
         //   read: true
         // },
         // {
@@ -157,7 +158,7 @@ export default {
         //   doctor: '李医生',
         //   time: '2024-5-12',
         //   id: '03230802',
-        //   timetamp: '2024-5-11',
+        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
         //   read: false
         // }
       ],
@@ -169,7 +170,7 @@ export default {
         //   doctor: '李医生',
         //   time: '2024-5-12',
         //   id: '03230802',
-        //   timetamp: '2024-5-11',
+        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
         //   price: 200,
         //   read: false
         // },
@@ -180,7 +181,7 @@ export default {
         //   doctor: '李医生',
         //   time: '2024-5-12',
         //   id: '03230802',
-        //   timetamp: '2024-5-11',
+        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
         //   price: 200,
         //   read: false
         // }
@@ -221,7 +222,8 @@ export default {
       });
     },
     openDrawer() {
-      this.table = true
+      this.getMesData();
+      this.table = true;
     },
     turnToBill() {
       this.table = false
@@ -253,9 +255,10 @@ export default {
       // 遍历 oriBillMes 数组
       this.oriBillMes.forEach(item => {
         // 将字符串形式的时间戳转换为数字类型的时间戳（毫秒）
-        const timetamp = parseInt(item.timetamp);
+        const timetamp = new Date(item.timetamp + " GMT+0800").getTime();
         // 检查 type 是否为 '处方缴费提醒' 并且 timetamp 时间距离当前时间是否大于30分钟
-        if (item.type === '处方缴费提醒' && (now - timetamp) > 30 * 60 * 1000) {
+        // bug 时间戳格式待定
+        if ((item.type === '处方缴费提醒' && (now - timetamp) > 30 * 60 * 1000)||item.type === '处方缴费成功') {
           // 如果条件满足，将 item 添加到 billMes 数组
           this.billMes.push(item);
         }
