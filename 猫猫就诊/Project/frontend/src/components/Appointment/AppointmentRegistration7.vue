@@ -1,6 +1,6 @@
 <template>  
   <Header :squares2="squares2"/> 
-  
+  <BillDetails @update:payStatus="updatePayStatus" ref="BillDetails"> </BillDetails>
   <div class="notice-box" style="height: 1500px;">  
     <!-- 上一步/下一步 -->
     <div class="container2">  
@@ -9,7 +9,10 @@
           query:{
             order:JSON.stringify(info)
           }}" class="button2 button-next" @click="submit">确认</router-link>
-      
+      <div class="container2" >
+        <el-button @click="showBillDetails()"
+          >缴费</el-button>
+      </div>  
     </div> 
     <div class="doctor-item">
       <div class="doctor-header"> 
@@ -58,6 +61,7 @@
 </template>  
   
 <script>  
+import BillDetails from './Appointments/BillDetails.vue'
 import Header from './Appointments/AppointmentHeader.vue'
 export default {  
   components: {
@@ -99,6 +103,9 @@ export default {
       },
     };  
   }  ,
+  components: {
+    BillDetails
+  },
   methods: {  
     submit(){
       this.form.address='猫猫就诊';
@@ -115,6 +122,18 @@ export default {
     }, 
     togglePaymentType() {  
       this.isMedicalInsurance = !this.isMedicalInsurance; // 切换支付类型  
+    },
+    showBillDetails() {
+      const now = new Date(); 
+      const formattedDateTime = `${now.getFullYear()}年${String(now.getMonth() + 1).padStart(2, '0')}月${String(now.getDate()).padStart(2, '0')}日`;  
+      var row={
+        type:'挂号',
+        issue:'非医保挂号',
+        price:this.info.cost,
+        date:formattedDateTime
+      };
+      console.log(row)
+      this.$refs.BillDetails.openModal(row)
     },
   }  ,
   created(){
@@ -284,5 +303,11 @@ span {
 .toggle-arrow {  
     margin-left: auto; /* 将箭头推到右边 */  
     cursor: pointer; /* 鼠标悬停时显示小手图标，表示可点击 */  
+}
+
+.pay-button {
+  background-color: whitesmoke;
+  margin-left: -10px;
+  max-width: 75px;
 }
 </style>

@@ -16,7 +16,7 @@
         下一步
       </router-link>
     </div>
-    
+    <div>{{ this.$route.query.department }}</div>
     <!-- 顶部日期块 -->  
     <div class="date-blocks">
       <button   
@@ -200,6 +200,7 @@ export default {
           action: 'getNextSevenDaysDuty',
           department: this.$route.query.department,
         };
+        console.log(requestData.department)
         this.$axios.post('/api/duty/next_seven_days/', requestData)
           .then(function (response) {
             ts.doctors = response.data['duty'];
@@ -259,6 +260,8 @@ export default {
     },
   },
   mounted() {
+    console.log(this.$route.query.department)
+    console.log(this.$route.query.paymentType)
     this.getDutyData().then(() => {
       console.log("111");
       console.log(this.doctors);
@@ -285,6 +288,12 @@ export default {
       console.log(this.doctors);
     });
   },
+  created(){
+    this.info.name = this.$route.query.name;
+    this.info.paymentType = this.$route.query.paymentType;
+    this.info.department = this.$route.query.department;
+    console.log(this.info.department)
+  }
 }
 </script>  
   

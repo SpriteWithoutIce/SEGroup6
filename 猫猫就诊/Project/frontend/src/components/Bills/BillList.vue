@@ -72,102 +72,102 @@ export default {
     return {
       desc: '缴费列表统计',
       bill: [
-        // {
-        //   id: 1,
-        //   type: '挂号',
-        //   department: '皮肤科',
-        //   price: 10,
-        //   date: '2024年3月15日',
-        //   payStatus: true
-        // },
-        // {
-        //   id: 2,
-        //   type: '处方',
-        //   department: '眼科',
-        //   price: 200,
-        //   date: '2024年2月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // }
+        {
+          id: 1,
+          type: '挂号',
+          department: '皮肤科',
+          price: 10,
+          date: '2024年3月15日',
+          payStatus: true
+        },
+        {
+          id: 2,
+          type: '处方',
+          department: '眼科',
+          price: 200,
+          date: '2024年2月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          department: '全科',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          department: '全科',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          department: '全科',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          department: '全科',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          department: '全科',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          department: '全科',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          department: '全科',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          department: '全科',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          department: '全科',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        },
+        {
+          id: 3,
+          type: '挂号',
+          department: '全科',
+          price: 5,
+          date: '2024年1月15日',
+          payStatus: false
+        }
       ],
       pagination: {
         total: 0,

@@ -112,6 +112,7 @@ export default {
       info:{},
     };  
   }  ,
+  
   methods: {  
     timeBeforeTenMinutes(timeStr) {  
       // 假设时间字符串格式为 HH:mm  
