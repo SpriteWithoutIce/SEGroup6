@@ -18,7 +18,7 @@
         <el-form-item v-for="(medicine, index) in form.medicines" :key="index">
           <el-autocomplete v-model="medicine.name" :trigger-on-focus="false" :fetch-suggestions="querySearch"
             placeholder="药物名称或症状" @select="handleSelect(index)" :show-all="true"></el-autocomplete>
-          <el-input-number v-model="medicine.quantity" :min="0" :step="1" placeholder="数量"
+          <el-input-number v-model="medicine.cnt" :min="0" :step="1" placeholder="数量"
             @change="calculatePrice(medicine)"></el-input-number>
           <el-row>
             <el-col :span="12">
@@ -64,7 +64,7 @@ export default {
         date: new Date().toISOString().substr(0, 10), /*就诊日期 年月日*/
         gender: '',
         advice: '',
-        medicines: [{ name: '', quantity: 0, price: 0, totalPrice: 0 }]
+        medicines: [{ name: '', cnt: 0, price: 0, totalPrice: 0 }]
       },
       medicinesDB: [
         // { name: '布洛芬', stock 改成num: 80, price: 5.0, use: ['发热', '炎症'] }
@@ -85,9 +85,11 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         let requestData = {
+          /*问诊单字段：单号+开具的药物+时间+医师建议+总价*/
           id: this.form.id,
+          medicines: this.medicines,
           date: new Date().toISOString,
-
+          totalPrice: this.totalPrice,
         };
         this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
           .then(function (response) {
@@ -156,7 +158,7 @@ export default {
       this.closeModal();
     },
     addMedicine () {
-      this.form.medicines.push({ name: '', quantity: 0, price: 0, totalPrice: 0 });
+      this.form.medicines.push({ name: '', cnt: 0, price: 0, totalPrice: 0 });
     },
     removeMedicine (index) {
       this.form.medicines.splice(index, 1);
