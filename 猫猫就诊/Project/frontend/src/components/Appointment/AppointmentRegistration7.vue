@@ -2,6 +2,7 @@
   <Header :squares2="squares2"/> 
   <BillDetails @update:payStatus="updatePayStatus" ref="BillDetails"> </BillDetails>
   <div class="notice-box" style="height: 1500px;">  
+    <div>{{ this.info.inumber }}</div>
     <!-- 上一步/下一步 -->
     <div class="container2">  
       <router-link :to="{
@@ -100,7 +101,7 @@ export default {
         doctorAvatar:'',//医生头像
         doctorRearch:'',//医生领域
         cost:'',//医生的挂号费
-        inumber:'',
+        inumber:'',//患者的证件号
       },
     };  
   }  ,
