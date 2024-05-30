@@ -196,7 +196,7 @@ class TreatmentView(APIView):
             filter = {'doctor__identity_num': identity_num}
         elif user.type == 2:
             filter = {'patient': identity_num}
-        for item in Register.objects.filter(**filter).annotate(
+        for item in Treatment.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
             doctor_name=F('doctor__name')
