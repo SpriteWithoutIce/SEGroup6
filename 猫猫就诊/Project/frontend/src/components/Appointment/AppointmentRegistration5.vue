@@ -280,49 +280,49 @@ export default {
   mounted() {
     console.log(this.$route.query.department)
     console.log(this.$route.query.paymentType)
-    // this.getDutyData().then(() => {
-    //   console.log("111");
-    //   console.log(this.doctors);
-    //   this.nextSevenDays = this.locatenextSevenDays();
-    //   for (let i = 0; i < this.nextSevenDays.length; i++) {
-    //     const day = this.nextSevenDays[i].date;
-    //     this.dayStatus[i].status = 'none';
-    //     this.doctors.forEach(doctor => {
-    //       doctor.schedule.forEach(scheduleItem => {
-    //         if (scheduleItem.time.includes(day)) {
-    //           if (scheduleItem.status === 'full' && this.dayStatus[i].status != 'empty') {
-    //             this.dayStatus[i].status = 'full';
-    //           } else if (scheduleItem.status === 'empty') {
-    //             this.dayStatus[i].status = 'empty';
-    //           }
-    //         }
-    //         console.log(this.dayStatus[i].status);
-    //       });
-    //     });
-    //   }
-    console.log("111");
-    console.log(this.doctors);
-    this.nextSevenDays = this.locatenextSevenDays();
-    for (let i = 0; i < this.nextSevenDays.length; i++) {
-      const day = this.nextSevenDays[i].date;
-      this.dayStatus[i].status = 'none';
-      this.doctors.forEach(doctor => {
-        doctor.schedule.forEach(scheduleItem => {
-          if (scheduleItem.time.includes(day)) {
-            if (scheduleItem.status === 'full' && this.dayStatus[i].status != 'empty') {
-              this.dayStatus[i].status = 'full';
-            } else if (scheduleItem.status === 'empty') {
-              this.dayStatus[i].status = 'empty';
-            }
-          }
-          console.log(this.dayStatus[i].status);
-        });
-      });
-      this.info.name = this.$route.query.name;
-      this.info.paymentType = this.$route.query.paymentType;
-      this.info.department = this.$route.query.department;
+    this.getDutyData().then(() => {
+      console.log("111");
       console.log(this.doctors);
-    }
+      this.nextSevenDays = this.locatenextSevenDays();
+      for (let i = 0; i < this.nextSevenDays.length; i++) {
+        const day = this.nextSevenDays[i].date;
+        this.dayStatus[i].status = 'none';
+        this.doctors.forEach(doctor => {
+          doctor.schedule.forEach(scheduleItem => {
+            if (scheduleItem.time.includes(day)) {
+              if (scheduleItem.status === 'full' && this.dayStatus[i].status != 'empty') {
+                this.dayStatus[i].status = 'full';
+              } else if (scheduleItem.status === 'empty') {
+                this.dayStatus[i].status = 'empty';
+              }
+            }
+            console.log(this.dayStatus[i].status);
+          });
+        });
+      }
+    // console.log("111");
+    // console.log(this.doctors);
+    // this.nextSevenDays = this.locatenextSevenDays();
+    // for (let i = 0; i < this.nextSevenDays.length; i++) {
+    //   const day = this.nextSevenDays[i].date;
+    //   this.dayStatus[i].status = 'none';
+    //   this.doctors.forEach(doctor => {
+    //     doctor.schedule.forEach(scheduleItem => {
+    //       if (scheduleItem.time.includes(day)) {
+    //         if (scheduleItem.status === 'full' && this.dayStatus[i].status != 'empty') {
+    //           this.dayStatus[i].status = 'full';
+    //         } else if (scheduleItem.status === 'empty') {
+    //           this.dayStatus[i].status = 'empty';
+    //         }
+    //       }
+    //       console.log(this.dayStatus[i].status);
+    //     });
+    //   });
+    //   this.info.name = this.$route.query.name;
+    //   this.info.paymentType = this.$route.query.paymentType;
+    //   this.info.department = this.$route.query.department;
+    //   console.log(this.doctors);
+    })
   },
   created(){
     this.info.name = this.$route.query.name;
