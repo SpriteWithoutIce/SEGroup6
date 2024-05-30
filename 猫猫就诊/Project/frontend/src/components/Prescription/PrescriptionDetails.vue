@@ -59,8 +59,9 @@ export default {
       isVisible: false,
       image: null,
       form: {
+        id: "",/*这里的id是问诊单号*/
         name: '',
-        date: new Date().toISOString().substr(0, 10),
+        date: new Date().toISOString().substr(0, 10), /*就诊日期 年月日*/
         gender: '',
         advice: '',
         medicines: [{ name: '', quantity: 0, price: 0, totalPrice: 0 }]
@@ -80,6 +81,26 @@ export default {
     }
   },
   methods: {
+    writeBackPrescriptionDetailsData () {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          id: this.form.id,
+          date: new Date().toISOString,
+
+        };
+        this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg']);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            console.log("Prescription Details Write Back Failed")
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
     handleImageUpload (event) {
       const file = event.target.files[0];
       if (file) {
@@ -106,6 +127,7 @@ export default {
       });
     },
     openModal (row) {
+      this.id = row.Id;
       this.isVisible = true;
       document.body.style.overflow = 'hidden'; // 禁止滚动
       this.form.name = row.name;
@@ -130,6 +152,7 @@ export default {
         type: "success"
       });
       console.log('提交表单', this.form);
+      writeBackPrescriptionDetailsData();
       this.closeModal();
     },
     addMedicine () {
