@@ -67,11 +67,13 @@
 
 <script>
 import { inject } from 'vue'
+import { GlobalState } from '../../global.js';
 import BillDetails from './BillDetails.vue'
 export default {
-  inject: ['$identity_num'],
+  // inject: ['$identity_num'],
   created() {
-    this.identityNum = this.$identity_num;
+    // this.identityNum = this.$identity_num;
+    this.identityNum = GlobalState.identityNum;
     // console.log("获取的identityNum为：",this.identityNum); 
   },
   data() {
