@@ -1,6 +1,6 @@
 <!--药物管理系统-->
 <template>
-  <DetailD ref="detail"> </DetailD>
+  <DetailD ref="detail" @updateData="refreshDoctorData"> </DetailD>
   <div class="container">
     <div class="m">
       <p style="margin-left: 50px; font-weight: bold; margin-right: 10px">首页</p>
@@ -73,8 +73,15 @@ import axios from 'axios'
 const detail = ref(null)
 const input4 = ref('')
 const showPrescriptionDetails = (row, sign) => {
-  // 假设DetailC组件有一个名为openModal的方法
+  // 假设DetailD组件有一个名为openModal的方法
   detail.value.openModal(row, sign)
+}
+// closeModal后刷新数据
+const refreshDoctorData = () => {
+  getDoctorData().then(() => {
+    updateTotal()
+    handleCurrentChange(pagination.value.currentPage)
+  })
 }
 const handleEdit = (index, row) => {
   // 编辑操作的逻辑
@@ -83,7 +90,7 @@ const handleEdit = (index, row) => {
 
 const handleDelete = (index, row) => {
   // 删除操作的逻辑
-  console.log('Delete row:', row)
+  deleteDoctor(row).then(() => {})
 }
 const pagination = ref({
   total: 0,
@@ -115,7 +122,38 @@ const updateTotal = () => {
 watch(input4, () => {
   updateTotal()
 })
-
+const getDoctorData = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get('/api/doctor/list/')
+      .then((response) => {
+        tableData.value = response.data['doctor']
+        pagination.value.total = tableData.value.length // 更新总条目数
+        console.log('Doctor data fetched:', tableData.value)
+        resolve() // 数据获取完成，resolve Promise
+      })
+      .catch((error) => {
+        console.error('Error fetching doctor data:', error)
+        reject(error) // 数据获取失败，reject Promise
+      })
+  })
+}
+const deleteDoctor = (row) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post('/api/doctor/delete/', { id: row.id, action: 'deleteDoctor' })
+      .then((response) => {
+        tableData.value = response.data['doctor']
+        pagination.value.total = tableData.value.length // 更新总条目数
+        console.log('Doctor data deleted')
+        resolve() // 数据获取完成，resolve Promise
+      })
+      .catch((error) => {
+        console.error('Error deleting doctor data:', error)
+        reject(error) // 数据获取失败，reject Promise
+      })
+  })
+}
 const ftableData = computed(() => {
   const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
   const end = start + pagination.value.pageSize
@@ -127,10 +165,10 @@ const handleCurrentChange = (e) => {
   pagination.value.currentPage = e
 }
 onMounted(() => {
-  // getDoctorsData().then(() => {
+  getDoctorData().then(() => {
     updateTotal()
     handleCurrentChange(1)
-  // })
+  })
 })
 </script>
 <style scoped>
