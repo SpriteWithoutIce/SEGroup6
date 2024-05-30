@@ -247,14 +247,16 @@ class TreatmentView(APIView):
 class DoctorView(APIView):
     def get(self, request):
         doctors = []
-        for item in Doctors.objects.values('identity_num', 'name', 'department', 'title', 'research', 'cost'):
+        for item in Doctors.objects.values('identity_num', 'name', 'department',
+                                        'title', 'research', 'cost', 'avatar_name'):
             doctors.append({
                 'id': item['identity_num'],
                 'name': item['name'],
                 'office': item['department'],
                 'title': item['title'],
                 'research': item['research'],
-                'cost': item['cost']
+                'cost': item['cost'],
+                'avatar_name': item['avatar_name']
             })
         return JsonResponse({'doctors': doctors})
             
