@@ -168,7 +168,7 @@ export default {
           ]
         case '管理员':
           return [
-            { link: '/MedicineA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
+            { link: '/PharmaCist', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
             { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
             { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' }
           ]
@@ -179,7 +179,7 @@ export default {
               icon: '/static/img/navigation/list1_1.png',
               alt: 'Image1'
             },
-            { link: '/PatientA', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
+            { link: '/PharmaCist', icon: '/static/img/navigation/list1_2.png', alt: 'Image 2' },
             { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
             { link: '/Bill', icon: '/static/img/navigation/list1_4.png', alt: 'Image 4' }
           ]
