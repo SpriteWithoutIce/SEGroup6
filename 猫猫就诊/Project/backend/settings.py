@@ -136,3 +136,33 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDICINE_PHOTO_ROOT = os.path.join(BASE_DIR, 'static/images/medicine')
 DOCTOR_AVATAR_ROOT = os.path.join(BASE_DIR, 'static/images/doctors')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'django.log'),  # 修改为你想要保存日志文件的路径
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
