@@ -521,7 +521,7 @@ class NoticeView(APIView):
             doctor_name=F('doctor__name'),
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
-        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'date', 'isRead'):
+        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
             type = ""
             if item['msg_type'] == 1:
                 type = "预约成功"
@@ -532,30 +532,29 @@ class NoticeView(APIView):
             else:
                 type = "处方缴费成功"
             if item['msg_type'] == 1 or item['msg_type'] == 2:
-                register = Register.objects.get(id=item['register'])
                 resMes.append({
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": register.time.date().strftime('%Y-%m-%d'),
+                    "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
                     "timetamp": item['date'],
                     "read": item['isRead']
                 })
             else:
-                treatment = Treatment.objects.get(id=item['treatment'])
+                treatment = Treatment.objects.get(id=item['treatment']).value('price')
                 billMes.append({
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": treatment.time.date().strftime('%Y-%m-%d'),
+                    "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
                     "timetamp": item['date'],
-                    "price": treatment.price,
+                    "price": treatment['price'],
                     "read": item['isRead']
                 })
         return JsonResponse({"resMes": resMes, "billMes": billMes})
