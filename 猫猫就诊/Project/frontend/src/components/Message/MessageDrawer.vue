@@ -161,7 +161,7 @@ export default {
         //   read: false
         // }
       ],
-      billMes: [
+      oriBillMes: [
         // {
         //   type: '处方缴费提醒',
         //   name: '小黄',
@@ -184,7 +184,8 @@ export default {
         //   price: 200,
         //   read: false
         // }
-      ]
+      ],
+      billMes:[],
     }
   },
   methods: {
@@ -206,7 +207,8 @@ export default {
         this.$axios.post('api/notice/list/', {identity_num: this.$identityNum})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
-            ts.billMes = response.data['billMes'];
+            ts.oriBillMes = response.data['billMes'];
+            ts.payOverTimeQuery();
             console.log(ts.resMes);
             console.log(ts.billMes);
             ts.countUnread();
@@ -246,7 +248,18 @@ export default {
       this.getMesData();
     },
     payOverTimeQuery(){
-      
+      // 获取当前时间的时间戳（毫秒）
+      const now = Date.now();
+      // 遍历 oriBillMes 数组
+      this.oriBillMes.forEach(item => {
+        // 将字符串形式的时间戳转换为数字类型的时间戳（毫秒）
+        const timetamp = parseInt(item.timetamp);
+        // 检查 type 是否为 '处方缴费提醒' 并且 timetamp 时间距离当前时间是否大于30分钟
+        if (item.type === '处方缴费提醒' && (now - timetamp) > 30 * 60 * 1000) {
+          // 如果条件满足，将 item 添加到 billMes 数组
+          this.billMes.push(item);
+        }
+      });
     },
     mounted() {
       if (this.$identityNum === '0') {
