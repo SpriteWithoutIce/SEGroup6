@@ -98,7 +98,7 @@ export default {
   methods: {
     setMedicineData() {
       return new Promise((resolve, reject) => {
-        let ts = this;
+        let ts = this
         let requestData = {
           id: this.info.id,
           name: this.info.name,
@@ -107,41 +107,47 @@ export default {
           price: this.info.price,
           quantity: this.info.num,
           photo_name: this.fileList.length === 0 ? '' : this.fileList[0].name,
-          action: this.sign == 'add' ? 'addMedicine' : 'alterMedicine',
-        };
-        this.$axios.post('/api/medicine/setData/', requestData)
+          action: this.sign == 'add' ? 'addMedicine' : 'alterMedicine'
+        }
+        this.$axios
+          .post('/api/medicine/setData/', requestData)
           .then(function (response) {
-            console.log(response.data['msg']);
-            resolve(); // 数据获取完成，resolve Promise
+            console.log(response.data['msg'])
+            resolve() // 数据获取完成，resolve Promise
           })
           .catch(function (error) {
-            console.log(error);
-            reject(error); // 数据获取失败，reject Promise
-          });
-      });
+            console.log(error)
+            reject(error) // 数据获取失败，reject Promise
+          })
+      })
     },
     removePhoto() {
       return new Promise((resolve, reject) => {
-        axios.post('/api/medicine/removePhoto/', { id: this.info.id, photo_name: this.fileList[0].name, action: "removePhoto" })
-          .then(response => {
-            console.log('删除成功:', response.data);
-            resolve();
+        axios
+          .post('/api/medicine/removePhoto/', {
+            id: this.info.id,
+            photo_name: this.fileList[0].name,
+            action: 'removePhoto'
           })
-          .catch(error => {
-            console.error('删除失败:', error);
-            reject(error);
-          });
-      });
+          .then((response) => {
+            console.log('删除成功:', response.data)
+            resolve()
+          })
+          .catch((error) => {
+            console.error('删除失败:', error)
+            reject(error)
+          })
+      })
     },
     handleBeforeUpload(file) {
       if (this.fileList.length === 0) {
-        file.formData = { id: this.info.id };
-        return true;
+        file.formData = { id: this.info.id }
+        return true
       } else {
         this.removePhoto().then(() => {
-          file.formData = { id: this.info.id };
-          return true;
-        });
+          file.formData = { id: this.info.id }
+          return true
+        })
       }
     },
     handleSuccess(res) {
@@ -152,17 +158,17 @@ export default {
       //   console.error('文件上传失败');
       // }
       if (this.fileList.length === 0) {
-        this.fileList.push({ name: res.name, url: res.url });
+        this.fileList.push({ name: res.name, url: res.url })
       } else {
         this.fileList = []
-        this.fileList.push({ name: res.name, url: res.url });
+        this.fileList.push({ name: res.name, url: res.url })
       }
-      console.log(this.fileList);
+      console.log(this.fileList)
     },
     handleBeforeRemove() {
       this.removePhoto().then(() => {
-        return true;
-      });
+        return true
+      })
     },
     // 合并之前的handleRemove函数
     handleRemove() {
@@ -198,20 +204,19 @@ export default {
         this.removePhoto().then(() => {
           this.isVisible = false
           document.body.style.overflow = '' // 恢复滚动
-          this.$emit('updateData'); // 触发自定义事件
+          this.$emit('updateData') // 触发自定义事件
         })
-      }
-      else {
+      } else {
         this.isVisible = false
         document.body.style.overflow = '' // 恢复滚动
-        this.$emit('updateData'); // 触发自定义事件
+        this.$emit('updateData') // 触发自定义事件
       }
     },
     setDataAndCloseModal() {
       this.setMedicineData().then(() => {
         this.isVisible = false
         document.body.style.overflow = '' // 恢复滚动
-        this.$emit('updateData'); // 触发自定义事件
+        this.$emit('updateData') // 触发自定义事件
       })
     }
   }

@@ -134,7 +134,6 @@ p {
   left: 0px;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -145,7 +144,8 @@ p {
   max-height: 500px;
   max-width: 700px; /* 设置最大宽度为800像素 */
   width: 100%;
-  background-color: #fff;
+  background-image: url('../../utils/blue.jpg');
+  opacity: 0.8;
   border-radius: 5px;
   display: flex; /* 使用Flexbox布局 */
   flex-direction: column; /* 设置为垂直方向的布局 */
