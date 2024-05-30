@@ -321,6 +321,7 @@ class DoctorView(APIView):
             doctor.research = data['research']
             doctor.avatar = '/api/doctor/avatar/' + data['avatar_name']
             doctor.avatar_name = data['avatar_name']
+            doctor.save()
             return JsonResponse({'msg': "Successfully add doctor data"})
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
