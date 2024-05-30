@@ -299,7 +299,7 @@ class DoctorView(APIView):
     
     def deleteDoctor(self, request):
         id = json.loads(request.body)['id']
-        Doctors.objects.get(id=id).delete()
+        Doctors.objects.get(identity_num=id).delete()
         return self.get(request)
     
     def removeAvatar(self, request):
