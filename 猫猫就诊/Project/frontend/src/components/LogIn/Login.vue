@@ -83,26 +83,6 @@ export default {
     /*this.getUsersData();*/
   },
   methods: {
-    writeBackUserData () {
-      return new Promise((resolve, reject) => {
-        let ts = this;
-        let requestData = {
-          identityNum: this.loginForm.idCard,
-          userType: this.loginForm.userType,
-          password: this.loginForm.password,//这里也要SHA吗？
-        };
-        this.$axios.post('/api/loginWriteBack/', requestData)
-          .then(function (response) {
-            console.log(response.data['msg']);
-            resolve(); // 数据获取完成，resolve Promise
-          })
-          .catch(function (error) {
-            console.log(error);
-            console.log("Login Write Back Failed")
-            reject(error); // 数据获取失败，reject Promise
-          });
-      });
-    },
     getUserData (idCard, password, userType) {
       return new Promise((resolve, reject) => {
         let ts = this;
@@ -191,8 +171,6 @@ export default {
             } else {
               //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
               // this.users.push({ id: idCard, password, userType });
-              /*writeback是新增的写回数据库*/
-              writeBackUserData();
               ElMessage({
                 showClose: true,
                 message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",

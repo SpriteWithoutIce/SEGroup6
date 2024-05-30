@@ -40,7 +40,7 @@ export default {
   name: 'HeaderNavigation',
   data () {
     return {
-      date: new Date().toISOString(),
+      date: new Date(),
       WebURL: 'http://localhost:8080',
       currentIndex: 0,
       images: [
