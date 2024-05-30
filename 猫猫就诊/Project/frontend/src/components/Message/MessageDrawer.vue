@@ -266,11 +266,15 @@ export default {
     },
     payOverTimeQuery(){
       // 获取当前时间的时间戳（毫秒）
-      const now = Date.now();
+      const nowUtcTimestamp = Date.now();
+      // 北京时区相对于 UTC 的偏移量（8小时 * 60分钟 * 60秒 * 1000毫秒）
+      const beijingUtcOffset = 8 * 60 * 60 * 1000;
+      // 将 UTC 时间戳转换为北京时区的时间戳
+      const now = nowUtcTimestamp + beijingUtcOffset;
       // 遍历 oriBillMes 数组
       this.oriBillMes.forEach(item => {
         // 将字符串形式的时间戳转换为数字类型的时间戳（毫秒）
-        const timetamp = new Date(item.timetamp + " GMT+0800").getTime();
+        const timetamp = new Date(item.timetamp).getTime();
         // 检查 type 是否为 '处方缴费提醒' 并且 timetamp 时间距离当前时间是否大于30分钟
         // bug 时间戳格式待定
         if ((item.type === '处方缴费提醒' && (now - timetamp) > 30 * 60 * 1000)||item.type === '处方缴费成功') {
