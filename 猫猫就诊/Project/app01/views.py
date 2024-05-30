@@ -335,7 +335,6 @@ class DoctorView(APIView):
             doctor.cost = data['cost']
             doctor.identity_num = data['id']
             doctor.research = data['research']
-            doctor.avatar = '/api/doctor/avatar/' + data['avatar_name']
             doctor.avatar_name = data['avatar_name']
             doctor.save()
             return JsonResponse({'msg': "Successfully altered doctor data"})
