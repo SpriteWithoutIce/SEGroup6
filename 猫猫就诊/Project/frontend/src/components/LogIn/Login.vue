@@ -47,6 +47,7 @@
 
 <script>
 import globalStateManagement from '../../globalStateManagement.js';
+import { GlobalState } from '../../global.js';
 import CryptoJS from 'crypto-js'
 import { ElMessage } from 'element-plus'
 import { inject } from 'vue'
@@ -162,6 +163,8 @@ export default {
                 type: 'success'
               })
               this.identityNum = idCard
+              this.updateIdentityNum(idCard)
+              console.log("登录处修改identityNum为:",GlobalState.identityNum)
               this.$emit('update:currentUserCard', this.loginForm.idCard)
               this.$emit('update:currentUserType', this.loginForm.userType)
               this.closeModal()
@@ -181,6 +184,7 @@ export default {
               })
               this.identityNum = idCard
               this.updateIdentityNum(idCard)
+              console.log("登录处修改identityNum为:",GlobalState.identityNum)
               this.$emit('update:currentUserCard', this.loginForm.idCard)
               this.$emit('update:currentUserType', this.loginForm.userType)
               this.closeModal()
