@@ -74,7 +74,7 @@ export default {
   created() {
     // this.identityNum = this.$identity_num;
     this.identityNum = GlobalState.identityNum;
-    // console.log("获取的identityNum为：",this.identityNum); 
+    console.log("BillList获取的identityNum为：",this.identityNum); 
   },
   data() {
     return {
@@ -133,7 +133,7 @@ export default {
             console.log(error);
             reject(error); // 数据获取失败，reject Promise
           });
-          console.log('发送的请求参数:', {identity_num: this.identityNum});
+          console.log('BillList发送的请求参数:', {identity_num: this.identityNum});
       });
     },
     handleCurrentChange(e) {
