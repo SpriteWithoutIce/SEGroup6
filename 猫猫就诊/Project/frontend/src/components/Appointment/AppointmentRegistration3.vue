@@ -9,10 +9,9 @@
           path:'/AppointmentRegistration4',
           query:{
             name:formData.name,
-            paymentType:formData.paymentType,
-            selected:select
+            paymentType:formData.paymentType
           }
-        }" class="button2 button-next"  v-if="isformed()">
+        }" class="button2 button-next"  >
         下一步
       </router-link>
     </div> 
@@ -87,6 +86,7 @@
       </div>  
     </div>
   </div>  
+  <div>{{ formData.name }}</div>
 </template>  
   
 <script>  
@@ -123,7 +123,6 @@ export default {
       ],
       first: 0,
       second: 0,
-      select:0,
       formData:{
         queryFirst:0,
         name:'',
@@ -137,7 +136,31 @@ export default {
       }
     };  
   }  ,
-  methods: {  
+  methods: { 
+    setPatientData() {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          name: this.formData.name,
+          paymentType: this.formData.paymentType,
+          gender: this.formData.gender,
+          birthday: this.formData.birthday,
+          idType: this.formData.idType,
+          phone: this.formData.phone,
+          number: this.formData.number,
+          addr: this.formData.addr,
+        };
+        this.$axios.post('/api/patient/add/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg']);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
     toggleSquare(index) {  
       this.currentSquareIndex = index;   
       this.currentSquareIndex = 1;
@@ -146,36 +169,19 @@ export default {
     nextSquare(){
 
     },
+    
+    // 需要在点击“下一步”按钮时执行submitForm()
     submitForm() {  
-      // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
-      console.log(this.form); // 在控制台打印表单数据  
+      this.setPatientData().then(() => {  
+        console.log(this.formData); // 在控制台打印表单数据 
+      }) 
     } ,
-    submitForm2() {  
-      // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
-      console.log(this.form2); // 在控制台打印表单数据  
-    }, 
-    isformed(){
-      if(this.first==1){
-        if(!this.checked)
-          return false;
-        return Object.keys(this.formData)  
-        .filter(key => key !== 'queryFirst') // 排除 queryFirst 字段  
-        .every(key => this.formData[key] !== '');
-      }
-      else{
-        if(!this.checked)
-          return false;
-        if(this.formData.name=='') return false;
-        if(this.formData.gender=='') return false;
-        if(this.formData.idType=='') return false;
-        if(this.formData.number=='') return false;
-        if(this.formData.phone=='') return false;
-        return true;
-      }
-    }
+    // submitForm2() {  
+    //   // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
+    //   console.log(this.form2); // 在控制台打印表单数据  
+    // }, 
   },
   created(){
-    this.select=this.$route.query.select
     if(this.$route.query.select==0){
       this.first=1;
       this.formData.queryFirst=1;
@@ -262,7 +268,6 @@ button {
   color: #000000;  
   cursor: pointer;  
   transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
-  text-decoration: none;
 }  
 .button-next {  
   background-color: #003366; /* 浅蓝色 */  

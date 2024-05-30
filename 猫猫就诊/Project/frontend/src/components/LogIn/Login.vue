@@ -36,7 +36,9 @@
           <p>用户类型：{{ receivedtype }}</p>
         </div>
         <div class="button-group">
-          <el-button type="danger" @click="logout" class="input-item2">退出登录</el-button>
+          <RouterLink to="/Main">
+            <el-button type="danger" @click="logout" class="input-item2">退出登录</el-button>
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -81,7 +83,7 @@ export default {
     /*this.getUsersData();*/
   },
   methods: {
-    getUserData(idCard, password, userType) {
+    getUserData (idCard, password, userType) {
       return new Promise((resolve, reject) => {
         let ts = this;
         let requestData = {
@@ -89,7 +91,7 @@ export default {
           password: CryptoJS.SHA256(password).toString(),
           userType: userType
         };
-        this.$axios.post('api/login', requestData)
+        this.$axios.post('/api/login/', requestData)
           .then(function (response) {
             ts.msg = response.data['msg'];
             console.log(ts.msg);
@@ -136,6 +138,21 @@ export default {
           // let user = this.findUser(idCard);
           // 不能从数据库直接读用户信息，不安全
           // 把用户证件号和使用SHA256加密后的密码传入后端进行比对
+          ElMessage({
+            showClose: true,
+            message: "登录成功 (๑˃̵ᴗ˂̵)",
+            type: "success",
+          });
+
+
+          /*连数据库注释下边四行*/
+          // this.identityNum = idCard;
+          // this.$emit('update:currentUserCard', this.loginForm.idCard);
+          // this.$emit('update:currentUserType', this.loginForm.userType);
+          // this.closeModal();
+
+
+
           this.getUserData(idCard, password, userType).then(() => {
             if (this.msg === "Successfully Login") {
               ElMessage({
@@ -177,10 +194,12 @@ export default {
       });
     },
     logout () {
+      this.identityNum = '0';
       this.receivedidCard = '';
       this.currentUserType = '';
-      this.$emit('update:currentUserCard', this.loginForm.idCard);
-      this.$emit('update:currentUserType', this.loginForm.userType);
+      this.loginForm.userType = ''
+      this.$emit('update:currentUserCard', "");
+      this.$emit('update:currentUserType', "");
       this.isLogin = false;
       this.notLogin = true;
       this.closeModal();
@@ -189,7 +208,12 @@ export default {
         message: '已退出登录 (๑˃̵ᴗ˂̵)',
         showClose: true,
       });
-      this.identityNum = '0';
+
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
     },
     // findUser (idCard) {
     //   return this.users.find((user) => user.id === idCard);
