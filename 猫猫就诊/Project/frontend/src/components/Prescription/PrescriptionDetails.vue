@@ -208,7 +208,7 @@ export default {
       就诊日期: ${this.form.date} <br/>
       性别: ${this.form.gender} <br/>
       药物列表: <br/>
-      ${this.form.medicines.map(med => `  - ${med.name}: ${med.quantity} 个，总价: ¥${med.totalPrice}`).join('<br/>')}
+      ${this.form.medicines.map(med => `  - ${med.name}: ${med.cnt} 个，总价: ¥${med.totalPrice}`).join('<br/>')}
       <br/>
       医师建议: <br/>
       ${this.form.advice} <br/>
