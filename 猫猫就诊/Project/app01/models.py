@@ -3,17 +3,28 @@ import django
 from django.db import models
 
 # Create your models here.
+
+class User(models.Model):
+    type_choices = (
+        (1, "医生"),
+        (2, "普通用户"),
+        (3, "管理员"),
+    )
+    type = models.SmallIntegerField(verbose_name="用户类型", choices=type_choices, default=2)
+    identity_num = models.CharField(verbose_name="证件号", max_length=64, primary_key=True)
+    password = models.CharField(verbose_name="用户密码", max_length=64)
+
 class Patients(models.Model):
     identity_choices = (
         (1, "身份证"),
-        (2, "医保卡"),        (3, "诊疗卡"),
+        (2, "医保卡"),
+        (3, "诊疗卡"),
         (4, "护照"),
         (5, "军官证"),
         (6, "港澳通行证"),
     )
     identity = models.SmallIntegerField(verbose_name="身份证明", choices=identity_choices, default=1)
     identity_num = models.CharField(verbose_name="证件号", max_length=64, primary_key=True)
-    password = models.CharField(verbose_name="用户密码", max_length=64)
     name = models.CharField(verbose_name="患者姓名", max_length=20)
     health_insurance_choices = (
         (1, "医保"),
@@ -35,7 +46,9 @@ class Doctors(models.Model):
     title = models.CharField(verbose_name="医生职称", max_length=50)
     department = models.CharField(verbose_name="医生科室", max_length=20)
     research = models.CharField(verbose_name="研究方向", max_length=150, null=True, blank=True)
+    cost = models.DecimalField(verbose_name="出诊费", max_digits=5, decimal_places=2)
     avatar = models.ImageField(verbose_name="医生头像", upload_to='doctor/', null=True, blank=True)
+    avatar_name = models.CharField(verbose_name="图片名字", max_length=128, default="img")
 
 class OnDuty(models.Model):
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", primary_key=True, on_delete=models.CASCADE)
@@ -49,17 +62,20 @@ class OnDuty(models.Model):
     state = models.IntegerField(verbose_name="预约状态")
 
 class Register(models.Model):
+    queue_id = models.IntegerField(verbose_name="排队号", default=1)
     patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='patient_registers')
     register = models.ForeignKey(verbose_name="挂号者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='register_registers')
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
     time = models.DateTimeField(verbose_name="挂号时间")
+    position = models.CharField(verbose_name="门诊位置", max_length=128)
 
 class Treatment(models.Model):
     queue_id = models.IntegerField(verbose_name="排队号", default=1)
     patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE)
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
-    date = models.DateField(verbose_name="就诊日期", default=django.utils.timezone.now)
-    medicine = models.TextField(verbose_name="处方内容", max_length=1024)
+    time = models.DateTimeField(verbose_name="挂号时间")
+    advice = models.CharField(verbose_name="诊断结果", max_length=256)
+    medicine = models.TextField(verbose_name="开具药物")
     price = models.DecimalField(verbose_name="处方总价", max_digits=5, decimal_places=2)
 
 class Bill(models.Model):
@@ -103,4 +119,4 @@ class Medicine(models.Model):
     symptom = models.CharField(verbose_name="适应症状", max_length=200)
     price = models.DecimalField(verbose_name="药物价格", max_digits=5, decimal_places=2)
     quantity = models.IntegerField(verbose_name="药物库存", default=0)
-    photo = models.ImageField(verbose_name="药物图片", upload_to='medicine/', null=True, blank=True)
+    photo_name = models.CharField(verbose_name="图片名字", max_length=128, default="img")

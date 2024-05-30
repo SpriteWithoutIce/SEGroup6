@@ -8,7 +8,7 @@
       <router-link to="/AppointmentRegistration" class="button2 button-prev">上一步</router-link>
       <router-link :to="{path:'/AppointmentRegistration3',query:{select:selected}}" class="button2 button-next" v-if="checked">下一步</router-link>
     </div> 
-    <div class="container" style="display: flex; justify-content: center; align-items: center; height: 180px;">
+    <div class="containerlyh" style="display: flex; justify-content: center; align-items: center; height: 180px;">
       <div  
         v-for="(square, index) in squares3"  
         :key="index"  
@@ -99,6 +99,7 @@ export default {
   color: #000000;  
   cursor: pointer;  
   transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  text-decoration: none;
 }  
   
 .square-hovered {  

@@ -12,7 +12,7 @@
             department:info.department,
             time:info_time
           }
-        }" class="button2 button-next" v-if="checked" style="text-decoration: none;">
+        }" class="button2 button-next" style="text-decoration: none;">
         下一步
       </router-link>
     </div>
@@ -145,42 +145,42 @@ export default {
       selectDate:'',
       today: new Date(), // 今天的日期  
       doctors: [  
-        // {  
-        //   id:0,
-        //   name: '医生A',  
-        //   title: '主任医师',  
-        //   avatar: 'img/lsy.jpg', // 头像URL  
-        //   research: '生物信息', // 主要研究方向  
-        //   schedule: [  
-        //     {time: '05-11(上午)',status:'empty', number: 10},
-        //     {time: '05-12(下午) ',status: 'full'},
-        //   ],  
-        //   cost:100,
-        // },
-        // {  
-        //   id:1,
-        //   name: '医生B',  
-        //   title: '副主任医师',  
-        //   avatar: 'img/touxiang.png', // 头像URL  
-        //   research: '生物信息', // 主要研究方向  
-        //   schedule: [  
-        //     {time: '05-13(上午)',status:'full'},
-        //     {time: '05-12(下午) ',status: 'empty',number:5},
-        //   ],  
-        //   cost:60,
-        // }, 
-        // {  
-        //   id:2,
-        //   name: '医生C',  
-        //   title: '副主任医师',  
-        //   avatar: 'img/touxiang (1).png', // 头像URL  
-        //   research: '生物信息', // 主要研究方向  
-        //   schedule: [  
-        //     {time: '05-11(上午)',status:'full'},
-        //     {time: '05-14(下午) ',status: 'full'},
-        //   ],  
-        //   cost:60,
-        // }, 
+        {  
+          id:0,
+          name: '医生A',  
+          title: '主任医师',  
+          avatar: 'img/lsy.jpg', // 头像URL  
+          research: '生物信息', // 主要研究方向  
+          schedule: [  
+            {time: '05-30(上午)',status:'empty', number: 10},
+            {time: '05-12(下午) ',status: 'full'},
+          ],  
+          cost:100,
+        },
+        {  
+          id:1,
+          name: '医生B',  
+          title: '副主任医师',  
+          avatar: 'img/touxiang.png', // 头像URL  
+          research: '生物信息', // 主要研究方向  
+          schedule: [  
+            {time: '05-13(上午)',status:'full'},
+            {time: '05-12(下午) ',status: 'empty',number:5},
+          ],  
+          cost:60,
+        }, 
+        {  
+          id:2,
+          name: '医生C',  
+          title: '副主任医师',  
+          avatar: 'img/touxiang (1).png', // 头像URL  
+          research: '生物信息', // 主要研究方向  
+          schedule: [  
+            {time: '05-11(上午)',status:'full'},
+            {time: '05-14(下午) ',status: 'full'},
+          ],  
+          cost:60,
+        }, 
         // ... 其他医生数据  
       ],  
       isHovered:[false,false,false,false,false,false,false,false,false,false],

@@ -23,7 +23,7 @@
           type="primary"
           plain
           style="height: 40px; margin-left: 10px"
-          @click="showPrescriptionDetails('')"
+          @click="showPrescriptionDetails('', 'add')"
           >+录入医生</el-button
         >
         <el-table :data="ftableData" style="width: 95%; max-height: 480px">
@@ -35,7 +35,9 @@
 
           <el-table-column label="操作">
             <template #default="scope">
-              <el-button size="small" @click="showPrescriptionDetails(scope.row)"> 修改 </el-button>
+              <el-button size="small" @click="showPrescriptionDetails(scope.row, 'alter')">
+                修改
+              </el-button>
               <el-button
                 size="small"
                 type="danger"
@@ -70,9 +72,9 @@ import DetailD from './DetailD.vue'
 import axios from 'axios'
 const detail = ref(null)
 const input4 = ref('')
-const showPrescriptionDetails = (row) => {
+const showPrescriptionDetails = (row, sign) => {
   // 假设DetailC组件有一个名为openModal的方法
-  detail.value.openModal(row)
+  detail.value.openModal(row, sign)
 }
 const handleEdit = (index, row) => {
   // 编辑操作的逻辑
@@ -91,10 +93,10 @@ const pagination = ref({
 const tableData = ref([
   {
     name: '王秋',
-    office: '心血管内科',
-    title: '副主任医师',
-    cost: '10.00',
-    research: '生物医学工程'
+    office: '心血管内科', //科室
+    title: '副主任医师', //职称
+    cost: '10.00', //出诊费
+    research: '生物医学工程' //主要研究方向
   }
 ])
 
@@ -114,23 +116,6 @@ watch(input4, () => {
   updateTotal()
 })
 
-const getMedicineData = () => {
-  return new Promise((resolve, reject) => {
-    axios
-      .get('/api/medicine/list/')
-      .then((response) => {
-        tableData.value = response.data['medicine']
-        pagination.value.total = tableData.value.length // 更新总条目数
-        console.log('Medicine data fetched:', tableData.value)
-        resolve() // 数据获取完成，resolve Promise
-      })
-      .catch((error) => {
-        console.error('Error fetching medicine data:', error)
-        reject(error) // 数据获取失败，reject Promise
-      })
-  })
-}
-
 const ftableData = computed(() => {
   const start = (pagination.value.currentPage - 1) * pagination.value.pageSize
   const end = start + pagination.value.pageSize
@@ -142,10 +127,10 @@ const handleCurrentChange = (e) => {
   pagination.value.currentPage = e
 }
 onMounted(() => {
-  getMedicineData().then(() => {
+  // getDoctorsData().then(() => {
     updateTotal()
     handleCurrentChange(1)
-  })
+  // })
 })
 </script>
 <style scoped>

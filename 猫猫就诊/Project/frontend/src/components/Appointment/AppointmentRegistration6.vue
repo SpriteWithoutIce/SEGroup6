@@ -21,7 +21,7 @@
             doctorRearch:doctors[0].research,
             cost:doctors[0].cost
           }
-        }" class="button2 button-next" v-if="checked" style="text-decoration: none;">
+        }" class="button2 button-next" style="text-decoration: none;">
         下一步</router-link>
       <!-- <button class="button2 button-prev">上一步</button>  
       <button class="button2 button-next" v-if="checked">下一步</button>   -->
@@ -141,36 +141,36 @@ export default {
       ],
       doctors: [  
         {  
-          // name: '医生A',  
-          // title: '主任医师',  
-          // avatar: 'img/lsy.jpg', // 头像URL  
-          // research: '生物信息', // 主要研究方向  
-          // schedule: [  
-          //   {time: '05-09(上午)',status:'empty', number: 10},
-          // ],  
-          // emptytime:[
-          //   {number: 1,status:'empty'},
-          //   {number: 2,status:'full'},
-          //   {number: 3,status:'empty'},
-          //   {number: 4,status:'empty'},
-          //   {number: 5,status:'full'},
-          //   {number: 6,status:'empty'},
-          //   {number: 7,status:'full'},
-          //   {number: 8,status:'full'},
-          //   {number: 9,status:'empty'},
-          //   {number: 10,status:'full'},
-          //   {number: 11,status:'full'},
-          //   {number: 12,status:'full'},
-          //   {number: 13,status:'empty'},
-          //   {number: 14,status:'empty'},
-          //   {number: 15,status:'full'},
-          //   {number: 16,status:'empty'},
-          //   {number: 17,status:'empty'},
-          //   {number: 18,status:'full'},
-          //   {number: 19,status:'empty'},
-          //   {number: 20,status:'full'},
-          // ],
-          // cost:100,
+          name: '医生A',  
+          title: '主任医师',  
+          avatar: 'img/lsy.jpg', // 头像URL  
+          research: '生物信息', // 主要研究方向  
+          schedule: [  
+            {time: '05-09(上午)',status:'empty', number: 10},
+          ],  
+          emptytime:[
+            {number: 1,status:'empty'},
+            {number: 2,status:'full'},
+            {number: 3,status:'empty'},
+            {number: 4,status:'empty'},
+            {number: 5,status:'full'},
+            {number: 6,status:'empty'},
+            {number: 7,status:'full'},
+            {number: 8,status:'full'},
+            {number: 9,status:'empty'},
+            {number: 10,status:'full'},
+            {number: 11,status:'full'},
+            {number: 12,status:'full'},
+            {number: 13,status:'empty'},
+            {number: 14,status:'empty'},
+            {number: 15,status:'full'},
+            {number: 16,status:'empty'},
+            {number: 17,status:'empty'},
+            {number: 18,status:'full'},
+            {number: 19,status:'empty'},
+            {number: 20,status:'full'},
+          ],
+          cost:100,
         },
       ],
       info:{

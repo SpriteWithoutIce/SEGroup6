@@ -21,7 +21,14 @@
             {{ selectedDepartmentName }}  
           </div>  
           <div class="container2">  
-            <router-link to="/AppointmentRegistration3" class="button2 button-prev">上一步</router-link>
+            <router-link 
+              :to="{
+                path:'/AppointmentRegistration3',
+                query:{
+                  select:this.selected
+                }
+              }"
+              class="button2 button-prev">上一步</router-link>
             <router-link 
               :to="{
                 path:'/AppointmentRegistration5',
@@ -30,7 +37,7 @@
                   paymentType:info.paymentType,
                   department:selectedDepartmentName
                 }
-              }" class="button2 button-next"  >
+              }" class="button2 button-next"  v-if="checked">
               下一步
             </router-link>
           </div> 
@@ -104,7 +111,8 @@ export default {
       info:{
         name:'',
         paymentType:''
-      }
+      },
+      selected:0,
     };  
   }  ,
   methods: {  
@@ -199,6 +207,7 @@ export default {
   created(){
     this.info.name=this.$route.query.name;
     this.info.paymentType=this.$route.query.paymentType;
+    this.selected=this.$route.query.selected;
   }
 };  
 </script>  
@@ -333,6 +342,7 @@ export default {
   color: #000000;  
   cursor: pointer;  
   transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  text-decoration: none;
 }  
 .button-next {  
   background-color: #003366; /* 浅蓝色 */  

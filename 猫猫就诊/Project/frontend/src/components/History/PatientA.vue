@@ -1,9 +1,15 @@
 <!--患者的挂号查询页面-->
 <template>
-  <div class="container">
+  <el-container style="height: 100vh">
     <scroll>
       <div class="all-container" width="100%">
-        <SearchA></SearchA>
+        <div class="search-container">
+          <div class="wenzi">
+            <p class="guahao">挂号查询</p>
+            <p class="back">首页 > 挂号查询</p>
+          </div>
+          <el-divider class="divider" />
+        </div>
         <SignA></SignA>
         <div class="input-container">
           <div class="chaxun">
@@ -32,100 +38,121 @@
         <HistoryA :filterInfo="filterInfo"></HistoryA>
       </div>
     </scroll>
-  </div>
+  </el-container>
 </template>
 <script setup>
 import SearchA from './SearchA.vue'
 import SignA from './SignA.vue'
 import HistoryA from './HistoryA.vue'
-import { ref, onMounted, computed } from 'vue'
+import axios from 'axios'
+import { ref, onMounted, computed, inject } from 'vue'
 const input4 = ref('')
 const info = ref([
-  {
-    office: '神经外科',
-    orderNum: 'w0023',
-    price: '0.00元',
-    name: 'buaa',
-    cardNum: '001741',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-14 下午 14:10-14:20',
-    line: '37',
-    state: '已预约',
-    doctor: '王玉'
-  },
-  {
-    office: '消化内科',
-    orderNum: 'w0024',
-    price: '0.00元',
-    name: 'buaa',
-    cardNum: '001741',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-15 下午 14:10-14:20',
-    line: '38',
-    state: '已就诊',
-    doctor: '王玉'
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0025',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-16 下午 14:10-14:20',
-    line: '39',
-    state: '已预约',
-    doctor: '王玉'
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    doctor: '王玉'
-  },
-  {
-    office: '精神科',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    doctor: '王玉'
-  },
-  {
-    office: '普通外科',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    doctor: '王玉'
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    doctor: '王玉'
-  }
+  // {
+  //   office: '神经外科',
+  //   orderNum: 'w0023',
+  //   price: '0.00元',
+  //   name: 'buaa',
+  //   cardNum: '001741',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-14 下午 14:10-14:20',
+  //   line: '37',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '消化内科',
+  //   orderNum: 'w0024',
+  //   price: '0.00元',
+  //   name: 'buaa',
+  //   cardNum: '001741',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-15 下午 14:10-14:20',
+  //   line: '38',
+  //   state: '已就诊',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0025',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-16 下午 14:10-14:20',
+  //   line: '39',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0026',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '精神科',
+  //   orderNum: 'w0026',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '普通外科',
+  //   orderNum: 'w0026',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0026',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   doctor: '王玉'
+  // }
 ])
+
+const identityNum = inject('$identity_num')
+
+const getRegistersData = () => {
+  return new Promise((resolve, reject) => {
+    let requestData = {
+      action: 'getRegistersData',
+      identity_num: identityNum,
+    };
+    axios.post('/api/registers/list/', requestData).then((response) => {
+      info.value = response.data['registers']
+      console.log('Registers data fetched:', info.value)
+      resolve() // 数据获取完成，resolve Promise
+    }).catch((error) => {
+      console.error('Error fetching registers data:', error)
+      reject(error) // 数据获取失败，reject Promise
+    })
+  })
+}
+
 const commitSearch = () => {
   console.log(`查询内容是：${input4.value}`)
 }
@@ -142,9 +169,61 @@ const filterInfo = computed(() => {
     }
   })
 })
+onMounted(() => {
+  if (identityNum == '0') {
+    console.log("未登录")
+    return
+  }
+  getRegistersData().then(() => {
+  })
+})
 </script>
 
 <style scoped>
+.wenzi {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  /* 将组件横向排列 */
+  align-items: center;
+}
+p {
+  color: #e9c874;
+}
+
+.back {
+  font-size: 15px;
+  position: absolute;
+  left: 80%;
+}
+
+p {
+  font-weight: bold;
+}
+.divider {
+  position: absolute;
+  width: 50%;
+  left: 25%;
+  top: 55%;
+}
+.guahao {
+  position: absolute;
+  font-size: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.search-container {
+  position: absolute;
+  top: 400px;
+  height: 90px;
+  width: 800px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgb(212, 206, 206);
+  border-radius: 35px;
+  transform: translateX(-50%);
+  left: 50%;
+}
 .container {
   position: absolute;
   top: 0;

@@ -130,8 +130,10 @@
 </template>
 
 <script>
+import { inject } from 'vue'
 export default {
-  data() {
+  setup() {
+    const identityNum = inject('$identity_num')
     return {
       activeNames: ['1', '2'],
       table: false,
@@ -185,19 +187,28 @@ export default {
     }
   },
   methods: {
+    countUnread() {
+      // 计算resMes中read为false的数量
+      const unreadResMesCount = this.resMes.filter((item) => item.read === false).length
+      // 计算billMes中read为false的数量
+      const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
+      // 返回两个数量的总和
+      // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
+      this.$emit('update:result', unreadResMesCount + unreadBillMesCount)
+    },
     // post请求，请求数据体中包含用户证件号identity_num
     // url为api/notice/list/
     // 返回数据为resMes和billMes两个字典数组
     getMesData(){
       return new Promise((resolve, reject) => {
         let ts = this;
-        //注意：需要前端传入当前登录用户的证件号
-        this.$axios.post('api/notice/list/', {identity_num: "123"})
+        this.$axios.post('api/notice/list/', {identity_num: identityNum})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.billMes = response.data['billMes'];
             console.log(ts.resMes);
             console.log(ts.billMes);
+            ts.countUnread();
             resolve(); // 数据获取完成，resolve Promise
           })
           .catch(function (error) {
@@ -225,18 +236,29 @@ export default {
       }
       return ''
     },
-    countUnread() {
-      // 计算resMes中read为false的数量
-      const unreadResMesCount = this.resMes.filter((item) => item.read === false).length
-      // 计算billMes中read为false的数量
-      const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
-      // 返回两个数量的总和
-      // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
-      this.$emit('update:result', unreadResMesCount + unreadBillMesCount)
-    },
+    /* TODO
+      1.根据当前用户id和row对应的消息id更改对应消息的阅读状态（未读->已读） 【link-backend！】
+      2.重新获取消息，刷新界面
+    */
     readMes(row) {
       row.read = true;
-      this.countUnread();
+      this.getMesData();
+    },
+    payOverTimeQuery(){
+      
+    },
+    mounted() {
+      if (identityNum == '0') {
+        console.log("未登录");
+        return;
+      }
+      this.getMesData().then(() => {
+        this.intervalId = setInterval(this.payOverTimeQuery, 30000);
+      })
+    },
+    beforeDestroy() {
+      // 组件销毁时清除定时器
+      clearInterval(this.intervalId);
     }
   }
 }

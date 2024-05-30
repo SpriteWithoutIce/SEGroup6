@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-9d(@z+^#ndq-#(x$(88=mahim#gsmbl=qgihen!06s$i3=n$5s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['101.42.36.160']
+ALLOWED_HOSTS = ['101.42.36.160', '127.0.0.1']
 
 
 # Application definition
@@ -126,11 +126,13 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/dist/static"),
+    os.path.join(BASE_DIR, 'static/images/medicine'),
+    os.path.join(BASE_DIR, 'static/images/doctors')
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'app01/static/media')
+MEDICINE_PHOTO_ROOT = os.path.join(BASE_DIR, 'static/images/medicine')
+DOCTOR_AVATAR_ROOT = os.path.join(BASE_DIR, 'static/images/doctors')

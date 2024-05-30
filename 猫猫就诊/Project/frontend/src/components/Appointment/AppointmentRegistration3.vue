@@ -9,9 +9,10 @@
           path:'/AppointmentRegistration4',
           query:{
             name:formData.name,
-            paymentType:formData.paymentType
+            paymentType:formData.paymentType,
+            selected:select
           }
-        }" class="button2 button-next"  >
+        }" class="button2 button-next"  v-if="isformed()">
         下一步
       </router-link>
     </div> 
@@ -86,7 +87,6 @@
       </div>  
     </div>
   </div>  
-  <div>{{ formData.name }}</div>
 </template>  
   
 <script>  
@@ -123,6 +123,7 @@ export default {
       ],
       first: 0,
       second: 0,
+      select:0,
       formData:{
         queryFirst:0,
         name:'',
@@ -153,8 +154,28 @@ export default {
       // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
       console.log(this.form2); // 在控制台打印表单数据  
     }, 
+    isformed(){
+      if(this.first==1){
+        if(!this.checked)
+          return false;
+        return Object.keys(this.formData)  
+        .filter(key => key !== 'queryFirst') // 排除 queryFirst 字段  
+        .every(key => this.formData[key] !== '');
+      }
+      else{
+        if(!this.checked)
+          return false;
+        if(this.formData.name=='') return false;
+        if(this.formData.gender=='') return false;
+        if(this.formData.idType=='') return false;
+        if(this.formData.number=='') return false;
+        if(this.formData.phone=='') return false;
+        return true;
+      }
+    }
   },
   created(){
+    this.select=this.$route.query.select
     if(this.$route.query.select==0){
       this.first=1;
       this.formData.queryFirst=1;
@@ -241,6 +262,7 @@ button {
   color: #000000;  
   cursor: pointer;  
   transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  text-decoration: none;
 }  
 .button-next {  
   background-color: #003366; /* 浅蓝色 */  

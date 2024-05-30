@@ -1,9 +1,11 @@
 <template>
+  <HeaderNavigation ref="HeaderNavigation" />
   <div class="navbar" :class="{ sticky: isSticky }">
-    <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount"/>
+    <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
     <RouterLink to="/Main" @click="returnTop" class="white-bold">首页</RouterLink>
-    <a href="#" class="white-bold">登录</a>
-    <a class="white-bold" @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item" v-if="unreadCount!==0"></el-badge>
+    <a @click="NavbarLogin" class="white-bold">登录</a>
+    <a class="white-bold" @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
+      v-if="unreadCount !== 0"></el-badge>
     <a @click="returnTop" class="white-bold">回到顶部</a>
   </div>
 </template>
@@ -11,7 +13,8 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
 import messagedrawer from '../Message/MessageDrawer.vue'
-
+import HeaderNavigation from './HeaderNavigation.vue'
+import { Navbar } from '..'
 export default {
   name: 'NavBar',
   setup () {
@@ -31,31 +34,39 @@ export default {
 
     return { isSticky }
   },
-  data(){
-    return{
+  data () {
+    return {
       unreadCount: 0
     }
   },
   components: {
-    messagedrawer
+    messagedrawer,
+    HeaderNavigation
   },
   methods: {
-    openMessageBox() {
+    NavbarLogin () {
+      if (this.$refs.HeaderNavigation && this.$refs.HeaderNavigation.showLogin) {
+        this.$refs.HeaderNavigation.showLogin()
+      } else {
+        console.error("HeaderNavigation component is not properly initialized.");
+      }
+    },
+    openMessageBox () {
       this.$refs.messageBox.openDrawer()
     },
-    getUnreadCount(cnt) {
+    getUnreadCount (cnt) {
       this.unreadCount = cnt
     },
-    returnTop(){
+    returnTop () {
       window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
     }
   },
-  mounted() {
-    this.$refs.messageBox.countUnread()
+  mounted () {
+    this.$refs.messageBox.countUnread();
   },
 }
 </script>
@@ -103,8 +114,8 @@ export default {
 
 .item {
   margin-top: 10px;
-  margin-left:-25px;
-  margin-right:25px;
+  margin-left: -25px;
+  margin-right: 25px;
 }
 
 .white-bold {

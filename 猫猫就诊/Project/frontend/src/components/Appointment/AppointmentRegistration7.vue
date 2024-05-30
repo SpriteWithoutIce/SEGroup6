@@ -9,7 +9,7 @@
           query:{
             order:JSON.stringify(info)
           }}" class="button2 button-next" @click="submit">确认</router-link>
-      <!-- <button class="button2 button-next" @click="submit">确认</button>   -->
+      
     </div> 
     <div class="doctor-item">
       <div class="doctor-header"> 
@@ -174,6 +174,7 @@ button {
   color: #000000;  
   cursor: pointer;  
   transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  text-decoration: none;
 }  
 .button-next {  
   background-color: #003366; /* 浅蓝色 */  

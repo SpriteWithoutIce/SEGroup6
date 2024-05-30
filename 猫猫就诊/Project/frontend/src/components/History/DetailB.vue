@@ -19,10 +19,6 @@
             <p style="margin-left: 15px">使用方法：</p>
             <p>{{ item.use }}</p>
           </div>
-          <div class="line">
-            <p style="margin-left: 15px">频次：</p>
-            <p>{{ item.fre }}</p>
-          </div>
           <div class="m"></div>
         </div>
       </div>
@@ -41,7 +37,9 @@ export default {
       form: {
         office: '',
         time: '',
-        medicine: [{ name: '金莲花软件囊', time: 3, cnt: 1, use: '口服', fre: 'Tid', price: '' }]
+        patient: '',
+        doctor: '',
+        medicine: [{ name: '金莲花软件囊', time: 3, cnt: 1, use: '口服', price: '' }]
       }
     }
   },
@@ -51,6 +49,8 @@ export default {
       document.body.style.overflow = 'hidden' // 禁止滚动
       this.form.office = item.office
       this.form.time = item.time
+      this.form.doctor = item.doctor
+      this.form.patient = item.patient
       this.form.medicine = item.medicine
     },
     closeModal() {
