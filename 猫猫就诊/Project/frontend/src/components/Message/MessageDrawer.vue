@@ -246,8 +246,24 @@ export default {
       2.重新获取消息，刷新界面
     */
     readMes(row) {
-      row.read = true;
-      this.getMesData();
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        //TODO:需要后端在Notice的api里添加action"readMes"，根据传入的item_id找到对应数据将其item['isRead']改为true，然后重新返回"resMes"和"billMes"
+        this.$axios.post('api/notice/list/', {identity_num: this.$identityNum, action: "readMes", item_id: row.id})
+          .then(function (response) {
+            ts.resMes = response.data['resMes'];
+            ts.oriBillMes = response.data['billMes'];
+            ts.payOverTimeQuery();
+            console.log(ts.resMes);
+            console.log(ts.billMes);
+            ts.countUnread();
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
     },
     payOverTimeQuery(){
       // 获取当前时间的时间戳（毫秒）
