@@ -4,13 +4,13 @@
     <el-drawer v-model="table" title="消息列表" direction="rtl" size="40%" >
       <!-- 折叠面板实现消息种类分类 -->
       <div class="demo-collapse">
-        <el-collapse v-model="activeNames" @change="handleChange">
+        <el-collapse v-model="activeNames">
           <el-collapse-item title="&nbsp;&nbsp;&nbsp;预约通知" name="1" class="collapseItem1">
             <div class="messageList">
               <el-table :data="resMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
                   <template #default="props">
-                    <div v-if="props.row.type == '预约成功'" m="4">
+                    <div v-if="props.row.type == '预约成功'" m="4" class="mesBody">
                       <p>尊敬的患者:</p>
                       <p>您好！您已<b>成功预约</b>了我院的挂号服务。以下是您的预约详情：</p>
                       <strong>
@@ -28,7 +28,7 @@
                         {{ props.row.timetamp }}
                       </p>
                     </div>
-                    <div v-if="props.row.type == '取消预约'" m="4">
+                    <div v-if="props.row.type == '取消预约'" m="4" class="mesBody">
                       <p>尊敬的患者:</p>
                       <p>您好！我们收到了您的<b>预约挂号取消</b>请求。以下是已取消的预约信息：</p>
                       <strong>
@@ -70,7 +70,7 @@
               <el-table :data="billMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
                   <template #default="props">
-                    <div m="4" v-if="props.row.type == '处方缴费提醒'">
+                    <div m="4" v-if="props.row.type == '处方缴费提醒'" class="mesBody">
                       <p>尊敬的患者:</p>
                       <p>您好！您在我院的就诊处方<b>即将到达缴费截止时间</b>。处方详情如下：</p>
                       <strong>
@@ -89,7 +89,7 @@
                         {{ props.row.timetamp }}
                       </p>
                     </div>
-                    <div m="4" v-if="props.row.type == '处方缴费成功'">
+                    <div m="4" v-if="props.row.type == '处方缴费成功'" class="mesBody">
                       <p>尊敬的患者:</p>
                       <p>您好！您在我院的就诊处方<b>缴费成功</b>。处方详情如下：</p>
                       <strong>
@@ -133,9 +133,13 @@
 import { inject } from 'vue'
 export default {
   inject: ['$identity_num'],
+  created() {
+    this.identityNum = this.$identity_num;
+    // console.log("获取的identityNum为：",this.identityNum); 
+  },
   data() {
-    // const identityNum = inject('$identity_num')
     return {
+      identityNum: 0,
       activeNames: ['1', '2'],
       table: false,
       timer: null,
@@ -147,7 +151,7 @@ export default {
         //   doctor: '李医生',
         //   time: '2024-5-12',
         //   id: '03230802',
-        //   timetamp: '2024-5-11',
+        //   timetamp: '2024-5-11 23:59:59', //用MySQL中的DATETIME类型就可以
         //   read: true
         // },
         // {
@@ -157,7 +161,7 @@ export default {
         //   doctor: '李医生',
         //   time: '2024-5-12',
         //   id: '03230802',
-        //   timetamp: '2024-5-11',
+        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
         //   read: false
         // }
       ],
@@ -169,7 +173,7 @@ export default {
         //   doctor: '李医生',
         //   time: '2024-5-12',
         //   id: '03230802',
-        //   timetamp: '2024-5-11',
+        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
         //   price: 200,
         //   read: false
         // },
@@ -180,7 +184,7 @@ export default {
         //   doctor: '李医生',
         //   time: '2024-5-12',
         //   id: '03230802',
-        //   timetamp: '2024-5-11',
+        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
         //   price: 200,
         //   read: false
         // }
@@ -198,13 +202,13 @@ export default {
       // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
       this.$emit('update:result', unreadResMesCount + unreadBillMesCount)
     },
-    // post请求，请求数据体中包含用户证件号identity_num
+    // post请求，请求数据体中包含用户证件号identityNum
     // url为api/notice/list/
     // 返回数据为resMes和billMes两个字典数组
     getMesData(){
       return new Promise((resolve, reject) => {
         let ts = this;
-        this.$axios.post('api/notice/list/', {identity_num: this.$identityNum})
+        this.$axios.post('api/notice/list/', {identity_num: this.identityNum})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.oriBillMes = response.data['billMes'];
@@ -218,10 +222,12 @@ export default {
             console.log(error);
             reject(error); // 数据获取失败，reject Promise
           });
+          console.log('发送的请求参数:', {identity_num: this.identityNum});
       });
     },
     openDrawer() {
-      this.table = true
+      this.getMesData();
+      this.table = true;
     },
     turnToBill() {
       this.table = false
@@ -244,8 +250,19 @@ export default {
       2.重新获取消息，刷新界面
     */
     readMes(row) {
-      row.read = true;
-      this.getMesData();
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        //TODO:需要后端在Notice的api里添加action"readMes"，根据传入的item_id找到对应数据将其item['isRead']改为true，不用后端返回更新后的数据，前端直接再调用一次getMesData()就可以
+        this.$axios.post('api/notice/list/', {identity_num: this.$identityNum, action: "readMes", item_id: row.id})
+          .then(function (response) {
+            ts.getMesData();
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
     },
     payOverTimeQuery(){
       // 获取当前时间的时间戳（毫秒）
@@ -253,9 +270,10 @@ export default {
       // 遍历 oriBillMes 数组
       this.oriBillMes.forEach(item => {
         // 将字符串形式的时间戳转换为数字类型的时间戳（毫秒）
-        const timetamp = parseInt(item.timetamp);
+        const timetamp = new Date(item.timetamp + " GMT+0800").getTime();
         // 检查 type 是否为 '处方缴费提醒' 并且 timetamp 时间距离当前时间是否大于30分钟
-        if (item.type === '处方缴费提醒' && (now - timetamp) > 30 * 60 * 1000) {
+        // bug 时间戳格式待定
+        if ((item.type === '处方缴费提醒' && (now - timetamp) > 30 * 60 * 1000)||item.type === '处方缴费成功') {
           // 如果条件满足，将 item 添加到 billMes 数组
           this.billMes.push(item);
         }
@@ -289,6 +307,9 @@ export default {
   text-shadow: 2px 2px 3px rgba(13, 65, 153, 0.941);
   text-align: left;
   color:rgb(255, 254, 254)
+}
+.mesBody{
+  margin: 20px;
 }
 .collapseItem1,.collapseItem2{
   padding: 3px;

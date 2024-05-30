@@ -48,7 +48,7 @@
       </div>
       <div class="button">
         <el-button @click="closeModal" plain>取消</el-button>
-        <el-button @click="closeModal" type="primary">确定</el-button>
+        <el-button @click="setDataAndCloseModal" type="primary">确定</el-button>
       </div>
     </div>
   </div>
@@ -60,17 +60,13 @@ export default {
   name: 'DetailC',
   data() {
     return {
-      fileList: ref([
-        {
-          name: 'food.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }
-      ]),
+      fileList: [],
       isVisible: false,
       sign: '',
       inputName: '',
       radio: '',
       info: [
+        //医生的信息
         {
           name: '',
           office: '',
@@ -82,27 +78,28 @@ export default {
     }
   },
   methods: {
-    handleSuccess(response, file, fileList) {
-      // 假设后端API返回了文件上传成功的响应
-      if (response.success) {
-        // 更新fileList，添加新上传的文件信息
-        this.fileList.push({
-          name: file.name,
-          url: response.data.url // 假设后端返回文件的URL
-          // 其他需要的属性...
-        })
-      } else {
-        // 处理错误情况
-        console.error('文件上传失败:', response.message)
-      }
-    },
-    // 合并之前的handleRemove函数
-    handleRemove(uploadFile, uploadFiles) {
-      console.log(uploadFile, uploadFiles)
-    },
-    // 合并之前的handlePreview函数
-    handlePreview(file) {
-      console.log(file)
+    setDoctorData() {
+      return new Promise((resolve, reject) => {
+        let ts = this
+        let requestData = {
+          name: this.info.name,
+          department: this.info.office,
+          title: this.info.title,
+          cost: this.info.cost,
+          research: this.info.research,
+          action: this.sign == 'add' ? 'addDoctor' : 'alterDoctor'
+        }
+        this.$axios
+          .post('/api/doctor/setData/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg'])
+            resolve() // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error)
+            reject(error) // 数据获取失败，reject Promise
+          })
+      })
     },
     openModal(row, sign) {
       this.isVisible = true
@@ -113,10 +110,20 @@ export default {
       this.info.cost = row.cost
       this.info.research = row.research
       this.sign = sign
+      this.fileList = []
+      console.log(`传入的sign是：${this.sign}`)
     },
     closeModal() {
       this.isVisible = false
       document.body.style.overflow = '' // 恢复滚动
+      this.$emit('updateData') // 触发自定义事件
+    },
+    setDataAndCloseModal() {
+      this.setDoctorData().then(() => {
+        this.isVisible = false
+        document.body.style.overflow = '' // 恢复滚动
+        this.$emit('updateData') // 触发自定义事件
+      })
     }
   }
 }
