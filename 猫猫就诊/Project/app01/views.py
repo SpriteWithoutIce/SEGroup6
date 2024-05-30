@@ -299,7 +299,7 @@ class DoctorView(APIView):
     
     def deleteDoctor(self, request):
         id = json.loads(request.body)['id']
-        Doctors.objects.get(id=id).delete()
+        Doctors.objects.get(identity_num=id).delete()
         return self.get(request)
     
     def removeAvatar(self, request):
@@ -319,7 +319,6 @@ class DoctorView(APIView):
             doctor.cost = data['cost']
             doctor.identity_num = data['id']
             doctor.research = data['research']
-            doctor.avatar = '/api/doctor/avatar/' + data['avatar_name']
             doctor.avatar_name = data['avatar_name']
             doctor.save()
             return JsonResponse({'msg': "Successfully add doctor data"})
@@ -336,7 +335,6 @@ class DoctorView(APIView):
             doctor.cost = data['cost']
             doctor.identity_num = data['id']
             doctor.research = data['research']
-            doctor.avatar = '/api/doctor/avatar/' + data['avatar_name']
             doctor.avatar_name = data['avatar_name']
             doctor.save()
             return JsonResponse({'msg': "Successfully altered doctor data"})
