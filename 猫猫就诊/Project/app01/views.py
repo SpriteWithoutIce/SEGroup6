@@ -1,11 +1,15 @@
+import asyncio
 from datetime import timedelta
+import os
+from urllib.parse import quote, unquote
 from django.utils import timezone
 import re
 from django.forms import model_to_dict
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import render, HttpResponse
 from rest_framework.views import APIView
 from django.db.models import F
+from django.contrib.auth.hashers import check_password
 
 import json
 
@@ -25,32 +29,104 @@ class MyCore(MiddlewareMixin):
 
 class PatientView(APIView):
     def post(self, request):
-        action = request.POST.get('action')
-        if action == 'login':
-            return self.login(request)
-        elif action == 'register':
-            return self.register(request)
+        data = json.loads(request.body)
+        identity_num = data["idCard"]
+        pwd = data["password"]
+        type = data['userType']
+        if type == "医生":
+            type = 1
+        elif type == "普通用户":
+            type = 2
+        else:
+            type = 3
+        try:
+            user = User.objects.get(identity_num=identity_num)
+            if pwd == user.password and type == user.type:
+                return JsonResponse({'msg': 'Successfully Login'})
+            else:
+                return JsonResponse({'msg': 'Wrong Password'})
+        except User.DoesNotExist:
+            user = User(
+                identity_num = identity_num,
+                password = pwd,
+                type = type,
+            )
+            user.save()
+            return JsonResponse({'msg': 'Successfully Register'})
+
+class RegisterView(APIView):
+    def post(self, request):
+        action = json.loads(request.body)['action']
+        if action == 'getRegistersData':
+            return self.getRegistersData(request)
+        elif action == 'cancelRegister':
+            return self.cancelRegister(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
-    
-    def login(self, request):
-        identity_num = request.POST.get("idCard")
-        pwd = request.Post.get("password")
-        patient = Patients.objects.get(identity_num=identity_num)
-        if patient.password == pwd:
-            return JsonResponse({'msg': 'Successfully Login'})
-        else:
-            return JsonResponse({'msg': 'Wrong Password'})
-    
-    def register(self, request):
-        identity_num = request.POST.get("idCard")
-        pwd = request.Post.get("password")
-        patient = Patients(
-            identity_num = identity_num,
-            password = pwd
-        )
-        patient.save()
-        return JsonResponse({'msg': 'Successfully Register'})
+        
+    def getRegistersData(self, request):
+        identity_num = json.loads(request.body)['identity_num']
+        registers = []
+        user = User.objects.get(identity_num=identity_num)
+        if user.type == 1:
+            filter = {'doctor__identity_num': identity_num}
+        elif user.type == 2:
+            filter = {'patient': identity_num}
+        for item in Register.objects.filter(**filter).annotate(
+            patient_name=F('patient__name'),
+            doctor_department=F('doctor__department'),
+            doctor_name=F('doctor__name')
+        ).values('id', 'queue_id', 'patient', 'patient_name', 'doctor_department',
+                'doctor_name', 'time', 'position'):
+            CHINESE_AM = '上午'
+            CHINESE_PM = '下午'
+            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M')
+            end_time = start_time + timedelta(minutes=10)
+            end_time = end_time.strftime('%H:%M')
+            formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
+            if start_time.hour < 12:
+                middle_index = len(formatted_datetime) // 2
+                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_AM + formatted_datetime[middle_index:]
+            else:
+                middle_index = len(formatted_datetime) // 2
+                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_PM + formatted_datetime[middle_index:]
+            
+            state = ""
+            current_time = timezone.now()
+            if start_time > current_time:
+                state = "已就诊"
+            else:
+                state = "已预约"
+            
+            bill = Bill.objects.get(register=item['id']).values('price')
+            registers.append({'id': item['id'],
+                            'office': item['doctor_department'],
+                            'orderNum': item['id'],
+                            'price': bill['price'],
+                            'name': item['patient_name'],
+                            'cardNum': item['patient'],
+                            'position': item['position'],
+                            'time': formatted_datetime + '-' + end_time,
+                            'line': item['queue_id'],
+                            'state': state,
+                            'doctor': item['doctor_name']})
+        return JsonResponse({'registers': registers})
+
+    def cancelRegister(self, request):
+        id = json.loads(request.body)['id']
+        item = Register.objects.get(id=id)
+        Bill.objects.get(register=id).delete()
+        notice = Notice()
+        notice.patient = item.patient
+        notice.register = item.register
+        notice.doctor = item.doctor
+        notice.msg_type = 2
+        notice.date = datetime.date.today()
+        notice.register = id
+        notice.save()
+        item.delete()
+        return JsonResponse({'msg': "Successfully cancel register"})
+
 
 class TreatmentView(APIView):
     # 返回所有就诊记录
@@ -61,20 +137,55 @@ class TreatmentView(APIView):
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
             patient_gender=F('patient__gender')
-        ).values('queue_id', 'patient_name', 'patient_birthday', 'patient_gender', 'date'):
+        ).values('queue_id', 'patient_name', 'patient_birthday', 'patient_gender', 'time'):
             age = current_date.year - item['patient_birthday'].year - ((current_date.month, current_date.day) < (item['patient_birthday'].month, item['patient_birthday'].day))
             treatments.append({
                 "Id": item['queue_id'],
                 "name": item['patient_name'],
                 "age": age,
                 "sex": "男" if item['patient_gender'] == 1 else "女",
-                "date": item['date'].strftime('%Y年%m月%d日')
+                "date": datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').date().strftime('%Y年%m月%d日')
+            })
+        return JsonResponse({'treatments': treatments})
+    
+    def post(self, request):
+        treatments = []
+        identity_num = json.loads(request.body)['identity_num']
+        user = User.objects.get(identity_num=identity_num)
+        if user.type == 1:
+            filter = {'doctor__identity_num': identity_num}
+        elif user.type == 2:
+            filter = {'patient': identity_num}
+        for item in Register.objects.filter(**filter).annotate(
+            patient_name=F('patient__name'),
+            doctor_department=F('doctor__department'),
+            doctor_name=F('doctor__name')
+        ).values('patient_name', 'doctor_department',
+                'doctor_name', 'time', 'advice', 'medicine'):
+            CHINESE_AM = '上午'
+            CHINESE_PM = '下午'
+            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M')
+            end_time = start_time + timedelta(minutes=10)
+            end_time = end_time.strftime('%H:%M')
+            formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
+            if start_time.hour < 12:
+                middle_index = len(formatted_datetime) // 2
+                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_AM + formatted_datetime[middle_index:]
+            else:
+                middle_index = len(formatted_datetime) // 2
+                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_PM + formatted_datetime[middle_index:]
+            treatments.append({'office': item['doctor_department'],
+                            'time': formatted_datetime,
+                            'patient': item['patient_name'],
+                            'doctor': item['doctor_name'],
+                            'advice': item['advice'],
+                            'medicine': json.loads(item['medicine']),
             })
         return JsonResponse({'treatments': treatments})
 
 class DoctorView(APIView):
     def post(self, request):
-        action = request.POST.get('action')
+        action = json.loads(request.body)['action']
         if action == 'upload_avatar':
             return self.upload_avatar(request)
         else:
@@ -169,7 +280,7 @@ class BillView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         for item in Bill.objects.filter(patient=identity_num):
             department = item.register.doctor.department if item.type == 1 else item.treatment.doctor.department
-            date = item.register.time.date() if item.type == 1 else item.treatment.date
+            date = item.register.time.date() if item.type == 1 else item.treatment.time.date()
             bill.append({
                 "id": item.id,
                 "type": '挂号' if item.type == 1 else '处方',
@@ -226,17 +337,18 @@ class NoticeView(APIView):
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": treatment.date.strftime('%Y-%m-%d'),
+                    "time": treatment.time.date().strftime('%Y-%m-%d'),
                     "id": item['patient'],
                     "timetamp": item['date'],
                     "price": treatment.price,
                     "read": item['isRead']
                 })
         return JsonResponse({"resMes": resMes, "billMes": billMes})
+
 class MedicineView(APIView):
     def get(self, request):
         medicine = []
-        for item in Medicine.objects.values('name', 'medicine_type', 'symptom', 'price', 'quantity'):
+        for item in Medicine.objects.values('id', 'name', 'medicine_type', 'symptom', 'price', 'quantity', 'photo_name'):
             type = ""
             if item['medicine_type'] == 1:
                 type = "中药"
@@ -244,25 +356,96 @@ class MedicineView(APIView):
                 type = "中成药"
             else:
                 type = "西药"
-            medicine.append({
+            medicine.append({ 
+                'id': item['id'],
                 "name": item['name'],
                 "type": type,
                 "use": item['symptom'],
                 "price": item['price'],
-                "num": item['quantity']
+                "num": item['quantity'],
+                "photo_name": item['photo_name'],
             })
         return JsonResponse({'medicine': medicine})
     
     def post(self, request):
-        action = request.POST.get('action')
-        if action == 'upload_photo':
-            return self.upload_photo(request)
+        action = json.loads(request.body)['action']
+        if action == 'deleteMedicine':
+            return self.deleteMedicine(request)
+        elif action == 'removePhoto':
+            return self.removePhoto(request)
+        elif action == 'addMedicine':
+            return self.addMedicine(request)
+        elif action == 'alterMedicine':
+            return self.alterMedicine(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
-        
-    # 上传药物图片
-    def upload_photo(self, request):
-        medicine = Medicine.objects.get(id=request.POST.get("id"))
-        medicine.photo = request.FILES.get('photo')
-        medicine.save()
-        return JsonResponse({"medicine": medicine})
+    
+    def deleteMedicine(self, request):
+        id = json.loads(request.body)['id']
+        Medicine.objects.get(id=id).delete()
+        return self.get(request)
+    
+    def removePhoto(self, request):
+        photo_name = json.loads(request.body)['photo_name']
+        file_path = os.path.join(settings.MEDICINE_PHOTO_ROOT, photo_name)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        return JsonResponse({'msg': "Successfully removed photo"})
+    
+    def addMedicine(self, request):
+        data = json.loads(request.body)
+        try:
+            medicine = Medicine()
+            medicine.name = data['name']
+            if data['type'] == '3':
+                medicine.medicine_type = 1
+            elif data['type'] == '6':
+                medicine.medicine_type = 2
+            else:
+                medicine.medicine_type = 3
+            medicine.symptom = data['symptom']
+            medicine.price = data['price']
+            medicine.quantity = data['quantity']
+            medicine.photo_name = data['photo_name']
+            medicine.save()
+            return JsonResponse({'msg': "Successfully add medicine data"})
+        except Medicine.DoesNotExist:
+            return JsonResponse({'msg': "Medicine with id {} not found".format(id)}, status=404)
+    
+    def alterMedicine(self, request):
+        data = json.loads(request.body)
+        try:
+            medicine = Medicine.objects.get(id=data['id'])
+            medicine.name = data['name']
+            if data['type'] == '3':
+                medicine.medicine_type = 1
+            elif data['type'] == '6':
+                medicine.medicine_type = 2
+            else:
+                medicine.medicine_type = 3
+            medicine.symptom = data['symptom']
+            medicine.price = data['price']
+            medicine.quantity = data['quantity']
+            medicine.photo_name = data['photo_name']
+            medicine.save()
+            return JsonResponse({'msg': "Successfully altered medicine data"})
+        except Medicine.DoesNotExist:
+            return JsonResponse({'msg': "Medicine with id {} not found".format(id)}, status=404)
+
+class UploadPhotoView(APIView):
+    def get(self, request, filename, *args, **kwargs):
+        photo_path = os.path.join(settings.MEDICINE_PHOTO_ROOT, filename)
+        if os.path.exists(photo_path):
+            with open(photo_path, 'rb') as f:
+                return HttpResponse(f.read(), content_type='image/jpeg')  # 根据实际图片类型调整 content_type
+        else:
+            raise Http404("Photo not found")
+    
+    def post(self, request):
+        file = request.FILES.get('file')
+        file_path = os.path.join(settings.MEDICINE_PHOTO_ROOT, file.name)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, 'wb+') as f:
+            f.write(file.read())
+        url = '/api/medicine/photo/' + file.name
+        return JsonResponse({'msg': "Successfully uploaded photo", 'name': file.name, 'url': url})

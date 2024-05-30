@@ -15,21 +15,34 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
+from panel import serve
 from app01 import views
 from django.views.generic.base import TemplateView
+from django.conf.urls.static import static
+
+from backend import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", TemplateView.as_view(template_name="index.html")),
+    path("api/registers/list/", views.RegisterView.as_view()),
+    path("api/registers/cancel/", views.RegisterView.as_view()),
     path("api/treatments/list/", views.TreatmentView.as_view()),
     path("api/duty/next_seven_days/", views.OnDutyView.as_view()),
     path("api/duty/date_doctor_unoccupied/", views.OnDutyView.as_view()),
     path("api/doctors/upload_avatar/", views.DoctorView.as_view()),
+    path("api/doctors/list", views.DoctorView.as_view()),
     path("api/medicine/list/", views.MedicineView.as_view()),
+    path("api/medicine/delete/", views.MedicineView.as_view()),
+    path("api/medicine/uploadPhoto/", views.UploadPhotoView.as_view()),
+    path("api/medicine/removePhoto/", views.MedicineView.as_view()),
+    path("api/medicine/setData/", views.MedicineView.as_view()),
     path("api/duty/doctor_status/", views.OnDutyView.as_view()),
     path("api/bills/list/", views.BillView.as_view()),
     path("api/notice/list/", views.NoticeView.as_view()),
     path("api/login", views.PatientView.as_view()),
     path("api/login/register", views.PatientView.as_view()),
+
+    re_path(r'^api/medicine/photo/(?P<filename>[\w.-]+)$', views.UploadPhotoView.as_view()),
 ]

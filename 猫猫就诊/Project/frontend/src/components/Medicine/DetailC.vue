@@ -12,10 +12,12 @@
           <el-upload
             v-model:file-list="fileList"
             class="upload-demo"
-            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
+            action="/api/medicine/uploadPhoto/"
+            :before-upload="handleBeforeUpload"
             :on-success="handleSuccess"
+            :on-preview="handlePreview"
+            :before-remove="handleBeforeRemove"
+            :on-remove="handleRemove"
             list-type="picture"
           >
             <el-button type="primary">Click to upload</el-button>
@@ -64,30 +66,28 @@
       </div>
       <div class="button">
         <el-button @click="closeModal" plain>取消</el-button>
-        <el-button @click="closeModal" type="primary">确定</el-button>
+        <el-button @click="setDataAndCloseModal" type="primary">确定</el-button>
       </div>
     </div>
   </div>
 </template>
 <script>
+import axios from 'axios'
 import { ref } from 'vue'
 export default {
   name: 'DetailC',
   data() {
     return {
-      fileList: ref([
-        {
-          name: 'food.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }
-      ]),
+      // 尝试不使用ref数组
+      fileList: [],
       isVisible: false,
+      sign: '',
       inputName: '',
       radio: '',
       info: [
         {
+          id: '',
           name: '',
-          type: '',
           use: '',
           price: '',
           num: ''
@@ -96,29 +96,83 @@ export default {
     }
   },
   methods: {
-    handleSuccess(response, file, fileList) {
-      // 假设后端API返回了文件上传成功的响应
-      if (response.success) {
-        // 更新fileList，添加新上传的文件信息
-        this.fileList.push({
-          name: file.name,
-          url: response.data.url // 假设后端返回文件的URL
-          // 其他需要的属性...
-        })
+    setMedicineData() {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          id: this.info.id,
+          name: this.info.name,
+          type: this.radio,
+          symptom: this.info.use,
+          price: this.info.price,
+          quantity: this.info.num,
+          photo_name: this.fileList.length === 0 ? '' : this.fileList[0].name,
+          action: this.sign == 'add' ? 'addMedicine' : 'alterMedicine',
+        };
+        this.$axios.post('/api/medicine/setData/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg']);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
+    removePhoto() {
+      return new Promise((resolve, reject) => {
+        axios.post('/api/medicine/removePhoto/', { id: this.info.id, photo_name: this.fileList[0].name, action: "removePhoto" })
+          .then(response => {
+            console.log('删除成功:', response.data);
+            resolve();
+          })
+          .catch(error => {
+            console.error('删除失败:', error);
+            reject(error);
+          });
+      });
+    },
+    handleBeforeUpload(file) {
+      if (this.fileList.length === 0) {
+        file.formData = { id: this.info.id };
+        return true;
       } else {
-        // 处理错误情况
-        console.error('文件上传失败:', response.message)
+        this.removePhoto().then(() => {
+          file.formData = { id: this.info.id };
+          return true;
+        });
       }
     },
+    handleSuccess(res) {
+      // if (response.data['msg'] == "Successfully uploaded photo") {
+      //   this.fileList[0].name = data['name'];
+      //   this.fileList[0].url = data['url'];
+      // } else {
+      //   console.error('文件上传失败');
+      // }
+      if (this.fileList.length === 0) {
+        this.fileList.push({ name: res.name, url: res.url });
+      } else {
+        this.fileList = []
+        this.fileList.push({ name: res.name, url: res.url });
+      }
+      console.log(this.fileList);
+    },
+    handleBeforeRemove() {
+      this.removePhoto().then(() => {
+        return true;
+      });
+    },
     // 合并之前的handleRemove函数
-    handleRemove(uploadFile, uploadFiles) {
-      console.log(uploadFile, uploadFiles)
+    handleRemove() {
+      this.fileList = []
     },
     // 合并之前的handlePreview函数
     handlePreview(file) {
       console.log(file)
     },
-    openModal(row) {
+    openModal(row, sign) {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
       this.info.name = row.name
@@ -129,14 +183,36 @@ export default {
       } else {
         this.radio = 9
       }
+      this.info.id = row.id
       this.info.use = row.use
       this.info.price = row.price
       this.info.num = row.num
-      console.log(`传入的name是：${this.info.name}`)
+      this.sign = sign
+      this.fileList = []
+      if (row.photo_name !== undefined && row.photo_name != '')
+        this.fileList.push({ name: row.photo_name, url: '/api/medicine/photo/' + row.photo_name })
+      console.log(`传入的sign是：${this.sign}`)
     },
     closeModal() {
-      this.isVisible = false
-      document.body.style.overflow = '' // 恢复滚动
+      if (this.fileList.length !== 0) {
+        this.removePhoto().then(() => {
+          this.isVisible = false
+          document.body.style.overflow = '' // 恢复滚动
+          this.$emit('updateData'); // 触发自定义事件
+        })
+      }
+      else {
+        this.isVisible = false
+        document.body.style.overflow = '' // 恢复滚动
+        this.$emit('updateData'); // 触发自定义事件
+      }
+    },
+    setDataAndCloseModal() {
+      this.setMedicineData().then(() => {
+        this.isVisible = false
+        document.body.style.overflow = '' // 恢复滚动
+        this.$emit('updateData'); // 触发自定义事件
+      })
     }
   }
 }

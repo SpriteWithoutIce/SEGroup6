@@ -1,7 +1,7 @@
 <!--患者的处方查询页面-->
 <template>
   <!-- <div class="container"> -->
-  <el-container style="height: 100vh;">
+  <el-container style="height: 100vh">
     <scroll>
       <div class="all-container" width="100%">
         <div class="search-container">
@@ -14,16 +14,26 @@
         <SignA></SignA>
         <div class="input-container">
           <div class="chaxun">
-            <el-input v-model="input4" style="width: 300px; height: 40px" placeholder="请输入就诊日期(例:2024-05-09) 或 科室"
-              class="shuru">
+            <el-input
+              v-model="input4"
+              style="width: 300px; height: 40px"
+              placeholder="请输入就诊日期(例:2024-05-09) 或 科室"
+              class="shuru"
+            >
               <template #prefix>
                 <el-icon class="el-input__icon">
                   <search />
                 </el-icon>
               </template>
             </el-input>
-            <el-button color="#DBA979" :dark="isDark" plain class="searchButton"
-              style="width: 80px; height: 40px">查询</el-button>
+            <el-button
+              color="#DBA979"
+              :dark="isDark"
+              plain
+              class="searchButton"
+              style="width: 80px; height: 40px"
+              >查询</el-button
+            >
             <p>{{ input4 }}</p>
           </div>
         </div>
@@ -39,97 +49,129 @@ import SearchA from './SearchA.vue'
 import SignA from './SignA.vue'
 import InputA from './InputA.vue'
 import PHistory from './PHistory.vue'
-import { ref, onMounted, computed } from 'vue'
+import axios from 'axios'
+import { ref, onMounted, computed, inject } from 'vue'
+
+const identityNum = inject('$identity_num')
+
+const getTreatmentsData = () => {
+  return new Promise((resolve, reject) => {
+    axios.post('/api/treatments/list/', {identity_num: identityNum })
+    .then((response) => {
+      info.value = response.data['treatments']
+      console.log('Treatments data fetched:', info.value)
+      resolve() // 数据获取完成，resolve Promise
+    }).catch((error) => {
+      console.error('Error fetching treatments data:', error)
+      reject(error) // 数据获取失败，reject Promise
+    })
+  })
+}
+
 const input4 = ref('')
 const info = ref([
-  {
-    office: '心血管门诊',
-    time: '2024-05-14 下午 14:10-14:20',
-    advice: '心跳过快',
-    medicine: [
-      { name: '金莲花软件囊', time: 3, cnt: 1, use: '口服', fre: 'Tid', price: '5.98' },
-      { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', fre: 'Tid', price: 1.09 },
-      { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', fre: 'Tid', price: 1.09 }
-    ]
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0024',
-    price: '0.00元',
-    name: 'buaa',
-    cardNum: '001741',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-15 下午 14:10-14:20',
-    line: '38',
-    state: '已就诊',
-    advice: '',
-    medicine: []
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0025',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-16 下午 14:10-14:20',
-    line: '39',
-    state: '已预约',
-    advice: '',
-    medicine: []
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    advice: '',
-    medicine: []
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    advice: '',
-    medicine: []
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    advice: '',
-    medicine: []
-  },
-  {
-    office: '心血管门诊',
-    orderNum: 'w0026',
-    price: '0.00元',
-    name: 'hhh',
-    cardNum: '001742',
-    position: '门诊楼三层内科二诊区',
-    time: '2024-05-17 下午 14:10-14:20',
-    line: '40',
-    state: '已预约',
-    advice: '',
-    medicine: []
-  }
+  // {
+  //   office: '心血管门诊', //科室
+  //   time: '2024-05-14 下午 14:10-14:20', //就诊时间
+  //   patient: 'buaa', //患者姓名
+  //   doctor: '士小信', //医生
+  //   advice: '心跳过快', //医生诊断(比较短,不是很长的那种建议)
+  //   medicine: [
+  //     { name: '金莲花软件囊', time: 3, cnt: 1, use: '口服', price: '5.98' }, //time:疗程,cnt:开的药的数量,use:使用方法,price:单价
+  //     { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', price: 1.09 },
+  //     { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', price: 1.09 }
+  //   ]
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0024',
+  //   patient: 'buaa',
+  //   doctor: '士小信',
+  //   price: '0.00元',
+  //   name: 'buaa',
+  //   cardNum: '001741',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-15 下午 14:10-14:20',
+  //   line: '38',
+  //   state: '已就诊',
+  //   advice: '',
+  //   medicine: []
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0025',
+  //   patient: 'buaa',
+  //   doctor: '士小信',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-16 下午 14:10-14:20',
+  //   line: '39',
+  //   state: '已预约',
+  //   advice: '',
+  //   medicine: []
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0026',
+  //   patient: 'buaa',
+  //   doctor: '士小信',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   advice: '',
+  //   medicine: []
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0026',
+  //   patient: 'buaa',
+  //   doctor: '士小信',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   advice: '',
+  //   medicine: []
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0026',
+  //   patient: 'buaa',
+  //   doctor: '士小信',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   advice: '',
+  //   medicine: []
+  // },
+  // {
+  //   office: '心血管门诊',
+  //   orderNum: 'w0026',
+  //   patient: 'buaa',
+  //   doctor: '士小信',
+  //   price: '0.00元',
+  //   name: 'hhh',
+  //   cardNum: '001742',
+  //   position: '门诊楼三层内科二诊区',
+  //   time: '2024-05-17 下午 14:10-14:20',
+  //   line: '40',
+  //   state: '已预约',
+  //   advice: '',
+  //   medicine: []
+  // }
 ])
 const commitSearch = () => {
   console.log(`查询内容是：${input4.value}`)
@@ -147,6 +189,14 @@ const filterInfo = computed(() => {
       // 如果不是数字，按照 office 字段进行过滤
       return input4.value ? item.office === input4.value : true
     }
+  })
+})
+onMounted(() => {
+  if (identityNum == '0') {
+    console.log("未登录")
+    return
+  }
+  getTreatmentsData().then(() => {
   })
 })
 </script>

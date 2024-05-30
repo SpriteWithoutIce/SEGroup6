@@ -126,11 +126,13 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/dist/static"),
+    os.path.join(BASE_DIR, 'static/images/medicine'),
+    os.path.join(BASE_DIR, 'static/images/doctors')
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'app01/static/media')
+MEDICINE_PHOTO_ROOT = os.path.join(BASE_DIR, 'static/images/medicine')
+DOCTOR_AVATAR_ROOT = os.path.join(BASE_DIR, 'static/images/doctors')

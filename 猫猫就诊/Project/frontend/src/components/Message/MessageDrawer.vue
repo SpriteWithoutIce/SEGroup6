@@ -130,8 +130,10 @@
 </template>
 
 <script>
+import { inject } from 'vue'
 export default {
-  data() {
+  setup() {
+    const identityNum = inject('$identity_num')
     return {
       activeNames: ['1', '2'],
       table: false,
@@ -200,8 +202,7 @@ export default {
     getMesData(){
       return new Promise((resolve, reject) => {
         let ts = this;
-        //注意：需要前端传入当前登录用户的证件号
-        this.$axios.post('api/notice/list/', {identity_num: "123"})
+        this.$axios.post('api/notice/list/', {identity_num: identityNum})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.billMes = response.data['billMes'];
@@ -247,8 +248,13 @@ export default {
       
     },
     mounted() {
-      this.getMesData();
-      this.intervalId = setInterval(this.payOverTimeQuery, 30000);
+      if (identityNum == '0') {
+        console.log("未登录");
+        return;
+      }
+      this.getMesData().then(() => {
+        this.intervalId = setInterval(this.payOverTimeQuery, 30000);
+      })
     },
     beforeDestroy() {
       // 组件销毁时清除定时器

@@ -54,6 +54,7 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
 import { ref } from 'vue'
 export default {
   name: 'DetailC',
@@ -66,6 +67,7 @@ export default {
         }
       ]),
       isVisible: false,
+      sign: '',
       inputName: '',
       radio: '',
       info: [
@@ -102,7 +104,7 @@ export default {
     handlePreview(file) {
       console.log(file)
     },
-    openModal(row) {
+    openModal(row, sign) {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
       this.info.name = row.name
@@ -110,6 +112,7 @@ export default {
       this.info.title = row.title
       this.info.cost = row.cost
       this.info.research = row.research
+      this.sign = sign
     },
     closeModal() {
       this.isVisible = false

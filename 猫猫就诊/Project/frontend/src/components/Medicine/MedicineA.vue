@@ -1,6 +1,6 @@
 <!--药物管理系统-->
 <template>
-  <DetailC ref="detail"> </DetailC>
+  <DetailC ref="detail" @updateData="refreshMedicineData"> </DetailC>
   <div class="container">
     <div class="m">
       <p style="margin-left: 50px; font-weight: bold; margin-right: 10px">首页</p>
@@ -23,7 +23,7 @@
           type="primary"
           plain
           style="height: 40px; margin-left: 10px"
-          @click="showPrescriptionDetails('')"
+          @click="showPrescriptionDetails('', 'add')"
           >+新建药物类型</el-button
         >
         <el-table :data="ftableData" style="width: 95%; max-height: 480px">
@@ -45,7 +45,9 @@
           <el-table-column prop="use" label="适应症状" />
           <el-table-column label="操作">
             <template #default="scope">
-              <el-button size="small" @click="showPrescriptionDetails(scope.row)"> 修改 </el-button>
+              <el-button size="small" @click="showPrescriptionDetails(scope.row, 'alter')">
+                修改
+              </el-button>
               <el-button
                 size="small"
                 type="danger"
@@ -75,23 +77,32 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch} from 'vue'
 import DetailC from './DetailC.vue'
 import axios from 'axios'
 const detail = ref(null)
 const input4 = ref('')
-const showPrescriptionDetails = (row) => {
+const showPrescriptionDetails = (row, sign) => {
   // 假设DetailC组件有一个名为openModal的方法
-  detail.value.openModal(row)
+  detail.value.openModal(row, sign)
 }
-const handleEdit = (index, row) => {
-  // 编辑操作的逻辑
-  console.log('Edit row:', row)
-}
+// const handleEdit = (index, row) => {
+//   // 编辑操作的逻辑
+//   console.log('Edit row:', row)
+// }
+
+// closeModal后刷新数据
+const refreshMedicineData = () => {
+  getMedicineData().then(() => {
+    updateTotal();
+    handleCurrentChange(pagination.value.currentPage);
+  });
+};
 
 const handleDelete = (index, row) => {
   // 删除操作的逻辑
-  console.log('Delete row:', row)
+  deleteMedicine(row).then(() => {
+  })
 }
 const pagination = ref({
   total: 0,
@@ -102,7 +113,7 @@ const tableData = ref([
   {
     name: '感冒冲剂',
     type: '中药',
-    use: '感冒',
+    use: '感冒', //症状，用英文逗号分隔（例如：感冒,头晕)
     price: '5.00',
     num: '10'
   }
@@ -126,9 +137,7 @@ watch(input4, () => {
 
 const getMedicineData = () => {
   return new Promise((resolve, reject) => {
-    axios
-      .get('/api/medicine/list/')
-      .then((response) => {
+    axios.get('/api/medicine/list/').then((response) => {
         tableData.value = response.data['medicine']
         pagination.value.total = tableData.value.length // 更新总条目数
         console.log('Medicine data fetched:', tableData.value)
@@ -136,6 +145,21 @@ const getMedicineData = () => {
       })
       .catch((error) => {
         console.error('Error fetching medicine data:', error)
+        reject(error) // 数据获取失败，reject Promise
+      })
+  })
+}
+
+const deleteMedicine = (row) => {
+  return new Promise((resolve, reject) => {
+    axios.post('/api/medicine/delete/', {id: row.id, action: "deleteMedicine"}).then((response) => {
+        tableData.value = response.data['medicine']
+        pagination.value.total = tableData.value.length // 更新总条目数
+        console.log('Medicine data deleted')
+        resolve() // 数据获取完成，resolve Promise
+      })
+      .catch((error) => {
+        console.error('Error deleting medicine data:', error)
         reject(error) // 数据获取失败，reject Promise
       })
   })
