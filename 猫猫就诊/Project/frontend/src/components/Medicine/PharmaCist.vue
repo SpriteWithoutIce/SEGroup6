@@ -1,3 +1,4 @@
+<!--药物+医生信息录入总的-->
 <template>
   <div class="container">
     <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">

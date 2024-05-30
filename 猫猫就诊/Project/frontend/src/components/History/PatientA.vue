@@ -140,16 +140,19 @@ const getRegistersData = () => {
   return new Promise((resolve, reject) => {
     let requestData = {
       action: 'getRegistersData',
-      identity_num: identityNum,
-    };
-    axios.post('/api/registers/list/', requestData).then((response) => {
-      info.value = response.data['registers']
-      console.log('Registers data fetched:', info.value)
-      resolve() // 数据获取完成，resolve Promise
-    }).catch((error) => {
-      console.error('Error fetching registers data:', error)
-      reject(error) // 数据获取失败，reject Promise
-    })
+      identity_num: identityNum
+    }
+    axios
+      .post('/api/registers/list/', requestData)
+      .then((response) => {
+        info.value = response.data['registers']
+        console.log('Registers data fetched:', info.value)
+        resolve() // 数据获取完成，resolve Promise
+      })
+      .catch((error) => {
+        console.error('Error fetching registers data:', error)
+        reject(error) // 数据获取失败，reject Promise
+      })
   })
 }
 
@@ -171,11 +174,10 @@ const filterInfo = computed(() => {
 })
 onMounted(() => {
   if (identityNum == '0') {
-    console.log("未登录")
+    console.log('未登录')
     return
   }
-  getRegistersData().then(() => {
-  })
+  getRegistersData().then(() => {})
 })
 </script>
 

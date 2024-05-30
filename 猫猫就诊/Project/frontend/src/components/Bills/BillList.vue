@@ -70,107 +70,39 @@ import { inject } from 'vue'
 import BillDetails from './BillDetails.vue'
 export default {
   inject: ['$identity_num'],
+  created() {
+    this.identityNum = this.$identity_num;
+    // console.log("获取的identityNum为：",this.identityNum); 
+  },
   data() {
     return {
-      identity_num: this.$identity_num,
+      identityNum: 0,
       desc: '缴费列表统计',
       bill: [
-        {
-          id: 1,
-          type: '挂号',
-          department: '皮肤科',
-          price: 10,
-          date: '2024年3月15日',
-          payStatus: true
-        },
-        {
-          id: 2,
-          type: '处方',
-          department: '眼科',
-          price: 200,
-          date: '2024年2月15日',
-          payStatus: false
-        },
-        {
-          id: 3,
-          type: '挂号',
-          department: '全科',
-          price: 5,
-          date: '2024年1月15日',
-          payStatus: false
-        },
-        {
-          id: 3,
-          type: '挂号',
-          department: '全科',
-          price: 5,
-          date: '2024年1月15日',
-          payStatus: false
-        },
-        {
-          id: 3,
-          type: '挂号',
-          department: '全科',
-          price: 5,
-          date: '2024年1月15日',
-          payStatus: false
-        },
-        {
-          id: 3,
-          type: '挂号',
-          department: '全科',
-          price: 5,
-          date: '2024年1月15日',
-          payStatus: false
-        },
-        {
-          id: 3,
-          type: '挂号',
-          department: '全科',
-          price: 5,
-          date: '2024年1月15日',
-          payStatus: false
-        },
-        {
-          id: 3,
-          type: '挂号',
-          department: '全科',
-          price: 5,
-          date: '2024年1月15日',
-          payStatus: false
-        },
-        {
-          id: 3,
-          type: '挂号',
-          department: '全科',
-          price: 5,
-          date: '2024年1月15日',
-          payStatus: false
-        },
-        {
-          id: 3,
-          type: '挂号',
-          department: '全科',
-          price: 5,
-          date: '2024年1月15日',
-          payStatus: false
-        },
-        {
-          id: 3,
-          type: '挂号',
-          department: '全科',
-          price: 5,
-          date: '2024年1月15日',
-          payStatus: false
-        },
-        {
-          id: 3,
-          type: '挂号',
-          department: '全科',
-          price: 5,
-          date: '2024年1月15日',
-          payStatus: false
-        }
+        // {
+        //   id: 1,
+        //   type: '挂号',
+        //   department: '皮肤科',
+        //   price: 10,
+        //   date: '2024年3月15日',
+        //   payStatus: true
+        // },
+        // {
+        //   id: 2,
+        //   type: '处方',
+        //   department: '眼科',
+        //   price: 200,
+        //   date: '2024年2月15日',
+        //   payStatus: false
+        // },
+        // {
+        //   id: 3,
+        //   type: '挂号',
+        //   department: '全科',
+        //   price: 5,
+        //   date: '2024年1月15日',
+        //   payStatus: false
+        // },
       ],
       pagination: {
         total: 0,
@@ -189,7 +121,7 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         //已完成 注意：需要前端传入当前登录用户的证件号
-        this.$axios.post('/api/bills/list/', {identity_num: this.$identityNum, action: "getBillsData"})
+        this.$axios.post('/api/bills/list/', {identity_num: this.identityNum, action: "getBillsData"})
           .then(function (response) {
             ts.bill = response.data['bill'];
             console.log(ts.bill);
@@ -199,6 +131,7 @@ export default {
             console.log(error);
             reject(error); // 数据获取失败，reject Promise
           });
+          console.log('发送的请求参数:', {identity_num: this.identityNum});
       });
     },
     handleCurrentChange(e) {
@@ -213,16 +146,16 @@ export default {
     },
     selectFunc(payStatus) {
       // 根据传入的 payStatus 筛选患者数据
-      ;(this.filteredBills = this.bill.filter((stu) => {
+      this.filteredBills = this.bill.filter((stu) => {
         return stu.payStatus === payStatus
-      })),
-        this.handleCurrentChange(1)
+      }),
+      this.handleCurrentChange(1)
     },
     changeBillStatus(id) {
       return new Promise((resolve, reject) => {
         let ts = this;
         //已完成 注意：需要前端传入当前登录用户的证件号
-        this.$axios.post('/api/bills/list/', {identity_num: this.$identityNum, action: "changeBillStatus", item_id: id})
+        this.$axios.post('/api/bills/list/', {identity_num: this.identityNum, action: "changeBillStatus", item_id: id})
           .then(function (response) {
             ts.bill = response.data['bill'];
             console.log(ts.bill);
