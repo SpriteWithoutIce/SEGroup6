@@ -11,7 +11,7 @@
           <el-upload
             v-model:file-list="fileList"
             class="upload-demo"
-            action="/api/doctors/uploadPhoto/"
+            action="/api/doctors/uploadAvatar/"
             :before-upload="handleBeforeUpload"
             :on-success="handleSuccess"
             :on-preview="handlePreview"

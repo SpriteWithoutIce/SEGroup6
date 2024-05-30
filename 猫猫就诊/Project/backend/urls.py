@@ -38,6 +38,7 @@ urlpatterns = [
     path("api/medicine/list/", views.MedicineView.as_view()),
     path("api/medicine/delete/", views.MedicineView.as_view()),
     path("api/medicine/uploadPhoto/", views.UploadPhotoView.as_view()),
+    path("api/doctors/uploadAvatar/", views.UploadAvatarView.as_view()),
     path("api/medicine/removePhoto/", views.MedicineView.as_view()),
     path("api/medicine/setData/", views.MedicineView.as_view()),
     path("api/duty/doctor_status/", views.OnDutyView.as_view()),
