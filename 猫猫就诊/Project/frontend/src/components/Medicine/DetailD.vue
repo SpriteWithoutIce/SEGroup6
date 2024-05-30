@@ -37,6 +37,10 @@
           />
         </div>
         <div class="line">
+          <p style="margin-left: 15px">医生编号：</p>
+          <el-input v-model="info.id" style="width: 240px" placeholder="请输入医生编号" clearable />
+        </div>
+        <div class="line">
           <p style="margin-left: 15px">科室：</p>
           <el-input
             v-model="info.office"
@@ -92,6 +96,7 @@ export default {
         //医生的信息
         {
           name: '',
+          id: '',
           office: '',
           title: '',
           cost: '',
@@ -106,6 +111,7 @@ export default {
         let ts = this
         let requestData = {
           name: this.info.name,
+          id: this.info.id,
           department: this.info.office,
           title: this.info.title,
           cost: this.info.cost,
@@ -186,6 +192,7 @@ export default {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
       this.info.name = row.name
+      this.info.id = row.id
       this.info.office = row.office
       this.info.title = row.title
       this.info.cost = row.cost
