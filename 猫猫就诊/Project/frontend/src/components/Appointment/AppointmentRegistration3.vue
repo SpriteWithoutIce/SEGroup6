@@ -13,7 +13,7 @@
             paymentType:formData.paymentType,
             selected:select
           }
-        }" class="button2 button-next"  v-if="isformed()">
+        }" class="button2 button-next" @click="submit" v-if="isformed()">
         下一步
       </router-link>
     </div> 
@@ -174,10 +174,14 @@ export default {
     
     // 需要在点击“下一步”按钮时执行submitForm()
     submitForm() {  
-      this.setPatientData().then(() => {  
-        console.log(this.formData); // 在控制台打印表单数据 
-      }) 
+      // this.setPatientData().then(() => {  
+      //   console.log(this.formData); // 在控制台打印表单数据 
+      // })
+      console.log(this.formData);
     } ,
+    submit(){
+      this.setPatientData();
+    },
     submitForm2() {  
       // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
       console.log(this.form2); // 在控制台打印表单数据  

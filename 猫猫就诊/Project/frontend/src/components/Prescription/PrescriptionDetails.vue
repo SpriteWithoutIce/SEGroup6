@@ -31,6 +31,9 @@
         <el-form-item>
           <el-button @click="addMedicine" type="primary">添加药物</el-button>
         </el-form-item>
+        <el-form-item label="上传图片" type="primary">
+          <input type="file" @change="handleImageUpload">
+        </el-form-item>
         <el-form-item label="医师建议">
           <el-input type="textarea" v-model="form.advice"></el-input>
         </el-form-item>
@@ -41,6 +44,7 @@
       <div class="button-group">
         <el-button @click="submitForm" type="primary">提交</el-button>
         <el-button @click="cancelModal">退出</el-button>
+        <el-button @click="generateReport" type="success">生成报告</el-button>
       </div>
     </div>
   </div>
@@ -53,15 +57,18 @@ export default {
   data () {
     return {
       isVisible: false,
+      image: null,
       form: {
+        id: "",/*这里的id是问诊单号*/
         name: '',
-        date: new Date().toISOString().substr(0, 10),
+        date: new Date().toISOString().substr(0, 10), /*就诊日期 年月日*/
         gender: '',
         advice: '',
         medicines: [{ name: '', quantity: 0, price: 0, totalPrice: 0 }]
       },
       medicinesDB: [
         // { name: '布洛芬', stock 改成num: 80, price: 5.0, use: ['发热', '炎症'] }
+        // { name: '布洛芬', num: 80, price: 5.0, use: ['发热', '炎症'] }
         // 可以添加更多药物数据
       ]
     };
@@ -74,6 +81,36 @@ export default {
     }
   },
   methods: {
+    writeBackPrescriptionDetailsData () {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          id: this.form.id,
+          date: new Date().toISOString,
+
+        };
+        this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg']);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            console.log("Prescription Details Write Back Failed")
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
+    handleImageUpload (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.image = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
     getMedicineData () {
       return new Promise((resolve, reject) => {
         let ts = this;
@@ -90,6 +127,7 @@ export default {
       });
     },
     openModal (row) {
+      this.id = row.Id;
       this.isVisible = true;
       document.body.style.overflow = 'hidden'; // 禁止滚动
       this.form.name = row.name;
@@ -114,6 +152,7 @@ export default {
         type: "success"
       });
       console.log('提交表单', this.form);
+      writeBackPrescriptionDetailsData();
       this.closeModal();
     },
     addMedicine () {
@@ -158,13 +197,51 @@ export default {
           this.calculatePrice(medicine);
         }
       };
-    }
-  },
+    },
+    generateReport () {
+      // 插入标题
+      const title = "<h2 style='font-family: 宋体;font-size: 24px;'>猫猫就诊报告</h2>";
+      const image = this.image ? `<img src="${this.image}" alt="就诊图片" style="max-width: 100%;">` : '';
+      const reportContent = `
+    <p style='font-family: 宋体;font-size: 14px;'>
+      姓名: ${this.form.name} <br/>
+      就诊日期: ${this.form.date} <br/>
+      性别: ${this.form.gender} <br/>
+      药物列表: <br/>
+      ${this.form.medicines.map(med => `  - ${med.name}: ${med.quantity} 个，总价: ¥${med.totalPrice}`).join('<br/>')}
+      <br/>
+      医师建议: <br/>
+      ${this.form.advice} <br/>
+      总价: ¥${this.totalPrice}
+    </p>
+  `;
 
+      // 整合标题和报告内容
+      const fullReportContent = title + image + reportContent;
+      const blob = new Blob([fullReportContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${this.form.name}-就诊报告.html`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // 清理 URL 对象
+      URL.revokeObjectURL(url);
+
+      // 提示报告生成成功
+      ElMessage({
+        showClose: true,
+        message: "报告生成成功 ╰(*°▽°*)╯",
+        type: "success"
+      });
+    },
+  },
   mounted () {
     this.getMedicineData().then(() => {
     });
-  }
+  },
 };
 </script>
 

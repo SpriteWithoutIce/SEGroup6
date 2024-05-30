@@ -3,24 +3,32 @@
   <div class="notice-box" style="height: 1400px;">  
     <!-- 上一步/下一步 -->
     <div class="container2">  
-      <router-link to="/AppointmentRegistration5" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
+      <router-link :to="{
+        path:'/AppointmentRegistration5',
+        query:{
+          name:info.name,
+          paymentType:info.paymentType,
+          department:info.department,
+          inumber:info.inumber,
+        }}" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
       <router-link 
         :to="{
           path:'/AppointmentRegistration7',
           query:{
-            name:info.name,
-            paymentType:info.paymentType,
-            department:info.department,
-            inumber:info.inumber,
-            time:info_time,
-            starttime:info_startTime,
-            endtime:info_endTime,
-            number:info_number,
-            doctorName:doctors[0].name,
-            doctorTitle:doctors[0].title,
-            doctorAvatar:doctors[0].avatar,
-            doctorRearch:doctors[0].research,
-            cost:doctors[0].cost
+            // name:info.name,
+            // paymentType:info.paymentType,
+            // department:info.department,
+            // inumber:info.inumber,
+            // time:info_time,
+            // starttime:info_startTime,
+            // endtime:info_endTime,
+            // number:info_number,
+            // doctorName:doctors[0].name,
+            // doctorTitle:doctors[0].title,
+            // doctorAvatar:doctors[0].avatar,
+            // doctorRearch:doctors[0].research,
+            // cost:doctors[0].cost
+            info:JSON.stringify(info_detail)
           }
         }" class="button2 button-next" style="text-decoration: none;">
         下一步</router-link>
@@ -39,7 +47,7 @@
     </div>
     
     <div class="button-container">  
-      <div v-for="(timeSlot, index) in doctors[0].emptytime" :key="index" class="button-row">  
+      <div v-for="(timeSlot, index) in doctors[0].schedule[this.info_doctor.day_index].emptytime" :key="index" class="button-row">  
         <button  
           v-if="timeSlot.status === 'empty' && (this.info_time.match(/\(.*?\)/) || [])[0]=='(上午)'"  
           @click="selectTimeSlot(index,timetable_1[timeSlot.number-1].startTime,timetable_1[timeSlot.number-1].endTime)" 
@@ -140,40 +148,8 @@ export default {
             {startTime:"17:00",endTime:"17:10"},
             {startTime:"17:10",endTime:"17:20"},
       ],
-      doctors: [  
-        {  
-          name: '医生A',  
-          title: '主任医师',  
-          avatar: 'img/lsy.jpg', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-09(上午)',status:'empty', number: 10},
-          ],  
-          emptytime:[
-            {number: 1,status:'empty'},
-            {number: 2,status:'full'},
-            {number: 3,status:'empty'},
-            {number: 4,status:'empty'},
-            {number: 5,status:'full'},
-            {number: 6,status:'empty'},
-            {number: 7,status:'full'},
-            {number: 8,status:'full'},
-            {number: 9,status:'empty'},
-            {number: 10,status:'full'},
-            {number: 11,status:'full'},
-            {number: 12,status:'full'},
-            {number: 13,status:'empty'},
-            {number: 14,status:'empty'},
-            {number: 15,status:'full'},
-            {number: 16,status:'empty'},
-            {number: 17,status:'empty'},
-            {number: 18,status:'full'},
-            {number: 19,status:'empty'},
-            {number: 20,status:'full'},
-          ],
-          cost:100,
-        },
-      ],
+      doctors: [],
+      info_doctor:{},
       info:{
         name:'',
         paymentType:'',
@@ -185,6 +161,22 @@ export default {
       info_startTime:'',
       info_endTime:'',
       info_number:0,
+      info_detail:{
+        name:'',
+        paymentType:'',
+        department:'',
+        inumber:'',
+        time:'',
+        starttime:'',
+        endtime:'',
+        number:'',
+        doctorName:'',
+        doctorTitle:'',
+        doctorAvatar:'',
+        doctorRearch:'',
+        cost:'',
+        info_doctor:{},
+      }
     };  
   }  ,
   methods: {  
@@ -197,6 +189,9 @@ export default {
       this.info_startTime=start
       this.info_endTime=end
       this.info_number=index+1
+      this.info_detail.starttime=this.info_startTime
+      this.info_detail.endtime=this.info_endTime
+      this.info_detail.number=this.info_number
     },
     displayTime() {  
       this.timeOfDay = (this.info_time.match(/\(.*?\)/) || []); // 提取括号内的内容  
@@ -209,11 +204,34 @@ export default {
     },  
   }  ,
   created(){
-    this.info.name=this.$route.query.name;
-    this.info.paymentType=this.$route.query.paymentType;
-    this.info.department=this.$route.query.department;
-    this.info_time=this.$route.query.time;
-    this.info.inumber=this.$route.query.inumber;
+    // this.info.name=this.$route.query.name;
+    // this.info.paymentType=this.$route.query.paymentType;
+    // this.info.department=this.$route.query.department;
+    // this.info_time=this.$route.query.time;
+    // this.info.inumber=this.$route.query.inumber;
+    const info_doctor_Str = this.$route.query.info_doctor;  
+    if (info_doctor_Str) {  
+      this.info_doctor = JSON.parse(info_doctor_Str);  
+    }
+    console.log(this.info_doctor)
+    this.info.name=this.info_doctor.name;
+    this.info.paymentType=this.info_doctor.paymentType;
+    this.info.department=this.info_doctor.department;
+    this.info_time=this.info_doctor.info_time;
+    this.info.inumber=this.info_doctor.inumber;
+    this.doctors[0]=this.info_doctor.doctor;
+
+    this.info_detail.name=this.info.name;
+    this.info_detail.paymentType=this.info.paymentType;
+    this.info_detail.department=this.info.department;
+    this.info_detail.inumber=this.info.inumber;
+    this.info_detail.time=this.info_time;
+    this.info_detail.doctorName=this.doctors[0].name;
+    this.info_detail.doctorTitle=this.doctors[0].title;
+    this.info_detail.doctorAvatar=this.doctors[0].avatar;
+    this.info_detail.doctorRearch=this.doctors[0].research;
+    this.info_detail.cost=this.doctors[0].cost;
+    this.info_detail.info_doctor=this.info_doctor;
   }
 };  
 </script>  

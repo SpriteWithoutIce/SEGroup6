@@ -1,17 +1,24 @@
 <template>  
   <Header :squares2="squares2"/> 
-  <BillDetails @update:payStatus="updatePayStatus" ref="BillDetails"> </BillDetails>
+  <BillDetails @billDetailsUpdated="onBillDetailsUpdated" ref="BillDetails"> </BillDetails>
   <div class="notice-box" style="height: 1500px;">  
     <div>{{ this.info.inumber }}</div>
     <div>{{ this.info.identity_num }}</div>
+    <div>{{ this.billstatus }}</div>
     <!-- 上一步/下一步 -->
     <div class="container2">  
+      <router-link :to="{
+        path: '/AppointmentRegistration6',
+        query:{
+          info_doctor:JSON.stringify(info_last.info_doctor)
+        }
+        }" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
       <router-link :to="{
           path:'/AppointmentRegistration8',
           query:{
             order:JSON.stringify(info)
-          }}" class="button2 button-next" @click="submit">确认</router-link>
-      <div class="container2" >
+          }}" class="button2 button-next" @click="submit" v-if="billstatus">确认</router-link>
+      <div class="container2" v-if="!billstatus">
         <el-button @click="showBillDetails()"
           >缴费</el-button>
       </div>  
@@ -47,7 +54,7 @@
       </div>
       <div class="detail-container">
         <div class="detail-item ">就诊人：</div>
-        <div class="detail-item ">林艺涵</div>
+        <div class="detail-item ">{{ info.name }}</div>
       </div>
       <div class="detail-container">
         <div class="detail-item ">*支付类型（请选择）：</div>
@@ -63,7 +70,7 @@
 </template>  
   
 <script>  
-import BillDetails from './Appointments/BillDetails.vue'
+import BillDetails from './Appointments/AppointmentBillDetails.vue'
 import Header from './Appointments/AppointmentHeader.vue'
 export default {  
   inject: ['$identity_num'],
@@ -89,7 +96,7 @@ export default {
       ],
       selectTime:1,
       isMedicalInsurance:true,
-      
+      billstatus:false,
       info:{
         name:'',//就诊人
         paymentType:'',
@@ -105,7 +112,9 @@ export default {
         cost:'',//医生的挂号费
         inumber:'',//患者的证件号
         identity_num: this.$identityNum,
+        info_last:{},
       },
+      info_last:{},
     };  
   }  ,
   components: {
@@ -118,6 +127,7 @@ export default {
       this.form.order=this.doctor.cost;
       this.form.people=this.people;
       this.form.isMedicalInsurance=this.isMedicalInsurance;
+      
       this.form.doctorname=this.doctor.name;
       // console.log(this.form)
     },
@@ -127,34 +137,85 @@ export default {
     }, 
     togglePaymentType() {  
       this.isMedicalInsurance = !this.isMedicalInsurance; // 切换支付类型  
+      if(this.isMedicalInsurance)
+        this.info.paymentType='医保';
+      else
+        this.info.paymentType='非医保';
     },
     showBillDetails() {
       const now = new Date(); 
       const formattedDateTime = `${now.getFullYear()}年${String(now.getMonth() + 1).padStart(2, '0')}月${String(now.getDate()).padStart(2, '0')}日`;  
       var row={
         type:'挂号',
-        issue:'非医保挂号',
+        issue:'挂号费',
         price:this.info.cost,
         date:formattedDateTime
       };
+      if(this.isMedicalInsurance){
+        row.price=0;
+      }
       console.log(row)
       this.$refs.BillDetails.openModal(row)
     },
+    onBillDetailsUpdated(dataFromChild) {
+      this.billstatus=dataFromChild;
+      return dataFromChild;
+    },
+    setAppointmentData() {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          name:this.info.name,//就诊人
+          paymentType:this.info.paymentType,
+          department:this.info.department,
+          time:this.info.time,//日期05-30
+          starttime:this.info.starttime,//开始时间
+          endtime:this.info.endtime,
+          number:this.info.number,//挂号序号
+          doctorName:this.info.doctorName,//医生名字
+          doctorTitle:this.info.doctorAvatar,//医生title
+          doctorAvatar:this.info.doctorAvatar,//医生头像
+          doctorRearch:this.info.doctorRearch,//医生领域
+          cost:this.info.cost,//医生的挂号费
+          inumber:this.info.inumber,//患者的证件号
+          identity_num: this.$identityNum,
+        };
+        // 这里的api
+        this.$axios.post('/api/appointment/add/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg']);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
   }  ,
   created(){
-    this.info.name=this.$route.query.name;
-    this.info.paymentType=this.$route.query.paymentType;
-    this.info.department=this.$route.query.department;
-    this.info.time=this.$route.query.time;
-    this.info.starttime=this.$route.query.starttime;
-    this.info.endtime=this.$route.query.endtime;
-    this.info.number=this.$route.query.number;
-    this.info.doctorName=this.$route.query.doctorName;
-    this.info.doctorTitle=this.$route.query.doctorTitle;
-    this.info.doctorAvatar=this.$route.query.doctorAvatar;
-    this.info.doctorRearch=this.$route.query.doctorRearch;
-    this.info.cost=this.$route.query.cost;
-    this.info.inumber=this.$route.query.inumber;
+    const info_Str = this.$route.query.info;  
+    if (info_Str) {  
+      this.info_last = JSON.parse(info_Str);  
+    }
+    this.info.info_last=this.info_last;
+    this.info.name=this.info_last.name;
+    if(this.isMedicalInsurance)
+      this.info.paymentType='医保';
+    else
+      this.info.paymentType='非医保';
+    this.info.department=this.info_last.department;
+    this.info.time=this.info_last.time;
+    this.info.starttime=this.info_last.starttime;
+    this.info.endtime=this.info_last.endtime;
+    this.info.number=this.info_last.number;
+    this.info.doctorName=this.info_last.doctorName;
+    this.info.doctorTitle=this.info_last.doctorTitle;
+    this.info.doctorAvatar=this.info_last.doctorAvatar;
+    this.info.doctorRearch=this.info_last.doctorRearch;
+    this.info.cost=this.info_last.cost;
+    this.info.inumber=this.info_last.inumber;
+    console.log(this.info.info_last)
   }
 };  
 </script>  

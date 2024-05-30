@@ -53,6 +53,7 @@ export default {
   name: 'HeaderNavigation',
   data() {
     return {
+      date: new Date().toISOString(),
       WebURL: 'http://localhost:8080',
       currentIndex: 0,
       images: [
@@ -70,6 +71,7 @@ export default {
     }
   },
   mounted() {
+    console.log('HeaderNavigation' + this.date)
     this.startBackgroundRotation()
     this.$refs.messageBox.countUnread()
   },

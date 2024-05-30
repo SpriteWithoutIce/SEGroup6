@@ -7,11 +7,11 @@
       <div class="subline">您好，您已预约成功。订单详情如下</div>
       <div class="subline">
         <div>就诊人：</div>
-        <div class="detail">{{ info.name }}</div>
+        <div class="detail">{{ info1.name }}</div>
       </div>
       <div class="subline">
         <div>医生：</div>
-        <div class="detail">{{ info.doctorName }}</div>
+        <div class="detail">{{ info1.doctorName }}</div>
       </div>
       <div class="subline">
         <div>就诊医院：</div>
@@ -19,24 +19,24 @@
       </div>
       <div class="subline">
         <div>科室：</div>
-        <div class="detail">{{ info.department }}</div>
+        <div class="detail">{{ info1.department }}</div>
       </div>
       <div class="subline">
         <div>就诊时段：</div>
-        <div class="detail">2024-{{ info.time }}&nbsp;{{ info.starttime }}-{{ info.endtime }}</div>
+        <div class="detail">2024-{{ info1.time }}&nbsp;{{ info1.starttime }}-{{ info1.endtime }}</div>
       </div>
       <div class="subline">
         <div class="detail">建议到诊时间：</div>
-        <div class="detail">{{ timeBeforeTenMinutes(info.starttime) }}</div>
+        <div class="detail">{{ timeBeforeTenMinutes(info1.starttime) }}</div>
       </div>
       <div class="subline">
         <div>医事服务费：</div>
-        <div class="detail" v-if="this.form.isMedicalInsurance">0元</div>
-        <div class="detail" v-else>{{ info.cost }}元</div>
+        <div class="detail" v-if="this.info1.paymentType=='医保'">0元</div>
+        <div class="detail" v-else>{{ info1.cost }}元</div>
       </div>
       <div class="subline">
         <div>就诊序号：</div>
-        <div class="detail">{{ info.number }}</div>
+        <div class="detail">{{ info1.number }}</div>
       </div>
       <div class="subline">
         <div>挂号时间：</div>
@@ -62,6 +62,11 @@
       
     </div>
     <div class="container2">  
+      <router-link :to="{
+        path: '/AppointmentRegistration7',
+        query:{
+          info:JSON.stringify(info1.info_last)
+        }}" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
       <button class="button2 button-next" @click="submit">确认</button>  
     </div>
     
@@ -109,7 +114,7 @@ export default {
         num:15,
       },
       currentTime: '',
-      info:{},
+      info1:{},
     };  
   }  ,
   
@@ -138,13 +143,15 @@ export default {
       const formattedDateTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;  
       this.currentTime = formattedDateTime;  
     },
+    
   },
   created(){
     this.updateCurrentTime();  
     const orderStr = this.$route.query.order;  
     if (orderStr) {  
-      this.info = JSON.parse(orderStr);  
+      this.info1 = JSON.parse(orderStr);  
     }
+    
   },
 };  
 </script>  
