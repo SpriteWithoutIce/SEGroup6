@@ -211,7 +211,28 @@ export default {
       return this.doctors.filter(doctor =>
         doctor.department.id===id
       );
-    },  
+    }, 
+    getDutyData() {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          action: 'getAllNextSevenDaysDuty',
+        };
+        this.$axios.post('/api/duty/all_next_seven_days/', requestData)
+          .then(function (response) {
+            ts.doctors = response.data['duty'];
+            console.log(ts.doctors);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    }, 
+  },
+  created(){
+    this.getDutyData();
   }  
 };  
 </script>  

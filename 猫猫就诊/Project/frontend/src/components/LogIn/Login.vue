@@ -146,10 +146,10 @@ export default {
 
 
           // /*连数据库注释下边四行*/
-          // this.identityNum = idCard;
-          // this.$emit('update:currentUserCard', this.loginForm.idCard);
-          // this.$emit('update:currentUserType', this.loginForm.userType);
-          // this.closeModal();
+          this.identityNum = idCard;
+          this.$emit('update:currentUserCard', this.loginForm.idCard);
+          this.$emit('update:currentUserType', this.loginForm.userType);
+          this.closeModal();
 
           this.getUserData(idCard, password, userType).then(() => {
             if (this.msg === "Successfully Login") {

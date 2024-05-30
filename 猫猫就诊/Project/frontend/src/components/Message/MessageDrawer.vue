@@ -10,7 +10,7 @@
               <el-table :data="resMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
                   <template #default="props">
-                    <div v-if="props.row.type == '预约成功'" m="4">
+                    <div v-if="props.row.type == '预约成功'" m="4" class="mesBody">
                       <p>尊敬的患者:</p>
                       <p>您好！您已<b>成功预约</b>了我院的挂号服务。以下是您的预约详情：</p>
                       <strong>
@@ -28,7 +28,7 @@
                         {{ props.row.timetamp }}
                       </p>
                     </div>
-                    <div v-if="props.row.type == '取消预约'" m="4">
+                    <div v-if="props.row.type == '取消预约'" m="4" class="mesBody">
                       <p>尊敬的患者:</p>
                       <p>您好！我们收到了您的<b>预约挂号取消</b>请求。以下是已取消的预约信息：</p>
                       <strong>
@@ -70,7 +70,7 @@
               <el-table :data="billMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
                   <template #default="props">
-                    <div m="4" v-if="props.row.type == '处方缴费提醒'">
+                    <div m="4" v-if="props.row.type == '处方缴费提醒'" class="mesBody">
                       <p>尊敬的患者:</p>
                       <p>您好！您在我院的就诊处方<b>即将到达缴费截止时间</b>。处方详情如下：</p>
                       <strong>
@@ -89,7 +89,7 @@
                         {{ props.row.timetamp }}
                       </p>
                     </div>
-                    <div m="4" v-if="props.row.type == '处方缴费成功'">
+                    <div m="4" v-if="props.row.type == '处方缴费成功'" class="mesBody">
                       <p>尊敬的患者:</p>
                       <p>您好！您在我院的就诊处方<b>缴费成功</b>。处方详情如下：</p>
                       <strong>
@@ -252,15 +252,10 @@ export default {
     readMes(row) {
       return new Promise((resolve, reject) => {
         let ts = this;
-        //TODO:需要后端在Notice的api里添加action"readMes"，根据传入的item_id找到对应数据将其item['isRead']改为true，然后重新返回"resMes"和"billMes"
+        //TODO:需要后端在Notice的api里添加action"readMes"，根据传入的item_id找到对应数据将其item['isRead']改为true，不用后端返回更新后的数据，前端直接再调用一次getMesData()就可以
         this.$axios.post('api/notice/list/', {identity_num: this.$identityNum, action: "readMes", item_id: row.id})
           .then(function (response) {
-            ts.resMes = response.data['resMes'];
-            ts.oriBillMes = response.data['billMes'];
-            ts.payOverTimeQuery();
-            console.log(ts.resMes);
-            console.log(ts.billMes);
-            ts.countUnread();
+            ts.getMesData();
             resolve(); // 数据获取完成，resolve Promise
           })
           .catch(function (error) {
@@ -312,6 +307,9 @@ export default {
   text-shadow: 2px 2px 3px rgba(13, 65, 153, 0.941);
   text-align: left;
   color:rgb(255, 254, 254)
+}
+.mesBody{
+  margin: 20px;
 }
 .collapseItem1,.collapseItem2{
   padding: 3px;

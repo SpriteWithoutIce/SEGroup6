@@ -30,7 +30,7 @@
                 <el-table-column prop="department" label="开具科室"> </el-table-column>
                 <el-table-column prop="price" label="费用（元）"> </el-table-column>
                 <el-table-column prop="date" label="创建时间"> </el-table-column>
-                <el-table-column style="textalign: right" label="操作">
+                <el-table-column style="text-align: right" label="操作">
                   <!-- scope实现插槽，允许在父组件中定义插槽的内容，但是在子组件的作用域内访问数据 -->
                   <template #default="scope">
                     <!-- 使用 v-if来判断是否显示按钮 -->
