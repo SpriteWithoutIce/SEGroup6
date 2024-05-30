@@ -3,6 +3,7 @@
   <BillDetails @update:payStatus="updatePayStatus" ref="BillDetails"> </BillDetails>
   <div class="notice-box" style="height: 1500px;">  
     <div>{{ this.info.inumber }}</div>
+    <div>{{ this.info.identity_num }}</div>
     <!-- 上一步/下一步 -->
     <div class="container2">  
       <router-link :to="{
@@ -65,6 +66,7 @@
 import BillDetails from './Appointments/BillDetails.vue'
 import Header from './Appointments/AppointmentHeader.vue'
 export default {  
+  inject: ['$identity_num'],
   components: {
     Header,
   },
@@ -102,6 +104,7 @@ export default {
         doctorRearch:'',//医生领域
         cost:'',//医生的挂号费
         inumber:'',//患者的证件号
+        identity_num: this.$identityNum,
       },
     };  
   }  ,
