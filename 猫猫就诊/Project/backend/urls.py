@@ -26,13 +26,15 @@ from backend import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", TemplateView.as_view(template_name="index.html")),
+    path("api/login/", views.UserView.as_view()),
+    path('api/patient/add/', views.PatientView.as_view()),
     path("api/registers/list/", views.RegisterView.as_view()),
     path("api/registers/cancel/", views.RegisterView.as_view()),
     path("api/treatments/list/", views.TreatmentView.as_view()),
     path("api/duty/next_seven_days/", views.OnDutyView.as_view()),
     path("api/duty/date_doctor_unoccupied/", views.OnDutyView.as_view()),
     path("api/doctors/upload_avatar/", views.DoctorView.as_view()),
-    path("api/doctors/list", views.DoctorView.as_view()),
+    path("api/doctors/list/", views.DoctorView.as_view()),
     path("api/medicine/list/", views.MedicineView.as_view()),
     path("api/medicine/delete/", views.MedicineView.as_view()),
     path("api/medicine/uploadPhoto/", views.UploadPhotoView.as_view()),
@@ -41,8 +43,6 @@ urlpatterns = [
     path("api/duty/doctor_status/", views.OnDutyView.as_view()),
     path("api/bills/list/", views.BillView.as_view()),
     path("api/notice/list/", views.NoticeView.as_view()),
-    path("api/login", views.PatientView.as_view()),
-    path("api/login/register", views.PatientView.as_view()),
 
     re_path(r'^api/medicine/photo/(?P<filename>[\w.-]+)$', views.UploadPhotoView.as_view()),
 ]
