@@ -137,6 +137,30 @@ export default {
     };  
   }  ,
   methods: { 
+    setPatientData() {
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          name: this.formData.name,
+          paymentType: this.formData.paymentType,
+          gender: this.formData.gender,
+          birthday: this.formData.birthday,
+          idType: this.formData.idType,
+          phone: this.formData.phone,
+          number: this.formData.number,
+          addr: this.formData.addr,
+        };
+        this.$axios.post('/api/patient/add/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg']);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
     toggleSquare(index) {  
       this.currentSquareIndex = index;   
       this.currentSquareIndex = 1;
@@ -145,14 +169,17 @@ export default {
     nextSquare(){
 
     },
+    
+    // 需要在点击“下一步”按钮时执行submitForm()
     submitForm() {  
-      // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
-      console.log(this.form); // 在控制台打印表单数据  
+      this.setPatientData().then(() => {  
+        console.log(this.formData); // 在控制台打印表单数据 
+      }) 
     } ,
-    submitForm2() {  
-      // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
-      console.log(this.form2); // 在控制台打印表单数据  
-    }, 
+    // submitForm2() {  
+    //   // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
+    //   console.log(this.form2); // 在控制台打印表单数据  
+    // }, 
   },
   created(){
     if(this.$route.query.select==0){
