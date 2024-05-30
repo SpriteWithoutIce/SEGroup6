@@ -28,6 +28,7 @@
         >
         <el-table :data="ftableData" style="width: 95%; max-height: 480px">
           <el-table-column prop="name" label="姓名" width="150" />
+          <el-table-column prop="id" label="医生编号" width="150" />
           <el-table-column prop="office" label="科室" width="150" />
           <el-table-column prop="title" label="职称" width="150" />
           <el-table-column prop="cost" label="出诊费" width="150" />
@@ -100,6 +101,7 @@ const pagination = ref({
 const tableData = ref([
   // {
   //   name: '王秋',
+  //   id:'',
   //   office: '心血管内科', //科室
   //   title: '副主任医师', //职称
   //   cost: '10.00', //出诊费
