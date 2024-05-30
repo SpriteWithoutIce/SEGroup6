@@ -91,7 +91,7 @@ export default {
           password: CryptoJS.SHA256(password).toString(),
           userType: userType
         };
-        this.$axios.post('api/login', requestData)
+        this.$axios.post('/api/login/', requestData)
           .then(function (response) {
             ts.msg = response.data['msg'];
             console.log(ts.msg);

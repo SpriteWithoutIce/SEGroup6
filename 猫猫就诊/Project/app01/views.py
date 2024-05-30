@@ -27,7 +27,7 @@ class MyCore(MiddlewareMixin):
             response["Access-Control-Allow-Methods"] = 'POST, DELETE, PUT'
         return response
 
-class PatientView(APIView):
+class UserView(APIView):
     def post(self, request):
         data = json.loads(request.body)
         identity_num = data["idCard"]
@@ -54,6 +54,46 @@ class PatientView(APIView):
             user.save()
             return JsonResponse({'msg': 'Successfully Register'})
 
+class PatientView(APIView):
+    def post(self, request):
+        data = json.loads(request.body)
+        name = data['name']
+        paymentType = data['paymentType']
+        gender = data['gender']
+        birthday = data['birthday']
+        idType = data['idType']
+        phone = data['phone']
+        identity_num = data['number']
+        addr = data['addr']
+        patient = Patients()
+        if idType == '身份证':
+            patient.identity = 1
+        elif idType == '医保卡':
+            patient.identity = 2
+        elif idType == '诊疗卡':
+            patient.identity = 3
+        elif idType == '护照':
+            patient.identity = 4
+        elif idType == '军官证':
+            patient.identity = 5
+        elif idType == '港澳通行证':
+            patient.identity = 6
+        patient.identity_num = identity_num
+        patient.name = name
+        if paymentType == '医保':
+            patient.health_insurance = 1
+        elif paymentType == '非医保':
+            patient.health_insurance = 2
+        if gender == '男':
+            patient.gender = 1
+        elif gender == '女':
+            patient.gender = 2
+        patient.birthday = birthday
+        patient.phone_num = phone
+        patient.address = addr
+        patient.save()
+        return JsonResponse({'msg': 'Successfully add patient'})
+
 class RegisterView(APIView):
     def post(self, request):
         action = json.loads(request.body)['action']
@@ -71,7 +111,7 @@ class RegisterView(APIView):
         if user.type == 1:
             filter = {'doctor__identity_num': identity_num}
         elif user.type == 2:
-            filter = {'patient': identity_num}
+            filter = {'register': identity_num}
         for item in Register.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
