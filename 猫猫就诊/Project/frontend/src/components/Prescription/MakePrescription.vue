@@ -98,12 +98,13 @@ export default {
       console.log("看看这里能读吗1")
       console.log(this.patient);
     },
-    getTreatmentsData () {
+    getRegisterData() {
       return new Promise((resolve, reject) => {
         let ts = this;
-        this.$axios.get('/api/treatments/list/')
+        // 需要传入当前用户的identity_num
+        this.$axios.post('/api/registers/list/', {action: "getDoctorRegisters", identity_num: "000001"})
           .then(function (response) {
-            ts.patient = response.data['treatments'];
+            ts.patient = response.data['registers'];
             console.log(ts.patient);
             resolve(); // 数据获取完成，resolve Promise
           })
@@ -160,10 +161,10 @@ export default {
     },
   },
   mounted () {
-    // this.getTreatmentsData().then(() => {
-    //   this.selectFunc('1');
-    //   this.handleCurrentChange(1);
-    // });
+    this.getTreatmentsData().then(() => {
+      this.selectFunc('1');
+      this.handleCurrentChange(1);
+    });
   }
 }
 </script>

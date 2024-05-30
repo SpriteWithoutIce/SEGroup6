@@ -1,9 +1,32 @@
-<!--药物录入细节-->
+<!--医生录入细节-->
 <template>
   <div class="modal-background" v-if="isVisible">
     <div class="modal-container">
       <div class="content">
         <h3>录入医生</h3>
+        <div class="upload">
+          <p style="margin-bottom: 20px; font-size: 14px; font-weight: 500; color: grey">
+            点击导入本地医生照片
+          </p>
+          <el-upload
+            v-model:file-list="fileList"
+            class="upload-demo"
+            action="/api/doctors/uploadAvatar/"
+            :before-upload="handleBeforeUpload"
+            :on-success="handleSuccess"
+            :on-preview="handlePreview"
+            :before-remove="handleBeforeRemove"
+            :on-remove="handleRemove"
+            list-type="picture"
+          >
+            <el-button type="primary">Click to upload</el-button>
+            <template #tip>
+              <div class="el-upload__tip">jpg/png files with a size less than 500kb</div>
+            </template>
+          </el-upload>
+        </div>
+
+        <el-divider />
         <div class="line">
           <p style="margin-left: 15px">姓名：</p>
           <el-input
@@ -12,6 +35,10 @@
             placeholder="请输入医生姓名"
             clearable
           />
+        </div>
+        <div class="line">
+          <p style="margin-left: 15px">医生编号：</p>
+          <el-input v-model="info.id" style="width: 240px" placeholder="请输入医生编号" clearable />
         </div>
         <div class="line">
           <p style="margin-left: 15px">科室：</p>
@@ -69,6 +96,7 @@ export default {
         //医生的信息
         {
           name: '',
+          id: '',
           office: '',
           title: '',
           cost: '',
@@ -83,14 +111,16 @@ export default {
         let ts = this
         let requestData = {
           name: this.info.name,
+          id: this.info.id,
           department: this.info.office,
           title: this.info.title,
           cost: this.info.cost,
           research: this.info.research,
+          avatar_name: this.fileList.length === 0 ? '' : this.fileList[0].name,
           action: this.sign == 'add' ? 'addDoctor' : 'alterDoctor'
         }
         this.$axios
-          .post('/api/doctor/setData/', requestData)
+          .post('/api/doctors/setData/', requestData)
           .then(function (response) {
             console.log(response.data['msg'])
             resolve() // 数据获取完成，resolve Promise
@@ -101,22 +131,90 @@ export default {
           })
       })
     },
+    removePhoto() {
+      return new Promise((resolve, reject) => {
+        axios
+          .post('/api/doctors/removeAvatar/', {
+            id: this.info.id,
+            photo_name: this.fileList[0].name,
+            action: 'removeAvatar'
+          })
+          .then((response) => {
+            console.log('删除成功:', response.data)
+            resolve()
+          })
+          .catch((error) => {
+            console.error('删除失败:', error)
+            reject(error)
+          })
+      })
+    },
+    handleBeforeUpload(file) {
+      if (this.fileList.length === 0) {
+        file.formData = { id: this.info.id }
+        return true
+      } else {
+        this.removePhoto().then(() => {
+          file.formData = { id: this.info.id }
+          return true
+        })
+      }
+    },
+    handleSuccess(res) {
+      // if (response.data['msg'] == "Successfully uploaded photo") {
+      //   this.fileList[0].name = data['name'];
+      //   this.fileList[0].url = data['url'];
+      // } else {
+      //   console.error('文件上传失败');
+      // }
+      if (this.fileList.length === 0) {
+        this.fileList.push({ name: res.name, url: res.url })
+      } else {
+        this.fileList = []
+        this.fileList.push({ name: res.name, url: res.url })
+      }
+      console.log(this.fileList)
+    },
+    handleBeforeRemove() {
+      this.removePhoto().then(() => {
+        return true
+      })
+    },
+    // 合并之前的handleRemove函数
+    handleRemove() {
+      this.fileList = []
+    },
+    // 合并之前的handlePreview函数
+    handlePreview(file) {
+      console.log(file)
+    },
     openModal(row, sign) {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
       this.info.name = row.name
+      this.info.id = row.id
       this.info.office = row.office
       this.info.title = row.title
       this.info.cost = row.cost
       this.info.research = row.research
       this.sign = sign
       this.fileList = []
+      if (row.avatar_name !== undefined && row.avatar_name != '')
+        this.fileList.push({ name: row.avatar_name, url: '/api/doctor/avatar/' + row.avatar_name })
       console.log(`传入的sign是：${this.sign}`)
     },
     closeModal() {
-      this.isVisible = false
-      document.body.style.overflow = '' // 恢复滚动
-      this.$emit('updateData') // 触发自定义事件
+      if (this.fileList.length !== 0) {
+        this.removePhoto().then(() => {
+          this.isVisible = false
+          document.body.style.overflow = '' // 恢复滚动
+          this.$emit('updateData') // 触发自定义事件
+        })
+      } else {
+        this.isVisible = false
+        document.body.style.overflow = '' // 恢复滚动
+        this.$emit('updateData') // 触发自定义事件
+      }
     },
     setDataAndCloseModal() {
       this.setDoctorData().then(() => {

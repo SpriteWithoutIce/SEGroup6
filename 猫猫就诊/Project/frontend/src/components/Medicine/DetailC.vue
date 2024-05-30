@@ -40,9 +40,9 @@
         <div class="line">
           <p style="margin-left: 15px">药品类型：</p>
           <el-radio-group v-model="radio">
-            <el-radio :value="3">中药</el-radio>
-            <el-radio :value="6">中成药</el-radio>
-            <el-radio :value="9">西药</el-radio>
+            <el-radio :value="1">中药</el-radio>
+            <el-radio :value="2">中成药</el-radio>
+            <el-radio :value="3">西药</el-radio>
           </el-radio-group>
         </div>
         <div class="line">
@@ -183,11 +183,11 @@ export default {
       document.body.style.overflow = 'hidden' // 禁止滚动
       this.info.name = row.name
       if (row.type === '中药') {
-        this.radio = 3
+        this.radio = 1
       } else if (row.type === '中成药') {
-        this.radio = 6
+        this.radio = 2
       } else {
-        this.radio = 9
+        this.radio = 3
       }
       this.info.id = row.id
       this.info.use = row.use

@@ -56,15 +56,17 @@ const identityNum = inject('$identity_num')
 
 const getTreatmentsData = () => {
   return new Promise((resolve, reject) => {
-    axios.post('/api/treatments/list/', {identity_num: identityNum })
-    .then((response) => {
-      info.value = response.data['treatments']
-      console.log('Treatments data fetched:', info.value)
-      resolve() // 数据获取完成，resolve Promise
-    }).catch((error) => {
-      console.error('Error fetching treatments data:', error)
-      reject(error) // 数据获取失败，reject Promise
-    })
+    axios
+      .post('/api/treatments/list/', { identity_num: identityNum })
+      .then((response) => {
+        info.value = response.data['treatments']
+        console.log('Treatments data fetched:', info.value)
+        resolve() // 数据获取完成，resolve Promise
+      })
+      .catch((error) => {
+        console.error('Error fetching treatments data:', error)
+        reject(error) // 数据获取失败，reject Promise
+      })
   })
 }
 
@@ -76,11 +78,11 @@ const info = ref([
   //   patient: 'buaa', //患者姓名
   //   doctor: '士小信', //医生
   //   advice: '心跳过快', //医生诊断(比较短,不是很长的那种建议)
-  //   medicine: [
-  //     { name: '金莲花软件囊', time: 3, cnt: 1, use: '口服', price: '5.98' }, //time:疗程,cnt:开的药的数量,use:使用方法,price:单价
-  //     { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', price: 1.09 },
-  //     { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', price: 1.09 }
-  //   ]
+  // medicine: [
+  //   { name: '金莲花软件囊', time: 3, cnt: 1, use: '口服', price: '5.98' }, //time:疗程,cnt:开的药的数量,use:使用方法,price:单价
+  //   { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', price: 1.09 },
+  //   { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', price: 1.09 }
+  // ]
   // },
   // {
   //   office: '心血管门诊',
@@ -193,11 +195,10 @@ const filterInfo = computed(() => {
 })
 onMounted(() => {
   if (identityNum == '0') {
-    console.log("未登录")
+    console.log('未登录')
     return
   }
-  getTreatmentsData().then(() => {
-  })
+  getTreatmentsData().then(() => {})
 })
 </script>
 <style scoped>
