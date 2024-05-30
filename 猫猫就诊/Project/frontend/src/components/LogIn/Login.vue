@@ -170,8 +170,6 @@ export default {
             } else {
               //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
               // this.users.push({ id: idCard, password, userType });
-              /*writeback是新增的写回数据库*/
-              writeBackUserData()
               ElMessage({
                 showClose: true,
                 message: '注册成功并已登录 (๑˃̵ᴗ˂̵)',
