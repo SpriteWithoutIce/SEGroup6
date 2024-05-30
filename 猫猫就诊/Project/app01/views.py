@@ -224,6 +224,18 @@ class TreatmentView(APIView):
         return JsonResponse({'treatments': treatments})
 
 class DoctorView(APIView):
+    def get(self, request):
+        doctors = []
+        for item in Doctors.objects.values('name', 'department', 'title', 'research', 'cost'):
+            doctors.append({
+                'name': item['name'],
+                'office': item['department'],
+                'title': item['title'],
+                'research': item['research'],
+                'cost': item['cost']
+            })
+        return JsonResponse({'doctors': doctors})
+            
     def post(self, request):
         action = json.loads(request.body)['action']
         if action == 'upload_avatar':
@@ -341,6 +353,15 @@ class BillView(APIView):
 
 class NoticeView(APIView):
     def post(self, request):
+        action = json.loads(request.body)['action']
+        if action == 'getMesData':
+            return self.getNoticeData(request)
+        elif action == 'readMes':
+            return self.readNotice(request)
+        else:
+            return JsonResponse({'error': 'Invalid action'}, status=400)
+    
+    def getNoticeData(self, request):
         resMes = []
         billMes = []
         identity_num = json.loads(request.body)['identity_num']
@@ -348,7 +369,7 @@ class NoticeView(APIView):
             doctor_name=F('doctor__name'),
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
-        ).values('patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'date', 'isRead'):
+        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'date', 'isRead'):
             type = ""
             if item['msg_type'] == 1:
                 type = "预约成功"
@@ -361,6 +382,7 @@ class NoticeView(APIView):
             if item['msg_type'] == 1 or item['msg_type'] == 2:
                 register = Register.objects.get(id=item['register'])
                 resMes.append({
+                    "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
@@ -373,6 +395,7 @@ class NoticeView(APIView):
             else:
                 treatment = Treatment.objects.get(id=item['treatment'])
                 billMes.append({
+                    "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
@@ -384,6 +407,13 @@ class NoticeView(APIView):
                     "read": item['isRead']
                 })
         return JsonResponse({"resMes": resMes, "billMes": billMes})
+    
+    def readNotice(self, request):
+        item_id = json.loads(request.body)['item_id']
+        item = Notice.objects.get(id=item_id)
+        item.isRead = True
+        item.save()
+        return JsonResponse({'msg': 'Successfully read'})
 
 class MedicineView(APIView):
     def get(self, request):
