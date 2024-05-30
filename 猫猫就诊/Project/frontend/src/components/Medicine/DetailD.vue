@@ -199,8 +199,8 @@ export default {
       this.info.research = row.research
       this.sign = sign
       this.fileList = []
-      if (row.photo_name !== undefined && row.photo_name != '')
-        this.fileList.push({ name: row.photo_name, url: '/api/doctors/photo/' + row.photo_name })
+      if (row.avatar_name !== undefined && row.avatar_name != '')
+        this.fileList.push({ name: row.avatar_name, url: '/api/doctor/avatar/' + row.avatar_name })
       console.log(`传入的sign是：${this.sign}`)
     },
     closeModal() {
