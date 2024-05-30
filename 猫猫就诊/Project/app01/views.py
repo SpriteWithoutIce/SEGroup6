@@ -360,8 +360,10 @@ class OnDutyView(APIView):
             doctor_name=F('doctor__name'),
             doctor_title=F('doctor__title'),
             doctor_research=F('doctor__research'),
-            doctor_avatar_name=F('doctor__avatar_name')
-        ).values('doctor_id', 'doctor_name', 'doctor_title', 'date', 'doctor_research', 'doctor_avatar_name', 'time', 'state'):
+            doctor_avatar_name=F('doctor__avatar_name'),
+            doctor_cost=F('doctor__cost')
+        ).values('doctor_id', 'doctor_name', 'doctor_title', 'doctor_cost',
+                'date', 'doctor_research', 'doctor_avatar_name', 'time', 'state'):
             time = ""
             if (item['time'] == 1):
                 time = "(上午)"
@@ -401,6 +403,7 @@ class OnDutyView(APIView):
                     "title": item['doctor_title'],
                     "research": item['doctor_research'],
                     "avatar": '/api/doctor/avatar/' + item['doctor_avatar_name'],
+                    "cost": item['doctor_cost'],
                     "schedule": [{'time': item['date'].strftime('%m-%d') + time,
                                     'status': 'full' if rest == 0 else 'empty',
                                     'number': rest,

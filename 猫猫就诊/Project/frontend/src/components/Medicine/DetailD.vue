@@ -134,10 +134,10 @@ export default {
     removePhoto() {
       return new Promise((resolve, reject) => {
         axios
-          .post('/api/doctors/removePhoto/', {
+          .post('/api/doctors/removeAvatar/', {
             id: this.info.id,
             photo_name: this.fileList[0].name,
-            action: 'removePhoto'
+            action: 'removeAvatar'
           })
           .then((response) => {
             console.log('删除成功:', response.data)
