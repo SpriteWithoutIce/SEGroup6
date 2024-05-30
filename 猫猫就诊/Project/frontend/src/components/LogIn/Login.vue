@@ -61,7 +61,7 @@ export default {
       notLogin: "",
       loginForm: {
         idCard: "",
-        password: "",
+        userType: "", password: "",
         userType: "",
         remember: false,
         autoLogin: false,
@@ -195,7 +195,7 @@ export default {
       this.identityNum = '0';
       this.receivedidCard = '';
       this.currentUserType = '';
-      this.loginForm.userType = ''
+      this.loginForm.userType = '';
       this.$emit('update:currentUserCard', "");
       this.$emit('update:currentUserType', "");
       this.isLogin = false;
