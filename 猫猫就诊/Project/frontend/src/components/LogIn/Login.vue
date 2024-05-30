@@ -36,7 +36,9 @@
           <p>用户类型：{{ receivedtype }}</p>
         </div>
         <div class="button-group">
-          <el-button type="danger" @click="logout" class="input-item2">退出登录</el-button>
+          <RouterLink to="/Main">
+            <el-button type="danger" @click="logout" class="input-item2">退出登录</el-button>
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -81,7 +83,7 @@ export default {
     /*this.getUsersData();*/
   },
   methods: {
-    getUserData(idCard, password, userType) {
+    getUserData (idCard, password, userType) {
       return new Promise((resolve, reject) => {
         let ts = this;
         let requestData = {
@@ -136,51 +138,65 @@ export default {
           // let user = this.findUser(idCard);
           // 不能从数据库直接读用户信息，不安全
           // 把用户证件号和使用SHA256加密后的密码传入后端进行比对
-          this.getUserData(idCard, password, userType).then(() => {
-            if (this.msg === "Successfully Login") {
-              ElMessage({
-                showClose: true,
-                message: "登录成功 (๑˃̵ᴗ˂̵)",
-                type: "success",
-              });
-              this.identityNum = idCard;
-              this.$emit('update:currentUserCard', this.loginForm.idCard);
-              this.$emit('update:currentUserType', this.loginForm.userType);
-              this.closeModal();
-            } else if (this.msg === "Wrong Password") {
-              ElMessage({
-                showClose: true,
-                message: "密码错误或用户类型错误 ╮(╯▽╰)╭",
-                type: "error",
-              });
-            } else {
-              //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
-              // this.users.push({ id: idCard, password, userType });
-              ElMessage({
-                showClose: true,
-                message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
-                type: "success",
-              });
-              this.identityNum = idCard;
-              this.$emit('update:currentUserCard', this.loginForm.idCard);
-              this.$emit('update:currentUserType', this.loginForm.userType);
-              this.closeModal();
-            }
-          })
-        } else {
           ElMessage({
-            type: "info",
-            message: "信息错误 ╮(╯▽╰)╭",
             showClose: true,
+            message: "登录成功 (๑˃̵ᴗ˂̵)",
+            type: "success",
           });
+
+          this.identityNum = idCard;
+          this.$emit('update:currentUserCard', this.loginForm.idCard);
+          this.$emit('update:currentUserType', this.loginForm.userType);
+          this.closeModal();
+
+
+
+          //     this.getUserData(idCard, password, userType).then(() => {
+          //       if (this.msg === "Successfully Login") {
+          //         ElMessage({
+          //           showClose: true,
+          //           message: "登录成功 (๑˃̵ᴗ˂̵)",
+          //           type: "success",
+          //         });
+          //         this.identityNum = idCard;
+          //         this.$emit('update:currentUserCard', this.loginForm.idCard);
+          //         this.$emit('update:currentUserType', this.loginForm.userType);
+          //         this.closeModal();
+          //       } else if (this.msg === "Wrong Password") {
+          //         ElMessage({
+          //           showClose: true,
+          //           message: "密码错误或用户类型错误 ╮(╯▽╰)╭",
+          //           type: "error",
+          //         });
+          //       } else {
+          //         //下边一个语句是把新的数据存在了本地的User数组中，得写回数据库
+          //         // this.users.push({ id: idCard, password, userType });
+          //         ElMessage({
+          //           showClose: true,
+          //           message: "注册成功并已登录 (๑˃̵ᴗ˂̵)",
+          //           type: "success",
+          //         });
+          //         this.identityNum = idCard;
+          //         this.$emit('update:currentUserCard', this.loginForm.idCard);
+          //         this.$emit('update:currentUserType', this.loginForm.userType);
+          //         this.closeModal();
+          //       }
+          //     })
+          //   } else {
+          //     ElMessage({
+          //       type: "info",
+          //       message: "信息错误 ╮(╯▽╰)╭",
+          //       showClose: true,
+          //     });
         }
       });
     },
     logout () {
       this.receivedidCard = '';
       this.currentUserType = '';
-      this.$emit('update:currentUserCard', this.loginForm.idCard);
-      this.$emit('update:currentUserType', this.loginForm.userType);
+      this.loginForm.userType = ''
+      this.$emit('update:currentUserCard', "");
+      this.$emit('update:currentUserType', "");
       this.isLogin = false;
       this.notLogin = true;
       this.closeModal();
@@ -189,7 +205,12 @@ export default {
         message: '已退出登录 (๑˃̵ᴗ˂̵)',
         showClose: true,
       });
-      this.identityNum = '0';
+
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
     },
     // findUser (idCard) {
     //   return this.users.find((user) => user.id === idCard);
