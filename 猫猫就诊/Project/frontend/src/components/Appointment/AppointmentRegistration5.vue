@@ -2,16 +2,24 @@
   <Header :squares2="squares2" />
   <div class="notice-box" style="height: 1000px;">
     <div class="container2">
-      <router-link to="/AppointmentRegistration4" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
+      <router-link :to="{
+        path:'/AppointmentRegistration4',
+        query:{
+          name:info.name,
+          paymentType:info.paymentType,
+          department:info.department,
+          inumber:info.inumber,
+        }}" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
       <router-link 
         :to="{
           path:'/AppointmentRegistration6',
           query:{
-            name:info.name,
-            paymentType:info.paymentType,
-            department:info.department,
-            inumber:info.inumber,
-            time:info_time
+            // name:info.name,
+            // paymentType:info.paymentType,
+            // department:info.department,
+            // inumber:info.inumber,
+            // time:info_time
+            info_doctor:JSON.stringify(info)
           }
         }" class="button2 button-next" style="text-decoration: none;">
         下一步
@@ -41,8 +49,8 @@
     <!-- 底部医生介绍 -->  
     <div class="doctor-intro">  
       <div   
-        v-for="doctor in doctors"   
-        :key="doctor.name"  
+        v-for="(doctor,doctorIndex) in doctors"   
+        :key="doctorIndex"  
       >  
         <div v-if="doctorHasScheduleForDate(doctor, selectedDate)" class="doctor-item">
           <div class="doctor-header"> 
@@ -64,7 +72,7 @@
                     <div class="status">约满</div> 
                   </div>
                 </button>
-                <button v-else @click="isClick(doctor.name,daySchedule.time)"
+                <button v-else @click="isClick(doctor.name,daySchedule.time,dayIndex,doctorIndex)"
                   @mouseover="hoverButton"  
                   @mouseout="mouseoutButton" 
                   class="schedule-item"
@@ -74,22 +82,6 @@
                     <div class="status" style="color: blue;">余&nbsp;{{ daySchedule.number }}</div> 
                   </div>
                 </button>
-                <!-- <router-link to="/AppointmentRegistration6" v-else @mouseover="isHovered[dayIndex] = true "   
-                  @mouseleave="isHovered[dayIndex] = false" 
-                  class="schedule-item" :style="isHovered[dayIndex]? 'color: blue; background-color: #85c400;color:white;' : 'color: blue;'">
-                  <div class="time-label">{{ daySchedule.time }}</div>  
-                  <div>
-                    <div class="status" style="color: blue;">余&nbsp;{{ daySchedule.number }}</div> 
-                  </div>
-                </router-link> -->
-                <!-- <button v-else @mouseover="isHovered[dayIndex] = true "   
-                  @mouseleave="isHovered[dayIndex] = false" 
-                  class="schedule-item" :style="isHovered[dayIndex]? 'color: blue; background-color: #85c400;color:white;' : 'color: blue;'">
-                  <div class="time-label">{{ daySchedule.time }}</div>  
-                  <div>
-                    <div class="status" style="color: blue;">余&nbsp;{{ daySchedule.number }}</div> 
-                  </div>
-                </button> -->
               </div> 
             </div>  
           </div>  
@@ -153,9 +145,29 @@ export default {
           avatar: 'img/lsy.jpg', // 头像URL  
           research: '生物信息', // 主要研究方向  
           schedule: [  
-            {time: '05-30(上午)',status:'empty', number: 10},
-            {time: '05-12(下午) ',status: 'full'},
-          ],  
+            {time: '05-31(上午)',status:'empty', number: 10,emptytime:[
+            {number: 1,status:'empty'},
+            {number: 2,status:'full'},
+            {number: 3,status:'empty'},
+            {number: 4,status:'empty'},
+            {number: 5,status:'full'},
+            {number: 6,status:'empty'},
+            {number: 7,status:'full'},
+            {number: 8,status:'full'},
+            {number: 9,status:'empty'},
+            {number: 10,status:'full'},
+            {number: 11,status:'full'},
+            {number: 12,status:'full'},
+            {number: 13,status:'empty'},
+            {number: 14,status:'empty'},
+            {number: 15,status:'full'},
+            {number: 16,status:'empty'},
+            {number: 17,status:'empty'},
+            {number: 18,status:'full'},
+            {number: 19,status:'empty'},
+            {number: 20,status:'full'},
+          ],},
+          ],
           cost:100,
         },
         {  
@@ -190,8 +202,10 @@ export default {
         paymentType:'',
         department:'',
         inumber:'',
+        info_time:'',
+        doctor:{},
+        day_index:'',
       },
-      info_time:'',
     };  
   }  ,
   methods: {  
@@ -215,11 +229,13 @@ export default {
           });
       });
     },
-    isClick(doctor,time){
-      this.info_time=time;
+    isClick(doctor,time,dayIndex,doctorIndex){
+      this.info.info_time=time;
       this.checked=true;
       this.selectDoctor=doctor;
       this.selectDate=time;
+      this.info.day_index=dayIndex;
+      this.info.doctor=this.doctors[doctorIndex];
     },
     // 计算接下来7天的日期和周几  
     locatenextSevenDays() {  
@@ -284,11 +300,29 @@ export default {
           });
         });
       }
-      this.info.name = this.$route.query.name;
-      this.info.paymentType = this.$route.query.paymentType;
-      this.info.department = this.$route.query.department;
-      console.log(this.doctors);
-    });
+    // console.log("111");
+    // console.log(this.doctors);
+    // this.nextSevenDays = this.locatenextSevenDays();
+    // for (let i = 0; i < this.nextSevenDays.length; i++) {
+    //   const day = this.nextSevenDays[i].date;
+    //   this.dayStatus[i].status = 'none';
+    //   this.doctors.forEach(doctor => {
+    //     doctor.schedule.forEach(scheduleItem => {
+    //       if (scheduleItem.time.includes(day)) {
+    //         if (scheduleItem.status === 'full' && this.dayStatus[i].status != 'empty') {
+    //           this.dayStatus[i].status = 'full';
+    //         } else if (scheduleItem.status === 'empty') {
+    //           this.dayStatus[i].status = 'empty';
+    //         }
+    //       }
+    //       console.log(this.dayStatus[i].status);
+    //     });
+    //   });
+    //   this.info.name = this.$route.query.name;
+    //   this.info.paymentType = this.$route.query.paymentType;
+    //   this.info.department = this.$route.query.department;
+    //   console.log(this.doctors);
+    })
   },
   created(){
     this.info.name = this.$route.query.name;

@@ -98,13 +98,13 @@ const pagination = ref({
   pageSize: 9
 })
 const tableData = ref([
-  {
-    name: '王秋',
-    office: '心血管内科', //科室
-    title: '副主任医师', //职称
-    cost: '10.00', //出诊费
-    research: '生物医学工程' //主要研究方向
-  }
+  // {
+  //   name: '王秋',
+  //   office: '心血管内科', //科室
+  //   title: '副主任医师', //职称
+  //   cost: '10.00', //出诊费
+  //   research: '生物医学工程' //主要研究方向
+  // }
 ])
 
 const filterData = computed(() => {
@@ -125,9 +125,9 @@ watch(input4, () => {
 const getDoctorData = () => {
   return new Promise((resolve, reject) => {
     axios
-      .get('/api/doctor/list/')
+      .get('/api/doctors/list/')
       .then((response) => {
-        tableData.value = response.data['doctor']
+        tableData.value = response.data['doctors']
         pagination.value.total = tableData.value.length // 更新总条目数
         console.log('Doctor data fetched:', tableData.value)
         resolve() // 数据获取完成，resolve Promise
@@ -141,9 +141,9 @@ const getDoctorData = () => {
 const deleteDoctor = (row) => {
   return new Promise((resolve, reject) => {
     axios
-      .post('/api/doctor/delete/', { id: row.id, action: 'deleteDoctor' })
+      .post('/api/doctors/delete/', { id: row.id, action: 'deleteDoctor' })
       .then((response) => {
-        tableData.value = response.data['doctor']
+        tableData.value = response.data['doctors']
         pagination.value.total = tableData.value.length // 更新总条目数
         console.log('Doctor data deleted')
         resolve() // 数据获取完成，resolve Promise
