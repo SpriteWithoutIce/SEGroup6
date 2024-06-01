@@ -88,9 +88,10 @@ export default {
           /*问诊单字段：单号+开具的药物+时间+医师建议+总价*/
           id: this.form.id,
           medicines: this.medicines,
-          date: new Date().toISOString,
+          suggestion: this.advice,
           totalPrice: this.totalPrice,
         };
+
         this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
@@ -208,7 +209,7 @@ export default {
       就诊日期: ${this.form.date} <br/>
       性别: ${this.form.gender} <br/>
       药物列表: <br/>
-      ${this.form.medicines.map(med => `  - ${med.name}: ${med.quantity} 个，总价: ¥${med.totalPrice}`).join('<br/>')}
+      ${this.form.medicines.map(med => `  - ${med.name}: ${med.cnt} 个，总价: ¥${med.totalPrice}`).join('<br/>')}
       <br/>
       医师建议: <br/>
       ${this.form.advice} <br/>

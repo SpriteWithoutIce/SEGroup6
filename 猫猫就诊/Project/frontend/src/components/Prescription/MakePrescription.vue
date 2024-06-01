@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import { GlobalState } from '../../global.js';
 import PrescriptionDetails from './PrescriptionDetails.vue'
 export default {
   data () {
@@ -72,7 +73,6 @@ export default {
           sex: '男',
           date: '2024年5月10日',
         },
-
       ],
       //这里设置数据初始化
       filteredPatients: [
@@ -95,14 +95,14 @@ export default {
       const end = start + this.pagination.pageSize;
       this.currentPatients = this.filteredPatients.slice(start, end);
       this.pagination.total = this.filteredPatients.length;
-      console.log("看看这里能读吗1")
       console.log(this.patient);
     },
-    getRegisterData() {
+    getRegisterData () {
+      console.log('getRegisterDate done');
       return new Promise((resolve, reject) => {
         let ts = this;
         // 需要传入当前用户的identity_num
-        this.$axios.post('/api/registers/list/', {action: "getDoctorRegisters", identity_num: "000001"})
+        this.$axios.post('/api/registers/list/', { action: "getDoctorRegisters", identity_num: GlobalState.identityNum })
           .then(function (response) {
             ts.patient = response.data['registers'];
             console.log(ts.patient);
@@ -157,11 +157,11 @@ export default {
           this.handleCurrentChange(1);
           break;
       }
-      console.log(this.filteredPatients);
+      // console.log(this.filteredPatients);
     },
   },
   mounted () {
-    this.getTreatmentsData().then(() => {
+    this.getRegisterData().then(() => {
       this.selectFunc('1');
       this.handleCurrentChange(1);
     });

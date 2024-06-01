@@ -104,7 +104,7 @@ export default {
       info: [
         "出诊查询","网上预约看诊","预约流程","医生查询"
       ],
-      link:['/TableSearch','/AppointmentRegistration','/AppointmentRegistration','/DoctorSearch'],
+      link:['/TableSearch','/AppointmentRegistration','/Picture','/DoctorSearch'],
 
       departments: [  
         { id:0, name: '心血管内科', pinyin:'Xinxueguanneike' },  
@@ -254,7 +254,7 @@ export default {
     filteredDoctors(id) {  
       if(this.search_name_id!=-1){
         return this.doctors.filter(doctor =>
-          doctor.name===this.departments[search_name_id].name
+          doctor.name===this.departments[this.search_name_id].name
         );
       }
       return this.doctors.filter(doctor =>

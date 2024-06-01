@@ -52,7 +52,7 @@ import CryptoJS from 'crypto-js'
 import { ElMessage } from 'element-plus'
 import { inject } from 'vue'
 export default {
-  data() {
+  data () {
     return {
       identityNum: inject('$identity_num'),
 
@@ -81,14 +81,14 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     /*this.getUsersData();*/
   },
   methods: {
-    updateIdentityNum(newId) {
+    updateIdentityNum (newId) {
       globalStateManagement.updateIdentityNum(newId);
     },
-    getUserData(idCard, password, userType) {
+    getUserData (idCard, password, userType) {
       return new Promise((resolve, reject) => {
         let ts = this
         let requestData = {
@@ -109,7 +109,7 @@ export default {
           })
       })
     },
-    openModal(id, type) {
+    openModal (id, type) {
       this.receivedidCard = id
       this.receivedtype = type
       if (id != '') {
@@ -124,19 +124,20 @@ export default {
       this.loginVisible = true
       document.body.style.overflow = 'hidden'
     },
-    closeModal() {
+    closeModal () {
       this.loginVisible = false
       document.body.style.overflow = ''
     },
-    cancelModal() {
+    cancelModal () {
       ElMessage({
         type: 'info',
         message: '取消 ╮(╯▽╰)╭',
         showClose: true
       })
+      this.loginForm.userType = ""
       this.closeModal()
     },
-    handleLogin() {
+    handleLogin () {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           const { idCard, password, userType } = this.loginForm
@@ -164,7 +165,7 @@ export default {
               })
               this.identityNum = idCard
               this.updateIdentityNum(idCard)
-              console.log("登录处修改identityNum为:",GlobalState.identityNum)
+              console.log("登录处修改identityNum为:", GlobalState.identityNum)
               this.$emit('update:currentUserCard', this.loginForm.idCard)
               this.$emit('update:currentUserType', this.loginForm.userType)
               this.closeModal()
@@ -184,7 +185,7 @@ export default {
               })
               this.identityNum = idCard
               this.updateIdentityNum(idCard)
-              console.log("登录处修改identityNum为:",GlobalState.identityNum)
+              console.log("登录处修改identityNum为:", GlobalState.identityNum)
               this.$emit('update:currentUserCard', this.loginForm.idCard)
               this.$emit('update:currentUserType', this.loginForm.userType)
               this.closeModal()
@@ -199,7 +200,7 @@ export default {
         }
       })
     },
-    logout() {
+    logout () {
       this.identityNum = '0'
       this.receivedidCard = ''
       this.currentUserType = ''

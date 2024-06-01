@@ -21,8 +21,9 @@ import AppointmentRegistration6 from "./Appointment/AppointmentRegistration6.vue
 import AppointmentRegistration7 from "./Appointment/AppointmentRegistration7.vue";
 import AppointmentRegistration8 from "./Appointment/AppointmentRegistration8.vue";
 import TableSearch from "./Table/TableSearch.vue";
-import DoctorSearch from "./Table/DoctorSearch.vue"
+import DoctorSearch from "./Table/DoctorSearch.vue";
+import Picture from "./Table/Picture.vue"
 export {
   ReadOnlyVue, HeaderNavigation, MakePrescription, PrescriptionDetails, Navbar, BillList, BillDetails, AppointmentRegistration, AppointmentRegistration2,
-  AppointmentRegistration3, AppointmentRegistration4, AppointmentRegistration5, AppointmentRegistration6, AppointmentRegistration7, AppointmentRegistration8, TableSearch,  DoctorSearch, PatientA, PresA, MedicineA,PharmaCist
+  AppointmentRegistration3, AppointmentRegistration4, AppointmentRegistration5, AppointmentRegistration6, AppointmentRegistration7, AppointmentRegistration8, TableSearch,  DoctorSearch, Picture, PatientA, PresA, MedicineA,PharmaCist
 }

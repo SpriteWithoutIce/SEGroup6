@@ -109,10 +109,11 @@ class RegisterView(APIView):
     def getRegistersData(self, request):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
-        user = User.objects.get(identity_num=identity_num)
-        if user.type == 1:
+        filter = {}
+        try:
+            doctor = Doctors.objects.get(identity_num=identity_num)
             filter = {'doctor__identity_num': identity_num}
-        elif user.type == 2:
+        except Doctors.DoesNotExist:
             filter = {'register': identity_num}
         for item in Register.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
@@ -184,7 +185,7 @@ class RegisterView(APIView):
                 "name": item['patient_name'],
                 "age": age,
                 "sex": "男" if item['patient_gender'] == 1 else "女",
-                "date": datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').date().strftime('%Y年%m月%d日')
+                "date": item['time'].date().strftime('%Y年%m月%d日')
             })
         return JsonResponse({'registers': registers})
 
@@ -212,11 +213,12 @@ class TreatmentView(APIView):
     def post(self, request):
         treatments = []
         identity_num = json.loads(request.body)['identity_num']
-        user = User.objects.get(identity_num=identity_num)
-        if user.type == 1:
+        filter = {}
+        try:
+            doctor = Doctors.objects.get(identity_num=identity_num)
             filter = {'doctor__identity_num': identity_num}
-        elif user.type == 2:
-            filter = {'patient': identity_num}
+        except Doctors.DoesNotExist:
+            filter = {'register': identity_num}
         for item in Treatment.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
@@ -299,7 +301,7 @@ class DoctorView(APIView):
     
     def deleteDoctor(self, request):
         id = json.loads(request.body)['id']
-        Doctors.objects.get(id=id).delete()
+        Doctors.objects.get(identity_num=id).delete()
         return self.get(request)
     
     def removeAvatar(self, request):
@@ -319,8 +321,8 @@ class DoctorView(APIView):
             doctor.cost = data['cost']
             doctor.identity_num = data['id']
             doctor.research = data['research']
-            doctor.avatar = '/api/doctor/avatar/' + data['avatar_name']
             doctor.avatar_name = data['avatar_name']
+            doctor.save()
             return JsonResponse({'msg': "Successfully add doctor data"})
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
@@ -335,7 +337,6 @@ class DoctorView(APIView):
             doctor.cost = data['cost']
             doctor.identity_num = data['id']
             doctor.research = data['research']
-            doctor.avatar = '/api/doctor/avatar/' + data['avatar_name']
             doctor.avatar_name = data['avatar_name']
             doctor.save()
             return JsonResponse({'msg': "Successfully altered doctor data"})
@@ -526,7 +527,7 @@ class NoticeView(APIView):
             doctor_name=F('doctor__name'),
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
-        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
+        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
             type = ""
             if item['msg_type'] == 1:
                 type = "预约成功"
@@ -537,19 +538,20 @@ class NoticeView(APIView):
             else:
                 type = "处方缴费成功"
             if item['msg_type'] == 1 or item['msg_type'] == 2:
+                register = Register.objects.get(id=item['register'])
                 resMes.append({
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
+                    "time": register.time.strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
-                    "timetamp": item['date'],
+                    "timetamp": item['time'],
                     "read": item['isRead']
                 })
             else:
-                treatment = Treatment.objects.get(id=item['treatment']).value('price')
+                treatment = Treatment.objects.get(id=item['treatment'])
                 billMes.append({
                     "item_id": item['id'],
                     "type": type,
@@ -558,8 +560,8 @@ class NoticeView(APIView):
                     "doctor": item['doctor_name'],
                     "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
-                    "timetamp": item['date'],
-                    "price": treatment['price'],
+                    "timetamp": item['time'],
+                    "price": treatment.price,
                     "read": item['isRead']
                 })
         return JsonResponse({"resMes": resMes, "billMes": billMes})
@@ -623,12 +625,7 @@ class MedicineView(APIView):
         try:
             medicine = Medicine()
             medicine.name = data['name']
-            if data['type'] == '3':
-                medicine.medicine_type = 1
-            elif data['type'] == '6':
-                medicine.medicine_type = 2
-            else:
-                medicine.medicine_type = 3
+            medicine.medicine_type = data['type']
             medicine.symptom = data['symptom']
             medicine.price = data['price']
             medicine.quantity = data['quantity']
@@ -643,12 +640,7 @@ class MedicineView(APIView):
         try:
             medicine = Medicine.objects.get(id=data['id'])
             medicine.name = data['name']
-            if data['type'] == '3':
-                medicine.medicine_type = 1
-            elif data['type'] == '6':
-                medicine.medicine_type = 2
-            else:
-                medicine.medicine_type = 3
+            medicine.medicine_type = data['type']
             medicine.symptom = data['symptom']
             medicine.price = data['price']
             medicine.quantity = data['quantity']

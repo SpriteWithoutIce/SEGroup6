@@ -78,7 +78,7 @@ export default {
       info2:[
         "就诊须知","挂号类别","填写预约信息","选择科室","选择医生","选择时间地点","核对预约信息","预约成功"
       ],
-      link:['/TableSearch','/AppointmentRegistration','/AppointmentRegistration','/DoctorSearch'],
+      link:['/TableSearch','/AppointmentRegistration','/Picture','/DoctorSearch'],
     };  
   }  ,
   methods: {  
