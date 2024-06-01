@@ -219,6 +219,8 @@ export default {
       if (GlobalState.identityNum === '0') {
         this.resMes = [];
         this.oriBillMes = [];
+        this.countUnread();
+        return;
       }
       return new Promise((resolve, reject) => {
         let ts = this;
@@ -314,7 +316,7 @@ export default {
         return;
       }
       this.getMesData().then(() => {
-        this.intervalId = setInterval(this.payOverTimeQuery, 30000);
+        this.intervalId = setInterval(this.getMesData(), 30000);
       })
     },
     beforeDestroy() {
