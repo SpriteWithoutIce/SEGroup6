@@ -72,6 +72,7 @@
 <script>  
 import BillDetails from './Appointments/AppointmentBillDetails.vue'
 import Header from './Appointments/AppointmentHeader.vue'
+import { GlobalState } from '../../global.js';
 export default {  
   inject: ['$identity_num'],
   components: {
@@ -178,7 +179,7 @@ export default {
           doctorRearch:this.info.doctorRearch,//医生领域
           cost:this.info.cost,//医生的挂号费
           inumber:this.info.inumber,//患者的证件号
-          identity_num: this.$identityNum,
+          identity_num: GlobalState.identityNum
         };
         // 这里的api
         this.$axios.post('/api/appointment/add/', requestData)
