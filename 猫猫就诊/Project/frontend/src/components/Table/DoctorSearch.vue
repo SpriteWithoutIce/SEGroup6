@@ -206,7 +206,7 @@ export default {
     filteredDoctors(id) {  
       if(this.search_name_id!=-1){
         return this.doctors.filter(doctor =>
-          doctor.name==this.doctors[this.search_name_id].name
+          doctor.name==this.doctors[this.search_name_id-1].name
         );
       }
       else if(this.square_selected!=-1){
