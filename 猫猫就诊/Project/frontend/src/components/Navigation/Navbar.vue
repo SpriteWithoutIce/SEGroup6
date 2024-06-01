@@ -1,7 +1,7 @@
 <template>
   <HeaderNavigation ref="HeaderNavigation" />
   <div class="navbar" :class="{ sticky: isSticky }">
-    <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
+    <messagedrawer ref="messageBox" msg=false class="messageBox" @update:result="getUnreadCount" />
     <RouterLink to="/Main" @click="returnTop" class="white-bold">首页</RouterLink>
     <a @click="NavbarLogin" class="white-bold">登录</a>
     <a class="white-bold" @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
