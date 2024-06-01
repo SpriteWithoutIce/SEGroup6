@@ -155,13 +155,13 @@ export default {
         type: "success"
       });
       console.log('提交表单 完成', this.form);
+      writeBackPrescriptionDetailsData();
       this.form.advice = "";
       this.form.date = "";
       this.form.gender = "";
       this.form.id = "";
       this.form.medicines = "";
       this.form.name = "";
-      writeBackPrescriptionDetailsData();
       this.closeModal();
     },
     addMedicine () {
