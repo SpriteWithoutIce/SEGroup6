@@ -126,7 +126,7 @@ class RegisterView(APIView):
                 'doctor_name', 'time', 'position'):
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M')
+            start_time = item['time']
             end_time = start_time + timedelta(minutes=10)
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
@@ -207,12 +207,14 @@ class TreatmentView(APIView):
             patient_gender=F('patient__gender')
         ).values('queue_id', 'patient_name', 'patient_birthday', 'patient_gender', 'time'):
             age = current_date.year - item['patient_birthday'].year - ((current_date.month, current_date.day) < (item['patient_birthday'].month, item['patient_birthday'].day))
+            year, month, day, hour, minute = map(int, item['time'].split('-') + item['time'].split()[1].split(':'))
+            date = datetime(year, month, day, hour, minute).date()
             treatments.append({
                 "Id": item['queue_id'],
                 "name": item['patient_name'],
                 "age": age,
                 "sex": "男" if item['patient_gender'] == 1 else "女",
-                "date": datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').date().strftime('%Y年%m月%d日')
+                "date": item['time'].date().strftime('%Y年%m月%d日')
             })
         return JsonResponse({'treatments': treatments})
     
@@ -233,7 +235,7 @@ class TreatmentView(APIView):
                 'doctor_name', 'time', 'advice', 'medicine'):
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M')
+            start_time = item['time']
             end_time = start_time + timedelta(minutes=10)
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
