@@ -124,7 +124,6 @@ export default {
   },
   methods: {  
     submit(){
-      this.form.address='猫猫就诊';
       this.form.selectTimeTable=this.selectTimeTable;
       this.form.order=this.doctor.cost;
       this.form.people=this.people;
