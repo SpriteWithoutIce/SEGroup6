@@ -1,6 +1,6 @@
 <template>
   <div>
-    <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
+    <messagedrawer ref="messageBox" msg=true class="messageBox" @update:result="getUnreadCount" />
     <Login @update:refresh="refreshPage" @update:currentUserCard="updateUserCard"
       @update:currentUserType="updateUserType" ref="Login"></Login>
     <Sign ref="Sign"> </Sign>

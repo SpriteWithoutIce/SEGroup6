@@ -140,6 +140,7 @@ import { inject } from 'vue'
 import { GlobalState } from '../../global.js';
 import { ElNotification } from 'element-plus'
 export default {
+  props:['msg'],
   data() {
     return {
       activeNames: ['1', '2'],
@@ -147,6 +148,7 @@ export default {
       timer: null,
       unreadCount: 0,
       firstLoad: true,
+      msg: this.msg,
       resMes: [
         // {
         //   type: '预约成功',
@@ -156,7 +158,7 @@ export default {
         //   time: '2024-5-12',
         //   id: '03230802',
         //   timetamp: '2024-5-11 23:59:59', //用MySQL中的DATETIME类型就可以
-        //   read: true
+        //   read: false
         // },
         // {
         //   type: '取消预约',
@@ -203,7 +205,7 @@ export default {
       // 计算billMes中read为false的数量
       const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
       this.unreadCount = unreadResMesCount + unreadBillMesCount
-      if(this.unreadCount > 0 && this.firstLoad === true) {
+      if(this.unreadCount > 0 && this.firstLoad === true && this.msg === "true") {
           this.checkNewMsg();
           this.firstLoad = false;
       }
