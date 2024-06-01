@@ -88,9 +88,10 @@ export default {
           /*问诊单字段：单号+开具的药物+时间+医师建议+总价*/
           id: this.form.id,
           medicines: this.medicines,
-          date: new Date().toISOString,
+          suggestion: this.advice,
           totalPrice: this.totalPrice,
         };
+
         this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
