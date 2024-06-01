@@ -109,10 +109,11 @@ class RegisterView(APIView):
     def getRegistersData(self, request):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
-        user = User.objects.get(identity_num=identity_num)
-        if user.type == 1:
+        filter = {}
+        try:
+            doctor = Doctors.objects.get(identity_num=identity_num)
             filter = {'doctor__identity_num': identity_num}
-        elif user.type == 2:
+        except Doctors.DoesNotExist:
             filter = {'register': identity_num}
         for item in Register.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
@@ -212,11 +213,12 @@ class TreatmentView(APIView):
     def post(self, request):
         treatments = []
         identity_num = json.loads(request.body)['identity_num']
-        user = User.objects.get(identity_num=identity_num)
-        if user.type == 1:
+        filter = {}
+        try:
+            doctor = Doctors.objects.get(identity_num=identity_num)
             filter = {'doctor__identity_num': identity_num}
-        elif user.type == 2:
-            filter = {'patient': identity_num}
+        except Doctors.DoesNotExist:
+            filter = {'register': identity_num}
         for item in Treatment.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
@@ -536,15 +538,16 @@ class NoticeView(APIView):
             else:
                 type = "处方缴费成功"
             if item['msg_type'] == 1 or item['msg_type'] == 2:
+                register = Register.objects.get(id=item['register']).values('time')
                 resMes.append({
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
+                    "time": register['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
-                    "timetamp": item['date'],
+                    "timetamp": item['time'],
                     "read": item['isRead']
                 })
             else:
@@ -557,7 +560,7 @@ class NoticeView(APIView):
                     "doctor": item['doctor_name'],
                     "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
-                    "timetamp": item['date'],
+                    "timetamp": item['time'],
                     "price": treatment['price'],
                     "read": item['isRead']
                 })
