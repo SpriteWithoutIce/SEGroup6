@@ -214,6 +214,7 @@ export default {
       if (GlobalState.identityNum === 0) {
         this.resMes = [];
         this.oriBillMes = [];
+        this.billMes = [];
         this.countUnread();
         return;
       }
@@ -298,7 +299,10 @@ export default {
       });
     },
     checkNewMsg(){
-      if( this.msgCount !== this.resMes.length + this.billMes.length ){
+      console.log("旧消息数：",this.msgCount)
+      console.log("新消息数：",this.resMes.length + this.billMes.length)
+      if( this.msgCount != this.resMes.length + this.billMes.length ){
+        console.log("有新消息")
         ElNotification({
           icon: notIcon,
           title: '未读消息提示',
