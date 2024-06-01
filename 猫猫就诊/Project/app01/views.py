@@ -195,12 +195,12 @@ class RegisterView(APIView):
     def addRegisterData(self, request):
         data = json.loads(request.body)
         register = Register()
-        # register.queue_id = 
-        # register.patient = data['inumber']
-        # register.register = data['identity_num']
-        # register.doctor = data['id']
-        # register.time = 
-        # register.position =
+        register.queue_id = 
+        register.patient = data['inumber']
+        register.register = data['identity_num']
+        register.doctor = data['id']
+        register.time = 
+        register.position =
         # name:this.info.name,//就诊人
         #   paymentType:this.info.paymentType,
         #   department:this.info.department,
@@ -260,11 +260,9 @@ class TreatmentView(APIView):
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
             if start_time.hour < 12:
-                middle_index = len(formatted_datetime) // 2
-                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_AM + formatted_datetime[middle_index:]
+                formatted_datetime = formatted_datetime[:10] + ' ' + CHINESE_AM + formatted_datetime[10:]
             else:
-                middle_index = len(formatted_datetime) // 2
-                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_PM + formatted_datetime[middle_index:]
+                formatted_datetime = formatted_datetime[:10] + ' ' + CHINESE_PM + formatted_datetime[10:]
             treatments.append({'office': item['doctor_department'],
                             'time': formatted_datetime,
                             'patient': item['patient_name'],
