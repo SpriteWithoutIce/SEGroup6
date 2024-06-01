@@ -36,6 +36,7 @@ import BillList from '../Bills/BillList.vue'
 import PatientA from '../History/PatientA.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
 import messagedrawer from '../Message/MessageDrawer.vue'
+import globalStateManagement from '../../globalStateManagement.js';
 import VueCookies from 'vue-cookies';
 export default {
   name: 'HeaderNavigation',
@@ -81,6 +82,7 @@ export default {
       const userType = VueCookies.get('userType');
 
       if (idCard && userType) {
+        GlobalState.identityNum = idCard;
         this.currentUser.userType = userType;
         this.currentUser.idCard = idCard;
       }
