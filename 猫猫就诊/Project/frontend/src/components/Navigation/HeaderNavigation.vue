@@ -1,7 +1,7 @@
 <template>
   <div>
     <messagedrawer ref="messageBox" msg=true class="messageBox" @update:result="getUnreadCount" />
-    <Login @update:refresh="refreshPage" @update:currentUserCard="updateUserCard"
+    <Login @update:refresh="refreshPage" @update:currentUserCard="updateUserCard" @update:messagebox="updateMessagebox"
       @update:currentUserType="updateUserType" ref="Login"></Login>
     <Sign ref="Sign"> </Sign>
     <el-header class="header-nav" @click="changeBackgroundOnClick">
@@ -62,7 +62,6 @@ export default {
   mounted () {
     this.checkLoginStatus()
     this.startBackgroundRotation()
-    this.$refs.messageBox.countUnread()
   },
   beforeDestroy () {
     this.stopBackgroundRotation()
@@ -83,6 +82,7 @@ export default {
 
       if (idCard && userType) {
         GlobalState.identityNum = idCard;
+        this.$refs.messageBox.getMesData();
         console.log("刷新后的全局身份" + GlobalState.identityNum);
         this.currentUser.userType = userType;
         this.currentUser.idCard = idCard;
@@ -110,6 +110,10 @@ export default {
       this.currentUser.userType = userType
       this.$forceUpdate()
       console.log('用户类型更新完毕')
+    },
+    updateMessagebox(){
+      this.$refs.messageBox.getMesData();
+      this.$emit('update:messagebox');
     },
     showLogin () {
       this.$refs.Login.openModal(this.currentUser.idCard, this.currentUser.userType)

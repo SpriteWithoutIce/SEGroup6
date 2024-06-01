@@ -304,7 +304,7 @@ export default {
         offset: 50
       })
     },
-    created() {
+    mounted() {
       if (GlobalState.identityNum === '0') {
         console.log("未登录");
         return;
