@@ -181,6 +181,8 @@ export default {
           inumber:this.info.inumber,//患者的证件号
           identity_num: GlobalState.identityNum
         };
+        if(this.info.paymentType=='医保')
+          requestData.cost=0;
         // 这里的api
         this.$axios.post('/api/appointment/add/', requestData)
           .then(function (response) {
