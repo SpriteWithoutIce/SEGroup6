@@ -78,7 +78,7 @@ class PatientView(APIView):
         addr = data['addr']
         try:
             patient = Patients.objects.get(identity_num=identity_num)
-        except User.DoesNotExist:
+        except Patients.DoesNotExist:
             patient = Patients()
         if idType == '身份证':
             patient.identity = 1
@@ -105,7 +105,10 @@ class PatientView(APIView):
         patient.birthday = birthday
         patient.phone_num = phone
         patient.address = addr
-        patient.save()
+        try:
+            patient.save()
+        except Exception as e:
+            return JsonResponse({'error': e}, status=500)
         return JsonResponse({'msg': 'Successfully add patient'})
 
 class RegisterView(APIView):

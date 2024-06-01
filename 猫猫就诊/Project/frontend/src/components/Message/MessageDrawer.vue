@@ -69,7 +69,7 @@
 
           <el-collapse-item name="2" class="collapseItem2">
             <template #title>
-              &nbsp;&nbsp;&nbsp;<el-icon><Money /></el-icon>&nbsp;&nbsp;处方缴费通知
+              &nbsp;&nbsp;&nbsp;<el-icon><Money /></el-icon>&nbsp;&nbsp;缴费通知
             </template>
             <div class="messageList">
               <!-- <el-table :data="billMes" style="width: 100%" :row-class-name='success'> -->
@@ -140,7 +140,6 @@ import notIcon from './notIcon.vue'
 import { GlobalState } from '../../global.js';
 import { ElNotification } from 'element-plus'
 export default {
-  props:['msg'],
   data() {
     return {
       activeNames: ['1', '2'],
@@ -204,7 +203,7 @@ export default {
       // 计算billMes中read为false的数量
       const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
       this.unreadCount = unreadResMesCount + unreadBillMesCount
-      if(this.unreadCount > 0 && this.firstLoad === true && this.msg === "true") {
+      if(this.unreadCount > 0 && this.firstLoad === true) {
           this.checkNewMsg();
           this.firstLoad = false;
       }
@@ -216,7 +215,7 @@ export default {
     // url为api/notice/list/
     // 返回数据为resMes和billMes两个字典数组
     getMesData(){
-      if (GlobalState.identityNum === '0') {
+      if (GlobalState.identityNum === 0) {
         this.resMes = [];
         this.oriBillMes = [];
         this.countUnread();
@@ -315,15 +314,8 @@ export default {
         console.log("未登录");
         return;
       }
-      this.getMesData().then(() => {
-        this.intervalId = setInterval(this.getMesData, 30000);
-        console.log("Msg定时器已加载");
-      })
+      this.getMesData()
     },
-    beforeDestroy() {
-      // 组件销毁时清除定时器
-      clearInterval(this.intervalId);
-    }
   }
 }
 </script>
