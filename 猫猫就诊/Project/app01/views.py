@@ -78,7 +78,7 @@ class PatientView(APIView):
         addr = data['addr']
         try:
             patient = Patients.objects.get(identity_num=identity_num)
-        except User.DoesNotExist:
+        except Patients.DoesNotExist:
             patient = Patients()
         if idType == '身份证':
             patient.identity = 1
