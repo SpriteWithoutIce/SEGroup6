@@ -90,6 +90,11 @@ const router = createRouter({
       component: DoctorSearch
     },
     {
+      path: 'Picture',
+      name: 'Picture',
+      component: Picture
+    },
+    {
       path: '/MedicineA',
       name: 'MedicineA',
       component: MedicineA
