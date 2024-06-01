@@ -181,6 +181,7 @@ export default {
           cost:this.info.cost,//医生的挂号费
           inumber:this.info.inumber,//患者的证件号
           identity_num: GlobalState.identityNum,
+          id:this.info.doctor_id,
           action:"addRegisterData"
         };
         if(this.info.paymentType=='医保')
