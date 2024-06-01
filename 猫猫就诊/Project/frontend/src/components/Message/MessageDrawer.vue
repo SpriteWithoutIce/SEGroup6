@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { inject } from 'vue'
+import notIcon from './notIcon.vue'
 import { GlobalState } from '../../global.js';
 import { ElNotification } from 'element-plus'
 export default {
@@ -148,7 +148,6 @@ export default {
       timer: null,
       unreadCount: 0,
       firstLoad: true,
-      msg: this.msg,
       resMes: [
         // {
         //   type: '预约成功',
@@ -298,12 +297,14 @@ export default {
     },
     checkNewMsg(){
       ElNotification({
+        icon: notIcon,
         title: '未读消息提示',
-        message: '你有新的消息，请及时查看',
-        type: 'info',
+        message: '猫猫提示您，有新消息啦，请及时查看哦(>^ω^<)',
+        duration: 6000,
+        offset: 50
       })
     },
-    mounted() {
+    created() {
       if (GlobalState.identityNum === '0') {
         console.log("未登录");
         return;

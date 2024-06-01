@@ -113,9 +113,10 @@ export default {
 }
 
 .item {
-  margin-top: 10px;
+  margin-top: 17px;
   margin-left: -25px;
   margin-right: 25px;
+  right: 20px;
 }
 
 .white-bold {
