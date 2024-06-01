@@ -51,7 +51,7 @@ class Doctors(models.Model):
     avatar_name = models.CharField(verbose_name="图片名字", max_length=128, default="img")
 
 class OnDuty(models.Model):
-    doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", primary_key=True, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
     date = models.DateField(verbose_name="值班日期", default=django.utils.timezone.now)
     time_choices = (
         (1, "上午"),
