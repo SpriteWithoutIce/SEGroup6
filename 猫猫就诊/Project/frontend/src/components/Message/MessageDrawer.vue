@@ -216,6 +216,10 @@ export default {
     // url为api/notice/list/
     // 返回数据为resMes和billMes两个字典数组
     getMesData(){
+      if (GlobalState.identityNum === '0') {
+        this.resMes = [];
+        this.oriBillMes = [];
+      }
       return new Promise((resolve, reject) => {
         let ts = this;
         this.$axios.post('api/notice/list/', {identity_num: GlobalState.identityNum, action: "getMesData"})
