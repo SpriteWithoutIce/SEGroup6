@@ -36,6 +36,7 @@ import BillList from '../Bills/BillList.vue'
 import PatientA from '../History/PatientA.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
 import messagedrawer from '../Message/MessageDrawer.vue'
+import VueCookies from 'vue-cookies';
 export default {
   name: 'HeaderNavigation',
   data () {
@@ -58,7 +59,7 @@ export default {
     }
   },
   mounted () {
-    console.log('HeaderNavigation' + this.date.toISOString)
+    this.checkLoginStatus()
     this.startBackgroundRotation()
     this.$refs.messageBox.countUnread()
   },
@@ -74,6 +75,16 @@ export default {
     messagedrawer
   },
   methods: {
+    checkLoginStatus () {
+      const idCard = VueCookies.get('idCard');
+      console.log("HeaderNavigationcookies" + idCard);
+      const userType = VueCookies.get('userType');
+
+      if (idCard && userType) {
+        this.currentUser.userType = userType;
+        this.currentUser.idCard = idCard;
+      }
+    },
     handleImageClick (link, event) {
       if (this.currentUser.userType === '') {
         this.showLogin()
