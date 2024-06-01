@@ -83,6 +83,7 @@ export default {
 
       if (idCard && userType) {
         GlobalState.identityNum = idCard;
+        console.log("刷新后的全局身份" + GlobalState.identityNum);
         this.currentUser.userType = userType;
         this.currentUser.idCard = idCard;
       }
