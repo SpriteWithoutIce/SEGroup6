@@ -193,7 +193,27 @@ class RegisterView(APIView):
         return JsonResponse({'registers': registers})
     
     def addRegisterData(self, request):
-        
+        data = json.loads(request.body)
+        register = Register()
+        # register.queue_id = 
+        # register.patient = data['inumber']
+        # register.register = data['identity_num']
+        # register.doctor = data['id']
+        # register.time = 
+        # register.position =
+        # name:this.info.name,//就诊人
+        #   paymentType:this.info.paymentType,
+        #   department:this.info.department,
+        #   time:this.info.time,//日期05-30
+        #   starttime:this.info.starttime,//开始时间
+        #   endtime:this.info.endtime,
+        #   number:this.info.number,//挂号序号
+        #   doctorName:this.info.doctorName,//医生名字
+        #   doctorTitle:this.info.doctorAvatar,//医生title
+        #   doctorAvatar:this.info.doctorAvatar,//医生头像
+        #   doctorRearch:this.info.doctorRearch,//医生领域
+        #   cost:this.info.cost,//医生的挂号费
+        #   identity_num: GlobalState.identityNum,
         return JsonResponse({'msg': "Successfully add register"})
 
 class TreatmentView(APIView):
