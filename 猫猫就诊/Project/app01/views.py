@@ -59,7 +59,7 @@ class UserView(APIView):
             patient.name = "未填写"
             patient.health_insurance = 1
             patient.gender = 1
-            patient.birthday = datetime.datetime.now()
+            patient.birthday = datetime.date.now()
             patient.phone_num = "未填写"
             patient.address = "未填写"
             patient.save()
