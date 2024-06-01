@@ -138,13 +138,15 @@
 <script>
 import { inject } from 'vue'
 import { GlobalState } from '../../global.js';
+import { ElNotification } from 'element-plus'
 export default {
-  // inject: ['$identity_num'],
   data() {
     return {
       activeNames: ['1', '2'],
       table: false,
       timer: null,
+      unreadCount: 0,
+      firstLoad: true,
       resMes: [
         // {
         //   type: '预约成功',
@@ -200,9 +202,14 @@ export default {
       const unreadResMesCount = this.resMes.filter((item) => item.read === false).length
       // 计算billMes中read为false的数量
       const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
+      this.unreadCount = unreadResMesCount + unreadBillMesCount
+      if(this.unreadCount > 0 && this.firstLoad === true) {
+          this.checkNewMsg();
+          this.firstLoad = false;
+      }
       // 返回两个数量的总和
       // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
-      this.$emit('update:result', unreadResMesCount + unreadBillMesCount)
+      this.$emit('update:result', this.unreadCount)
     },
     // post请求，请求数据体中包含用户证件号identityNum
     // url为api/notice/list/
@@ -247,7 +254,7 @@ export default {
       }
       return ''
     },
-    /* TODO
+    /* done TODO
       1.根据当前用户id和row对应的消息id更改对应消息的阅读状态（未读->已读） 【link-backend！】
       2.重新获取消息，刷新界面
     */
@@ -286,6 +293,13 @@ export default {
           this.billMes.push(item);
         }
       });
+    },
+    checkNewMsg(){
+      ElNotification({
+        title: '未读消息提示',
+        message: '你有新的消息，请及时查看',
+        type: 'info',
+      })
     },
     mounted() {
       if (GlobalState.identityNum === '0') {
