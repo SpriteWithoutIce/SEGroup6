@@ -144,11 +144,9 @@ class RegisterView(APIView):
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
             if start_time.hour < 12:
-                middle_index = len(formatted_datetime) // 2
-                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_AM + formatted_datetime[middle_index:]
+                formatted_datetime = formatted_datetime[:10] + CHINESE_AM + formatted_datetime[10:]
             else:
-                middle_index = len(formatted_datetime) // 2
-                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_PM + formatted_datetime[middle_index:]
+                formatted_datetime = formatted_datetime[:10] + CHINESE_PM + formatted_datetime[10:]
             
             state = ""
             current_time = timezone.now()
