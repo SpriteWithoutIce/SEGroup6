@@ -144,7 +144,7 @@ class RegisterView(APIView):
             else:
                 state = "已预约"
             
-            bill = Bill.objects.get(register=item['id']).values('price')
+            bill = Bill.objects.get(register=item['id'])
             registers.append({'id': item['id'],
                             'office': item['doctor_department'],
                             'orderNum': item['id'],
