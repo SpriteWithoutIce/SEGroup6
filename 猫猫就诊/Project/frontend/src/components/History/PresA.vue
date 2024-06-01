@@ -51,13 +51,13 @@ import InputA from './InputA.vue'
 import PHistory from './PHistory.vue'
 import axios from 'axios'
 import { ref, onMounted, computed, inject } from 'vue'
-
+import { GlobalState } from '../../global.js'
 const identityNum = inject('$identity_num')
 
 const getTreatmentsData = () => {
   return new Promise((resolve, reject) => {
     axios
-      .post('/api/treatments/list/', { identity_num: identityNum })
+      .post('/api/treatments/list/', { identity_num: GlobalState.identityNum })
       .then((response) => {
         info.value = response.data['treatments']
         console.log('Treatments data fetched:', info.value)

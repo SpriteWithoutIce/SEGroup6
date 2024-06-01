@@ -45,6 +45,8 @@ import SearchA from './SearchA.vue'
 import SignA from './SignA.vue'
 import HistoryA from './HistoryA.vue'
 import axios from 'axios'
+import { GlobalState } from '../../global.js'
+// GlobalState.identityNum;
 import { ref, onMounted, computed, inject } from 'vue'
 const input4 = ref('')
 const info = ref([
@@ -140,7 +142,7 @@ const getRegistersData = () => {
   return new Promise((resolve, reject) => {
     let requestData = {
       action: 'getRegistersData',
-      identity_num: identityNum
+      identity_num: GlobalState.identityNum
     }
     axios
       .post('/api/registers/list/', requestData)

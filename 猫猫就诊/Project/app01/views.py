@@ -525,7 +525,7 @@ class NoticeView(APIView):
             doctor_name=F('doctor__name'),
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
-        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
+        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
             type = ""
             if item['msg_type'] == 1:
                 type = "预约成功"
@@ -622,9 +622,9 @@ class MedicineView(APIView):
         try:
             medicine = Medicine()
             medicine.name = data['name']
-            if data['type'] == '3':
+            if data['type'] == '1':
                 medicine.medicine_type = 1
-            elif data['type'] == '6':
+            elif data['type'] == '2':
                 medicine.medicine_type = 2
             else:
                 medicine.medicine_type = 3
@@ -642,9 +642,9 @@ class MedicineView(APIView):
         try:
             medicine = Medicine.objects.get(id=data['id'])
             medicine.name = data['name']
-            if data['type'] == '3':
+            if data['type'] == '1':
                 medicine.medicine_type = 1
-            elif data['type'] == '6':
+            elif data['type'] == '2':
                 medicine.medicine_type = 2
             else:
                 medicine.medicine_type = 3
