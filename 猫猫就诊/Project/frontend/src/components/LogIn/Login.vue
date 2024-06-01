@@ -218,6 +218,7 @@ export default {
       this.receivedidCard = '';
       this.currentUserType = '';
       this.loginForm.userType = '';
+      this.$emit('update:messagebox');
       this.$emit('update:currentUserCard', '');
       this.$emit('update:currentUserType', '');
       this.isLogin = true;

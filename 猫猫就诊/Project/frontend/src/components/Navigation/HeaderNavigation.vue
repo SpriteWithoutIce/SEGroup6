@@ -82,7 +82,7 @@ export default {
 
       if (idCard && userType) {
         GlobalState.identityNum = idCard;
-        this.$refs.messageBox.getMesData();
+        this.updateMessagebox();
         console.log("刷新后的全局身份" + GlobalState.identityNum);
         this.currentUser.userType = userType;
         this.currentUser.idCard = idCard;
