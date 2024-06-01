@@ -174,6 +174,7 @@ export default {
           starttime:this.info.starttime,//开始时间
           endtime:this.info.endtime,
           number:this.info.number,//挂号序号
+          doctorId:this.info.doctor_id,
           doctorName:this.info.doctorName,//医生名字
           doctorTitle:this.info.doctorAvatar,//医生title
           doctorAvatar:this.info.doctorAvatar,//医生头像

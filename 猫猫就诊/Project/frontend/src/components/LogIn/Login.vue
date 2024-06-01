@@ -126,11 +126,13 @@ export default {
       document.body.style.overflow = '';
     },
     cancelModal () {
-      ElMessage({
-        type: 'info',
-        message: '请登录后重试 ╮(╯▽╰)╭',
-        showClose: true
-      });
+      if( GlobalState.identityNum === 0 ){
+        ElMessage({
+          type: 'info',
+          message: '请登录后重试 ╮(╯▽╰)╭',
+          showClose: true
+        });
+      }
       this.loginForm.userType = "";
       this.closeModal();
     },
@@ -162,6 +164,7 @@ export default {
               this.identityNum = idCard;
               this.updateIdentityNum(idCard);
               // console.log("登录处修改identityNum为:", GlobalState.identityNum);
+              this.$emit('update:messagebox');
               this.$emit('update:currentUserCard', this.loginForm.idCard);
               this.$emit('update:currentUserType', this.loginForm.userType);
               // 设置 cookies
@@ -215,6 +218,8 @@ export default {
       this.receivedidCard = '';
       this.currentUserType = '';
       this.loginForm.userType = '';
+      this.updateIdentityNum(0);
+      this.$emit('update:messagebox');
       this.$emit('update:currentUserCard', '');
       this.$emit('update:currentUserType', '');
       this.isLogin = true;
