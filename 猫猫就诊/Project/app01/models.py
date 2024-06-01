@@ -73,7 +73,7 @@ class Treatment(models.Model):
     queue_id = models.IntegerField(verbose_name="排队号", default=1)
     patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE)
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
-    time = models.DateTimeField(verbose_name="挂号时间")
+    time = models.DateTimeField(verbose_name="就诊时间")
     advice = models.CharField(verbose_name="诊断结果", max_length=256)
     medicine = models.TextField(verbose_name="开具药物")
     price = models.DecimalField(verbose_name="处方总价", max_digits=5, decimal_places=2)
@@ -93,7 +93,7 @@ class Bill(models.Model):
 
 class Notice(models.Model):
     patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='patient_notices')
-    register = models.ForeignKey(verbose_name="挂号者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='register_notices')
+    registerMan = models.ForeignKey(verbose_name="挂号者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='register_notices')
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
     
     type_choices1 = (

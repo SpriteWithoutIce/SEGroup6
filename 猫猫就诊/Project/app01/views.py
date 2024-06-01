@@ -53,6 +53,16 @@ class UserView(APIView):
                 type = type,
             )
             user.save()
+            patient = Patients()
+            patient.identity = 1
+            patient.identity_num = identity_num
+            patient.name = "未填写"
+            patient.health_insurance = 1
+            patient.gender = 1
+            patient.birthday = datetime.datetime.now()
+            patient.phone_num = "未填写"
+            patient.address = "未填写"
+            patient.save()
             return JsonResponse({'msg': 'Successfully Register'})
 
 class PatientView(APIView):
@@ -66,7 +76,10 @@ class PatientView(APIView):
         phone = data['phone']
         identity_num = data['number']
         addr = data['addr']
-        patient = Patients()
+        try:
+            patient = Patients.objects.get(identity_num=identity_num)
+        except User.DoesNotExist:
+            patient = Patients()
         if idType == '身份证':
             patient.identity = 1
         elif idType == '医保卡':
@@ -181,10 +194,10 @@ class RegisterView(APIView):
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
             patient_gender=F('patient__gender')
-        ).values('queue_id', 'patient_name', 'patient_birthday', 'patient_gender', 'time'):
+        ).values('id', 'patient_name', 'patient_birthday', 'patient_gender', 'time'):
             age = current_date.year - item['patient_birthday'].year - ((current_date.month, current_date.day) < (item['patient_birthday'].month, item['patient_birthday'].day))
             registers.append({
-                "Id": item['queue_id'],
+                "Id": item['id'],
                 "name": item['patient_name'],
                 "age": age,
                 "sex": "男" if item['patient_gender'] == 1 else "女",
@@ -195,25 +208,31 @@ class RegisterView(APIView):
     def addRegisterData(self, request):
         data = json.loads(request.body)
         register = Register()
-        register.queue_id = 
+        register.queue_id = data['number']
         register.patient = data['inumber']
         register.register = data['identity_num']
         register.doctor = data['id']
-        register.time = 
-        register.position =
-        # name:this.info.name,//就诊人
-        #   paymentType:this.info.paymentType,
-        #   department:this.info.department,
-        #   time:this.info.time,//日期05-30
-        #   starttime:this.info.starttime,//开始时间
-        #   endtime:this.info.endtime,
-        #   number:this.info.number,//挂号序号
-        #   doctorName:this.info.doctorName,//医生名字
-        #   doctorTitle:this.info.doctorAvatar,//医生title
-        #   doctorAvatar:this.info.doctorAvatar,//医生头像
-        #   doctorRearch:this.info.doctorRearch,//医生领域
-        #   cost:this.info.cost,//医生的挂号费
-        #   identity_num: GlobalState.identityNum,
+        month, day = map(int, data['time'].split('-'))
+        hour, minute = map(int, data['starttime'].split(':'))
+        register.time = datetime(datetime.datetime.now().year, month, day, hour, minute)
+        register.position = "猫猫医院" + data['department']
+        register.save()
+        bill = Bill()
+        bill.type = 1
+        bill.state = False
+        bill.patient = data['inumber']
+        bill.register = register.id
+        bill.price = data['cost']
+        bill.save()
+        notice = Notice()
+        notice.patient = data['inumber']
+        notice.registerMan = data['identity_num']
+        notice.doctor = data['doctorId']
+        notice.msg_type = 1
+        notice.time = datetime.datetime.now()
+        notice.register = register.id
+        notice.isRead = False
+        notice.save()
         return JsonResponse({'msg': "Successfully add register"})
 
 class TreatmentView(APIView):
@@ -239,6 +258,15 @@ class TreatmentView(APIView):
         return JsonResponse({'treatments': treatments})
     
     def post(self, request):
+        action = json.loads(request.body)['action']
+        if action == 'getTreatmentsData':
+            return self.getTreatmentsData(request)
+        elif action == 'addTreatmentData':
+            return self.addTreatmentData(request)
+        else:
+            return JsonResponse({'error': 'Invalid action'}, status=400)
+    
+    def getTreatmentsData(self, request):
         treatments = []
         identity_num = json.loads(request.body)['identity_num']
         filter = {}
@@ -271,6 +299,36 @@ class TreatmentView(APIView):
                             'medicine': json.loads(item['medicine']),
             })
         return JsonResponse({'treatments': treatments})
+    
+    def addTreatmentData(self, request):
+        data = json.loads(request.body)
+        treatment = Treatment()
+        register = Register.objects.get(id=data['id'])
+        treatment.queue_id = register.queue_id
+        treatment.patient = register.patient
+        treatment.doctor = register.doctor
+        treatment.time = datetime.datetime.now()
+        treatment.advice = data['suggestion']
+        treatment.medicine = json.dumps(data['medicines'])
+        treatment.price = data['totalPrice']
+        treatment.save()
+        bill = Bill()
+        bill.type = 2
+        bill.state = False
+        bill.patient = register.patient
+        bill.treatment = treatment.id
+        bill.price = data['totalPrice']
+        bill.save()
+        notice = Notice()
+        notice.patient = register.patient
+        notice.registerMan = register.register
+        notice.doctor = register.doctor
+        notice.msg_type = 3
+        notice.time = datetime.datetime.now()
+        notice.register = register.id
+        notice.isRead = False
+        notice.save()
+        return JsonResponse({'msg': "Successfully add treatment"})
 
 class DoctorView(APIView):
     def get(self, request):
