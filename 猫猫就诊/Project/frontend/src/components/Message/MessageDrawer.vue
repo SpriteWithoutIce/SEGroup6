@@ -268,6 +268,7 @@ export default {
       });
     },
     payOverTimeQuery(){
+      this.billMes = [];
       // 获取当前时间的时间戳（毫秒）
       const nowUtcTimestamp = Date.now();
       // 北京时区相对于 UTC 的偏移量（8小时 * 60分钟 * 60秒 * 1000毫秒）
