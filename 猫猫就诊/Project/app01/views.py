@@ -185,7 +185,7 @@ class RegisterView(APIView):
                 "name": item['patient_name'],
                 "age": age,
                 "sex": "男" if item['patient_gender'] == 1 else "女",
-                "date": datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').date().strftime('%Y年%m月%d日')
+                "date": item['time'].date().strftime('%Y年%m月%d日')
             })
         return JsonResponse({'registers': registers})
 
@@ -538,20 +538,20 @@ class NoticeView(APIView):
             else:
                 type = "处方缴费成功"
             if item['msg_type'] == 1 or item['msg_type'] == 2:
-                register = Register.objects.get(id=item['register']).values('time')
+                register = Register.objects.get(id=item['register'])
                 resMes.append({
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": register['time'].strftime('%Y-%m-%d %H:%M:%S'),
+                    "time": register.time.strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
                     "timetamp": item['time'],
                     "read": item['isRead']
                 })
             else:
-                treatment = Treatment.objects.get(id=item['treatment']).value('price')
+                treatment = Treatment.objects.get(id=item['treatment'])
                 billMes.append({
                     "item_id": item['id'],
                     "type": type,
@@ -561,7 +561,7 @@ class NoticeView(APIView):
                     "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
                     "timetamp": item['time'],
-                    "price": treatment['price'],
+                    "price": treatment.price,
                     "read": item['isRead']
                 })
         return JsonResponse({"resMes": resMes, "billMes": billMes})
@@ -625,12 +625,7 @@ class MedicineView(APIView):
         try:
             medicine = Medicine()
             medicine.name = data['name']
-            if data['type'] == '1':
-                medicine.medicine_type = 1
-            elif data['type'] == '2':
-                medicine.medicine_type = 2
-            else:
-                medicine.medicine_type = 3
+            medicine.medicine_type = data['type']
             medicine.symptom = data['symptom']
             medicine.price = data['price']
             medicine.quantity = data['quantity']
@@ -645,12 +640,7 @@ class MedicineView(APIView):
         try:
             medicine = Medicine.objects.get(id=data['id'])
             medicine.name = data['name']
-            if data['type'] == '1':
-                medicine.medicine_type = 1
-            elif data['type'] == '2':
-                medicine.medicine_type = 2
-            else:
-                medicine.medicine_type = 3
+            medicine.medicine_type = data['type']
             medicine.symptom = data['symptom']
             medicine.price = data['price']
             medicine.quantity = data['quantity']
