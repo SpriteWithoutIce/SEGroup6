@@ -1,5 +1,5 @@
 import asyncio
-from datetime import timedelta
+from datetime import timedelta, datetime
 import os
 from urllib.parse import quote, unquote
 from django.utils import timezone
@@ -103,6 +103,8 @@ class RegisterView(APIView):
             return self.cancelRegister(request)
         elif action == 'getDoctorRegisters':
             return self.getDoctorRegisters(request)
+        elif action == 'addRegisterData':
+            return self.addRegisterData(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -188,7 +190,24 @@ class RegisterView(APIView):
                 "date": item['time'].date().strftime('%Y年%m月%d日')
             })
         return JsonResponse({'registers': registers})
-
+    
+    def addRegisterData(self, request):
+        # identity_num = json.loads(request.body)['identity_num']
+        # patient_id = json.loads(request.body)['cardNum']
+        # doctor_id = json.loads(request.body)['doctorId']
+        # register = Register()
+        # register.patient = Patients.objects.get(id=patient_id)
+        # register.doctor = Doctors.objects.get(id=doctor_id)
+        # register.save()
+        # notice = Notice()
+        # notice.patient = register.patient
+        # notice.register = register.id
+        # notice.doctor = register.doctor
+        # notice.msg_type = 1
+        # notice.date = datetime.date.today()
+        # notice.register = register.id
+        # notice.save()
+        return JsonResponse({'msg': "Successfully add register"})
 
 class TreatmentView(APIView):
     # 返回所有就诊记录
@@ -218,7 +237,7 @@ class TreatmentView(APIView):
             doctor = Doctors.objects.get(identity_num=identity_num)
             filter = {'doctor__identity_num': identity_num}
         except Doctors.DoesNotExist:
-            filter = {'register': identity_num}
+            filter = {'patient': identity_num}
         for item in Treatment.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
