@@ -154,7 +154,13 @@ export default {
         message: "提交成功 ╰(*°▽°*)╯",
         type: "success"
       });
-      console.log('提交表单', this.form);
+      console.log('提交表单 完成', this.form);
+      this.form.advice = "";
+      this.form.date = "";
+      this.form.gender = "";
+      this.form.id = "";
+      this.form.medicines = "";
+      this.form.name = "";
       writeBackPrescriptionDetailsData();
       this.closeModal();
     },
