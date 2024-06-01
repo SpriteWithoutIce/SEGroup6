@@ -17,38 +17,47 @@
 </template>
 
 <style>
-/*也就是说卡顿被我调整成了100s*一次，消除卡顿需要对高度px进行调整*/
+  /*也就是说卡顿被我调整成了100s*一次，消除卡顿需要对高度px进行调整*/
   .flowing-background {
     width: 100%;
-    height: 8vh; 
+    height: 8vh;
     background-image: url('../../assets/main/divider.jpg');
-    background-repeat: repeat-y; 
-    background-size: cover; 
+    background-repeat: repeat-y;
+    background-size: cover;
     animation: flow 100s linear infinite;
   }
+
   @keyframes flow {
     0% {
-      background-position: 0 0; /* 初始位置 */
+      background-position: 0 0;
+      /* 初始位置 */
     }
+
     100% {
-      background-position: 0 -100vh; /* 向上移动100vh */
+      background-position: 0 -100vh;
+      /* 向上移动100vh */
     }
   }
+
   @keyframes rotate {
     0% {
       transform: rotate(0deg);
     }
+
     100% {
       transform: rotate(360deg);
     }
   }
-  .divider{
-    width:100%;
+
+  .divider {
+    width: 100%;
   }
-  .Header{
-    position:relative;
-    height:100vh;
+
+  .Header {
+    position: relative;
+    height: 100vh;
   }
+
   .logo {
     opacity: 0.5;
     position: relative;
@@ -57,25 +66,28 @@
     top: 80px;
     left: 150px;
     z-index: 2;
-    animation: rotate 50s linear infinite; 
+    animation: rotate 50s linear infinite;
   }
-  .title{
+
+  .title {
     position: absolute;
-    opacity:1;
-    z-index:3;
-    top:0px;
-    left:60px;
-    width:260px;
+    opacity: 1;
+    z-index: 3;
+    top: 0px;
+    left: 60px;
+    width: 260px;
   }
-  .subtitle{
+
+  .subtitle {
     position: absolute;
-    opacity:1;
-    z-index:3;
-    top:0px;
-    right:220px;
-    width:180px;
+    opacity: 1;
+    z-index: 3;
+    top: 0px;
+    right: 220px;
+    width: 180px;
   }
-  .bg{
+
+  .bg {
     position: absolute;
     top: 0;
     left: 0;
@@ -87,18 +99,25 @@
     width: 100%;
     height: 650px;
   }
-  .zqssquare1, .zqssquare2, .zqssquare3, .zqssquare4 {
-    border-radius: 5px; /* 添加圆角框 */
+
+  .zqssquare1,
+  .zqssquare2,
+  .zqssquare3,
+  .zqssquare4 {
+    border-radius: 5px;
+    /* 添加圆角框 */
     position: absolute;
     width: 230px;
     height: 230px;
-    transition: transform 1.5s ease; /* 添加过渡效果 */
+    transition: transform 1.5s ease;
+    /* 添加过渡效果 */
   }
 
   .zqssquare1 {
     top: 80px;
     right: 330px;
-    background-image: url('../../assets/main/1.jpg'); /* 默认背景图片 */
+    background-image: url('../../assets/main/1.jpg');
+    /* 默认背景图片 */
   }
 
   .zqssquare2 {
@@ -110,20 +129,23 @@
   .zqssquare3 {
     top: 330px;
     right: 330px;
-    background-image: url('../../assets/main/3.jpg'); /* 默认背景图片 */
+    background-image: url('../../assets/main/3.jpg');
+    /* 默认背景图片 */
   }
 
   .zqssquare4 {
     top: 330px;
     right: 80px;
-    background-image: url('../../assets/main/4.jpg'); /* 默认背景图片 */
+    background-image: url('../../assets/main/4.jpg');
+    /* 默认背景图片 */
   }
 
   .zqssquare1:hover,
   .zqssquare2:hover,
   .zqssquare3:hover,
   .zqssquare4:hover {
-    transform: scale(1.1); /* 悬停时放大 */
+    transform: scale(1.1);
+    /* 悬停时放大 */
   }
 
   .zqssquare1:hover::before,
@@ -136,29 +158,39 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.5); /* 半透明白色遮罩 */
-    transition: background-image 0.8s ease; /* 添加过渡效果 */
+    background-color: rgba(255, 255, 255, 0.5);
+    /* 半透明白色遮罩 */
+    transition: background-image 0.8s ease;
+    /* 添加过渡效果 */
     z-index: 1;
   }
 
   .zqssquare1:hover::before {
-    background-image: url('../../../static/img/main/change1.png'); /* 悬停时的背景图片 */
+    background-image: url('../../../static/img/main/change1.png');
+    /* 悬停时的背景图片 */
   }
+
   .zqssquare2:hover::before {
-    background-image: url('../../../static/img/main/change2.png'); /* 悬停时的背景图片 */
+    background-image: url('../../../static/img/main/change2.png');
+    /* 悬停时的背景图片 */
   }
+
   .zqssquare3:hover::before {
-    background-image: url('../../../static/img/main/change3.png'); /* 悬停时的背景图片 */
+    background-image: url('../../../static/img/main/change3.png');
+    /* 悬停时的背景图片 */
   }
+
   .zqssquare4:hover::before {
-    background-image: url('../../../static/img/main/change4.png'); /* 悬停时的背景图片 */
+    background-image: url('../../../static/img/main/change4.png');
+    /* 悬停时的背景图片 */
   }
+
   .footer {
     position: relative;
     background-color: rgb(8, 3, 88);
     color: white;
     font-size: 17px;
     line-height: 30px;
-  
+
   }
 </style>

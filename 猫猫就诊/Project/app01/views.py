@@ -1,5 +1,6 @@
 import asyncio
 from datetime import timedelta
+import datetime
 import os
 from urllib.parse import quote, unquote
 from django.utils import timezone
@@ -103,6 +104,8 @@ class RegisterView(APIView):
             return self.cancelRegister(request)
         elif action == 'getDoctorRegisters':
             return self.getDoctorRegisters(request)
+        elif action == 'addRegisterData':
+            return self.addRegisterData(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -123,7 +126,7 @@ class RegisterView(APIView):
                 'doctor_name', 'time', 'position'):
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M')
+            start_time = item['time']
             end_time = start_time + timedelta(minutes=10)
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
@@ -141,7 +144,7 @@ class RegisterView(APIView):
             else:
                 state = "已预约"
             
-            bill = Bill.objects.get(register=item['id']).values('price')
+            bill = Bill.objects.get(register=item['id'])
             registers.append({'id': item['id'],
                             'office': item['doctor_department'],
                             'orderNum': item['id'],
@@ -188,7 +191,10 @@ class RegisterView(APIView):
                 "date": item['time'].date().strftime('%Y年%m月%d日')
             })
         return JsonResponse({'registers': registers})
-
+    
+    def addRegisterData(self, request):
+        
+        return JsonResponse({'msg': "Successfully add register"})
 
 class TreatmentView(APIView):
     # 返回所有就诊记录
@@ -201,12 +207,14 @@ class TreatmentView(APIView):
             patient_gender=F('patient__gender')
         ).values('queue_id', 'patient_name', 'patient_birthday', 'patient_gender', 'time'):
             age = current_date.year - item['patient_birthday'].year - ((current_date.month, current_date.day) < (item['patient_birthday'].month, item['patient_birthday'].day))
+            year, month, day, hour, minute = map(int, item['time'].split('-') + item['time'].split()[1].split(':'))
+            date = datetime(year, month, day, hour, minute).date()
             treatments.append({
                 "Id": item['queue_id'],
                 "name": item['patient_name'],
                 "age": age,
                 "sex": "男" if item['patient_gender'] == 1 else "女",
-                "date": datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').date().strftime('%Y年%m月%d日')
+                "date": item['time'].date().strftime('%Y年%m月%d日')
             })
         return JsonResponse({'treatments': treatments})
     
@@ -218,7 +226,7 @@ class TreatmentView(APIView):
             doctor = Doctors.objects.get(identity_num=identity_num)
             filter = {'doctor__identity_num': identity_num}
         except Doctors.DoesNotExist:
-            filter = {'register': identity_num}
+            filter = {'patient': identity_num}
         for item in Treatment.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
@@ -227,7 +235,7 @@ class TreatmentView(APIView):
                 'doctor_name', 'time', 'advice', 'medicine'):
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M')
+            start_time = item['time']
             end_time = start_time + timedelta(minutes=10)
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
