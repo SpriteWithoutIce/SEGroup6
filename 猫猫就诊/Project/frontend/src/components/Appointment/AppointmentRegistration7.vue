@@ -114,6 +114,7 @@ export default {
         inumber:'',//患者的证件号
         identity_num: this.$identityNum,
         info_last:{},
+        doctor_id:'',
       },
       info_last:{},
     };  
@@ -219,6 +220,7 @@ export default {
     this.info.doctorRearch=this.info_last.doctorRearch;
     this.info.cost=this.info_last.cost;
     this.info.inumber=this.info_last.inumber;
+    this.info.doctor_id=this.info_last.doctor_id;
     console.log(this.info.info_last)
   }
 };  
