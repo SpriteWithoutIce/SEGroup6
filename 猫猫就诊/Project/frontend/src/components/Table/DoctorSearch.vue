@@ -157,55 +157,7 @@ export default {
         // ... 其他科室  
       ],
       doctors: [  
-        {  
-          id:0,
-          name: '医生A',  
-          title: '主任医师',  
-          department:{id:0,name:'心血管内科'},
-          avatar: 'img/avatar/lsy.jpg', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-        },
-        {  
-          id:1,
-          name: '医生B',  
-          title: '副主任医师',  
-          avatar: 'img/avatar/touxiang.png', // 头像URL  
-          department:{id:1,name:'呼吸与危重症医学科'},
-          research: '生物信息', // 主要研究方向  
-        }, 
-        {  
-          id:2,
-          name: '医生C',  
-          title: '副主任医师',  
-          avatar: 'img/avatar/touxiang (1).png', // 头像URL  
-          department:{id:0,name:'心血管内科'},
-          research: '生物信息', // 主要研究方向  
-        }, 
-        {  
-          id:3,
-          name: '医生A',  
-          title: '主任医师',  
-          department:{id:0,name:'心血管内科'},
-          avatar: 'img/avatar/lsy.jpg', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-        },
-        {  
-          id:4,
-          name: '医生B',  
-          title: '副主任医师',  
-          avatar: 'img/avatar/touxiang.png', // 头像URL  
-          department:{id:1,name:'呼吸与危重症医学科'},
-          research: '生物信息', // 主要研究方向  
-        }, 
-        { 
-          id:5, 
-          name: '医生C',  
-          title: '副主任医师',  
-          avatar: 'img/avatar/touxiang (1).png', // 头像URL  
-          department:{id:0,name:'心血管内科'},
-          research: '生物信息', // 主要研究方向  
-        }, 
-        // ... 其他医生数据  
+        
       ],     
       departmentLetters: ['ALL', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],  
 
@@ -254,11 +206,11 @@ export default {
     filteredDoctors(id) {  
       if(this.search_name_id!=-1){
         return this.doctors.filter(doctor =>
-          doctor.name===this.departments[this.search_name_id].name
+          doctor.name==this.departments[this.search_name_id].name
         );
       }
       return this.doctors.filter(doctor =>
-        doctor.department.id===id
+        doctor.department==this.departments[this.square_selected].name
       );
     },  
     querySearch(queryString, cb) {   
@@ -296,7 +248,7 @@ export default {
       });
     }, 
   },
-  created(){
+  mounted(){
     this.getDutyData();
   }
 };  
