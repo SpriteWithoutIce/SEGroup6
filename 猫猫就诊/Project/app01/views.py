@@ -536,15 +536,16 @@ class NoticeView(APIView):
             else:
                 type = "处方缴费成功"
             if item['msg_type'] == 1 or item['msg_type'] == 2:
+                register = Register.objects.get(id=item['register']).value('time')
                 resMes.append({
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
+                    "time": register['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
-                    "timetamp": item['date'],
+                    "timetamp": item['time'],
                     "read": item['isRead']
                 })
             else:
@@ -557,7 +558,7 @@ class NoticeView(APIView):
                     "doctor": item['doctor_name'],
                     "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
-                    "timetamp": item['date'],
+                    "timetamp": item['time'],
                     "price": treatment['price'],
                     "read": item['isRead']
                 })
