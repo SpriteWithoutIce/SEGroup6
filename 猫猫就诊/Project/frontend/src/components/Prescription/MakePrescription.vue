@@ -162,7 +162,7 @@ export default {
     },
   },
   mounted () {
-    this.getTreatmentsData().then(() => {
+    this.getRegisterData().then(() => {
       this.selectFunc('1');
       this.handleCurrentChange(1);
     });
