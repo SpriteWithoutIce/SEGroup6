@@ -78,38 +78,61 @@ class PatientView(APIView):
         addr = data['addr']
         try:
             patient = Patients.objects.get(identity_num=identity_num)
+            if idType == '身份证':
+                patient.identity = 1
+            elif idType == '医保卡':
+                patient.identity = 2
+            elif idType == '诊疗卡':
+                patient.identity = 3
+            elif idType == '护照':
+                patient.identity = 4
+            elif idType == '军官证':
+                patient.identity = 5
+            elif idType == '港澳通行证':
+                patient.identity = 6
+            patient.name = name
+            if paymentType == '医保':
+                patient.health_insurance = 1
+            elif paymentType == '非医保':
+                patient.health_insurance = 2
+            if gender == '男':
+                patient.gender = 1
+            elif gender == '女':
+                patient.gender = 2
+            patient.birthday = birthday
+            patient.phone_num = phone
+            patient.address = addr
+            patient.save()
+            return JsonResponse({'msg': 'Successfully add patient'})
         except Patients.DoesNotExist:
             patient = Patients()
-        if idType == '身份证':
-            patient.identity = 1
-        elif idType == '医保卡':
-            patient.identity = 2
-        elif idType == '诊疗卡':
-            patient.identity = 3
-        elif idType == '护照':
-            patient.identity = 4
-        elif idType == '军官证':
-            patient.identity = 5
-        elif idType == '港澳通行证':
-            patient.identity = 6
-        patient.identity_num = identity_num
-        patient.name = name
-        if paymentType == '医保':
-            patient.health_insurance = 1
-        elif paymentType == '非医保':
-            patient.health_insurance = 2
-        if gender == '男':
-            patient.gender = 1
-        elif gender == '女':
-            patient.gender = 2
-        patient.birthday = birthday
-        patient.phone_num = phone
-        patient.address = addr
-        try:
+            if idType == '身份证':
+                patient.identity = 1
+            elif idType == '医保卡':
+                patient.identity = 2
+            elif idType == '诊疗卡':
+                patient.identity = 3
+            elif idType == '护照':
+                patient.identity = 4
+            elif idType == '军官证':
+                patient.identity = 5
+            elif idType == '港澳通行证':
+                patient.identity = 6
+            patient.identity_num = identity_num
+            patient.name = name
+            if paymentType == '医保':
+                patient.health_insurance = 1
+            elif paymentType == '非医保':
+                patient.health_insurance = 2
+            if gender == '男':
+                patient.gender = 1
+            elif gender == '女':
+                patient.gender = 2
+            patient.birthday = birthday
+            patient.phone_num = phone
+            patient.address = addr
             patient.save()
-        except Exception as e:
-            return JsonResponse({'error': e}, status=500)
-        return JsonResponse({'msg': 'Successfully add patient'})
+            return JsonResponse({'msg': 'Successfully add patient'})
 
 class RegisterView(APIView):
     def post(self, request):
