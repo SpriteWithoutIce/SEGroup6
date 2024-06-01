@@ -108,8 +108,7 @@ class PatientView(APIView):
         try:
             patient.save()
         except Exception as e:
-            print(e)
-            return JsonResponse({'error': 'Failed to add patient'}, status=500)
+            return JsonResponse({'error': e}, status=500)
         return JsonResponse({'msg': 'Successfully add patient'})
 
 class RegisterView(APIView):
