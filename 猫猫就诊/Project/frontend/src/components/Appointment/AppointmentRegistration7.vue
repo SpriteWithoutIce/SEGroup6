@@ -124,12 +124,7 @@ export default {
   },
   methods: {  
     submit(){
-      this.form.selectTimeTable=this.selectTimeTable;
-      this.form.order=this.doctor.cost;
-      this.form.people=this.people;
-      this.form.isMedicalInsurance=this.isMedicalInsurance;
       
-      this.form.doctorname=this.doctor.name;
       // console.log(this.form)
     },
     selectTimeSlot(index){
