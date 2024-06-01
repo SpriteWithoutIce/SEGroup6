@@ -156,7 +156,7 @@ export default {
         type: "success"
       });
       console.log('提交表单 完成', this.form);
-      writeBackPrescriptionDetailsData();
+      this.writeBackPrescriptionDetailsData();
       this.form.advice = "";
       this.form.date = "";
       this.form.gender = "";
