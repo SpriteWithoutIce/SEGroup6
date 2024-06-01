@@ -210,7 +210,7 @@ class RegisterView(APIView):
         register.patient = data['inumber']
         register.register = data['identity_num']
         register.doctor = data['id']
-        month, day = map(int, data['time'].split('-'))
+        month, day = map(int, data['time'][:5].split('-'))
         hour, minute = map(int, data['starttime'].split(':'))
         register.time = datetime(datetime.datetime.now().year, month, day, hour, minute)
         register.position = "猫猫医院" + data['department']
