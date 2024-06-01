@@ -128,7 +128,7 @@ export default {
     cancelModal () {
       ElMessage({
         type: 'info',
-        message: '取消 ╮(╯▽╰)╭',
+        message: '请登录后重试 ╮(╯▽╰)╭',
         showClose: true
       });
       this.loginForm.userType = "";
