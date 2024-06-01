@@ -622,9 +622,9 @@ class MedicineView(APIView):
         try:
             medicine = Medicine()
             medicine.name = data['name']
-            if data['type'] == '3':
+            if data['type'] == '1':
                 medicine.medicine_type = 1
-            elif data['type'] == '6':
+            elif data['type'] == '2':
                 medicine.medicine_type = 2
             else:
                 medicine.medicine_type = 3
@@ -642,9 +642,9 @@ class MedicineView(APIView):
         try:
             medicine = Medicine.objects.get(id=data['id'])
             medicine.name = data['name']
-            if data['type'] == '3':
+            if data['type'] == '1':
                 medicine.medicine_type = 1
-            elif data['type'] == '6':
+            elif data['type'] == '2':
                 medicine.medicine_type = 2
             else:
                 medicine.medicine_type = 3
