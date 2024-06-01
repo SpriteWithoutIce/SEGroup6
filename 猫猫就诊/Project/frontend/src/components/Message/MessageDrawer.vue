@@ -136,10 +136,11 @@
 </template>
 
 <script>
-import { inject } from 'vue'
+import notIcon from './notIcon.vue'
 import { GlobalState } from '../../global.js';
 import { ElNotification } from 'element-plus'
 export default {
+  props:['msg'],
   data() {
     return {
       activeNames: ['1', '2'],
@@ -156,7 +157,7 @@ export default {
         //   time: '2024-5-12',
         //   id: '03230802',
         //   timetamp: '2024-5-11 23:59:59', //用MySQL中的DATETIME类型就可以
-        //   read: true
+        //   read: false
         // },
         // {
         //   type: '取消预约',
@@ -203,7 +204,7 @@ export default {
       // 计算billMes中read为false的数量
       const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
       this.unreadCount = unreadResMesCount + unreadBillMesCount
-      if(this.unreadCount > 0 && this.firstLoad === true) {
+      if(this.unreadCount > 0 && this.firstLoad === true && this.msg === "true") {
           this.checkNewMsg();
           this.firstLoad = false;
       }
@@ -296,12 +297,14 @@ export default {
     },
     checkNewMsg(){
       ElNotification({
+        icon: notIcon,
         title: '未读消息提示',
-        message: '你有新的消息，请及时查看',
-        type: 'info',
+        message: '猫猫提示您，有新消息啦，请及时查看哦(>^ω^<)',
+        duration: 6000,
+        offset: 50
       })
     },
-    mounted() {
+    created() {
       if (GlobalState.identityNum === '0') {
         console.log("未登录");
         return;
