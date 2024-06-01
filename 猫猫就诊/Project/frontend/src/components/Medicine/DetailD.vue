@@ -136,7 +136,7 @@ export default {
         axios
           .post('/api/doctors/removeAvatar/', {
             id: this.info.id,
-            photo_name: this.fileList[0].name,
+            avatar_name: this.fileList[0].name,
             action: 'removeAvatar'
           })
           .then((response) => {
