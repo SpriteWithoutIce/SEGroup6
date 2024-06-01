@@ -306,7 +306,7 @@ export default {
         icon: notIcon,
         title: '未读消息提示',
         message: '猫猫提示您，有新消息啦，请及时查看哦(>^ω^<)',
-        duration: 6000,
+        duration: 5000,
         offset: 50
       })
     },
@@ -316,7 +316,8 @@ export default {
         return;
       }
       this.getMesData().then(() => {
-        this.intervalId = setInterval(this.getMesData(), 30000);
+        this.intervalId = setInterval(this.getMesData, 30000);
+        console.log("Msg定时器已加载");
       })
     },
     beforeDestroy() {
