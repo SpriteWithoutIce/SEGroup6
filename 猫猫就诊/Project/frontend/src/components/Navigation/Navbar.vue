@@ -1,5 +1,5 @@
 <template>
-  <HeaderNavigation ref="HeaderNavigation" />
+  <HeaderNavigation ref="HeaderNavigation" @update:messagebox="updateMessagebox" />
   <div class="navbar" :class="{ sticky: isSticky }">
     <messagedrawer ref="messageBox" msg=false class="messageBox" @update:result="getUnreadCount" />
     <RouterLink to="/Main" @click="returnTop" class="white-bold">首页</RouterLink>
@@ -56,6 +56,9 @@ export default {
     },
     getUnreadCount (cnt) {
       this.unreadCount = cnt
+    },
+    updateMessagebox(){
+      this.$refs.messageBox.getMesData();
     },
     returnTop () {
       window.scrollTo({

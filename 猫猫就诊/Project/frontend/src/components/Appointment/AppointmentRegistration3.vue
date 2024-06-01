@@ -180,7 +180,9 @@ export default {
       console.log(this.formData);
     } ,
     submit(){
-      this.setPatientData();
+      console.log(this.formData)
+      if(this.first==1)
+        this.setPatientData();
     },
     submitForm2() {  
       // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  

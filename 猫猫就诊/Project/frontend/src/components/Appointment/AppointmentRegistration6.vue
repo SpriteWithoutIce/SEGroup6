@@ -176,6 +176,7 @@ export default {
         doctorRearch:'',
         cost:'',
         info_doctor:{},
+        doctor_id:'',
       }
     };  
   }  ,
@@ -221,6 +222,7 @@ export default {
     this.info.inumber=this.info_doctor.inumber;
     this.doctors[0]=this.info_doctor.doctor;
 
+    this.info_detail.doctor_id=this.doctors[0].id;
     this.info_detail.name=this.info.name;
     this.info_detail.paymentType=this.info.paymentType;
     this.info_detail.department=this.info.department;

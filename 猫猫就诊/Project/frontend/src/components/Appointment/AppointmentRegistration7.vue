@@ -114,6 +114,7 @@ export default {
         inumber:'',//患者的证件号
         identity_num: this.$identityNum,
         info_last:{},
+        doctor_id:'',
       },
       info_last:{},
     };  
@@ -123,13 +124,7 @@ export default {
   },
   methods: {  
     submit(){
-      this.form.address='猫猫就诊';
-      this.form.selectTimeTable=this.selectTimeTable;
-      this.form.order=this.doctor.cost;
-      this.form.people=this.people;
-      this.form.isMedicalInsurance=this.isMedicalInsurance;
       
-      this.form.doctorname=this.doctor.name;
       // console.log(this.form)
     },
     selectTimeSlot(index){
@@ -173,6 +168,7 @@ export default {
           starttime:this.info.starttime,//开始时间
           endtime:this.info.endtime,
           number:this.info.number,//挂号序号
+          doctorId:this.info.doctor_id,
           doctorName:this.info.doctorName,//医生名字
           doctorTitle:this.info.doctorAvatar,//医生title
           doctorAvatar:this.info.doctorAvatar,//医生头像
@@ -180,6 +176,7 @@ export default {
           cost:this.info.cost,//医生的挂号费
           inumber:this.info.inumber,//患者的证件号
           identity_num: GlobalState.identityNum,
+          id:this.info.doctor_id,
           action:"addRegisterData"
         };
         if(this.info.paymentType=='医保')
@@ -219,6 +216,7 @@ export default {
     this.info.doctorRearch=this.info_last.doctorRearch;
     this.info.cost=this.info_last.cost;
     this.info.inumber=this.info_last.inumber;
+    this.info.doctor_id=this.info_last.doctor_id;
     console.log(this.info.info_last)
   }
 };  

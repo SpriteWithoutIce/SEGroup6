@@ -90,6 +90,7 @@ export default {
           medicines: this.medicines,
           suggestion: this.advice,
           totalPrice: this.totalPrice,
+          action: "addTreatmentData"
         };
 
         this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
