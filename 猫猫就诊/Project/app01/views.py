@@ -1,5 +1,6 @@
 import asyncio
-from datetime import timedelta, datetime
+from datetime import timedelta
+import datetime
 import os
 from urllib.parse import quote, unquote
 from django.utils import timezone
@@ -192,21 +193,7 @@ class RegisterView(APIView):
         return JsonResponse({'registers': registers})
     
     def addRegisterData(self, request):
-        # identity_num = json.loads(request.body)['identity_num']
-        # patient_id = json.loads(request.body)['cardNum']
-        # doctor_id = json.loads(request.body)['doctorId']
-        # register = Register()
-        # register.patient = Patients.objects.get(id=patient_id)
-        # register.doctor = Doctors.objects.get(id=doctor_id)
-        # register.save()
-        # notice = Notice()
-        # notice.patient = register.patient
-        # notice.register = register.id
-        # notice.doctor = register.doctor
-        # notice.msg_type = 1
-        # notice.date = datetime.date.today()
-        # notice.register = register.id
-        # notice.save()
+        
         return JsonResponse({'msg': "Successfully add register"})
 
 class TreatmentView(APIView):
