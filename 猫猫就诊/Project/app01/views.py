@@ -159,7 +159,7 @@ class RegisterView(APIView):
             registers.append({'id': item['id'],
                             'office': item['doctor_department'],
                             'orderNum': item['id'],
-                            'price': bill['price'],
+                            'price': bill.price,
                             'name': item['patient_name'],
                             'cardNum': item['patient'],
                             'position': item['position'],
