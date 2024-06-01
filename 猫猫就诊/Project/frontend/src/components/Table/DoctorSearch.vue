@@ -209,9 +209,12 @@ export default {
           doctor.name==this.departments[this.search_name_id].name
         );
       }
-      return this.doctors.filter(doctor =>
-        doctor.department==this.departments[this.square_selected].name
-      );
+      else if(this.square_selected!=-1){
+        return this.doctors.filter(doctor =>
+          doctor.department==this.departments[this.square_selected].name
+        );
+      }
+      
     },  
     querySearch(queryString, cb) {   
       console.log(queryString)
