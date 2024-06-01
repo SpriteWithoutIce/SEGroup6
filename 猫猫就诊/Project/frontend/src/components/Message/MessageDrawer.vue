@@ -5,7 +5,10 @@
       <!-- 折叠面板实现消息种类分类 -->
       <div class="demo-collapse">
         <el-collapse v-model="activeNames">
-          <el-collapse-item title="&nbsp;&nbsp;&nbsp;预约通知" name="1" class="collapseItem1">
+          <el-collapse-item name="1" class="collapseItem1">
+            <template #title>
+              &nbsp;&nbsp;&nbsp;<el-icon><Calendar /></el-icon>&nbsp;&nbsp;预约通知
+            </template>
             <div class="messageList">
               <el-table :data="resMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
@@ -64,7 +67,10 @@
             </div>
           </el-collapse-item>
 
-          <el-collapse-item title="&nbsp;&nbsp;&nbsp;缴费通知" name="2" class="collapseItem2">
+          <el-collapse-item name="2" class="collapseItem2">
+            <template #title>
+              &nbsp;&nbsp;&nbsp;<el-icon><Money /></el-icon>&nbsp;&nbsp;处方缴费通知
+            </template>
             <div class="messageList">
               <!-- <el-table :data="billMes" style="width: 100%" :row-class-name='success'> -->
               <el-table :data="billMes" style="width: 100%" :row-class-name="tableRowClassName">
@@ -119,7 +125,7 @@
                 </el-table-column>
                 <el-table-column label="类型" prop="type" />
                 <el-table-column label="患者姓名" prop="name" />
-                <el-table-column label="时间" prop="time" />
+                <el-table-column label="开具时间" prop="time" />
               </el-table>
             </div>
           </el-collapse-item>
@@ -262,6 +268,7 @@ export default {
       });
     },
     payOverTimeQuery(){
+      this.billMes = [];
       // 获取当前时间的时间戳（毫秒）
       const nowUtcTimestamp = Date.now();
       // 北京时区相对于 UTC 的偏移量（8小时 * 60分钟 * 60秒 * 1000毫秒）
@@ -308,6 +315,11 @@ export default {
   text-shadow: 2px 2px 3px rgba(13, 65, 153, 0.941);
   text-align: left;
   color:rgb(255, 254, 254)
+}
+::v-deep .el-collapse-item__header{
+  font-size: 14px;
+  font-weight: bold;
+  color:grey
 }
 .mesBody{
   margin: 20px;

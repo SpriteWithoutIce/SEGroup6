@@ -175,7 +175,7 @@ const filterInfo = computed(() => {
   })
 })
 onMounted(() => {
-  if (identityNum == '0') {
+  if (GlobalState.identityNum == '0') {
     console.log('未登录')
     return
   }
