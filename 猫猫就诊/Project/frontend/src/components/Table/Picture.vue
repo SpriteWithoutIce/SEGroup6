@@ -5,7 +5,7 @@
       :key="index"  
       :to="link[index]"
       class="square"  
-      :class="{ 'square-hovered': (square.hovered || index==3) }"  
+      :class="{ 'square-hovered': (square.hovered || index==2) }"  
       @mouseover="square.hovered = true"  
       @mouseout="square.hovered = false">
       {{ info[index] }}  
@@ -14,7 +14,7 @@
   
   
   <div class="container2">  
-    
+    <img src="/static/img/appointment/img.png" alt="" style="width: 40%;">
     
   </div>  
 </template>  
@@ -32,13 +32,13 @@ export default {
       squares: [  
         { hovered: false },  
         { hovered: false },  
-        { hovered: false },  
-        { hovered: true }  
+        { hovered: true },  
+        { hovered: false }  
       ] ,
       info: [
         "出诊查询","网上预约看诊","预约流程","医生查询"
       ],
-      link:['/TableSearch','/AppointmentRegistration','/AppointmentRegistration','/DoctorSearch'],
+      link:['/TableSearch','/AppointmentRegistration','/Picture','/DoctorSearch'],
 
       
     };  
