@@ -146,7 +146,7 @@ export default {
       table: false,
       timer: null,
       unreadCount: 0,
-      firstLoad: true,
+      msgCount: 0,
       resMes: [
         // {
         //   type: '预约成功',
@@ -203,10 +203,6 @@ export default {
       // 计算billMes中read为false的数量
       const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
       this.unreadCount = unreadResMesCount + unreadBillMesCount
-      if(this.unreadCount > 0 && this.firstLoad === true) {
-          this.checkNewMsg();
-          this.firstLoad = false;
-      }
       // 返回两个数量的总和
       // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
       this.$emit('update:result', this.unreadCount)
@@ -231,6 +227,7 @@ export default {
             console.log(ts.resMes);
             console.log(ts.billMes);
             ts.countUnread();
+            ts.checkNewMsg();
             resolve(); // 数据获取完成，resolve Promise
           })
           .catch(function (error) {
@@ -301,13 +298,16 @@ export default {
       });
     },
     checkNewMsg(){
-      ElNotification({
-        icon: notIcon,
-        title: '未读消息提示',
-        message: '猫猫提示您，有新消息啦，请及时查看哦(>^ω^<)',
-        duration: 5000,
-        offset: 50
-      })
+      if( this.msgCount !== this.resMes.length + this.billMes.length ){
+        ElNotification({
+          icon: notIcon,
+          title: '未读消息提示',
+          message: '猫猫提示您，有新消息啦，请及时查看哦(>^ω^<)',
+          duration: 5000,
+          offset: 50
+        })
+        this.msgCount = this.resMes.length + this.billMes.length;
+      }
     },
     mounted() {
       if (GlobalState.identityNum === '0') {
