@@ -124,7 +124,7 @@ export default {
   },
   methods: {  
     submit(){
-      
+      this.setAppointmentData().then(() =>{})
       // console.log(this.form)
     },
     selectTimeSlot(index){
