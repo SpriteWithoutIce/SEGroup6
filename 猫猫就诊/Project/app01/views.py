@@ -212,7 +212,7 @@ class RegisterView(APIView):
         if register.time.hour > 12:
             time = 2
         onDuty = OnDuty.objects.get(doctor=register.doctor, date=register.time.date(), time=time)
-        onDuty.state = onDuty.state & (~(1 << (register.queue_id - 1)))
+        onDuty.state = onDuty.state & (1 << (register.queue_id - 1))
         onDuty.save()
         bill = Bill()
         bill.type = 1
