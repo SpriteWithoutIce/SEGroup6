@@ -156,7 +156,7 @@ export default {
         message: "提交成功 ╰(*°▽°*)╯",
         type: "success"
       });
-      console.log('提交表单 完成', this.form);
+      console.log('提交表单 完成' + this.form);
       this.writeBackPrescriptionDetailsData();
       this.form.advice = "";
       this.form.date = "";
