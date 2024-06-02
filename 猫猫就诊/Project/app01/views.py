@@ -208,6 +208,12 @@ class RegisterView(APIView):
         register.time = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
         register.position = "猫猫医院" + data['department']
         register.save()
+        time = 1
+        if register.time.hour > 12:
+            time = 2
+        onDuty = OnDuty.objects.get(doctor=register.doctor, date=register.time.date(), time=time)
+        onDuty.state = onDuty.state & (~(1 << (register.queue_id - 1)))
+        onDuty.save()
         bill = Bill()
         bill.type = 1
         bill.state = True
