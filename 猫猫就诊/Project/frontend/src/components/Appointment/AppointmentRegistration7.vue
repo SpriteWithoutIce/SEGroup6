@@ -218,10 +218,13 @@ export default {
     }
     this.info.info_last=this.info_last;
     this.info.name=this.info_last.name;
-    if(this.isMedicalInsurance)
+  
+    this.info.paymentType=this.info_last.paymentType;
+    if(this.info.paymentType=='非医保')
+      this.isMedicalInsurance=false;
+    else{
       this.info.paymentType='医保';
-    else
-      this.info.paymentType='非医保';
+    }
     this.info.department=this.info_last.department;
     this.info.time=this.info_last.time;
     this.info.starttime=this.info_last.starttime;

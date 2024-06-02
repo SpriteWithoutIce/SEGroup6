@@ -235,12 +235,25 @@ export default {
     this.info_detail.cost=this.doctors[0].cost;
     this.info_detail.info_doctor=this.info_doctor;
     if((this.info_time.match(/\(.*?\)/) || [])[0]=='(上午)'){
-      this.info_detail.starttime=this.timetable_1[0].startTime;
-      this.info_detail.endtime=this.timetable_1[0].endTime;
+      var i=0;
+      for(i=0;i<20;i++){
+        if(this.doctors[0].schedule[0].emptytime[i].status=='empty'){
+          this.info_detail.starttime=this.timetable_1[i].startTime;
+          this.info_detail.endtime=this.timetable_1[i].endTime;
+          break;
+        }
+      }
+      
     }
     else{
-      this.info_detail.starttime=this.timetable_2[0].startTime;
-      this.info_detail.endtime=this.timetable_2[0].endTime;
+      var i=0;
+      for(i=0;i<20;i++){
+        if(this.doctors[0].schedule[0].emptytime[i].status=='empty'){
+          this.info_detail.starttime=this.timetable_2[i].startTime;
+          this.info_detail.endtime=this.timetable_2[i].endTime;
+          break;
+        }
+      }
     }
     console.log(this.info_detail)
     console.log(this.info_detail.doctor_id)
