@@ -301,7 +301,7 @@ export default {
     checkNewMsg(){
       console.log("旧消息数：",this.msgCount)
       console.log("新消息数：",this.resMes.length + this.billMes.length)
-      if( this.msgCount != this.resMes.length + this.billMes.length ){
+      if( this.msgCount != this.resMes.length + this.billMes.length && this.unreadCount !== 0){
         console.log("有新消息")
         ElNotification({
           icon: notIcon,
