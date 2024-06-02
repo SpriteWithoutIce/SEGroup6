@@ -2,9 +2,7 @@
   <Header :squares2="squares2"/> 
   <BillDetails @billDetailsUpdated="onBillDetailsUpdated" ref="BillDetails"> </BillDetails>
   <div class="notice-box" style="height: 1500px;">  
-    <div>{{ this.info.inumber }}</div>
-    <div>{{ this.info.identity_num }}</div>
-    <div>{{ this.billstatus }}</div>
+   
     <!-- 上一步/下一步 -->
     <div class="container2">  
       <router-link :to="{

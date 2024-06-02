@@ -25,7 +25,7 @@
         下一步
       </router-link>
     </div>
-    <div>{{ this.$route.query.department }}</div>
+    
     <!-- 顶部日期块 -->  
     <div class="date-blocks">
       <button   
