@@ -240,6 +240,7 @@ export default {
         if(this.doctors[0].schedule[0].emptytime[i].status=='empty'){
           this.info_detail.starttime=this.timetable_1[i].startTime;
           this.info_detail.endtime=this.timetable_1[i].endTime;
+          break;
         }
       }
       
@@ -250,6 +251,7 @@ export default {
         if(this.doctors[0].schedule[0].emptytime[i].status=='empty'){
           this.info_detail.starttime=this.timetable_2[i].startTime;
           this.info_detail.endtime=this.timetable_2[i].endTime;
+          break;
         }
       }
     }
