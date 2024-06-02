@@ -590,7 +590,6 @@ class BillView(APIView):
         treatment = bill.treatment
         notice = Notice()
         notice.patient = treatment.patient
-        notice.registerMan = "未知"
         notice.doctor = treatment.doctor
         notice.msg_type = 4
         notice.time = timezone.now()
