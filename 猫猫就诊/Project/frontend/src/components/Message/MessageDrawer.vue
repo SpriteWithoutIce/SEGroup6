@@ -215,6 +215,7 @@ export default {
         this.resMes = [];
         this.oriBillMes = [];
         this.billMes = [];
+        this.msgCount = 0;
         this.countUnread();
         return;
       }
@@ -225,6 +226,7 @@ export default {
             ts.resMes = response.data['resMes'];
             ts.oriBillMes = response.data['billMes'];
             ts.payOverTimeQuery();
+            ts.sortMesByTimestamp();
             console.log(ts.resMes);
             console.log(ts.billMes);
             ts.countUnread();
@@ -236,6 +238,23 @@ export default {
             reject(error); // 数据获取失败，reject Promise
           });
           console.log('MesDrawer发送的请求参数:', {identity_num: GlobalState.identityNum});
+      });
+    },
+    // 将消息按照倒序排序
+    sortMesByTimestamp() {
+      this.resMes.sort((a, b) => {
+        // 将字符串转换为日期对象
+        const dateA = new Date(a.timetamp);
+        const dateB = new Date(b.timetamp);
+        // 比较日期对象的时间戳
+        return dateB - dateA; // 倒序排序
+      });
+      this.billMes.sort((a, b) => {
+        // 将字符串转换为日期对象
+        const dateA = new Date(a.timetamp);
+        const dateB = new Date(b.timetamp);
+        // 比较日期对象的时间戳
+        return dateB - dateA; // 倒序排序
       });
     },
     openDrawer() {
@@ -288,11 +307,7 @@ export default {
     payOverTimeQuery(){
       this.billMes = [];
       // 获取当前时间的时间戳（毫秒）
-      const nowUtcTimestamp = Date.now();
-      // 北京时区相对于 UTC 的偏移量（8小时 * 60分钟 * 60秒 * 1000毫秒）
-      const beijingUtcOffset = 8 * 60 * 60 * 1000;
-      // 将 UTC 时间戳转换为北京时区的时间戳
-      const now = nowUtcTimestamp + beijingUtcOffset;
+      const now = Date.now();
       // 遍历 oriBillMes 数组
       this.oriBillMes.forEach(item => {
         // 将字符串形式的时间戳转换为数字类型的时间戳（毫秒）
