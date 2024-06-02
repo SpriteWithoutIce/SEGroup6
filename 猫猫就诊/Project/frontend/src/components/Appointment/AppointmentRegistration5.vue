@@ -65,7 +65,7 @@
             <div v-for="(daySchedule, dayIndex) in doctor.schedule"   
                     :key="dayIndex">
               <div v-if="dayHasScheduleForDate(daySchedule,selectedDate)">
-                <button class="schedule-item1" v-if="daySchedule.status!='empty'">
+                <button class="schedule-item1" v-if="daySchedule.status!='empty'&& checkTime(daySchedule.time)">
                   <div class="time-label">{{ daySchedule.time }}
                   </div>  
                   <div>
@@ -275,6 +275,37 @@ export default {
     hoverButton() {  
     },  
     mouseoutButton() {  
+    },
+    checkTime(timeString) {  
+      const [datePart, timeOfDay] = timeString.split('(');  
+      const [month, day] = datePart.split('-').map(str => parseInt(str, 10));  
+      const isMorning = timeOfDay.includes('上午');  
+      const time = isMorning ? '08:00:00' : '14:00:00'; // 根据上午/下午设置时间  
+  
+      // 构造需要比较的时间点（完整的日期和时间）  
+      const compareDate = new Date();  
+      compareDate.setMonth(month - 1); // 注意月份是从0开始的  
+      compareDate.setDate(day);  
+      compareDate.setHours(...time.split(':').map(Number));  
+      compareDate.setMinutes(0);  
+      compareDate.setSeconds(0);  
+      compareDate.setMilliseconds(0);  
+  
+      // 获取当前时间的完整对象  
+      const now = new Date();  
+  
+      // 如果传入的时间不是同一天，则直接返回true（或根据需求决定）  
+      if (compareDate.getDate() !== now.getDate() || compareDate.getMonth() !== now.getMonth()) {  
+        return true; // 或者返回false，取决于你的业务逻辑  
+      }  
+  
+      // 比较时间  
+      if (now > compareDate) {  
+        return false; // 当前时间大于比较时间点  
+      }  
+  
+      // 其他情况返回true  
+      return true;  
     },
   },
   mounted() {
