@@ -239,6 +239,13 @@ export default {
       });
     },
     openDrawer() {
+      if(GlobalState.identityNum === 0){
+        ElMessage({
+          showClose: true,
+          message: '请先登录 ╮(╯▽╰)╭',
+          type: 'warning',
+        });
+      }
       this.getMesData();
       this.table = true;
     },
