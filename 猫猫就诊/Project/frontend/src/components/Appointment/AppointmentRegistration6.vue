@@ -234,6 +234,14 @@ export default {
     this.info_detail.doctorRearch=this.doctors[0].research;
     this.info_detail.cost=this.doctors[0].cost;
     this.info_detail.info_doctor=this.info_doctor;
+    if((this.info_time.match(/\(.*?\)/) || [])[0]=='(上午)'){
+      this.info_detail.starttime=this.timetable_1[0].startTime;
+      this.info_detail.endtime=this.timetable_1[0].endTime;
+    }
+    else{
+      this.info_detail.starttime=this.timetable_2[0].startTime;
+      this.info_detail.endtime=this.timetable_2[0].endTime;
+    }
     console.log(this.info_detail.doctor_id)
     console.log(this.info_doctor)
   }

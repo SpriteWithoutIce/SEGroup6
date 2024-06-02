@@ -67,7 +67,8 @@
         query:{
           info:JSON.stringify(info1.info_last)
         }}" class="button2 button-prev" style="text-decoration: none;">上一步</router-link>
-      <button class="button2 button-next" @click="submit">确认</button>  
+      <router-link to="/PatientA" class="button2 button-next" @click="submit">确认</router-link>
+      <!-- <button class="button2 button-next" @click="submit">确认</button>   -->
     </div>
     
     

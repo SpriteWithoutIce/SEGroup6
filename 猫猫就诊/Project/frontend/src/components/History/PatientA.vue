@@ -92,12 +92,12 @@ const info = ref([
 
 const getRegistersData = () => {
   return new Promise((resolve, reject) => {
-    // let requestData = {
-    //   action: 'getRegistersData',
-    //   identity_num: GlobalState.identityNum
-    // }
+    let requestData = {
+      action: 'getRegistersData',
+      identity_num: GlobalState.identityNum
+    }
     axios
-      .post('/api/registers/list/', { identity_num: GlobalState.identityNum })
+      .post('/api/registers/list/', requestData)
       .then((response) => {
         info.value = response.data['registers']
         console.log('Registers data fetched:', info.value)
