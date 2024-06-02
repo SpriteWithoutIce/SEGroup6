@@ -143,7 +143,7 @@ class RegisterView(APIView):
             
             state = ""
             current_time = timezone.now()
-            if start_time > current_time:
+            if start_time < current_time:
                 state = "已就诊"
             else:
                 state = "已预约"
