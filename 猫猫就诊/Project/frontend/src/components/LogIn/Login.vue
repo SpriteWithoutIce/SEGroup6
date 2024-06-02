@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { RouterLink, RouterView } from 'vue-router'
 import globalStateManagement from '../../globalStateManagement.js';
 import { GlobalState } from '../../global.js';
 import CryptoJS from 'crypto-js';
@@ -126,7 +127,7 @@ export default {
       document.body.style.overflow = '';
     },
     cancelModal () {
-      if( GlobalState.identityNum === 0 ){
+      if (GlobalState.identityNum === 0) {
         ElMessage({
           type: 'info',
           message: '请登录后重试 ╮(╯▽╰)╭',
@@ -239,6 +240,7 @@ export default {
         left: 0,
         behavior: 'smooth'
       });
+      this.$router.push({ path: "/Main" });
     }
   }
 }

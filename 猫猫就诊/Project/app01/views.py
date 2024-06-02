@@ -205,9 +205,15 @@ class RegisterView(APIView):
         register.doctor = Doctors.objects.get(id=data['doctorId'])
         month, day = map(int, data['time'][:5].split('-'))
         hour, minute = map(int, data['starttime'].split(':'))
-        register.time = datetime.datetime(datetime.datetime.now().year, month, day, hour, minute)
+        register.time = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
         register.position = "猫猫医院" + data['department']
         register.save()
+        time = 1
+        if register.time.hour > 12:
+            time = 2
+        onDuty = OnDuty.objects.get(doctor=register.doctor, date=register.time.date(), time=time)
+        onDuty.state = onDuty.state & (~(1 << (register.queue_id - 1)))
+        onDuty.save()
         bill = Bill()
         bill.type = 1
         bill.state = True
@@ -220,7 +226,7 @@ class RegisterView(APIView):
         notice.registerMan = register.register
         notice.doctor = register.doctor
         notice.msg_type = 1
-        notice.time = datetime.datetime.now()
+        notice.time = timezone.now()
         notice.register = register
         notice.isRead = False
         notice.save()
@@ -298,7 +304,7 @@ class TreatmentView(APIView):
         treatment.queue_id = register.queue_id
         treatment.patient = register.patient
         treatment.doctor = register.doctor
-        treatment.time = datetime.datetime.now()
+        treatment.time = timezone.now()
         treatment.advice = data['suggestion']
         treatment.medicine = json.dumps(data['medicines'])
         treatment.price = data['totalPrice']
@@ -315,7 +321,7 @@ class TreatmentView(APIView):
         notice.registerMan = register.register
         notice.doctor = register.doctor
         notice.msg_type = 3
-        notice.time = datetime.datetime.now()
+        notice.time = timezone.now()
         notice.treatment = treatment
         notice.isRead = False
         notice.save()
@@ -578,10 +584,18 @@ class BillView(APIView):
     
     def changeBillStatus(self, request):
         data = json.loads(request.body)
-        item_id = data['item_id']
-        item = Bill.objects.get(id=item_id)
-        item.state = True
-        item.save()
+        bill = Bill.objects.get(id=data['item_id'])
+        bill.state = True
+        bill.save()
+        treatment = Treatment.objects.get(id=bill.treatment)
+        notice = Notice()
+        notice.patient = treatment.patient
+        notice.doctor = treatment.doctor
+        notice.msg_type = 4
+        notice.time = timezone.now()
+        notice.treatment = treatment
+        notice.isRead = False
+        notice.save()
         return self.getBillsData(request)
 
 class NoticeView(APIView):
