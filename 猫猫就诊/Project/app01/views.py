@@ -164,17 +164,17 @@ class RegisterView(APIView):
 
     def cancelRegister(self, request):
         id = json.loads(request.body)['id']
-        item = Register.objects.get(id=id)
+        register = Register.objects.get(id=id)
         Bill.objects.get(register=id).delete()
         notice = Notice()
-        notice.patient = item.patient
-        notice.register = item
-        notice.doctor = item.doctor
+        notice.patient = register.patient
+        notice.registerMan = register.register
+        notice.doctor = register.doctor
         notice.msg_type = 2
         notice.date = datetime.date.today()
-        notice.register = id
+        notice.register = register
         notice.save()
-        item.delete()
+        register.delete()
         return JsonResponse({'msg': "Successfully cancel register"})
     
     def getDoctorRegisters(self, request):
