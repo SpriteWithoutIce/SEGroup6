@@ -200,9 +200,9 @@ class RegisterView(APIView):
         data = json.loads(request.body)
         register = Register()
         register.queue_id = data['number']
-        register.patient = data['inumber']
-        register.register = data['identity_num']
-        register.doctor = data['id']
+        register.patient = Patients.objects.get(identity_num=data['inumber'])
+        register.register = Patients.objects.get(identity_num=data['identity_num'])
+        register.doctor = Doctors.objects.get(id=data['doctorId'])
         month, day = map(int, data['time'][:5].split('-'))
         hour, minute = map(int, data['starttime'].split(':'))
         register.time = datetime(datetime.datetime.now().year, month, day, hour, minute)
@@ -211,17 +211,17 @@ class RegisterView(APIView):
         bill = Bill()
         bill.type = 1
         bill.state = False
-        bill.patient = data['inumber']
-        bill.register = register.id
+        bill.patient = register.patient
+        bill.register = register
         bill.price = data['cost']
         bill.save()
         notice = Notice()
-        notice.patient = data['inumber']
-        notice.registerMan = data['identity_num']
-        notice.doctor = data['doctorId']
+        notice.patient = register.patient
+        notice.registerMan = register.register
+        notice.doctor = register.doctor
         notice.msg_type = 1
         notice.time = datetime.datetime.now()
-        notice.register = register.id
+        notice.register = register
         notice.isRead = False
         notice.save()
         return JsonResponse({'msg': "Successfully add register"})
