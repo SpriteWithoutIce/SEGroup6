@@ -320,7 +320,7 @@ export default {
         this.msgCount = this.resMes.length + this.billMes.length;
       }
     },
-    mounted() {
+    created() {
       if (GlobalState.identityNum === '0') {
         console.log("未登录");
         return;
