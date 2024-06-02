@@ -166,6 +166,12 @@ class RegisterView(APIView):
         id = json.loads(request.body)['id']
         register = Register.objects.get(id=id)
         bill = Bill.objects.get(register=id)
+        time = 1
+        if register.time.hour > 12:
+            time = 2
+        onDuty = OnDuty.objects.get(doctor=register.doctor, date=register.time.date(), time=time)
+        onDuty.state = onDuty.state & (~(1 << (register.queue_id - 1)))
+        onDuty.save()
         notice = Notice()
         notice.patient = register.patient
         notice.registerMan = register.register
