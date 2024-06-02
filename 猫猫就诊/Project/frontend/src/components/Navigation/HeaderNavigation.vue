@@ -1,6 +1,6 @@
 <template>
   <div>
-    <messagedrawer ref="messageBox" msg=true class="messageBox" @update:result="getUnreadCount" />
+    <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
     <Login @update:refresh="refreshPage" @update:currentUserCard="updateUserCard" @update:messagebox="updateMessagebox"
       @update:currentUserType="updateUserType" ref="Login"></Login>
     <Sign ref="Sign"> </Sign>
@@ -61,10 +61,13 @@ export default {
   },
   mounted () {
     this.checkLoginStatus()
+    this.intervalId = setInterval(this.updateMessagebox, 30000);
+    console.log("HeaderNavigation 定时器已加载");
     this.startBackgroundRotation()
   },
   beforeDestroy () {
     this.stopBackgroundRotation()
+    clearInterval(this.intervalId)
   },
   components: {
     // Navbar,
@@ -113,7 +116,6 @@ export default {
     },
     updateMessagebox(){
       this.$refs.messageBox.getMesData();
-      this.$emit('update:messagebox');
     },
     showLogin () {
       this.$refs.Login.openModal(this.currentUser.idCard, this.currentUser.userType)
@@ -161,6 +163,7 @@ export default {
     },
     getUnreadCount (cnt) {
       this.unreadCount = cnt
+      this.$emit('update:unreadCount', cnt)
     },
     getClickableImages () {
       const defaultClickHandler = () => {

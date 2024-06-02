@@ -1,7 +1,6 @@
 <template>
-  <HeaderNavigation ref="HeaderNavigation" @update:messagebox="updateMessagebox" />
+  <HeaderNavigation ref="HeaderNavigation" @update:unreadCount="getUnreadCount" />
   <div class="navbar" :class="{ sticky: isSticky }">
-    <messagedrawer ref="messageBox" msg=false class="messageBox" @update:result="getUnreadCount" />
     <RouterLink to="/Main" @click="returnTop" class="white-bold">首页</RouterLink>
     <a @click="NavbarLogin" class="white-bold">登录</a>
     <a class="white-bold" @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
@@ -12,7 +11,6 @@
 
 <script>
 import { ref, onMounted, onUnmounted } from 'vue'
-import messagedrawer from '../Message/MessageDrawer.vue'
 import HeaderNavigation from './HeaderNavigation.vue'
 import { Navbar } from '..'
 export default {
@@ -40,7 +38,6 @@ export default {
     }
   },
   components: {
-    messagedrawer,
     HeaderNavigation
   },
   methods: {
@@ -52,13 +49,10 @@ export default {
       }
     },
     openMessageBox () {
-      this.$refs.messageBox.openDrawer()
+      this.$refs.HeaderNavigation.openMessageBox();
     },
     getUnreadCount (cnt) {
       this.unreadCount = cnt
-    },
-    updateMessagebox(){
-      this.$refs.messageBox.getMesData();
     },
     returnTop () {
       window.scrollTo({
@@ -69,7 +63,7 @@ export default {
     }
   },
   mounted () {
-    this.$refs.messageBox.countUnread();
+    this.$refs.HeaderNavigation.updateMessagebox();
   },
 }
 </script>

@@ -131,7 +131,7 @@ export default {
       });
     },
     openModal (row) {
-      this.id = row.Id;
+      this.form.id = row.Id;
       this.isVisible = true;
       document.body.style.overflow = 'hidden'; // 禁止滚动
       this.form.name = row.name;
@@ -156,13 +156,14 @@ export default {
         type: "success"
       });
       console.log('提交表单 完成', this.form);
-      writeBackPrescriptionDetailsData();
+      this.writeBackPrescriptionDetailsData();
       this.form.advice = "";
       this.form.date = "";
       this.form.gender = "";
       this.form.id = "";
-      this.form.medicines = "";
+      this.form.medicines = [{ name: '', cnt: 0, price: 0, totalPrice: 0 }];
       this.form.name = "";
+      this.totalPrice = 0;
       this.closeModal();
     },
     addMedicine () {

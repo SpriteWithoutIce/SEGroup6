@@ -69,7 +69,7 @@
 
           <el-collapse-item name="2" class="collapseItem2">
             <template #title>
-              &nbsp;&nbsp;&nbsp;<el-icon><Money /></el-icon>&nbsp;&nbsp;处方缴费通知
+              &nbsp;&nbsp;&nbsp;<el-icon><Money /></el-icon>&nbsp;&nbsp;缴费通知
             </template>
             <div class="messageList">
               <!-- <el-table :data="billMes" style="width: 100%" :row-class-name='success'> -->
@@ -140,14 +140,13 @@ import notIcon from './notIcon.vue'
 import { GlobalState } from '../../global.js';
 import { ElNotification } from 'element-plus'
 export default {
-  props:['msg'],
   data() {
     return {
       activeNames: ['1', '2'],
       table: false,
       timer: null,
       unreadCount: 0,
-      firstLoad: true,
+      msgCount: 0,
       resMes: [
         // {
         //   type: '预约成功',
@@ -204,10 +203,6 @@ export default {
       // 计算billMes中read为false的数量
       const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
       this.unreadCount = unreadResMesCount + unreadBillMesCount
-      if(this.unreadCount > 0 && this.firstLoad === true && this.msg === "true") {
-          this.checkNewMsg();
-          this.firstLoad = false;
-      }
       // 返回两个数量的总和
       // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
       this.$emit('update:result', this.unreadCount)
@@ -216,9 +211,10 @@ export default {
     // url为api/notice/list/
     // 返回数据为resMes和billMes两个字典数组
     getMesData(){
-      if (GlobalState.identityNum === '0') {
+      if (GlobalState.identityNum === 0) {
         this.resMes = [];
         this.oriBillMes = [];
+        this.billMes = [];
         this.countUnread();
         return;
       }
@@ -232,6 +228,7 @@ export default {
             console.log(ts.resMes);
             console.log(ts.billMes);
             ts.countUnread();
+            ts.checkNewMsg();
             resolve(); // 数据获取完成，resolve Promise
           })
           .catch(function (error) {
@@ -302,27 +299,27 @@ export default {
       });
     },
     checkNewMsg(){
-      ElNotification({
-        icon: notIcon,
-        title: '未读消息提示',
-        message: '猫猫提示您，有新消息啦，请及时查看哦(>^ω^<)',
-        duration: 6000,
-        offset: 50
-      })
+      console.log("旧消息数：",this.msgCount)
+      console.log("新消息数：",this.resMes.length + this.billMes.length)
+      if( this.msgCount != this.resMes.length + this.billMes.length ){
+        console.log("有新消息")
+        ElNotification({
+          icon: notIcon,
+          title: '未读消息提示',
+          message: '猫猫提示您，有新消息啦，请及时查看哦(>^ω^<)',
+          duration: 5000,
+          offset: 50
+        })
+        this.msgCount = this.resMes.length + this.billMes.length;
+      }
     },
     mounted() {
       if (GlobalState.identityNum === '0') {
         console.log("未登录");
         return;
       }
-      this.getMesData().then(() => {
-        this.intervalId = setInterval(this.getMesData(), 30000);
-      })
+      this.getMesData()
     },
-    beforeDestroy() {
-      // 组件销毁时清除定时器
-      clearInterval(this.intervalId);
-    }
   }
 }
 </script>

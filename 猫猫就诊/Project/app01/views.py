@@ -53,58 +53,51 @@ class UserView(APIView):
                 type = type,
             )
             user.save()
-            patient = Patients()
-            patient.identity = 1
-            patient.identity_num = identity_num
-            patient.name = "未填写"
-            patient.health_insurance = 1
-            patient.gender = 1
-            patient.birthday = datetime.date.now()
-            patient.phone_num = "未填写"
-            patient.address = "未填写"
-            patient.save()
+            patient = Patients.objects.filter(identity_num=identity_num).first()
+            if patient is None:
+                patient = Patients()
+                patient.identity = 1
+                patient.identity_num = identity_num
+                patient.name = "未填写"
+                patient.health_insurance = 1
+                patient.gender = 1
+                patient.birthday = datetime.date.today()
+                patient.phone_num = "未填写"
+                patient.address = "未填写"
+                patient.save()
             return JsonResponse({'msg': 'Successfully Register'})
 
 class PatientView(APIView):
     def post(self, request):
         data = json.loads(request.body)
-        name = data['name']
-        paymentType = data['paymentType']
-        gender = data['gender']
-        birthday = data['birthday']
-        idType = data['idType']
-        phone = data['phone']
-        identity_num = data['number']
-        addr = data['addr']
-        try:
-            patient = Patients.objects.get(identity_num=identity_num)
-        except User.DoesNotExist:
+        patient = Patients.objects.filter(identity_num=data['number']).first()
+        if patient is None:
             patient = Patients()
-        if idType == '身份证':
+        if data['idType'] == '身份证':
             patient.identity = 1
-        elif idType == '医保卡':
+        elif data['idType'] == '医保卡':
             patient.identity = 2
-        elif idType == '诊疗卡':
+        elif data['idType'] == '诊疗卡':
             patient.identity = 3
-        elif idType == '护照':
+        elif data['idType'] == '护照':
             patient.identity = 4
-        elif idType == '军官证':
+        elif data['idType'] == '军官证':
             patient.identity = 5
-        elif idType == '港澳通行证':
+        elif data['idType'] == '港澳通行证':
             patient.identity = 6
-        patient.identity_num = identity_num
-        patient.name = name
-        if paymentType == '医保':
+        patient.identity_num = data['number']
+        patient.name = data['name']
+        if data['paymentType'] == '医保':
             patient.health_insurance = 1
-        elif paymentType == '非医保':
+        elif data['paymentType'] == '非医保':
             patient.health_insurance = 2
-        if gender == '男':
+        if data['gender'] == '男':
             patient.gender = 1
-        elif gender == '女':
+        elif data['gender'] == '女':
             patient.gender = 2
-        patient.birthday = birthday
-        patient.phone_num = phone
-        patient.address = addr
+        patient.birthday = data['birthday']
+        patient.phone_num = data['phone']
+        patient.address = data['addr']
         patient.save()
         return JsonResponse({'msg': 'Successfully add patient'})
 
@@ -207,9 +200,9 @@ class RegisterView(APIView):
         data = json.loads(request.body)
         register = Register()
         register.queue_id = data['number']
-        register.patient = data['inumber']
-        register.register = data['identity_num']
-        register.doctor = data['id']
+        register.patient = Patients.objects.get(identity_num=data['inumber'])
+        register.register = Patients.objects.get(identity_num=data['identity_num'])
+        register.doctor = Doctors.objects.get(id=data['doctorId'])
         month, day = map(int, data['time'][:5].split('-'))
         hour, minute = map(int, data['starttime'].split(':'))
         register.time = datetime(datetime.datetime.now().year, month, day, hour, minute)
@@ -218,17 +211,17 @@ class RegisterView(APIView):
         bill = Bill()
         bill.type = 1
         bill.state = False
-        bill.patient = data['inumber']
-        bill.register = register.id
+        bill.patient = register.patient
+        bill.register = register
         bill.price = data['cost']
         bill.save()
         notice = Notice()
-        notice.patient = data['inumber']
-        notice.registerMan = data['identity_num']
-        notice.doctor = data['doctorId']
+        notice.patient = register.patient
+        notice.registerMan = register.register
+        notice.doctor = register.doctor
         notice.msg_type = 1
         notice.time = datetime.datetime.now()
-        notice.register = register.id
+        notice.register = register
         notice.isRead = False
         notice.save()
         return JsonResponse({'msg': "Successfully add register"})
