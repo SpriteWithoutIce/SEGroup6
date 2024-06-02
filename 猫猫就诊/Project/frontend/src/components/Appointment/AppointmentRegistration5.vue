@@ -321,6 +321,23 @@ export default {
         this.doctors.forEach(doctor => {
           doctor.schedule.forEach(scheduleItem => {
             if (scheduleItem.time.includes(day)) {
+              if(i==0){
+                const [datePart, timeOfDay] = scheduleItem.time.split('(');  
+                const [month, day] = datePart.split('-').map(str => parseInt(str, 10));  
+                const isMorning = timeOfDay.includes('上午');  
+                const time = isMorning ? '08:00:00' : '14:00:00'; // 根据上午/下午设置时间  
+                const compareDate = new Date();  
+                compareDate.setMonth(month - 1); // 注意月份是从0开始的  
+                compareDate.setDate(day);  
+                compareDate.setHours(...time.split(':').map(Number));  
+                compareDate.setMinutes(0);  
+                compareDate.setSeconds(0);  
+                compareDate.setMilliseconds(0);  
+                const now = new Date(); 
+                if (now > compareDate) {  
+                  scheduleItem.status = 'full'
+                }
+              }
               if (scheduleItem.status === 'full' && this.dayStatus[i].status != 'empty') {
                 this.dayStatus[i].status = 'full';
               } else if (scheduleItem.status === 'empty') {
