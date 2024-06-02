@@ -307,7 +307,7 @@ class TreatmentView(APIView):
         bill.type = 2
         bill.state = False
         bill.patient = register.patient
-        bill.treatment = treatment.id
+        bill.treatment = treatment
         bill.price = data['totalPrice']
         bill.save()
         notice = Notice()
