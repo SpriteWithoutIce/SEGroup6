@@ -181,7 +181,7 @@ export default {
       })
     }
   },
-  created() {
+  mounted() {
     this.getBillsData().then(() => {
       // 默认是未缴费页面
       this.selectFunc(false)
