@@ -264,6 +264,7 @@ export default {
           message: '请先登录 ╮(╯▽╰)╭',
           type: 'warning',
         });
+        return;
       }
       this.getMesData();
       this.table = true;
@@ -307,7 +308,11 @@ export default {
     payOverTimeQuery(){
       this.billMes = [];
       // 获取当前时间的时间戳（毫秒）
-      const now = Date.now();
+      const nowUtcTimestamp = Date.now();
+      // 北京时区相对于 UTC 的偏移量（8小时 * 60分钟 * 60秒 * 1000毫秒）
+      const beijingUtcOffset = 8 * 60 * 60 * 1000;
+      // 将 UTC 时间戳转换为北京时区的时间戳
+      const now = nowUtcTimestamp + beijingUtcOffset;
       // 遍历 oriBillMes 数组
       this.oriBillMes.forEach(item => {
         // 将字符串形式的时间戳转换为数字类型的时间戳（毫秒）
