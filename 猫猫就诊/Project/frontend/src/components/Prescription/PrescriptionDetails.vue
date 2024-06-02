@@ -68,7 +68,7 @@ export default {
       },
       medicinesDB: [
         // { name: '布洛芬', stock 改成num: 80, price: 5.0, use: ['发热', '炎症'] }
-        // { name: '布洛芬', num: 80, price: 5.0, use: '发热,炎症' }
+        { name: '布洛芬', num: 80, price: 5.0, use: '发热,炎症' }
         // 可以添加更多药物数据
       ]
     };
@@ -92,7 +92,7 @@ export default {
           totalPrice: this.totalPrice,
           action: "addTreatmentData"
         };
-
+        console.log("写回处方前的数据" + requestData.id + " " + requestData.totalPrice);
         this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
@@ -136,7 +136,7 @@ export default {
       document.body.style.overflow = 'hidden'; // 禁止滚动
       this.form.name = row.name;
       this.form.gender = row.sex;
-      console.log(打开订单时的列的信息 + this.form);
+      console.log("打开订单时的列的信息" + this.form.id + " " + this.form.name);
     },
     closeModal () {
       this.isVisible = false;
