@@ -58,6 +58,7 @@ export default {
     return {
       isVisible: false,
       image: null,
+      totalPrice: 0,
       form: {
         id: "",/*这里的id是问诊单号*/
         name: '',
@@ -75,6 +76,11 @@ export default {
   },
   computed: {
     totalPrice () {
+      this.totalPrice = his.form.medicines
+        .reduce((total, medicine) => total + parseFloat(medicine.totalPrice || 0), 0)
+        .toFixed(2);
+
+
       return this.form.medicines
         .reduce((total, medicine) => total + parseFloat(medicine.totalPrice || 0), 0)
         .toFixed(2);
@@ -87,8 +93,8 @@ export default {
         let requestData = {
           /*问诊单字段：单号+开具的药物+时间+医师建议+总价*/
           id: this.form.id,
-          medicines: this.medicines,
-          suggestion: this.advice,
+          medicines: this.form.medicines,
+          suggestion: this.form.advice,
           totalPrice: this.totalPrice,
           action: "addTreatmentData"
         };
