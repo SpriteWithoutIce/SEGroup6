@@ -181,8 +181,8 @@ class RegisterView(APIView):
         notice.register = register
         notice.isRead = False
         notice.save()
-        register.delete()
-        bill.delete()
+        # register.delete()
+        # bill.delete()
         return JsonResponse({'msg': "Successfully cancel register"})
     
     def getDoctorRegisters(self, request):
