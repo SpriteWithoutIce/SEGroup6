@@ -53,24 +53,25 @@ class UserView(APIView):
                 type = type,
             )
             user.save()
-            patient = Patients()
-            patient.identity = 1
-            patient.identity_num = identity_num
-            patient.name = "未填写"
-            patient.health_insurance = 1
-            patient.gender = 1
-            patient.birthday = datetime.date.today()
-            patient.phone_num = "未填写"
-            patient.address = "未填写"
-            patient.save()
+            patient = Patients.objects.filter(identity_num=identity_num).first()
+            if patient is None:
+                patient = Patients()
+                patient.identity = 1
+                patient.identity_num = identity_num
+                patient.name = "未填写"
+                patient.health_insurance = 1
+                patient.gender = 1
+                patient.birthday = datetime.date.today()
+                patient.phone_num = "未填写"
+                patient.address = "未填写"
+                patient.save()
             return JsonResponse({'msg': 'Successfully Register'})
 
 class PatientView(APIView):
     def post(self, request):
         data = json.loads(request.body)
-        try:
-            patient = Patients.objects.get(identity_num=data['number'])
-        except Patients.DoesNotExist:
+        patient = Patients.objects.filter(identity_num=data['number']).first()
+        if patient is None:
             patient = Patients()
         if data['idType'] == '身份证':
             patient.identity = 1
@@ -136,9 +137,9 @@ class RegisterView(APIView):
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
             if start_time.hour < 12:
-                formatted_datetime = formatted_datetime[:10] + CHINESE_AM + formatted_datetime[10:]
+                formatted_datetime = formatted_datetime[:10] + ' '+ CHINESE_AM + formatted_datetime[10:]
             else:
-                formatted_datetime = formatted_datetime[:10] + CHINESE_PM + formatted_datetime[10:]
+                formatted_datetime = formatted_datetime[:10] + ' '+ CHINESE_PM + formatted_datetime[10:]
             
             state = ""
             current_time = timezone.now()
@@ -199,28 +200,28 @@ class RegisterView(APIView):
         data = json.loads(request.body)
         register = Register()
         register.queue_id = data['number']
-        register.patient = data['inumber']
-        register.register = data['identity_num']
-        register.doctor = data['id']
+        register.patient = Patients.objects.get(identity_num=data['inumber'])
+        register.register = Patients.objects.get(identity_num=data['identity_num'])
+        register.doctor = Doctors.objects.get(id=data['doctorId'])
         month, day = map(int, data['time'][:5].split('-'))
         hour, minute = map(int, data['starttime'].split(':'))
-        register.time = datetime(datetime.datetime.now().year, month, day, hour, minute)
+        register.time = datetime.datetime(datetime.datetime.now().year, month, day, hour, minute)
         register.position = "猫猫医院" + data['department']
         register.save()
         bill = Bill()
         bill.type = 1
         bill.state = False
-        bill.patient = data['inumber']
-        bill.register = register.id
+        bill.patient = register.patient
+        bill.register = register
         bill.price = data['cost']
         bill.save()
         notice = Notice()
-        notice.patient = data['inumber']
-        notice.registerMan = data['identity_num']
-        notice.doctor = data['doctorId']
+        notice.patient = register.patient
+        notice.registerMan = register.register
+        notice.doctor = register.doctor
         notice.msg_type = 1
         notice.time = datetime.datetime.now()
-        notice.register = register.id
+        notice.register = register
         notice.isRead = False
         notice.save()
         return JsonResponse({'msg': "Successfully add register"})
