@@ -76,7 +76,7 @@ export default {
   },
   computed: {
     totalPrice () {
-      this.totalPrice = his.form.medicines
+      this.totalPrice = this.form.medicines
         .reduce((total, medicine) => total + parseFloat(medicine.totalPrice || 0), 0)
         .toFixed(2);
 
@@ -98,7 +98,8 @@ export default {
           totalPrice: this.totalPrice,
           action: "addTreatmentData"
         };
-        console.log("写回处方前的数据" + requestData.id + " " + requestData.totalPrice);
+        console.log("药物列表:", requestData.medicines); // 使用 JSON.stringify 打印药物列表
+        console.log("写回处方前的数据" + requestData.id + " " + requestData.totalPrice + " " + requestData.medicines + " " + requestData.suggestion);
         this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
@@ -157,6 +158,7 @@ export default {
       this.closeModal();
     },
     submitForm () {
+      console.log('Submitting form:', this.form); // 打印整个表单状态
       ElMessage({
         showClose: true,
         message: "提交成功 ╰(*°▽°*)╯",
