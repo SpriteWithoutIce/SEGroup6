@@ -124,6 +124,7 @@ class RegisterView(APIView):
             filter = {'doctor__identity_num': identity_num}
         except Doctors.DoesNotExist:
             filter = {'register': identity_num}
+        filter['queue_id__ne'] = -1
         for item in Register.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
@@ -181,15 +182,18 @@ class RegisterView(APIView):
         notice.register = register
         notice.isRead = False
         notice.save()
-        # register.delete()
-        # bill.delete()
+        register.queue_id = -1
+        register.save()
+        bill.delete()
         return JsonResponse({'msg': "Successfully cancel register"})
     
     def getDoctorRegisters(self, request):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
         current_date = datetime.date.today()
-        for item in Register.objects.filter(**{'doctor__identity_num': identity_num}).annotate(
+        filter = {'doctor__identity_num': identity_num}
+        filter['queue_id__ne'] = -1
+        for item in Register.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
             patient_gender=F('patient__gender')
