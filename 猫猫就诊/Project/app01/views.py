@@ -124,8 +124,7 @@ class RegisterView(APIView):
             filter = {'doctor__identity_num': identity_num}
         except Doctors.DoesNotExist:
             filter = {'register': identity_num}
-        filter['queue_id__ne'] = -1
-        for item in Register.objects.filter(**filter).annotate(
+        for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
             doctor_name=F('doctor__name')
@@ -192,8 +191,7 @@ class RegisterView(APIView):
         registers = []
         current_date = datetime.date.today()
         filter = {'doctor__identity_num': identity_num}
-        filter['queue_id__ne'] = -1
-        for item in Register.objects.filter(**filter).annotate(
+        for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
             patient_gender=F('patient__gender')
