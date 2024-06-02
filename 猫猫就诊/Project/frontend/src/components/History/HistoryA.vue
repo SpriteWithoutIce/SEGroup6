@@ -60,7 +60,9 @@
           <el-button type="primary" plain @click="showPrescriptionDetails(item)" class="xiang"
             >显示详情</el-button
           >
-          <el-button type="primary" plain v-if="item.state === '已预约'">取消挂号</el-button>
+          <el-button type="primary" plain v-if="item.state === '已预约'" @click="cancel(item)"
+            >取消挂号</el-button
+          >
         </div>
       </el-card>
     </div>
@@ -69,6 +71,8 @@
 </template>
 <script>
 import DetailA from './DetailA.vue'
+import { ElMessage } from "element-plus"
+
 export default {
   name: 'HistoryA',
   props: {
@@ -88,6 +92,34 @@ export default {
   methods: {
     showPrescriptionDetails(item) {
       this.$refs.detail.openModal(item)
+    },
+    cancelRegister(item) {
+      return new Promise((resolve, reject) => {
+        let ts = this
+        let requestData = {
+          action: 'cancelRegister',
+          id: item.id
+        }
+        this.$axios
+          .post('/api/registers/cancel/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg'])
+            resolve() // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error)
+            reject(error) // 数据获取失败，reject Promise
+          })
+      })
+    },
+    cancel(item) {
+      this.cancelRegister(item).then(() => {
+        ElMessage({
+          type: 'info',
+          message: '取消挂号成功 ╮(╯▽╰)╭',
+          showClose: true
+        })
+      })
     }
   }
 }

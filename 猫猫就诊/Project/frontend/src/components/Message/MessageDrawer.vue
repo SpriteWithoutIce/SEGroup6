@@ -215,6 +215,7 @@ export default {
         this.resMes = [];
         this.oriBillMes = [];
         this.billMes = [];
+        this.msgCount = 0;
         this.countUnread();
         return;
       }
@@ -225,6 +226,7 @@ export default {
             ts.resMes = response.data['resMes'];
             ts.oriBillMes = response.data['billMes'];
             ts.payOverTimeQuery();
+            ts.sortMesByTimestamp();
             console.log(ts.resMes);
             console.log(ts.billMes);
             ts.countUnread();
@@ -238,6 +240,23 @@ export default {
           console.log('MesDrawer发送的请求参数:', {identity_num: GlobalState.identityNum});
       });
     },
+    // 将消息按照倒序排序
+    sortMesByTimestamp() {
+      this.resMes.sort((a, b) => {
+        // 将字符串转换为日期对象
+        const dateA = new Date(a.timetamp);
+        const dateB = new Date(b.timetamp);
+        // 比较日期对象的时间戳
+        return dateB - dateA; // 倒序排序
+      });
+      this.billMes.sort((a, b) => {
+        // 将字符串转换为日期对象
+        const dateA = new Date(a.timetamp);
+        const dateB = new Date(b.timetamp);
+        // 比较日期对象的时间戳
+        return dateB - dateA; // 倒序排序
+      });
+    },
     openDrawer() {
       if(GlobalState.identityNum === 0){
         ElMessage({
@@ -245,6 +264,7 @@ export default {
           message: '请先登录 ╮(╯▽╰)╭',
           type: 'warning',
         });
+        return;
       }
       this.getMesData();
       this.table = true;

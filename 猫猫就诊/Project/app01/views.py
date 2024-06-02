@@ -124,7 +124,7 @@ class RegisterView(APIView):
             filter = {'doctor__identity_num': identity_num}
         except Doctors.DoesNotExist:
             filter = {'register': identity_num}
-        for item in Register.objects.filter(**filter).annotate(
+        for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
             doctor_name=F('doctor__name')
@@ -164,24 +164,34 @@ class RegisterView(APIView):
 
     def cancelRegister(self, request):
         id = json.loads(request.body)['id']
-        item = Register.objects.get(id=id)
-        Bill.objects.get(register=id).delete()
+        register = Register.objects.get(id=id)
+        bill = Bill.objects.get(register=id)
+        time = 1
+        if register.time.hour > 12:
+            time = 2
+        onDuty = OnDuty.objects.get(doctor=register.doctor, date=register.time.date(), time=time)
+        onDuty.state = onDuty.state & (~(1 << (register.queue_id - 1)))
+        onDuty.save()
         notice = Notice()
-        notice.patient = item.patient
-        notice.register = item.register
-        notice.doctor = item.doctor
+        notice.patient = register.patient
+        notice.registerMan = register.register
+        notice.doctor = register.doctor
         notice.msg_type = 2
-        notice.date = datetime.date.today()
-        notice.register = id
+        notice.time = timezone.now()
+        notice.register = register
+        notice.isRead = False
         notice.save()
-        item.delete()
+        register.queue_id = -1
+        register.save()
+        bill.delete()
         return JsonResponse({'msg': "Successfully cancel register"})
     
     def getDoctorRegisters(self, request):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
         current_date = datetime.date.today()
-        for item in Register.objects.filter(**{'doctor__identity_num': identity_num}).annotate(
+        filter = {'doctor__identity_num': identity_num}
+        for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
             patient_gender=F('patient__gender')
@@ -590,7 +600,6 @@ class BillView(APIView):
         treatment = bill.treatment
         notice = Notice()
         notice.patient = treatment.patient
-        notice.registerMan = "未知"
         notice.doctor = treatment.doctor
         notice.msg_type = 4
         notice.time = timezone.now()
