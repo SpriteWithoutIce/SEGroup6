@@ -55,7 +55,7 @@
         </div>
       </div>
       <div class="button">
-        <el-button v-if="form.state === '已预约'">取消挂号</el-button>
+        <el-button v-if="form.state === '已预约'" @click="cancelModal">取消挂号</el-button>
       </div>
       <div class="button">
         <el-button @click="closeModal">退出</el-button>
@@ -89,26 +89,27 @@ export default {
   methods: {
     cancelRegister() {
       return new Promise((resolve, reject) => {
-        let ts = this;
+        let ts = this
         let requestData = {
           action: 'cancelRegister',
-          id: this.form.id,
-        };
-        this.$axios.post('/api/registers/cancel/', requestData)
+          id: this.form.id
+        }
+        this.$axios
+          .post('/api/registers/cancel/', requestData)
           .then(function (response) {
-            console.log(response.data['msg']);
-            resolve(); // 数据获取完成，resolve Promise
+            console.log(response.data['msg'])
+            resolve() // 数据获取完成，resolve Promise
           })
           .catch(function (error) {
-            console.log(error);
-            reject(error); // 数据获取失败，reject Promise
-          });
-      });
+            console.log(error)
+            reject(error) // 数据获取失败，reject Promise
+          })
+      })
     },
     openModal(item) {
       this.isVisible = true
       document.body.style.overflow = 'hidden' // 禁止滚动
-      this.form.id = item.id  //传入id对预约进行标识
+      this.form.id = item.id //传入id对预约进行标识
       this.form.office = item.office
       this.form.orderNum = item.orderNum
       this.form.price = item.price
