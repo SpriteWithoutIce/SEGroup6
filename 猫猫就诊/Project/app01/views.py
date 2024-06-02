@@ -316,7 +316,7 @@ class TreatmentView(APIView):
         notice.doctor = register.doctor
         notice.msg_type = 3
         notice.time = datetime.datetime.now()
-        notice.register = register
+        notice.treatment = treatment
         notice.isRead = False
         notice.save()
         return JsonResponse({'msg': "Successfully add treatment"})
