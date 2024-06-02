@@ -136,6 +136,7 @@ export default {
       document.body.style.overflow = 'hidden'; // 禁止滚动
       this.form.name = row.name;
       this.form.gender = row.sex;
+      console.log(打开订单时的列的信息 + this.form);
     },
     closeModal () {
       this.isVisible = false;
