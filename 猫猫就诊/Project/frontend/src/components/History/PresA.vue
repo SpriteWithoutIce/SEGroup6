@@ -57,7 +57,10 @@ const identityNum = inject('$identity_num')
 const getTreatmentsData = () => {
   return new Promise((resolve, reject) => {
     axios
-      .post('/api/treatments/list/', { identity_num: GlobalState.identityNum, action: "getTreatmentsData"})
+      .post('/api/treatments/list/', {
+        identity_num: GlobalState.identityNum,
+        action: 'getTreatmentsData'
+      })
       .then((response) => {
         info.value = response.data['treatments']
         console.log('Treatments data fetched:', info.value)

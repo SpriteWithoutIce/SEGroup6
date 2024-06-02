@@ -587,7 +587,7 @@ class BillView(APIView):
         bill = Bill.objects.get(id=data['item_id'])
         bill.state = True
         bill.save()
-        treatment = Treatment.objects.get(id=bill.treatment)
+        treatment = bill.treatment
         notice = Notice()
         notice.patient = treatment.patient
         notice.doctor = treatment.doctor

@@ -138,7 +138,7 @@
 <script>
 import notIcon from './notIcon.vue'
 import { GlobalState } from '../../global.js';
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessage } from 'element-plus'
 export default {
   data() {
     return {
