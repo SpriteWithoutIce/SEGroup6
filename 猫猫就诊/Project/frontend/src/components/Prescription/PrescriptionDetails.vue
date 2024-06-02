@@ -58,6 +58,7 @@ export default {
     return {
       isVisible: false,
       image: null,
+      totalPrice: 0,
       form: {
         id: "",/*这里的id是问诊单号*/
         name: '',
@@ -75,6 +76,11 @@ export default {
   },
   computed: {
     totalPrice () {
+      this.totalPrice = this.form.medicines
+        .reduce((total, medicine) => total + parseFloat(medicine.totalPrice || 0), 0)
+        .toFixed(2);
+
+
       return this.form.medicines
         .reduce((total, medicine) => total + parseFloat(medicine.totalPrice || 0), 0)
         .toFixed(2);
@@ -87,12 +93,13 @@ export default {
         let requestData = {
           /*问诊单字段：单号+开具的药物+时间+医师建议+总价*/
           id: this.form.id,
-          medicines: this.medicines,
-          suggestion: this.advice,
+          medicines: this.form.medicines,
+          suggestion: this.form.advice,
           totalPrice: this.totalPrice,
           action: "addTreatmentData"
         };
-        console.log("写回处方前的数据" + requestData.id + " " + requestData.totalPrice);
+        console.log("药物列表:", requestData.medicines); // 使用 JSON.stringify 打印药物列表
+        console.log("写回处方前的数据" + requestData.id + " " + requestData.totalPrice + " " + requestData.medicines + " " + requestData.suggestion);
         this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
@@ -151,12 +158,13 @@ export default {
       this.closeModal();
     },
     submitForm () {
+      console.log('Submitting form:', this.form); // 打印整个表单状态
       ElMessage({
         showClose: true,
         message: "提交成功 ╰(*°▽°*)╯",
         type: "success"
       });
-      console.log('提交表单 完成', this.form);
+      console.log('提交表单 完成' + this.form);
       this.writeBackPrescriptionDetailsData();
       this.form.advice = "";
       this.form.date = "";
