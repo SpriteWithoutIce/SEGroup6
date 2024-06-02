@@ -242,6 +242,7 @@ export default {
       this.info_detail.starttime=this.timetable_2[0].startTime;
       this.info_detail.endtime=this.timetable_2[0].endTime;
     }
+    console.log(this.info_detail)
     console.log(this.info_detail.doctor_id)
     console.log(this.info_doctor)
   }
