@@ -234,6 +234,8 @@ export default {
     this.info_detail.doctorRearch=this.doctors[0].research;
     this.info_detail.cost=this.doctors[0].cost;
     this.info_detail.info_doctor=this.info_doctor;
+    console.log(this.info_detail.doctor_id)
+    console.log(this.info_doctor)
   }
 };  
 </script>  

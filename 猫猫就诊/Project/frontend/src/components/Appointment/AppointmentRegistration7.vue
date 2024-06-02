@@ -177,6 +177,25 @@ export default {
           inumber:this.info.inumber,//患者的证件号
           identity_num: GlobalState.identityNum,
           id:this.info.doctor_id,
+        };
+        console.log(requestData)
+        requestData = {
+          name:this.info.name,//就诊人
+          paymentType:this.info.paymentType,
+          department:this.info.department,
+          time:this.info.time,//日期05-30
+          starttime:this.info.starttime,//开始时间
+          endtime:this.info.endtime,
+          number:this.info.number,//挂号序号
+          doctorId:this.info.doctor_id,
+          doctorName:this.info.doctorName,//医生名字
+          doctorTitle:this.info.doctorAvatar,//医生title
+          doctorAvatar:this.info.doctorAvatar,//医生头像
+          doctorRearch:this.info.doctorRearch,//医生领域
+          cost:this.info.cost,//医生的挂号费
+          inumber:this.info.inumber,//患者的证件号
+          identity_num: GlobalState.identityNum,
+          id:this.info.doctor_id,
           action:"addRegisterData"
         };
         if(this.info.paymentType=='医保')
@@ -218,6 +237,7 @@ export default {
     this.info.inumber=this.info_last.inumber;
     this.info.doctor_id=this.info_last.doctor_id;
     console.log(this.info.info_last)
+    console.log(this.info)
   }
 };  
 </script>  
