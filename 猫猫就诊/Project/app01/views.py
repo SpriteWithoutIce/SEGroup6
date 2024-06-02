@@ -53,24 +53,25 @@ class UserView(APIView):
                 type = type,
             )
             user.save()
-            patient = Patients()
-            patient.identity = 1
-            patient.identity_num = identity_num
-            patient.name = "未填写"
-            patient.health_insurance = 1
-            patient.gender = 1
-            patient.birthday = datetime.date.today()
-            patient.phone_num = "未填写"
-            patient.address = "未填写"
-            patient.save()
+            patient = Patients.objects.filter(identity_num=identity_num).first()
+            if patient is None:
+                patient = Patients()
+                patient.identity = 1
+                patient.identity_num = identity_num
+                patient.name = "未填写"
+                patient.health_insurance = 1
+                patient.gender = 1
+                patient.birthday = datetime.date.today()
+                patient.phone_num = "未填写"
+                patient.address = "未填写"
+                patient.save()
             return JsonResponse({'msg': 'Successfully Register'})
 
 class PatientView(APIView):
     def post(self, request):
         data = json.loads(request.body)
-        try:
-            patient = Patients.objects.get(identity_num=data['number'])
-        except Patients.DoesNotExist:
+        patient = Patients.objects.filter(identity_num=data['number']).first()
+        if patient is None:
             patient = Patients()
         if data['idType'] == '身份证':
             patient.identity = 1
