@@ -168,7 +168,7 @@ class RegisterView(APIView):
         Bill.objects.get(register=id).delete()
         notice = Notice()
         notice.patient = item.patient
-        notice.register = item.register
+        notice.register = item
         notice.doctor = item.doctor
         notice.msg_type = 2
         notice.date = datetime.date.today()
