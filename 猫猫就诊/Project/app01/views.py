@@ -9,7 +9,7 @@ from django.forms import model_to_dict
 from django.http import Http404, JsonResponse
 from django.shortcuts import render, HttpResponse
 from rest_framework.views import APIView
-from django.db.models import F
+from django.db.models import F, Q
 from django.contrib.auth.hashers import check_password
 
 import json
@@ -210,7 +210,7 @@ class RegisterView(APIView):
         register.save()
         bill = Bill()
         bill.type = 1
-        bill.state = False
+        bill.state = True
         bill.patient = register.patient
         bill.register = register
         bill.price = data['cost']
@@ -598,11 +598,11 @@ class NoticeView(APIView):
         resMes = []
         billMes = []
         identity_num = json.loads(request.body)['identity_num']
-        for item in Notice.objects.filter(patient=identity_num).annotate(
+        for item in Notice.objects.filter(Q(patient=identity_num) | Q(registerMan=identity_num)).annotate(
             doctor_name=F('doctor__name'),
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
-        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
+        ).values('id', 'patient', 'registerMan', 'msg_type', 'patient_name', 'doctor_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
             type = ""
             if item['msg_type'] == 1:
                 type = "预约成功"
@@ -612,7 +612,7 @@ class NoticeView(APIView):
                 type = "处方缴费提醒"
             else:
                 type = "处方缴费成功"
-            if item['msg_type'] == 1 or item['msg_type'] == 2:
+            if (item['msg_type'] == 1 or item['msg_type'] == 2) and item['registerMan'] == identity_num:
                 register = Register.objects.get(id=item['register'])
                 resMes.append({
                     "item_id": item['id'],
@@ -625,7 +625,7 @@ class NoticeView(APIView):
                     "timetamp": item['time'],
                     "read": item['isRead']
                 })
-            else:
+            elif (item['msg_type'] == 3 or item['msg_type'] == 4) and item['patient'] == identity_num:
                 treatment = Treatment.objects.get(id=item['treatment'])
                 billMes.append({
                     "item_id": item['id'],
