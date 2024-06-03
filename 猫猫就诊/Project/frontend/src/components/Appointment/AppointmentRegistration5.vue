@@ -65,7 +65,7 @@
             <div v-for="(daySchedule, dayIndex) in doctor.schedule"   
                     :key="dayIndex">
               <div v-if="dayHasScheduleForDate(daySchedule,selectedDate)">
-                <button class="schedule-item1" v-if="daySchedule.status!='empty'&& checkTime(daySchedule.time)">
+                <button class="schedule-item1" v-if="daySchedule.status!='empty'">
                   <div class="time-label">{{ daySchedule.time }}
                   </div>  
                   <div>
