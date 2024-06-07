@@ -222,7 +222,7 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         let requestData = {
-          number:this.info_number,
+          number:this.info.number,
           time:this.info_time,
           starttime:this.info_startTime,
           doctorId:this.info.doctor_id,
