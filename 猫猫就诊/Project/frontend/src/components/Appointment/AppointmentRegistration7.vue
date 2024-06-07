@@ -225,7 +225,7 @@ export default {
           number:this.info_number,
           time:this.info_time,
           starttime:this.info_startTime,
-          doctorId:this.info_detail.doctor_id,
+          doctorId:this.info.doctor_id,
           action:"unlockRegister"
         };
         this.$axios.post('/api/register/unlock/', requestData)
