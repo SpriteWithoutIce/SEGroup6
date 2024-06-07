@@ -223,8 +223,8 @@ export default {
         let ts = this;
         let requestData = {
           number:this.info.number,
-          time:this.info_time,
-          starttime:this.info_startTime,
+          time:this.info.time,
+          starttime:this.info.starttime,
           doctorId:this.info.doctor_id,
           action:"unlockRegister"
         };
