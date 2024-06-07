@@ -145,7 +145,7 @@ export default {
           avatar: 'img/lsy.jpg', // 头像URL  
           research: '生物信息', // 主要研究方向  
           schedule: [  
-            {time: '05-31(上午)',status:'empty', number: 10,emptytime:[
+            {time: '06-11(上午)',status:'empty', number: 10,emptytime:[
             {number: 1,status:'empty'},
             {number: 2,status:'full'},
             {number: 3,status:'empty'},
@@ -177,8 +177,31 @@ export default {
           avatar: 'img/touxiang.png', // 头像URL  
           research: '生物信息', // 主要研究方向  
           schedule: [  
-            {time: '05-13(上午)',status:'full'},
-            {time: '05-12(下午) ',status: 'empty',number:5},
+            {time: '06-13(上午)',status:'full'},
+            {time: '06-12(下午) ',status: 'empty',number:5,emptytime:[
+              {number: 1, status: 'empty'},
+              {number: 2, status: 'empty'},
+              {number: 3, status: 'full'},
+              {number: 4, status: 'empty'},
+              {number: 5, status: 'empty'},
+              {number: 6, status: 'full'},
+              {number: 7, status: 'empty'},
+              {number: 8, status: 'empty'},
+              {number: 9, status: 'empty'},
+              {number: 10, status: 'empty'},
+              {number: 11, status: 'empty'},
+              {number: 12, status: 'empty'} ,
+              {number: 13, status: 'empty'},
+              {number: 14, status: 'empty'},
+              {number: 15, status: 'empty'},
+              {number: 16, status: 'empty'},
+              {number: 17, status: 'empty'},
+              {number: 18, status: 'empty'} ,
+              {number: 19, status: 'empty'},
+              {number: 20, status: 'empty'}
+            ]
+              
+            },
           ],  
           cost:60,
         }, 
@@ -189,8 +212,8 @@ export default {
           avatar: 'img/touxiang (1).png', // 头像URL  
           research: '生物信息', // 主要研究方向  
           schedule: [  
-            {time: '05-11(上午)',status:'full'},
-            {time: '05-14(下午) ',status: 'full'},
+            {time: '06-08(上午)',status:'full'},
+            {time: '06-14(下午) ',status: 'full'},
           ],  
           cost:60,
         }, 
@@ -348,6 +371,7 @@ export default {
           });
         });
       }
+    })
     // console.log("111");
     // console.log(this.doctors);
     // this.nextSevenDays = this.locatenextSevenDays();
@@ -370,7 +394,7 @@ export default {
     //   this.info.paymentType = this.$route.query.paymentType;
     //   this.info.department = this.$route.query.department;
     //   console.log(this.doctors);
-    })
+    // }
   },
   created(){
     this.info.name = this.$route.query.name;

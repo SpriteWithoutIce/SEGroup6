@@ -30,7 +30,7 @@
             // cost:doctors[0].cost
             info:JSON.stringify(info_detail)
           }
-        }" class="button2 button-next" style="text-decoration: none;">
+        }" @click="submit" class="button2 button-next" style="text-decoration: none; ">
         下一步</router-link>
       <!-- <button class="button2 button-prev">上一步</button>  
       <button class="button2 button-next" v-if="checked">下一步</button>   -->
@@ -203,6 +203,26 @@ export default {
       }  
       return '未知的时间';  
     },  
+    submit(){
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          number:this.info_number,
+          time:this.info_time,
+          starttime:this.info_startTime,
+          doctorId:this.info_detail.doctor_id
+        };
+        this.$axios.post('/api/patient/number/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg']);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    }
   }  ,
   created(){
     // this.info.name=this.$route.query.name;

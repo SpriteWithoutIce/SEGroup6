@@ -21,6 +21,7 @@
           >缴费</el-button>
       </div>  
     </div> 
+    <p>倒计时: {{ countDown }}</p> 
     <div class="doctor-item">
       <div class="doctor-header"> 
         <img :src="info.doctorAvatar" alt="" class="avatar">
@@ -78,6 +79,8 @@ export default {
   },
   data() {  
     return {  
+      countDown: 20, // 3分钟 = 180秒  
+      intervalId: null,  
       checked: false,  
       currentSquareIndex: 0,  
       squares2: [  
@@ -210,7 +213,36 @@ export default {
           });
       });
     },
-  }  ,
+    
+    navigateToOtherPage() {  
+      // 假设你正在使用Vue Router  
+      this.$router.push('/AppointmentRegistration');  
+    },  
+    cancel(){
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          number:this.info_number,
+          time:this.info_time,
+          starttime:this.info_startTime,
+          doctorId:this.info_detail.doctor_id
+        };
+        this.$axios.post('/api/patient/number/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg']);
+            resolve(); // 数据获取完成，resolve Promise
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error); // 数据获取失败，reject Promise
+          });
+      });
+    },
+  },
+  beforeDestroy() {  
+    // 在组件销毁前清除定时器，避免内存泄漏  
+    clearInterval(this.intervalId);  
+  },  
   created(){
     const info_Str = this.$route.query.info;  
     if (info_Str) {  
@@ -239,6 +271,17 @@ export default {
     this.info.doctor_id=this.info_last.doctor_id;
     console.log(this.info.info_last)
     console.log(this.info)
+    this.intervalId = setInterval(() => {  
+      if (this.countDown > 0) {  
+        this.countDown--;  
+      } else {  
+        // 倒计时结束，跳转到其他页面  
+        this.cancel();
+        this.navigateToOtherPage();  
+        
+        clearInterval(this.intervalId); // 清除定时器  
+      }  
+    }, 1000); // 每秒更新一次  
   }
 };  
 </script>  
