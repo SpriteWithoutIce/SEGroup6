@@ -225,9 +225,10 @@ export default {
           number:this.info_number,
           time:this.info_time,
           starttime:this.info_startTime,
-          doctorId:this.info_detail.doctor_id
+          doctorId:this.info_detail.doctor_id,
+          action:"unlockRegister"
         };
-        this.$axios.post('/api/patient/number/', requestData)
+        this.$axios.post('/api/register/unlock/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
             resolve(); // 数据获取完成，resolve Promise
