@@ -257,7 +257,7 @@ class RegisterView(APIView):
         time = 1
         if startTime.hour > 12:
             time = 2
-        onDuty = OnDuty.objects.get(doctor=doctor, date=time.date(), time=time)
+        onDuty = OnDuty.objects.get(doctor=doctor, date=startTime.date(), time=time)
         onDuty.state = onDuty.state | (1 << (queue_id - 1))
         onDuty.save()
         return JsonResponse({'msg': "Successfully lock register"})
@@ -272,7 +272,7 @@ class RegisterView(APIView):
         time = 1
         if startTime.hour > 12:
             time = 2
-        onDuty = OnDuty.objects.get(doctor=doctor, date=time.date(), time=time)
+        onDuty = OnDuty.objects.get(doctor=doctor, date=startTime.date(), time=time)
         onDuty.state = onDuty.state & (~(1 << (queue_id - 1)))
         onDuty.save()
         return JsonResponse({'msg': "Successfully unlock register"})
