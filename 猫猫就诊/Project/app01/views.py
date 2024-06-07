@@ -258,6 +258,8 @@ class RegisterView(APIView):
         if startTime.hour > 12:
             time = 2
         onDuty = OnDuty.objects.get(doctor=doctor, date=startTime.date(), time=time)
+        if (onDuty.state & (1 << (queue_id - 1))) != 0:
+            return JsonResponse({"msg": "This register has been locked by others"})
         onDuty.state = onDuty.state | (1 << (queue_id - 1))
         onDuty.save()
         return JsonResponse({'msg': "Successfully lock register"})
