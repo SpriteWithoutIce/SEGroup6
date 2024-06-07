@@ -1,3 +1,4 @@
+<!-- NavBar.vue为下拉的红色导航栏 -->
 <template>
   <HeaderNavigation ref="HeaderNavigation" @update:unreadCount="getUnreadCount" />
   <div class="navbar" :class="{ sticky: isSticky }">
@@ -77,7 +78,6 @@ export default {
   background-color: #78291e;
   display: flex;
   justify-content: flex-end;
-  /* 设置背景色为深蓝色 */
 }
 
 .navbar.sticky::before {
@@ -127,7 +127,6 @@ export default {
   padding: 0px 8px;
   width: 4em;
   text-align: center;
-  /* 调整文本之间的间距 */
 }
 
 .white-bold::after {
