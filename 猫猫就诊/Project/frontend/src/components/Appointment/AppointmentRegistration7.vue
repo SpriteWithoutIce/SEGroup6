@@ -79,7 +79,7 @@ export default {
   },
   data() {  
     return {  
-      countDown: 20, // 3分钟 = 180秒  
+      countDown: 180, // 3分钟 = 180秒  
       intervalId: null,  
       checked: false,  
       currentSquareIndex: 0,  
