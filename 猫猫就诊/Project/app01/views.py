@@ -112,6 +112,10 @@ class RegisterView(APIView):
             return self.getDoctorRegisters(request)
         elif action == 'addRegisterData':
             return self.addRegisterData(request)
+        elif action == 'lockRegister':
+            return self.lockRegister(request)
+        elif action == 'unlockRegister':
+            return self.unlockRegister(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -218,12 +222,13 @@ class RegisterView(APIView):
         register.time = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
         register.position = "猫猫医院" + data['department']
         register.save()
-        time = 1
-        if register.time.hour > 12:
-            time = 2
-        onDuty = OnDuty.objects.get(doctor=register.doctor, date=register.time.date(), time=time)
-        onDuty.state = onDuty.state | (1 << (register.queue_id - 1))
-        onDuty.save()
+        # onDuty表的改变在锁号进行
+        # time = 1
+        # if register.time.hour > 12:
+        #     time = 2
+        # onDuty = OnDuty.objects.get(doctor=register.doctor, date=register.time.date(), time=time)
+        # onDuty.state = onDuty.state | (1 << (register.queue_id - 1))
+        # onDuty.save()
         bill = Bill()
         bill.type = 1
         bill.state = True
@@ -241,6 +246,34 @@ class RegisterView(APIView):
         notice.isRead = False
         notice.save()
         return JsonResponse({'msg': "Successfully add register"})
+    
+    def lockRegister(self, request):
+        data = json.loads(request.body)
+        queue_id = data['number']
+        month, day = map(int, data['time'][:5].split('-'))
+        hour, minute = map(int, data['starttime'].split(':'))
+        startTime = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
+        doctor = Doctors.objects.get(id=data['doctorId'])
+        time = 1
+        if startTime.hour > 12:
+            time = 2
+        onDuty = OnDuty.objects.get(doctor=doctor, date=time.date(), time=time)
+        onDuty.state = onDuty.state | (1 << (queue_id - 1))
+        onDuty.save()
+    
+    def unlockRegister(self, request):
+        data = json.loads(request.body)
+        queue_id = data['number']
+        month, day = map(int, data['time'][:5].split('-'))
+        hour, minute = map(int, data['starttime'].split(':'))
+        startTime = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
+        doctor = Doctors.objects.get(id=data['doctorId'])
+        time = 1
+        if startTime.hour > 12:
+            time = 2
+        onDuty = OnDuty.objects.get(doctor=doctor, date=time.date(), time=time)
+        onDuty.state = onDuty.state & (~(1 << (queue_id - 1)))
+        onDuty.save()
 
 class TreatmentView(APIView):
     # 返回所有就诊记录
