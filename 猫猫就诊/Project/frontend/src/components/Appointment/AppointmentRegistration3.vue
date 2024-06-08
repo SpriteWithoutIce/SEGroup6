@@ -1,3 +1,4 @@
+<!-- 填写就诊人信息 -->
 <template>  
   <Header :squares2="squares2" />
   <!-- 就诊须知内容 -->

@@ -1,3 +1,4 @@
+<!-- 生成预约单 -->
 <template>  
   <Header :squares2="squares2"/> 
   <div class="notice-box" style="height: 1400px;">  

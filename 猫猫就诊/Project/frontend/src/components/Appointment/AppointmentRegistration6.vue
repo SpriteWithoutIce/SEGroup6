@@ -1,3 +1,4 @@
+<!-- 选择排队号 -->
 <template>  
   <Header :squares2="squares2"/> 
   <div class="notice-box" style="height: 1400px;">  
@@ -89,6 +90,7 @@ export default {
         "就诊须知","挂号类别","填写预约信息","选择科室","选择医生","选择时间地点","核对预约信息","预约成功"
       ],
       selectTime:1,
+      // 这里的是排班表，每10分钟一个号，医生只存储号的编号，不用存储具体的时间
       timetable_1:[
             {startTime:"08:00",endTime:"08:10"},
             {startTime:"08:10",endTime:"08:20"},

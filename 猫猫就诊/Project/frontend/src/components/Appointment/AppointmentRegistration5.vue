@@ -1,3 +1,4 @@
+<!-- 显示医生排班 -->
 <template>  
   <Header :squares2="squares2" />
   <div class="notice-box" style="height: 1000px;">
@@ -133,85 +134,7 @@ export default {
       selectDate:'',
       today: new Date(),
       doctors: [  
-        {  
-          id:0,
-          name: '医生A',  
-          title: '主任医师',  
-          avatar: 'img/lsy.jpg',
-          research: '生物信息',
-          schedule: [  
-            {time: '06-11(上午)',status:'empty', number: 10,emptytime:[
-            {number: 1,status:'empty'},
-            {number: 2,status:'full'},
-            {number: 3,status:'empty'},
-            {number: 4,status:'empty'},
-            {number: 5,status:'full'},
-            {number: 6,status:'empty'},
-            {number: 7,status:'full'},
-            {number: 8,status:'full'},
-            {number: 9,status:'empty'},
-            {number: 10,status:'full'},
-            {number: 11,status:'full'},
-            {number: 12,status:'full'},
-            {number: 13,status:'empty'},
-            {number: 14,status:'empty'},
-            {number: 15,status:'full'},
-            {number: 16,status:'empty'},
-            {number: 17,status:'empty'},
-            {number: 18,status:'full'},
-            {number: 19,status:'empty'},
-            {number: 20,status:'full'},
-          ],},
-          ],
-          cost:100,
-        },
-        {  
-          id:1,
-          name: '医生B',  
-          title: '副主任医师',  
-          avatar: 'img/touxiang.png',
-          research: '生物信息',
-          schedule: [  
-            {time: '06-13(上午)',status:'full'},
-            {time: '06-12(下午) ',status: 'empty',number:5,emptytime:[
-              {number: 1, status: 'empty'},
-              {number: 2, status: 'empty'},
-              {number: 3, status: 'full'},
-              {number: 4, status: 'empty'},
-              {number: 5, status: 'empty'},
-              {number: 6, status: 'full'},
-              {number: 7, status: 'empty'},
-              {number: 8, status: 'empty'},
-              {number: 9, status: 'empty'},
-              {number: 10, status: 'empty'},
-              {number: 11, status: 'empty'},
-              {number: 12, status: 'empty'} ,
-              {number: 13, status: 'empty'},
-              {number: 14, status: 'empty'},
-              {number: 15, status: 'empty'},
-              {number: 16, status: 'empty'},
-              {number: 17, status: 'empty'},
-              {number: 18, status: 'empty'} ,
-              {number: 19, status: 'empty'},
-              {number: 20, status: 'empty'}
-            ]
-              
-            },
-          ],  
-          cost:60,
-        }, 
-        {  
-          id:2,
-          name: '医生C',  
-          title: '副主任医师',  
-          avatar: 'img/touxiang (1).png',  
-          research: '生物信息',
-          schedule: [  
-            {time: '06-08(上午)',status:'full'},
-            {time: '06-14(下午) ',status: 'full'},
-          ],  
-          cost:60,
-        }, 
+        
       ],  
       isHovered:[false,false,false,false,false,false,false,false,false,false],
       info:{

@@ -1,3 +1,4 @@
+<!-- 选择首诊复诊 -->
 <template>  
   <Header :squares2="squares2"/> 
   

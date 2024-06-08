@@ -1,3 +1,4 @@
+<!-- 确认预约信息并缴费 -->
 <template>  
   <Header :squares2="squares2"/> 
   <BillDetails @billDetailsUpdated="onBillDetailsUpdated" ref="BillDetails"> </BillDetails>
@@ -22,7 +23,7 @@
       </div>  
     </div> 
     <div class="countdown">
-      <p>倒计时: {{ countDown }}</p> 
+      <p style="">倒计时: {{ countDown }}</p> 
     </div>
     <div class="doctor-item">
       <div class="doctor-header"> 

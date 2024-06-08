@@ -1,3 +1,4 @@
+<!-- 选择科室 -->
 <template>  
   <Header :squares2="squares2" />
   <div class="notice-box">  
@@ -139,6 +140,7 @@ export default {
         return [{subname:'医技科室',enbame:'Medical Technology Department'}]
       }
     },
+    // 这里是要显示在屏幕上的科室名字，是固定的
     getSubDepartments(departmentId) {  
       if (departmentId === 'internal') {  
         return [  

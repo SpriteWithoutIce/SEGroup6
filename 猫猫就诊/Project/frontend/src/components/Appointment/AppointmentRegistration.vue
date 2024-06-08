@@ -1,3 +1,4 @@
+<!-- 预约须知 -->
 <template>  
   <!-- 上面的四个框 -->
   <div class="containerlyh" style="display: flex; justify-content: center; align-items: center; height: 180px;">  
