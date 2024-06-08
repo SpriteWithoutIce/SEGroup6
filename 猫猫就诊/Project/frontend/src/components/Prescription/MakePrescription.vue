@@ -1,11 +1,9 @@
+<!-- 开具处方界面 -->
 <template>
-  <!-- 注意调用的位置 -->
   <PrescriptionDetails ref="prescriptionDetails"> </PrescriptionDetails>
-  <!-- 设置标题 -->
   <el-container style="height: 100vh;">
     <el-container>
       <el-aside width="200px">
-        <!-- 下边的部分是选择菜单 -->
         <el-menu class="aside my-menu" default-active="1" :unique-opened="true">
           <el-sub-menu index="1">
             <template #title>
@@ -64,14 +62,8 @@ export default {
     return {
       desc: "问诊列表统计",
       //注意，函数里有日期比较逻辑，所以务必注意后端的日期数据格式！！！
-      // 把patients设置成数据库读取的内容就好
       patient: [
         {
-          Id: '1',
-          name: '秋子夜',
-          age: '18',
-          sex: '男',
-          date: '2024年5月10日',
         },
       ],
       //这里设置数据初始化
@@ -184,7 +176,6 @@ export default {
   background-color: #f1f1f1;
 }
 
-/*菜单栏*/
 .aside {
   background-color: wheat;
 }
@@ -195,13 +186,9 @@ export default {
   opacity: 0.5;
 }
 
-/*标题的下划线*/
 .subHeader {
-  /*background-color: cornflowerblue*/
   background-color: black;
 }
-
-/*问诊列表*/
 .main {
   background-color: white;
   background-image: url(../../assets/prescription/prescription_bg.png);
@@ -213,7 +200,6 @@ export default {
   max-width: 75px;
 }
 
-/*页尾*/
 .footer {
   background-color: rgb(8, 3, 88);
   color: white;

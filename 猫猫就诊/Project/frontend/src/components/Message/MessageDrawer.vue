@@ -147,52 +147,8 @@ export default {
       timer: null,
       unreadCount: 0,
       msgCount: 0,
-      resMes: [
-        // {
-        //   type: '预约成功',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59', //用MySQL中的DATETIME类型就可以
-        //   read: false
-        // },
-        // {
-        //   type: '取消预约',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
-        //   read: false
-        // }
-      ],
-      oriBillMes: [
-        // {
-        //   type: '处方缴费提醒',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
-        //   price: 200,
-        //   read: false
-        // },
-        // {
-        //   type: '处方缴费成功',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
-        //   price: 200,
-        //   read: false
-        // }
-      ],
+      resMes: [],
+      oriBillMes: [],
       billMes:[],
     }
   },

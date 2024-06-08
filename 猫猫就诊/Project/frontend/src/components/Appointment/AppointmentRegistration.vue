@@ -95,7 +95,7 @@ export default {
     toggleSquare(index) {  
       this.currentSquareIndex = index;   
       this.currentSquareIndex = 1;
-      this.checked = false; // 重置打勾状态  
+      this.checked = false;
     },  
     nextSquare(){
 
@@ -182,8 +182,8 @@ export default {
   color: #000000;  
   cursor: pointer;  
   transition: background-color 0.3s, color 0.3s;
-  background-color: #003366; /* 浅蓝色 */  
-  color: #fcfcfc; /* 深蓝色 */  
+  background-color: #003366; 
+  color: #fcfcfc;
   text-decoration: none;
 }  
 .button-container {
@@ -193,18 +193,18 @@ export default {
 }
 
 .notice-box {  
-  background-color: #f5f5f5; /* 浅灰色背景 */  
+  background-color: #f5f5f5;
   border-left: 30px solid #fff;
-  border-right: 30px solid #fff; /* 白色边框 */  
-  padding: 20px; /* 内边距 */  
-  margin: 10px; /* 外边距 */  
-  box-sizing: border-box; /* 确保边框和内边距包含在元素的总宽度和高度内 */  
+  border-right: 30px solid #fff;
+  padding: 20px; 
+  margin: 10px;
+  box-sizing: border-box;
 }  
 .notice-box h2 {  
-  text-align: center; /* 标题居中 */  
-  margin-bottom: 20px; /* 标题与正文之间的间距 */  
+  text-align: center;
+  margin-bottom: 20px;
 }  
 .notice-box p {  
-  margin-bottom: 10px; /* 段落之间的间距 */  
+  margin-bottom: 10px;
 }  
 </style>

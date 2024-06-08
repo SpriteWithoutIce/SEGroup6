@@ -121,22 +121,18 @@ export default {
   
   methods: {  
     timeBeforeTenMinutes(timeStr) {  
-      // 假设时间字符串格式为 HH:mm  
       var [hoursStr, minutesStr] = timeStr.split(':').map(Number);  
       var hours = hoursStr;  
-      var minutes = minutesStr - 10; // 减去10分钟  
+      var minutes = minutesStr - 10;   
   
-      // 处理分钟数小于0的情况  
       if (minutes < 0) {  
-        hours -= 1; // 如果分钟数为负，则小时数减1  
-        minutes += 60; // 并且分钟数加上60  
+        hours -= 1; 
+        minutes += 60;
       }  
   
-      // 格式化小时和分钟为两位数  
       const formattedHours = String(hours).padStart(2, '0');  
       const formattedMinutes = String(minutes).padStart(2, '0');  
-  
-      // 返回格式化后的时间字符串  
+   
       return `${formattedHours}时${formattedMinutes}分`;  
     },
     updateCurrentTime() {  
@@ -174,13 +170,13 @@ button {
   border-radius: 10px;
 }  
 .notice-box {  
-  background-color: #f5f5f5; /* 浅灰色背景 */  
+  background-color: #f5f5f5;
   border-left: 30px solid #fff;
-  border-right: 30px solid #fff; /* 白色边框 */  
-  padding: 20px; /* 内边距 */  
-  margin: 10px; /* 外边距 */  
+  border-right: 30px solid #fff;
+  padding: 20px;
+  margin: 10px;
   margin-bottom: 100px;
-  box-sizing: border-box; /* 确保边框和内边距包含在元素的总宽度和高度内 */  
+  box-sizing: border-box; 
 }  
 
 .button2 {  
@@ -196,18 +192,18 @@ button {
   background-color: #fcfcfc;  
   color: #000000;  
   cursor: pointer;  
-  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  transition: background-color 0.3s, color 0.3s;
 }  
 .button-next {  
-  background-color: #003366; /* 浅蓝色 */  
-  color: #fcfcfc; /* 深蓝色 */  
+  background-color: #003366;
+  color: #fcfcfc;
 }  
 .button-prev {  
-  background-color: #e5ecff; /* 深蓝色 */  
-  color: #003366; /* 白色 */  
+  background-color: #e5ecff;
+  color: #003366;
 }  
 .button:hover {  
-  opacity: 0.8; /* 鼠标悬停时透明度降低 */  
+  opacity: 0.8;
 }  
 
 .button-container {  
@@ -215,25 +211,25 @@ button {
   margin: 20px auto;
   display: flex;  
   flex-wrap: wrap;  
-  justify-content: flex-start; /* 水平方向对齐方式，这里使用默认即可 */  
+  justify-content: flex-start;
 }  
   
 .button-row {  
   display: flex;  
-  margin-bottom: 10px; /* 可选，用于按钮行之间的间距 */  
+  margin-bottom: 10px;
 }  
 
 .button-down {  
   width: 120px;
   height: 100px;  
   display: flex;  
-  flex-direction: column; /* 垂直排列文字 */  
-  justify-content: center; /* 垂直居中文字 */  
-  align-items: center; /* 水平居中文字（在这个场景里其实不需要，但保持一致性）*/  
-  text-align: center; /* 水平居中文字内容 */  
-  border: none; /* 去除默认边框 */  
-  background-color: #eee; /* 示例背景色 */  
-  cursor: pointer; /* 鼠标悬停时变为小手形状 */  
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: none;
+  background-color: #eee;
+  cursor: pointer;
   color: black;
   margin-left: 50px;
   margin-right: 50px;
