@@ -23,12 +23,14 @@
       <div class="form-group">  
         <input type="text" id="name" name="name" class="form-control" placeholder="请输入姓名" v-model="formData.name">  
         <select id="paymentType" name="paymentType" class="form-control" placeholder="支付类型" v-model="formData.paymentType">  
+          <option value="" disabled selected>请选择支付类型</option>
           <option value="医保">医保</option>  
           <option value="非医保">非医保</option>  
         </select>  
       </div>  
       <div class="form-group">  
         <select id="gender" name="gender" class="form-control" placeholder="性别" v-model="formData.gender">  
+          <option value="" disabled selected>性别</option>
           <option value="男">男</option>  
           <option value="女">女</option>  
         </select>  
@@ -36,6 +38,7 @@
       </div>  
       <div class="form-group">  
         <select id="idType" name="idType" class="form-control" placeholder="证件类型" v-model="formData.idType">
+          <option value="" disabled selected>请选择证件类型</option>
           <option value="身份证">身份证</option>  
           <option value="医保卡">医保卡</option>  
           <option value="诊疗卡">诊疗卡</option>
@@ -59,19 +62,20 @@
       <div class="form-group">  
         <input type="text" id="name" name="name" class="form-control" placeholder="请输入姓名" v-model="formData.name">  
         <select id="gender" name="gender" class="form-control" placeholder="性别" v-model="formData.gender">  
+          <option value="" disabled selected>性别</option>
           <option value="男">男</option>  
           <option value="女">女</option>  
         </select>  
       </div>  
       <div class="form-group">  
         <select id="idType" name="idType" class="form-control" placeholder="证件类型" v-model="formData.idType">
+          <option value="" disabled selected>请选择证件类型</option>
           <option value="身份证">身份证</option>  
           <option value="医保卡">医保卡</option>  
           <option value="诊疗卡">诊疗卡</option>
           <option value="护照">护照</option>
           <option value="军官证">军官证</option>
           <option value="港澳通行证">港澳通行证</option>
-          <!-- 可以继续添加其他选项 -->  
         </select>  
         <input type="tel" id="phone" name="phone" class="form-control" placeholder="联系电话" v-model="formData.phone"> 
       </div>  
