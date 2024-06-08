@@ -296,6 +296,9 @@ export default {
   justify-content: center;  
   align-items: center;  
   height: 100px; 
+  font-size: large;
+  font-weight: bold;
+  color: orange;
 }
 button {  
   margin: auto auto;  
