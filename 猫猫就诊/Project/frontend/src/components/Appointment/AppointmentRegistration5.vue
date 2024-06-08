@@ -16,7 +16,7 @@
           query:{
             info_doctor:JSON.stringify(info)
           }
-        }" class="button2 button-next" style="text-decoration: none;">
+        }" class="button2 button-next" style="text-decoration: none; " v-if="checked">
         下一步
       </router-link>
     </div>
