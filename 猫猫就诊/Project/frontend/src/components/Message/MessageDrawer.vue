@@ -287,9 +287,9 @@ export default {
       this.oriBillMes.forEach(item => {
         // 将字符串形式的时间戳转换为数字类型的时间戳（毫秒）
         const timetamp = new Date(item.timetamp).getTime();
-        // 检查 type 是否为 '处方缴费提醒' 并且 timetamp 时间距离当前时间是否大于30分钟
+        // 检查 type 是否为 '处方缴费提醒' 并且 timetamp 时间距离当前时间是否大于2分钟
         // bug 时间戳格式待定
-        if ((item.type === '处方缴费提醒' && (now - timetamp) > 30 * 60 * 1000)||item.type === '处方缴费成功') {
+        if ((item.type === '处方缴费提醒' && (now - timetamp) > 2 * 60 * 1000)||item.type === '处方缴费成功') {
           // 如果条件满足，将 item 添加到 billMes 数组
           this.billMes.push(item);
         }
