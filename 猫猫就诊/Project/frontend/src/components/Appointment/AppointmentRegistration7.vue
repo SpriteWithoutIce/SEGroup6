@@ -79,7 +79,7 @@ export default {
   },
   data() {  
     return {  
-      countDown: 20, // 3分钟 = 180秒  
+      countDown: 180, // 3分钟 = 180秒  
       intervalId: null,  
       checked: false,  
       currentSquareIndex: 0,  
@@ -220,12 +220,13 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         let requestData = {
-          number:this.info_number,
-          time:this.info_time,
-          starttime:this.info_startTime,
-          doctorId:this.info_detail.doctor_id
+          number:this.info.number,
+          time:this.info.time,
+          starttime:this.info.starttime,
+          doctorId:this.info.doctor_id,
+          action:"unlockRegister"
         };
-        this.$axios.post('/api/patient/number/', requestData)
+        this.$axios.post('/api/register/unlock/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
             resolve();

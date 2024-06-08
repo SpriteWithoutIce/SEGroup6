@@ -257,9 +257,12 @@ class RegisterView(APIView):
         time = 1
         if startTime.hour > 12:
             time = 2
-        onDuty = OnDuty.objects.get(doctor=doctor, date=time.date(), time=time)
+        onDuty = OnDuty.objects.get(doctor=doctor, date=startTime.date(), time=time)
+        if (onDuty.state & (1 << (queue_id - 1))) != 0:
+            return JsonResponse({"msg": "This register has been locked by others"})
         onDuty.state = onDuty.state | (1 << (queue_id - 1))
         onDuty.save()
+        return JsonResponse({'msg': "Successfully lock register"})
     
     def unlockRegister(self, request):
         data = json.loads(request.body)
@@ -271,9 +274,10 @@ class RegisterView(APIView):
         time = 1
         if startTime.hour > 12:
             time = 2
-        onDuty = OnDuty.objects.get(doctor=doctor, date=time.date(), time=time)
+        onDuty = OnDuty.objects.get(doctor=doctor, date=startTime.date(), time=time)
         onDuty.state = onDuty.state & (~(1 << (queue_id - 1)))
         onDuty.save()
+        return JsonResponse({'msg': "Successfully unlock register"})
 
 class TreatmentView(APIView):
     # 返回所有就诊记录
