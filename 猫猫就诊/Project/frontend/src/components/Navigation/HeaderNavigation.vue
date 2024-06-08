@@ -115,7 +115,7 @@ export default {
       this.$forceUpdate()
       console.log('用户类型更新完毕')
     },
-    updateMessagebox(){
+    updateMessagebox () {
       this.$refs.messageBox.getMesData();
     },
     showLogin () {
@@ -125,7 +125,7 @@ export default {
       this.$refs.Sign.openModal()
     },
     startBackgroundRotation () {
-      this.intervalId = setInterval(this.changeBackground, 5000) 
+      this.intervalId = setInterval(this.changeBackground, 5000)
     },
     stopBackgroundRotation () {
       clearInterval(this.intervalId)
@@ -306,6 +306,7 @@ export default {
 .header-nav nav a:hover::after {
   transform: translateX(-50%) scaleX(0.5);
 }
+
 .header-nav::after {
   content: '';
   position: absolute;
@@ -337,6 +338,7 @@ export default {
   align-items: center;
   z-index: 2;
 }
+
 .clickable-images a {
   margin: 0 9vw;
 
