@@ -1,3 +1,4 @@
+<!-- Login.vue主要处理了登录的一系列逻辑，采用cookies技术实现刷新后当前用户不退出 -->
 <template>
   <div class="modal-background" v-if="loginVisible">
     <div class="modal-container">
@@ -99,11 +100,11 @@ export default {
           .then(function (response) {
             ts.msg = response.data['msg'];
             console.log(ts.msg);
-            resolve(); // 数据获取完成，resolve Promise
+            resolve(); 
           })
           .catch(function (error) {
             console.log(error);
-            reject(error); // 数据获取失败，reject Promise
+            reject(error); 
           });
       });
     },
@@ -153,8 +154,6 @@ export default {
           // this.closeModal();
 
 
-
-
           this.getUserData(idCard, password, userType).then(() => {
             if (this.msg === 'Successfully Login') {
               ElMessage({
@@ -164,7 +163,6 @@ export default {
               });
               this.identityNum = idCard;
               this.updateIdentityNum(idCard);
-              // console.log("登录处修改identityNum为:", GlobalState.identityNum);
               this.$emit('update:messagebox');
               this.$emit('update:currentUserCard', this.loginForm.idCard);
               this.$emit('update:currentUserType', this.loginForm.userType);

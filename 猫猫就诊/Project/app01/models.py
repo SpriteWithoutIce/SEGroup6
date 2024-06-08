@@ -93,7 +93,7 @@ class Bill(models.Model):
 
 class Notice(models.Model):
     patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='patient_notices')
-    registerMan = models.ForeignKey(verbose_name="挂号者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='register_notices')
+    registerMan = models.ForeignKey(verbose_name="挂号者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE, related_name='register_notices', null=True, blank=True)
     doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
     
     type_choices1 = (

@@ -147,52 +147,8 @@ export default {
       timer: null,
       unreadCount: 0,
       msgCount: 0,
-      resMes: [
-        // {
-        //   type: '预约成功',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59', //用MySQL中的DATETIME类型就可以
-        //   read: false
-        // },
-        // {
-        //   type: '取消预约',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
-        //   read: false
-        // }
-      ],
-      oriBillMes: [
-        // {
-        //   type: '处方缴费提醒',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
-        //   price: 200,
-        //   read: false
-        // },
-        // {
-        //   type: '处方缴费成功',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
-        //   price: 200,
-        //   read: false
-        // }
-      ],
+      resMes: [],
+      oriBillMes: [],
       billMes:[],
     }
   },
@@ -215,6 +171,7 @@ export default {
         this.resMes = [];
         this.oriBillMes = [];
         this.billMes = [];
+        this.msgCount = 0;
         this.countUnread();
         return;
       }
@@ -225,6 +182,7 @@ export default {
             ts.resMes = response.data['resMes'];
             ts.oriBillMes = response.data['billMes'];
             ts.payOverTimeQuery();
+            ts.sortMesByTimestamp();
             console.log(ts.resMes);
             console.log(ts.billMes);
             ts.countUnread();
@@ -238,6 +196,23 @@ export default {
           console.log('MesDrawer发送的请求参数:', {identity_num: GlobalState.identityNum});
       });
     },
+    // 将消息按照倒序排序
+    sortMesByTimestamp() {
+      this.resMes.sort((a, b) => {
+        // 将字符串转换为日期对象
+        const dateA = new Date(a.timetamp);
+        const dateB = new Date(b.timetamp);
+        // 比较日期对象的时间戳
+        return dateB - dateA; // 倒序排序
+      });
+      this.billMes.sort((a, b) => {
+        // 将字符串转换为日期对象
+        const dateA = new Date(a.timetamp);
+        const dateB = new Date(b.timetamp);
+        // 比较日期对象的时间戳
+        return dateB - dateA; // 倒序排序
+      });
+    },
     openDrawer() {
       if(GlobalState.identityNum === 0){
         ElMessage({
@@ -245,6 +220,7 @@ export default {
           message: '请先登录 ╮(╯▽╰)╭',
           type: 'warning',
         });
+        return;
       }
       this.getMesData();
       this.table = true;

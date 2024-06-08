@@ -71,6 +71,8 @@
 </template>
 <script>
 import DetailA from './DetailA.vue'
+import { ElMessage } from "element-plus"
+
 export default {
   name: 'HistoryA',
   props: {
