@@ -21,7 +21,9 @@
           >缴费</el-button>
       </div>  
     </div> 
-    <p>倒计时: {{ countDown }}</p> 
+    <div class="countdown">
+      <p>倒计时: {{ countDown }}</p> 
+    </div>
     <div class="doctor-item">
       <div class="doctor-header"> 
         <img :src="info.doctorAvatar" alt="" class="avatar">
@@ -289,7 +291,12 @@ export default {
   flex-wrap: wrap;  
   justify-content: center;  
 }  
-
+.countdown {
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  height: 100px; 
+}
 button {  
   margin: auto auto;  
   padding: 5px 10px;  
