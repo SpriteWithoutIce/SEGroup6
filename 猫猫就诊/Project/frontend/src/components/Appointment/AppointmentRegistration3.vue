@@ -166,17 +166,13 @@ export default {
     toggleSquare(index) {  
       this.currentSquareIndex = index;   
       this.currentSquareIndex = 1;
-      this.checked = false; // 重置打勾状态  
+      this.checked = false;
     },  
     nextSquare(){
 
     },
     
-    // 需要在点击“下一步”按钮时执行submitForm()
     submitForm() {  
-      // this.setPatientData().then(() => {  
-      //   console.log(this.formData); // 在控制台打印表单数据 
-      // })
       console.log(this.formData);
     } ,
     submit(){
@@ -185,15 +181,14 @@ export default {
         this.setPatientData();
     },
     submitForm2() {  
-      // 这里可以处理表单提交，比如发送 AJAX 请求到服务器  
-      console.log(this.form2); // 在控制台打印表单数据  
+      console.log(this.form2);
     }, 
     isformed(){
       if(this.first==1){
         if(!this.checked)
           return false;
         return Object.keys(this.formData)  
-        .filter(key => key !== 'queryFirst') // 排除 queryFirst 字段  
+        .filter(key => key !== 'queryFirst')
         .every(key => this.formData[key] !== '');
       }
       else{
@@ -229,10 +224,10 @@ export default {
 .container3 {  
   display: flex;  
   flex-direction: column;  
-  align-items: center; /* 垂直居中 */  
-  justify-content: center; /* 水平居中（如果 body 不是全屏高度，则不会居中在屏幕中间） */  
-  height: 40vh; /* 设置 body 高度为视口高度，以确保垂直居中 */  
-  margin: 0; /* 移除默认的 body 边距 */  
+  align-items: center; 
+  justify-content: center; 
+  height: 40vh;
+  margin: 0;
 }  
 button {  
   margin: auto auto;  
@@ -250,12 +245,12 @@ button {
 }
 
 .notice-box {  
-  background-color: #f5f5f5; /* 浅灰色背景 */  
+  background-color: #f5f5f5; 
   border-left: 30px solid #fff;
-  border-right: 30px solid #fff; /* 白色边框 */  
-  padding: 20px; /* 内边距 */  
-  margin: 10px; /* 外边距 */  
-  box-sizing: border-box; /* 确保边框和内边距包含在元素的总宽度和高度内 */  
+  border-right: 30px solid #fff;
+  padding: 20px;
+  margin: 10px;
+  box-sizing: border-box;
 }  
 
 .square-done {
@@ -295,19 +290,19 @@ button {
   background-color: #fcfcfc;  
   color: #000000;  
   cursor: pointer;  
-  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  transition: background-color 0.3s, color 0.3s;
   text-decoration: none;
 }  
 .button-next {  
-  background-color: #003366; /* 浅蓝色 */  
-  color: #fcfcfc; /* 深蓝色 */  
+  background-color: #003366;
+  color: #fcfcfc; 
 }  
 .button-prev {  
-  background-color: #e5ecff; /* 深蓝色 */  
-  color: #003366; /* 白色 */  
+  background-color: #e5ecff;
+  color: #003366;
 }  
 .button:hover {  
-  opacity: 0.8; /* 鼠标悬停时透明度降低 */  
+  opacity: 0.8;
 }  
 
 .checkbox-container {  
