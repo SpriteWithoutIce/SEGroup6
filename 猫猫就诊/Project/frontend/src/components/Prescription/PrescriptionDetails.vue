@@ -1,3 +1,4 @@
+<!-- 开具处方的具体实现逻辑界面 -->
 <template>
   <div class="modal-background" v-if="isVisible">
     <div class="modal-container">
@@ -23,11 +24,6 @@
           <el-form-item label="疗程">
             <el-input-number v-model="medicine.times" :min="0"></el-input-number>
           </el-form-item>
-          <!-- <el-row>
-            <el-col :span="12">
-              <el-input v-model="medicine.totalPrice" disabled placeholder="总价" style="margin-left: 10px;"></el-input>
-            </el-col>
-          </el-row> -->
           <el-button type="danger" icon="el-icon-delete" @click="removeMedicine(index)" v-if="form.medicines.length > 1"
             class="delete-button">删除药物</el-button>
         </el-form-item>
@@ -71,9 +67,6 @@ export default {
         medicines: [{ name: '', cnt: 0, price: 0, times: 0, totalPrice: 0 }]
       },
       medicinesDB: [
-        // { name: '布洛芬', stock 改成num: 80, price: 5.0, use: ['发热', '炎症'] }
-        { name: '布洛芬', num: 80, price: 5.0, use: '发热,炎症' }
-        // 可以添加更多药物数据
       ]
     };
   },
@@ -101,17 +94,16 @@ export default {
           totalPrice: this.totalPrice,
           action: "addTreatmentData"
         };
-        console.log("药物列表:", requestData.medicines); // 使用 JSON.stringify 打印药物列表
         console.log("写回处方前的数据" + requestData.id + " " + requestData.totalPrice + " " + requestData.medicines + " " + requestData.suggestion);
         this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
-            resolve(); // 数据获取完成，resolve Promise
+            resolve(); 
           })
           .catch(function (error) {
             console.log(error);
             console.log("Prescription Details Write Back Failed")
-            reject(error); // 数据获取失败，reject Promise
+            reject(error); 
           });
       });
     },
@@ -132,11 +124,11 @@ export default {
           .then(function (response) {
             ts.medicinesDB = response.data['medicine'];
             console.log(ts.medicinesDB);
-            resolve(); // 数据获取完成，resolve Promise
+            resolve(); 
           })
           .catch(function (error) {
             console.log(error);
-            reject(error); // 数据获取失败，reject Promise
+            reject(error); 
           });
       });
     },
@@ -248,10 +240,8 @@ export default {
       link.click();
       document.body.removeChild(link);
 
-      // 清理 URL 对象
       URL.revokeObjectURL(url);
 
-      // 提示报告生成成功
       ElMessage({
         showClose: true,
         message: "报告生成成功 ╰(*°▽°*)╯",

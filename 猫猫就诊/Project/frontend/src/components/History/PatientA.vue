@@ -49,44 +49,7 @@ import { GlobalState } from '../../global.js'
 // GlobalState.identityNum;
 import { ref, onMounted, computed, inject } from 'vue'
 const input4 = ref('')
-const info = ref([
-  // {
-  //   office: '神经外科',
-  //   orderNum: 'w0023',
-  //   price: '0.00元',
-  //   name: 'buaa',
-  //   cardNum: '001741',
-  //   position: '门诊楼三层内科二诊区',
-  //   time: '2024-05-14 下午 14:10-14:20',
-  //   line: '37',
-  //   state: '已预约',
-  //   doctor: '王玉'
-  // },
-  // {
-  //   office: '心血管门诊',
-  //   orderNum: 'w0026',
-  //   price: '0.00元',
-  //   name: 'hhh',
-  //   cardNum: '001742',
-  //   position: '门诊楼三层内科二诊区',
-  //   time: '2024-05-17 下午 14:10-14:20',
-  //   line: '40',
-  //   state: '已预约',
-  //   doctor: '王玉'
-  // },
-  // {
-  //   office: '精神科',
-  //   orderNum: 'w0026',
-  //   price: '0.00元',
-  //   name: 'hhh',
-  //   cardNum: '001742',
-  //   position: '门诊楼三层内科二诊区',
-  //   time: '2024-05-17 下午 14:10-14:20',
-  //   line: '40',
-  //   state: '已预约',
-  //   doctor: '王玉'
-  // },
-])
+const info = ref([])
 
 // const identityNum = inject('$identity_num')
 

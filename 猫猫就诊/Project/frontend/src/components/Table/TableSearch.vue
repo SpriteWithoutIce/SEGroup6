@@ -1,3 +1,4 @@
+<!-- 出诊查询 -->
 <template>  
   <div class="containerlyh" style="display: flex; justify-content: center; align-items: center; height: 180px;">  
     <router-link 
@@ -130,42 +131,7 @@ export default {
         { id:46, name: '临床营养科' ,pinyin:'Linchuang'},
         // ... 其他科室  
       ],
-      doctors: [  
-        {  
-          name: '医生A',  
-          title: '主任医师',  
-          department:'心血管内科',
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-09(上午)',status:'empty', number: 10},
-            {time: '05-07(下午) ',status: 'full'},
-          ],  
-          cost:100,
-        },
-        {  
-          name: '医生B',  
-          title: '副主任医师',  
-          department:'呼吸与危重症医学科',
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-08(上午)',status:'full'},
-            {time: '05-09(下午) ',status: 'empty',number:5},
-          ],  
-          cost:60,
-        }, 
-        {  
-          name: '医生C',  
-          title: '副主任医师',  
-          department:'心血管内科',
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '05-06(上午)',status:'full'},
-            {time: '05-10(下午) ',status: 'full'},
-          ],  
-          cost:60,
-        }, 
-        // ... 其他医生数据  
-      ],     
+      
       departmentLetters: ['ALL', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],  
 
       selectedLetterIndex: -1, 
@@ -174,13 +140,10 @@ export default {
     };  
   }  ,
   computed: {  
-    // 根据当前选中的索引来过滤科室  
     filteredDepartments() {  
       if (this.selectedLetterIndex === -1) {  
-        // 如果选择了“全部”，则显示所有科室  
         return this.departments;  
       } else {  
-        // 否则，只显示以选中字母为拼音首字母的科室  
         const letter = this.departmentLetters[this.selectedLetterIndex].toUpperCase();  
         return this.departments.filter(department =>  
           department.pinyin[0].toUpperCase() === letter  
@@ -190,14 +153,12 @@ export default {
 
   },  
   methods: {  
-    // 选中科室的方法  
     selectDepartment(index) { 
       if(index==0)
         this.selectedLetterIndex=-1; 
       else
         this.selectedLetterIndex = index;  
     },  
-    // 判断圆形按钮是否选中的方法  
     isActive(index) {  
       if(index==0)
         return this.selectedLetterIndex===-1;
@@ -254,7 +215,7 @@ export default {
   background-color: #e5ecff;  
   color: #000000;  
   cursor: pointer;  
-  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  transition: background-color 0.3s, color 0.3s;
   text-decoration: none;
 }  
   
@@ -299,7 +260,7 @@ export default {
   display: flex;  
   justify-content: center;  
   align-items: center;  
-  width: 200px; /* 假设有10px的间距 */  
+  width: 200px;
   margin: 10px;  
   background-color: white;  
   padding: 10px;  
@@ -321,25 +282,25 @@ export default {
 }
 .doctors-table-container {  
   width: 1000px;  
-  margin: 0 auto; /* 水平居中 */  
+  margin: 0 auto;
 }  
   
 .doctors-table {  
   width: 100%;  
-  border-collapse: collapse; /* 合并相邻边框 */  
-  background-color: lightblue; /* 表格背景色 */  
+  border-collapse: collapse;  
+  background-color: lightblue;
 }  
   
 .doctors-table th,  
 .doctors-table td {  
-  border: 1px solid white; /* 表格线 */  
-  padding: 8px; /* 单元格内边距 */  
-  text-align: center; /* 文字对齐方式 */  
-  color: black; /* 表格文字颜色 */  
+  border: 1px solid white; 
+  padding: 8px;
+  text-align: center;
+  color: black;
 }  
   
 .doctors-table th {  
-  background-color: blue; /* 表头背景色 */  
-  color: white; /* 表头文字颜色 */  
+  background-color: blue; 
+  color: white;
 }  
 </style>

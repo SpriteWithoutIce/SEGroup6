@@ -1,3 +1,4 @@
+<!-- 显示医生排班 -->
 <template>  
   <Header :squares2="squares2" />
   <div class="notice-box" style="height: 1000px;">
@@ -14,14 +15,9 @@
         :to="{
           path:'/AppointmentRegistration6',
           query:{
-            // name:info.name,
-            // paymentType:info.paymentType,
-            // department:info.department,
-            // inumber:info.inumber,
-            // time:info_time
             info_doctor:JSON.stringify(info)
           }
-        }" class="button2 button-next" style="text-decoration: none;">
+        }" class="button2 button-next" style="text-decoration: none; " v-if="checked">
         下一步
       </router-link>
     </div>
@@ -136,88 +132,9 @@ export default {
       selectedDate: null,
       selectDoctor:'',
       selectDate:'',
-      today: new Date(), // 今天的日期  
+      today: new Date(),
       doctors: [  
-        {  
-          id:0,
-          name: '医生A',  
-          title: '主任医师',  
-          avatar: 'img/lsy.jpg', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '06-11(上午)',status:'empty', number: 10,emptytime:[
-            {number: 1,status:'empty'},
-            {number: 2,status:'full'},
-            {number: 3,status:'empty'},
-            {number: 4,status:'empty'},
-            {number: 5,status:'full'},
-            {number: 6,status:'empty'},
-            {number: 7,status:'full'},
-            {number: 8,status:'full'},
-            {number: 9,status:'empty'},
-            {number: 10,status:'full'},
-            {number: 11,status:'full'},
-            {number: 12,status:'full'},
-            {number: 13,status:'empty'},
-            {number: 14,status:'empty'},
-            {number: 15,status:'full'},
-            {number: 16,status:'empty'},
-            {number: 17,status:'empty'},
-            {number: 18,status:'full'},
-            {number: 19,status:'empty'},
-            {number: 20,status:'full'},
-          ],},
-          ],
-          cost:100,
-        },
-        {  
-          id:1,
-          name: '医生B',  
-          title: '副主任医师',  
-          avatar: 'img/touxiang.png', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '06-13(上午)',status:'full'},
-            {time: '06-12(下午) ',status: 'empty',number:5,emptytime:[
-              {number: 1, status: 'empty'},
-              {number: 2, status: 'empty'},
-              {number: 3, status: 'full'},
-              {number: 4, status: 'empty'},
-              {number: 5, status: 'empty'},
-              {number: 6, status: 'full'},
-              {number: 7, status: 'empty'},
-              {number: 8, status: 'empty'},
-              {number: 9, status: 'empty'},
-              {number: 10, status: 'empty'},
-              {number: 11, status: 'empty'},
-              {number: 12, status: 'empty'} ,
-              {number: 13, status: 'empty'},
-              {number: 14, status: 'empty'},
-              {number: 15, status: 'empty'},
-              {number: 16, status: 'empty'},
-              {number: 17, status: 'empty'},
-              {number: 18, status: 'empty'} ,
-              {number: 19, status: 'empty'},
-              {number: 20, status: 'empty'}
-            ]
-              
-            },
-          ],  
-          cost:60,
-        }, 
-        {  
-          id:2,
-          name: '医生C',  
-          title: '副主任医师',  
-          avatar: 'img/touxiang (1).png', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-          schedule: [  
-            {time: '06-08(上午)',status:'full'},
-            {time: '06-14(下午) ',status: 'full'},
-          ],  
-          cost:60,
-        }, 
-        // ... 其他医生数据  
+        
       ],  
       isHovered:[false,false,false,false,false,false,false,false,false,false],
       info:{
@@ -244,11 +161,11 @@ export default {
           .then(function (response) {
             ts.doctors = response.data['duty'];
             console.log(ts.doctors);
-            resolve(); // 数据获取完成，resolve Promise
+            resolve();
           })
           .catch(function (error) {
             console.log(error);
-            reject(error); // 数据获取失败，reject Promise
+            reject(error);
           });
       });
     },
@@ -260,29 +177,24 @@ export default {
       this.info.day_index=dayIndex;
       this.info.doctor=this.doctors[doctorIndex];
     },
-    // 计算接下来7天的日期和周几  
     locatenextSevenDays() {  
       const days = [];  
       for (let i = 0; i < 7; i++) {  
         const date = new Date(this.today);  
         date.setDate(this.today.getDate() + i);  
         days.push({  
-          date: this.formatDate(date), // 格式化的日期字符串  
-          dayOfWeek: this.formatDayOfWeek(date), // 周几的字符串  
+          date: this.formatDate(date),
+          dayOfWeek: this.formatDayOfWeek(date),
         });  
       }  
       return days;  
-    },  
-    // 日期格式化函数  
+    },    
     formatDate(date) {  
-      // 根据需要格式化日期，例如 "05-02"  
       const mm = String(date.getMonth() + 1).padStart(2, '0');  
       const dd = String(date.getDate()).padStart(2, '0');  
       return `${mm}-${dd}`;  
     },  
-    // 周几格式化函数  
     formatDayOfWeek(date) {  
-      // 根据需要返回周几的字符串，例如 "周一"  
       const days = ['日', '一', '二', '三', '四', '五', '六'];  
       return `周${days[date.getDay()]}`;  
     },  
@@ -303,31 +215,23 @@ export default {
       const [datePart, timeOfDay] = timeString.split('(');  
       const [month, day] = datePart.split('-').map(str => parseInt(str, 10));  
       const isMorning = timeOfDay.includes('上午');  
-      const time = isMorning ? '08:00:00' : '14:00:00'; // 根据上午/下午设置时间  
-  
-      // 构造需要比较的时间点（完整的日期和时间）  
+      const time = isMorning ? '08:00:00' : '14:00:00'; 
+ 
       const compareDate = new Date();  
-      compareDate.setMonth(month - 1); // 注意月份是从0开始的  
+      compareDate.setMonth(month - 1);
       compareDate.setDate(day);  
       compareDate.setHours(...time.split(':').map(Number));  
       compareDate.setMinutes(0);  
       compareDate.setSeconds(0);  
       compareDate.setMilliseconds(0);  
-  
-      // 获取当前时间的完整对象  
-      const now = new Date();  
-  
-      // 如果传入的时间不是同一天，则直接返回true（或根据需求决定）  
+
+      const now = new Date();   
       if (compareDate.getDate() !== now.getDate() || compareDate.getMonth() !== now.getMonth()) {  
-        return true; // 或者返回false，取决于你的业务逻辑  
-      }  
-  
-      // 比较时间  
+        return true;
+      }   
       if (now > compareDate) {  
-        return false; // 当前时间大于比较时间点  
+        return false;
       }  
-  
-      // 其他情况返回true  
       return true;  
     },
   },
@@ -348,9 +252,9 @@ export default {
                 const [datePart, timeOfDay] = scheduleItem.time.split('(');  
                 const [month, day] = datePart.split('-').map(str => parseInt(str, 10));  
                 const isMorning = timeOfDay.includes('上午');  
-                const time = isMorning ? '08:00:00' : '14:00:00'; // 根据上午/下午设置时间  
+                const time = isMorning ? '08:00:00' : '14:00:00'; 
                 const compareDate = new Date();  
-                compareDate.setMonth(month - 1); // 注意月份是从0开始的  
+                compareDate.setMonth(month - 1); 
                 compareDate.setDate(day);  
                 compareDate.setHours(...time.split(':').map(Number));  
                 compareDate.setMinutes(0);  
@@ -409,13 +313,13 @@ export default {
 <style scoped>  
 
 .notice-box {  
-  background-color: #f5f5f5; /* 浅灰色背景 */  
+  background-color: #f5f5f5;
   border-left: 30px solid #fff;
-  border-right: 30px solid #fff; /* 白色边框 */  
-  padding: 20px; /* 内边距 */  
+  border-right: 30px solid #fff; 
+  padding: 20px;
   padding-bottom: 50px;
-  margin: 10px; /* 外边距 */  
-  box-sizing: border-box; /* 确保边框和内边距包含在元素的总宽度和高度内 */  
+  margin: 10px;
+  box-sizing: border-box;
 }  
 
 .container2 {  
@@ -437,18 +341,18 @@ export default {
   background-color: #fcfcfc;  
   color: #000000;  
   cursor: pointer;  
-  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  transition: background-color 0.3s, color 0.3s;
 }  
 .button-next {  
-  background-color: #003366; /* 浅蓝色 */  
-  color: #fcfcfc; /* 深蓝色 */  
+  background-color: #003366;
+  color: #fcfcfc;
 }  
 .button-prev {  
-  background-color: #e5ecff; /* 深蓝色 */  
-  color: #003366; /* 白色 */  
+  background-color: #e5ecff;
+  color: #003366;
 }  
 .button:hover {  
-  opacity: 0.8; /* 鼠标悬停时透明度降低 */  
+  opacity: 0.8;
 }  
 
 .date-blocks {  
@@ -465,7 +369,7 @@ export default {
   margin: 0 5px;  
 }  
 .date-block:hover{
-  background-color: #003366; /* 这里使用了:hover伪类，而不是Vue方法 */  
+  background-color: #003366;
   color: white;
 }
 .date-block.noSelected{
@@ -475,13 +379,11 @@ export default {
   display: flex;  
   flex-direction: column;
   justify-content: center;
-  /* flex-wrap: wrap;  
-  justify-content: space-around;   */
 }  
   
 .doctor-item {  
-  width: 600px; /* 如果你想要每个元素占据整行宽度，可以设置为100% */  
-  margin: 10px auto; /* 如果垂直排列，通常只需要上下边距 */
+  width: 600px;
+  margin: 10px auto;
   border: 1px solid #ccc;  
   padding: 15px;  
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  
@@ -552,17 +454,13 @@ export default {
   color: white;
 }
 .time-label {  
-  /* font-weight: bold;   */
   padding-left: 10px;
 }  
   
 .status {  
-  /* font-style: italic;   */
   color: #666;  
   padding-right: 20px;
 }  
-  
-/* 根据状态设置不同的背景色或颜色 */  
 .status.有号 {  
   color: green;  
 }  

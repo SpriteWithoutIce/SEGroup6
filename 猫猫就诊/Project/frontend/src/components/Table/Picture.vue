@@ -1,3 +1,4 @@
+<!-- 预约流程 -->
 <template>  
   <div class="containerlyh" style="display: flex; justify-content: center; align-items: center; height: 180px;">  
     <router-link 
@@ -76,7 +77,7 @@ export default {
   background-color: #e5ecff;  
   color: #000000;  
   cursor: pointer;  
-  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  transition: background-color 0.3s, color 0.3s;
   text-decoration: none;
 }  
   
@@ -121,7 +122,7 @@ export default {
   display: flex;  
   justify-content: center;  
   align-items: center;  
-  width: 200px; /* 假设有10px的间距 */  
+  width: 200px;
   margin: 10px;  
   background-color: white;  
   padding: 10px;  
@@ -179,14 +180,13 @@ export default {
   font-size: 14px;  
 }  
 
-.doctor-item {  
-  /* 每个医生框的样式 */  
-  border: 1px solid #ccc; /* 边框 */  
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 阴影 */  
-  padding: 10px; /* 可选，添加一些内边距 */  
-  margin: 10px; /* 可选，添加一些外边距以防止它们靠得太近 */  
-  width: 500px; /* 可选，设置固定宽度或最大宽度 */  
-  text-align: center; /* 文本居中（对于非 Flexbox 布局或内部元素）*/  
+.doctor-item {    
+  border: 1px solid #ccc; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;  
+  margin: 10px; 
+  width: 500px;  
+  text-align: center;
 }  
 
 .searchTable {
@@ -201,7 +201,7 @@ export default {
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: row; /* 将组件横向排列 */
+  flex-direction: row;
   align-items: center;
 }
 .shuru {

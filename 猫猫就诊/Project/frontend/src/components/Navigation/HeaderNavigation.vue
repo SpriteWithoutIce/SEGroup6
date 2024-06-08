@@ -1,3 +1,4 @@
+<!-- 导航栏代码部分 -->
 <template>
   <div>
     <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
@@ -124,7 +125,7 @@ export default {
       this.$refs.Sign.openModal()
     },
     startBackgroundRotation () {
-      this.intervalId = setInterval(this.changeBackground, 5000) // Change background every 5 seconds
+      this.intervalId = setInterval(this.changeBackground, 5000) 
     },
     stopBackgroundRotation () {
       clearInterval(this.intervalId)
@@ -190,8 +191,6 @@ export default {
         case '管理员':
           return [
             { link: '/PharmaCist', icon: '/static/img/navigation/信息录入.png', alt: 'Image 2' }
-            // { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
-            // { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' }
           ]
         default:
           return [
@@ -307,8 +306,6 @@ export default {
 .header-nav nav a:hover::after {
   transform: translateX(-50%) scaleX(0.5);
 }
-
-/*灰色透明区域 并不适合覆盖顶部选项*/
 .header-nav::after {
   content: '';
   position: absolute;
@@ -316,11 +313,8 @@ export default {
   right: 0;
   width: 100%;
   height: 80px;
-  /* 设置灰色透明矩形区域的高度 */
   background-color: rgba(255, 255, 255, 0.7);
-  /* 设置灰色透明 */
   z-index: 1;
-  /* 确保在导航链接之上 */
 }
 
 .header-nav nav {
@@ -332,21 +326,17 @@ export default {
   color: rgb(246, 242, 242);
 }
 
-/*注意底部灰色阴影的图层是1*/
 .clickable-images {
   position: absolute;
   bottom: 3px;
   left: 0;
   width: 100%;
   height: 90px;
-  /* 与灰色透明矩形区域高度相同 */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2;
 }
-
-/*调整灰色矩形内可点击元素距离*/
 .clickable-images a {
   margin: 0 9vw;
 
@@ -361,17 +351,11 @@ a:hover {
   cursor: pointer;
 }
 
-/*非常困惑的一点就是clickable里边设置过的元素，在子类元素里边再设置会被无视，好反常识？？？*/
 .clickable-images img {
-  /*width: 30px;
-    height: 30px;
-    */
   position: absolute;
   transition: all 0.3s ease;
 }
 
-/*父类是clickable images 所以找着那个来定位*/
-/*下边两个是并列等级的设置*/
 .Surround-image {
   opacity: 0;
   position: absolute;

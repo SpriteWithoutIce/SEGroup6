@@ -11,30 +11,6 @@
       @mouseout="square.hovered = false">
       {{ info[index] }}  
     </router-link>
-    <!-- <router-link to="/TableSearch" class="square" 
-      :class="{ 'square-hovered': squares[0].hovered}"
-      @mouseover="squares[0].hovered = true"  
-      @mouseout="squares[0].hovered = false">
-      {{ info[0] }}
-    </router-link>
-    <router-link to="/AppointmentRegistration" class="square" 
-      :class="{ 'square-hovered': 1}"
-      @mouseover="squares[1].hovered = true"  
-      @mouseout="squares[1].hovered = false">
-      {{ info[1] }}
-    </router-link>
-    <router-link to="/AppointmentRegistration" class="square" 
-      :class="{ 'square-hovered': squares[2].hovered}"
-      @mouseover="squares[2].hovered = true"  
-      @mouseout="squares[2].hovered = false">
-      {{ info[2] }}
-    </router-link>
-    <router-link to="/AppointmentRegistration" class="square" 
-      :class="{ 'square-hovered': squares[3].hovered}"
-      @mouseover="squares[3].hovered = true"  
-      @mouseout="squares[3].hovered = false">
-      {{ info[3] }}
-    </router-link> -->
   </div>  
   <!-- 下面的8个块 -->
   <div>  
@@ -59,7 +35,7 @@ export default {
   props: {  
     squares2: {  
       type: Array,  
-      required: true, // 如果父组件没有传递这个 prop，则抛出警告  
+      required: true, 
     },  
   },  
   data() {  
@@ -85,7 +61,7 @@ export default {
     toggleSquare(index) {  
       this.currentSquareIndex = index;   
       this.currentSquareIndex = 1;
-      this.checked = false; // 重置打勾状态  
+      this.checked = false;
     },  
     nextSquare(){
 
@@ -116,7 +92,7 @@ export default {
   background-color: #e5ecff;  
   color: #000000;  
   cursor: pointer;  
-  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  transition: background-color 0.3s, color 0.3s;
   text-decoration: none;
 }  
   
@@ -176,12 +152,12 @@ button {
 }
 
 .notice-box {  
-  background-color: #f5f5f5; /* 浅灰色背景 */  
+  background-color: #f5f5f5; 
   border-left: 30px solid #fff;
-  border-right: 30px solid #fff; /* 白色边框 */  
-  padding: 20px; /* 内边距 */  
-  margin: 10px; /* 外边距 */  
-  box-sizing: border-box; /* 确保边框和内边距包含在元素的总宽度和高度内 */  
+  border-right: 30px solid #fff; 
+  padding: 20px; 
+  margin: 10px; 
+  box-sizing: border-box; 
 }  
 
 .square-done {
