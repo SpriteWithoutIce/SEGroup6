@@ -110,11 +110,11 @@ const pagination = ref({
 })
 const tableData = ref([
   {
-    name: '感冒冲剂',
-    type: '中药',
-    use: '感冒', //症状，用英文逗号分隔（例如：感冒,头晕)
-    price: '5.00',
-    num: '10'
+    name: '',
+    type: '',
+    use: '', //症状，用英文逗号分隔（例如：感冒,头晕)
+    price: '',
+    num: ''
   }
 ])
 
