@@ -1,3 +1,4 @@
+<!-- 预约须知 -->
 <template>  
   <!-- 上面的四个框 -->
   <div class="containerlyh" style="display: flex; justify-content: center; align-items: center; height: 180px;">  
@@ -33,6 +34,7 @@
     <h2>温 馨 提 示</h2>  
     <p>尊敬的就诊者：</p>  
     <p>您好！我院门诊已实行就诊新流程，敬请注意如下事项：</p>  
+    <p style="font-weight: bold;">重点：每日上午的号需在当日8:00前挂，下午的号须在当日14:00前挂</p>
     <p>一、进入院区请正确佩戴口罩。体温≥37.3℃者请到发热门诊就诊。急危重症患者请到急诊就诊。</p>  
     <p>二、按照医院整体改造施工计划，东川门诊4楼大部分区域开始围蔽改造。部分康复科及心中医门诊继续安排在4楼新区出诊，请留意指引标识或咨询现场导诊人员。</p>  
     <p>三、原板房门诊已关停。东川儿科、肝胆内科已分别搬到东川门诊3楼及5楼，东川心理精神科已搬到伟伦楼4楼继续开诊，请留意现场指引。</p> 
@@ -86,7 +88,7 @@ export default {
       info2:[
         "就诊须知","挂号类别","填写预约信息","选择科室","选择医生","选择时间地点","核对预约信息","预约成功"
       ],
-      link:['/TableSearch','/AppointmentRegistration','/AppointmentRegistration','/DoctorSearch'],
+      link:['/TableSearch','/AppointmentRegistration','/Picture','/DoctorSearch'],
 
     };  
   }  ,
@@ -94,7 +96,7 @@ export default {
     toggleSquare(index) {  
       this.currentSquareIndex = index;   
       this.currentSquareIndex = 1;
-      this.checked = false; // 重置打勾状态  
+      this.checked = false;
     },  
     nextSquare(){
 
@@ -181,8 +183,8 @@ export default {
   color: #000000;  
   cursor: pointer;  
   transition: background-color 0.3s, color 0.3s;
-  background-color: #003366; /* 浅蓝色 */  
-  color: #fcfcfc; /* 深蓝色 */  
+  background-color: #003366; 
+  color: #fcfcfc;
   text-decoration: none;
 }  
 .button-container {
@@ -192,18 +194,18 @@ export default {
 }
 
 .notice-box {  
-  background-color: #f5f5f5; /* 浅灰色背景 */  
+  background-color: #f5f5f5;
   border-left: 30px solid #fff;
-  border-right: 30px solid #fff; /* 白色边框 */  
-  padding: 20px; /* 内边距 */  
-  margin: 10px; /* 外边距 */  
-  box-sizing: border-box; /* 确保边框和内边距包含在元素的总宽度和高度内 */  
+  border-right: 30px solid #fff;
+  padding: 20px; 
+  margin: 10px;
+  box-sizing: border-box;
 }  
 .notice-box h2 {  
-  text-align: center; /* 标题居中 */  
-  margin-bottom: 20px; /* 标题与正文之间的间距 */  
+  text-align: center;
+  margin-bottom: 20px;
 }  
 .notice-box p {  
-  margin-bottom: 10px; /* 段落之间的间距 */  
+  margin-bottom: 10px;
 }  
 </style>

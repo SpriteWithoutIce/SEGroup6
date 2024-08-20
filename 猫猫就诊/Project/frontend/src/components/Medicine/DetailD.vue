@@ -134,10 +134,10 @@ export default {
     removePhoto() {
       return new Promise((resolve, reject) => {
         axios
-          .post('/api/doctors/removePhoto/', {
+          .post('/api/doctors/removeAvatar/', {
             id: this.info.id,
-            photo_name: this.fileList[0].name,
-            action: 'removePhoto'
+            avatar_name: this.fileList[0].name,
+            action: 'removeAvatar'
           })
           .then((response) => {
             console.log('删除成功:', response.data)
@@ -199,12 +199,12 @@ export default {
       this.info.research = row.research
       this.sign = sign
       this.fileList = []
-      if (row.photo_name !== undefined && row.photo_name != '')
-        this.fileList.push({ name: row.photo_name, url: '/api/doctors/photo/' + row.photo_name })
+      if (row.avatar_name !== undefined && row.avatar_name != '')
+        this.fileList.push({ name: row.avatar_name, url: '/api/doctor/avatar/' + row.avatar_name })
       console.log(`传入的sign是：${this.sign}`)
     },
     closeModal() {
-      if (this.fileList.length !== 0) {
+      if (this.fileList.length !== 0 && this.sign == 'add') {
         this.removePhoto().then(() => {
           this.isVisible = false
           document.body.style.overflow = '' // 恢复滚动

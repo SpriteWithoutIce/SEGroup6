@@ -53,20 +53,7 @@ export default {
   },
   data() {
     return {
-      info: [
-        {
-          office: '心血管门诊',
-          time: '2024-05-14 下午 14:10-14:20',
-          patient: 'buaa',
-          doctor: '',
-          advice: '心跳过快',
-          medicine: [
-            { name: '金莲花软件囊', time: 3, cnt: 1, use: '口服', fre: 'Tid', price: '5.98' },
-            { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', fre: 'Tid', price: 1.09 },
-            { name: '复方鲜竹沥液', time: 3, cnt: 2, use: '口服', fre: 'Tid', price: 1.09 }
-          ]
-        }
-      ]
+      info: []
     }
   },
   components: {

@@ -1,37 +1,25 @@
+<!-- 导航栏代码部分 -->
 <template>
   <div>
     <messagedrawer ref="messageBox" class="messageBox" @update:result="getUnreadCount" />
-    <Login
-      @update:refresh="refreshPage"
-      @update:currentUserCard="updateUserCard"
-      @update:currentUserType="updateUserType"
-      ref="Login"
-    ></Login>
+    <Login @update:refresh="refreshPage" @update:currentUserCard="updateUserCard" @update:messagebox="updateMessagebox"
+      @update:currentUserType="updateUserType" ref="Login"></Login>
     <Sign ref="Sign"> </Sign>
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
         <RouterLink to="/Main">首页</RouterLink>
         <a href="#unknown" @click="showLogin()">登录</a>
-        <a @click="openMessageBox">消息</a
-        ><el-badge :value="unreadCount" class="item" v-if="unreadCount !== 0"></el-badge>
+        <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
+          v-if="unreadCount !== 0"></el-badge>
         <a href="#unknown" @click="showSign()">系统介绍</a>
       </nav>
       <div class="clickable-images">
         <template v-for="(image, index) in getClickableImages()">
           <!-- RouterLink里边必须加一个跳转地址 -->
-          <RouterLink
-            class="image-link"
-            to="/Main"
-            @mouseover="showSurroundImage(index + 1)"
-            @mouseleave="hideSurroundImage()"
-            @click.prevent="handleImageClick(image.link, $event)"
-          >
+          <RouterLink class="image-link" to="/Main" @mouseover="showSurroundImage(index + 1)"
+            @mouseleave="hideSurroundImage()" @click.prevent="handleImageClick(image.link, $event)">
             <img class="designed-icon" :src="image.icon" :alt="image.alt" />
-            <img
-              class="Surround-image"
-              src="../../assets/navigation/list1_bg.png"
-              alt="Surround Image"
-            />
+            <img class="Surround-image" src="../../assets/navigation/list1_bg.png" alt="Surround Image" />
           </RouterLink>
         </template>
       </div>
@@ -49,9 +37,11 @@ import BillList from '../Bills/BillList.vue'
 import PatientA from '../History/PatientA.vue'
 import Prescription from '../Prescription/MakePrescription.vue'
 import messagedrawer from '../Message/MessageDrawer.vue'
+import { GlobalState } from '../../global.js';
+import VueCookies from 'vue-cookies';
 export default {
   name: 'HeaderNavigation',
-  data() {
+  data () {
     return {
       date: new Date(),
       WebURL: 'http://localhost:8080',
@@ -70,13 +60,15 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log('HeaderNavigation' + this.date)
+  mounted () {
+    this.checkLoginStatus()
+    this.intervalId = setInterval(this.updateMessagebox, 30000);
+    console.log("HeaderNavigation 定时器已加载");
     this.startBackgroundRotation()
-    this.$refs.messageBox.countUnread()
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.stopBackgroundRotation()
+    clearInterval(this.intervalId)
   },
   components: {
     // Navbar,
@@ -87,42 +79,58 @@ export default {
     messagedrawer
   },
   methods: {
-    handleImageClick(link, event) {
+    checkLoginStatus () {
+      const idCard = VueCookies.get('idCard');
+      console.log("HeaderNavigationcookies" + idCard);
+      const userType = VueCookies.get('userType');
+
+      if (idCard && userType) {
+        GlobalState.identityNum = idCard;
+        this.updateMessagebox();
+        console.log("刷新后的全局身份" + GlobalState.identityNum);
+        this.currentUser.userType = userType;
+        this.currentUser.idCard = idCard;
+      }
+    },
+    handleImageClick (link, event) {
       if (this.currentUser.userType === '') {
         this.showLogin()
       } else {
         this.$router.push(link)
       }
     },
-    refreshPage() {
+    refreshPage () {
       this.currentUser.idCard = ''
       this.currentUser.userType = ''
       this.currentUser.password = ''
       console.log('HeaderNavigarion refreshPage done')
       this.$forceUpdate()
     },
-    updateUserCard(id) {
+    updateUserCard (id) {
       this.currentUser.idCard = id
       console.log('用户id更新完毕')
     },
-    updateUserType(userType) {
+    updateUserType (userType) {
       this.currentUser.userType = userType
       this.$forceUpdate()
       console.log('用户类型更新完毕')
     },
-    showLogin() {
+    updateMessagebox () {
+      this.$refs.messageBox.getMesData();
+    },
+    showLogin () {
       this.$refs.Login.openModal(this.currentUser.idCard, this.currentUser.userType)
     },
-    showSign() {
+    showSign () {
       this.$refs.Sign.openModal()
     },
-    startBackgroundRotation() {
-      this.intervalId = setInterval(this.changeBackground, 5000) // Change background every 5 seconds
+    startBackgroundRotation () {
+      this.intervalId = setInterval(this.changeBackground, 5000)
     },
-    stopBackgroundRotation() {
+    stopBackgroundRotation () {
       clearInterval(this.intervalId)
     },
-    changeBackground() {
+    changeBackground () {
       this.currentIndex = (this.currentIndex + 1) % this.images.length
       let elements = document.getElementsByClassName('header-nav')
       for (let i = 0; i < elements.length; i++) {
@@ -130,12 +138,12 @@ export default {
         elements[i].style.backgroundImage = 'url(' + this.images[this.currentIndex] + ')'
       }
     },
-    changeBackgroundOnClick() {
+    changeBackgroundOnClick () {
       this.stopBackgroundRotation()
       this.changeBackground()
       this.startBackgroundRotation()
     },
-    showSurroundImage(index) {
+    showSurroundImage (index) {
       const SurroundImage = document.querySelector(
         `.clickable-images a:nth-child(${index}) .Surround-image`
       )
@@ -144,20 +152,21 @@ export default {
         SurroundImage.style.animation = 'spin 10s linear infinite'
       }
     },
-    hideSurroundImage() {
+    hideSurroundImage () {
       const SurroundImages = document.querySelectorAll('.Surround-image')
       SurroundImages.forEach((image) => {
         image.style.opacity = 0
         image.style.transform = 'rotate(0deg)'
       })
     },
-    openMessageBox() {
+    openMessageBox () {
       this.$refs.messageBox.openDrawer()
     },
-    getUnreadCount(cnt) {
+    getUnreadCount (cnt) {
       this.unreadCount = cnt
+      this.$emit('update:unreadCount', cnt)
     },
-    getClickableImages() {
+    getClickableImages () {
       const defaultClickHandler = () => {
         this.showLogin()
       }
@@ -182,8 +191,6 @@ export default {
         case '管理员':
           return [
             { link: '/PharmaCist', icon: '/static/img/navigation/信息录入.png', alt: 'Image 2' }
-            // { link: '/PresA', icon: '/static/img/navigation/list1_5.png', alt: 'Image 5' },
-            // { link: '/Prescription', icon: '/static/img/navigation/list1_3.png', alt: 'Image 3' }
           ]
         default:
           return [
@@ -300,7 +307,6 @@ export default {
   transform: translateX(-50%) scaleX(0.5);
 }
 
-/*灰色透明区域 并不适合覆盖顶部选项*/
 .header-nav::after {
   content: '';
   position: absolute;
@@ -308,11 +314,8 @@ export default {
   right: 0;
   width: 100%;
   height: 80px;
-  /* 设置灰色透明矩形区域的高度 */
   background-color: rgba(255, 255, 255, 0.7);
-  /* 设置灰色透明 */
   z-index: 1;
-  /* 确保在导航链接之上 */
 }
 
 .header-nav nav {
@@ -324,21 +327,18 @@ export default {
   color: rgb(246, 242, 242);
 }
 
-/*注意底部灰色阴影的图层是1*/
 .clickable-images {
   position: absolute;
   bottom: 3px;
   left: 0;
   width: 100%;
   height: 90px;
-  /* 与灰色透明矩形区域高度相同 */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2;
 }
 
-/*调整灰色矩形内可点击元素距离*/
 .clickable-images a {
   margin: 0 9vw;
 
@@ -353,17 +353,11 @@ a:hover {
   cursor: pointer;
 }
 
-/*非常困惑的一点就是clickable里边设置过的元素，在子类元素里边再设置会被无视，好反常识？？？*/
 .clickable-images img {
-  /*width: 30px;
-    height: 30px;
-    */
   position: absolute;
   transition: all 0.3s ease;
 }
 
-/*父类是clickable images 所以找着那个来定位*/
-/*下边两个是并列等级的设置*/
 .Surround-image {
   opacity: 0;
   position: absolute;

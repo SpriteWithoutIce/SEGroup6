@@ -1,3 +1,17 @@
+<!--
+MessageDrawer.vue 组件是一个侧边抽屉式消息组件，用于在猫猫就诊应用中展示系统消息、通知或提醒。
+
+该组件的主要功能包括：
+1. 显示来自系统的消息内容，可以是文本、链接或其他富文本格式。
+2. 允许用户查看、阅读和理解消息内容，并提供必要的交互操作。
+3. 提供消息的关闭或隐藏功能，用户可以通过点击按钮或执行特定操作来关闭消息抽屉。
+
+组件内部通过props接收消息数据，并根据数据动态渲染消息内容。它使用Vue的动态组件特性，可以根据消息类型展示不同的消息模板。
+此外，组件内部还包含了一些交互逻辑，如处理用户点击消息链接的跳转、关闭消息抽屉等。
+MessageDrawer.vue组件的样式设计为侧边抽屉式，可以在需要时从屏幕边缘滑入，展示消息内容，并且不影响用户当前的操作界面。
+
+通过此组件，用户可以方便地查看和处理系统发送的消息通知，提高应用的交互性和用户体验。
+-->
 <template>
   <!-- 侧边抽屉 -->
   <div class="myDrawer">
@@ -5,7 +19,10 @@
       <!-- 折叠面板实现消息种类分类 -->
       <div class="demo-collapse">
         <el-collapse v-model="activeNames">
-          <el-collapse-item title="&nbsp;&nbsp;&nbsp;预约通知" name="1" class="collapseItem1">
+          <el-collapse-item name="1" class="collapseItem1">
+            <template #title>
+              &nbsp;&nbsp;&nbsp;<el-icon><Calendar /></el-icon>&nbsp;&nbsp;预约通知
+            </template>
             <div class="messageList">
               <el-table :data="resMes" style="width: 100%" :row-class-name="tableRowClassName">
                 <el-table-column type="expand">
@@ -64,7 +81,10 @@
             </div>
           </el-collapse-item>
 
-          <el-collapse-item title="&nbsp;&nbsp;&nbsp;缴费通知" name="2" class="collapseItem2">
+          <el-collapse-item name="2" class="collapseItem2">
+            <template #title>
+              &nbsp;&nbsp;&nbsp;<el-icon><Money /></el-icon>&nbsp;&nbsp;缴费通知
+            </template>
             <div class="messageList">
               <!-- <el-table :data="billMes" style="width: 100%" :row-class-name='success'> -->
               <el-table :data="billMes" style="width: 100%" :row-class-name="tableRowClassName">
@@ -119,7 +139,7 @@
                 </el-table-column>
                 <el-table-column label="类型" prop="type" />
                 <el-table-column label="患者姓名" prop="name" />
-                <el-table-column label="时间" prop="time" />
+                <el-table-column label="开具时间" prop="time" />
               </el-table>
             </div>
           </el-collapse-item>
@@ -130,65 +150,19 @@
 </template>
 
 <script>
-import { inject } from 'vue'
+import notIcon from './notIcon.vue'
+import { GlobalState } from '../../global.js';
+import { ElNotification, ElMessage } from 'element-plus'
 export default {
-  inject: ['$identity_num'],
-  created() {
-    this.identityNum = this.$identity_num;
-    // console.log("获取的identityNum为：",this.identityNum); 
-  },
   data() {
     return {
-      identityNum: 0,
       activeNames: ['1', '2'],
       table: false,
       timer: null,
-      resMes: [
-        // {
-        //   type: '预约成功',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59', //用MySQL中的DATETIME类型就可以
-        //   read: true
-        // },
-        // {
-        //   type: '取消预约',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
-        //   read: false
-        // }
-      ],
-      oriBillMes: [
-        // {
-        //   type: '处方缴费提醒',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
-        //   price: 200,
-        //   read: false
-        // },
-        // {
-        //   type: '处方缴费成功',
-        //   name: '小黄',
-        //   department: '精神科',
-        //   doctor: '李医生',
-        //   time: '2024-5-12',
-        //   id: '03230802',
-        //   timetamp: '2024-5-11 23:59:59',  //用MySQL中的DATETIME类型就可以
-        //   price: 200,
-        //   read: false
-        // }
-      ],
+      unreadCount: 0,
+      msgCount: 0,
+      resMes: [],
+      oriBillMes: [],
       billMes:[],
     }
   },
@@ -198,34 +172,70 @@ export default {
       const unreadResMesCount = this.resMes.filter((item) => item.read === false).length
       // 计算billMes中read为false的数量
       const unreadBillMesCount = this.billMes.filter((item) => item.read === false).length
+      this.unreadCount = unreadResMesCount + unreadBillMesCount
       // 返回两个数量的总和
       // this.$emit('getUnreadCount', unreadResMesCount + unreadBillMesCount)
-      this.$emit('update:result', unreadResMesCount + unreadBillMesCount)
+      this.$emit('update:result', this.unreadCount)
     },
     // post请求，请求数据体中包含用户证件号identityNum
     // url为api/notice/list/
     // 返回数据为resMes和billMes两个字典数组
     getMesData(){
+      if (GlobalState.identityNum === 0) {
+        this.resMes = [];
+        this.oriBillMes = [];
+        this.billMes = [];
+        this.msgCount = 0;
+        this.countUnread();
+        return;
+      }
       return new Promise((resolve, reject) => {
         let ts = this;
-        this.$axios.post('api/notice/list/', {identity_num: this.identityNum, action: "getMesData"})
+        this.$axios.post('api/notice/list/', {identity_num: GlobalState.identityNum, action: "getMesData"})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.oriBillMes = response.data['billMes'];
             ts.payOverTimeQuery();
+            ts.sortMesByTimestamp();
             console.log(ts.resMes);
             console.log(ts.billMes);
             ts.countUnread();
+            ts.checkNewMsg();
             resolve(); // 数据获取完成，resolve Promise
           })
           .catch(function (error) {
             console.log(error);
             reject(error); // 数据获取失败，reject Promise
           });
-          console.log('发送的请求参数:', {identity_num: this.identityNum});
+          console.log('MesDrawer发送的请求参数:', {identity_num: GlobalState.identityNum});
+      });
+    },
+    // 将消息按照倒序排序
+    sortMesByTimestamp() {
+      this.resMes.sort((a, b) => {
+        // 将字符串转换为日期对象
+        const dateA = new Date(a.timetamp);
+        const dateB = new Date(b.timetamp);
+        // 比较日期对象的时间戳
+        return dateB - dateA; // 倒序排序
+      });
+      this.billMes.sort((a, b) => {
+        // 将字符串转换为日期对象
+        const dateA = new Date(a.timetamp);
+        const dateB = new Date(b.timetamp);
+        // 比较日期对象的时间戳
+        return dateB - dateA; // 倒序排序
       });
     },
     openDrawer() {
+      if(GlobalState.identityNum === 0){
+        ElMessage({
+          showClose: true,
+          message: '请先登录 ╮(╯▽╰)╭',
+          type: 'warning',
+        });
+        return;
+      }
       this.getMesData();
       this.table = true;
     },
@@ -245,7 +255,7 @@ export default {
       }
       return ''
     },
-    /* TODO
+    /* done TODO
       1.根据当前用户id和row对应的消息id更改对应消息的阅读状态（未读->已读） 【link-backend！】
       2.重新获取消息，刷新界面
     */
@@ -266,6 +276,7 @@ export default {
       });
     },
     payOverTimeQuery(){
+      this.billMes = [];
       // 获取当前时间的时间戳（毫秒）
       const nowUtcTimestamp = Date.now();
       // 北京时区相对于 UTC 的偏移量（8小时 * 60分钟 * 60秒 * 1000毫秒）
@@ -276,27 +287,36 @@ export default {
       this.oriBillMes.forEach(item => {
         // 将字符串形式的时间戳转换为数字类型的时间戳（毫秒）
         const timetamp = new Date(item.timetamp).getTime();
-        // 检查 type 是否为 '处方缴费提醒' 并且 timetamp 时间距离当前时间是否大于30分钟
+        // 检查 type 是否为 '处方缴费提醒' 并且 timetamp 时间距离当前时间是否大于2分钟
         // bug 时间戳格式待定
-        if ((item.type === '处方缴费提醒' && (now - timetamp) > 30 * 60 * 1000)||item.type === '处方缴费成功') {
+        if ((item.type === '处方缴费提醒' && (now - timetamp) > 2 * 60 * 1000)||item.type === '处方缴费成功') {
           // 如果条件满足，将 item 添加到 billMes 数组
           this.billMes.push(item);
         }
       });
     },
-    mounted() {
-      if (this.$identityNum === '0') {
+    checkNewMsg(){
+      console.log("旧消息数：",this.msgCount)
+      console.log("新消息数：",this.resMes.length + this.billMes.length)
+      if( this.msgCount != this.resMes.length + this.billMes.length && this.unreadCount !== 0){
+        console.log("有新消息")
+        ElNotification({
+          icon: notIcon,
+          title: '未读消息提示',
+          message: '猫猫提示您，有新消息啦，请及时查看哦(>^ω^<)',
+          duration: 5000,
+          offset: 50
+        })
+        this.msgCount = this.resMes.length + this.billMes.length;
+      }
+    },
+    created() {
+      if (GlobalState.identityNum === '0') {
         console.log("未登录");
         return;
       }
-      this.getMesData().then(() => {
-        this.intervalId = setInterval(this.payOverTimeQuery, 30000);
-      })
+      this.getMesData()
     },
-    beforeDestroy() {
-      // 组件销毁时清除定时器
-      clearInterval(this.intervalId);
-    }
   }
 }
 </script>
@@ -312,6 +332,11 @@ export default {
   text-shadow: 2px 2px 3px rgba(13, 65, 153, 0.941);
   text-align: left;
   color:rgb(255, 254, 254)
+}
+::v-deep .el-collapse-item__header{
+  font-size: 14px;
+  font-weight: bold;
+  color:grey
 }
 .mesBody{
   margin: 20px;

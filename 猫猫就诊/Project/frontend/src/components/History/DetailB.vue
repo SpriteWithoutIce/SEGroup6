@@ -9,15 +9,11 @@
           <el-divider class="divider" />
           <div class="line">
             <p style="margin-left: 15px">疗程：</p>
-            <p>{{ item.time }}</p>
+            <p>{{ item.times }}</p>
           </div>
           <div class="line">
             <p style="margin-left: 15px">数量：</p>
             <p>{{ item.cnt }}</p>
-          </div>
-          <div class="line">
-            <p style="margin-left: 15px">使用方法：</p>
-            <p>{{ item.use }}</p>
           </div>
           <div class="m"></div>
         </div>
@@ -39,7 +35,7 @@ export default {
         time: '',
         patient: '',
         doctor: '',
-        medicine: [{ name: '金莲花软件囊', time: 3, cnt: 1, use: '口服', price: '' }]
+        medicine: [{ name: '金莲花软件囊', times: 3, cnt: 1, price: '' }]
       }
     }
   },

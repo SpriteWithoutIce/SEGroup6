@@ -1,3 +1,4 @@
+<!-- 选择科室 -->
 <template>  
   <Header :squares2="squares2" />
   <div class="notice-box">  
@@ -139,6 +140,7 @@ export default {
         return [{subname:'医技科室',enbame:'Medical Technology Department'}]
       }
     },
+    // 这里是要显示在屏幕上的科室名字，是固定的
     getSubDepartments(departmentId) {  
       if (departmentId === 'internal') {  
         return [  
@@ -199,7 +201,6 @@ export default {
           { id: 10, name: '临床营养科' },
         ];  
       }
-      // 添加其他科室的返回逻辑...  
     },  
     hoverButton() {  
     },  
@@ -218,19 +219,19 @@ export default {
 <style scoped>  
 
 .notice-box {  
-  background-color: #f5f5f5; /* 浅灰色背景 */  
+  background-color: #f5f5f5;
   border-left: 30px solid #fff;
-  border-right: 30px solid #fff; /* 白色边框 */  
-  padding: 20px; /* 内边距 */  
+  border-right: 30px solid #fff;
+  padding: 20px; 
   padding-bottom: 50px;
-  margin: 10px; /* 外边距 */  
-  box-sizing: border-box; /* 确保边框和内边距包含在元素的总宽度和高度内 */  
+  margin: 10px;
+  box-sizing: border-box;
 }  
 .department-selector {  
   display: flex;  
   justify-content: space-between;  
   align-items: flex-start;  
-  height: 100vh; /* 假设页面全屏高 */  
+  height: 100vh;
 }  
   
 .left-buttons {  
@@ -242,9 +243,9 @@ export default {
 }  
   
 .right-buttons {  
-  flex-grow: 1; /* 右侧按钮列表占据剩余空间 */  
+  flex-grow: 1;
   display: flex;  
-  flex-wrap: wrap; /* 允许按钮换行 */  
+  flex-wrap: wrap;
   padding: 10px;  
   justify-content: center;
   gap: 10px;
@@ -279,52 +280,50 @@ export default {
 }  
   
 .square-button:hover {  
-  background-color: #78291e; /* 这里使用了:hover伪类，而不是Vue方法 */  
+  background-color: #78291e;
   color: white;
 }  
 .square-button.selected {  
-  background-color: orange; /* 选中后变为黄色 */  
+  background-color: orange;
   color: white;
 }
 
 .sub-department-title {  
-  text-align: center; /* 居中文本 */  
-  padding: 10px 0; /* 添加一些上下内边距 */  
-  font-size: 18px; /* 增大字体大小 */  
-  font-weight: bold; /* 加粗字体 */  
+  text-align: center;
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: bold;
 }
 .sub-department-titles {  
-  text-align: center; /* 标题居中 */  
-  margin-bottom: 10px; /* 与按钮列表之间添加一些间距 */  
+  text-align: center;
+  margin-bottom: 10px; 
 }  
   
 .sub-department-title-chinese,  
 .sub-department-title-english {  
-  font-size: 18px; /* 标题字体大小 */  
-  font-weight: bold; /* 标题加粗 */  
+  font-size: 18px;
+  font-weight: bold; 
 }  
 .sub-department-buttons{
-  flex-grow: 1; /* 右侧按钮列表占据剩余空间 */  
+  flex-grow: 1; 
   display: flex;  
-  flex-wrap: wrap; /* 允许按钮换行 */  
+  flex-wrap: wrap; 
   padding: 10px;  
   justify-content: center;
   gap: 10px;
 }
 .selected-department-container {  
   width: 100%;
-  margin-bottom: 10px; /* 为下一个 div 添加一些垂直间距 */  
+  margin-bottom: 10px; 
   justify-content: center;
   display: flex;
   align-items: center; 
 }  
   
 .selected-department-title {  
-  /* 添加边框样式 */  
   border: 1px solid #ccc;  
-  padding: 5px 10px; /* 为文字添加内边距 */  
-  display: inline-block; /* 如果需要的话，让标题在一行内显示 */  
-  /* 其他你想要的样式 */  
+  padding: 5px 10px; 
+  display: inline-block; 
 }
 .container2 {  
   display: flex;  
@@ -344,19 +343,19 @@ export default {
   background-color: #fcfcfc;  
   color: #000000;  
   cursor: pointer;  
-  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  transition: background-color 0.3s, color 0.3s;
   text-decoration: none;
 }  
 .button-next {  
-  background-color: #003366; /* 浅蓝色 */  
-  color: #fcfcfc; /* 深蓝色 */  
+  background-color: #003366;
+  color: #fcfcfc; 
 }  
 .button-prev {  
-  background-color: #e5ecff; /* 深蓝色 */  
-  color: #003366; /* 白色 */  
+  background-color: #e5ecff; 
+  color: #003366; 
 }  
 .button:hover {  
-  opacity: 0.8; /* 鼠标悬停时透明度降低 */  
+  opacity: 0.8;
 }  
 
 </style>

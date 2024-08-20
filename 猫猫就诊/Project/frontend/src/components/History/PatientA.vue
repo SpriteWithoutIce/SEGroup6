@@ -45,102 +45,19 @@ import SearchA from './SearchA.vue'
 import SignA from './SignA.vue'
 import HistoryA from './HistoryA.vue'
 import axios from 'axios'
+import { GlobalState } from '../../global.js'
+// GlobalState.identityNum;
 import { ref, onMounted, computed, inject } from 'vue'
 const input4 = ref('')
-const info = ref([
-  // {
-  //   office: '神经外科',
-  //   orderNum: 'w0023',
-  //   price: '0.00元',
-  //   name: 'buaa',
-  //   cardNum: '001741',
-  //   position: '门诊楼三层内科二诊区',
-  //   time: '2024-05-14 下午 14:10-14:20',
-  //   line: '37',
-  //   state: '已预约',
-  //   doctor: '王玉'
-  // },
-  // {
-  //   office: '消化内科',
-  //   orderNum: 'w0024',
-  //   price: '0.00元',
-  //   name: 'buaa',
-  //   cardNum: '001741',
-  //   position: '门诊楼三层内科二诊区',
-  //   time: '2024-05-15 下午 14:10-14:20',
-  //   line: '38',
-  //   state: '已就诊',
-  //   doctor: '王玉'
-  // },
-  // {
-  //   office: '心血管门诊',
-  //   orderNum: 'w0025',
-  //   price: '0.00元',
-  //   name: 'hhh',
-  //   cardNum: '001742',
-  //   position: '门诊楼三层内科二诊区',
-  //   time: '2024-05-16 下午 14:10-14:20',
-  //   line: '39',
-  //   state: '已预约',
-  //   doctor: '王玉'
-  // },
-  // {
-  //   office: '心血管门诊',
-  //   orderNum: 'w0026',
-  //   price: '0.00元',
-  //   name: 'hhh',
-  //   cardNum: '001742',
-  //   position: '门诊楼三层内科二诊区',
-  //   time: '2024-05-17 下午 14:10-14:20',
-  //   line: '40',
-  //   state: '已预约',
-  //   doctor: '王玉'
-  // },
-  // {
-  //   office: '精神科',
-  //   orderNum: 'w0026',
-  //   price: '0.00元',
-  //   name: 'hhh',
-  //   cardNum: '001742',
-  //   position: '门诊楼三层内科二诊区',
-  //   time: '2024-05-17 下午 14:10-14:20',
-  //   line: '40',
-  //   state: '已预约',
-  //   doctor: '王玉'
-  // },
-  // {
-  //   office: '普通外科',
-  //   orderNum: 'w0026',
-  //   price: '0.00元',
-  //   name: 'hhh',
-  //   cardNum: '001742',
-  //   position: '门诊楼三层内科二诊区',
-  //   time: '2024-05-17 下午 14:10-14:20',
-  //   line: '40',
-  //   state: '已预约',
-  //   doctor: '王玉'
-  // },
-  // {
-  //   office: '心血管门诊',
-  //   orderNum: 'w0026',
-  //   price: '0.00元',
-  //   name: 'hhh',
-  //   cardNum: '001742',
-  //   position: '门诊楼三层内科二诊区',
-  //   time: '2024-05-17 下午 14:10-14:20',
-  //   line: '40',
-  //   state: '已预约',
-  //   doctor: '王玉'
-  // }
-])
+const info = ref([])
 
-const identityNum = inject('$identity_num')
+// const identityNum = inject('$identity_num')
 
 const getRegistersData = () => {
   return new Promise((resolve, reject) => {
     let requestData = {
       action: 'getRegistersData',
-      identity_num: identityNum
+      identity_num: GlobalState.identityNum
     }
     axios
       .post('/api/registers/list/', requestData)
@@ -173,7 +90,7 @@ const filterInfo = computed(() => {
   })
 })
 onMounted(() => {
-  if (identityNum == '0') {
+  if (GlobalState.identityNum == '0') {
     console.log('未登录')
     return
   }

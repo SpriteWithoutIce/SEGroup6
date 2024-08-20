@@ -1,3 +1,4 @@
+<!-- 医生查询 -->
 <template>  
   <div class="containerlyh" style="display: flex; justify-content: center; align-items: center; height: 180px;">  
     <router-link 
@@ -104,7 +105,7 @@ export default {
       info: [
         "出诊查询","网上预约看诊","预约流程","医生查询"
       ],
-      link:['/TableSearch','/AppointmentRegistration','/AppointmentRegistration','/DoctorSearch'],
+      link:['/TableSearch','/AppointmentRegistration','/Picture','/DoctorSearch'],
 
       departments: [  
         { id:0, name: '心血管内科', pinyin:'Xinxueguanneike' },  
@@ -153,59 +154,10 @@ export default {
         { id:43, name: '手术室' ,pinyin:'Shoushu'},
         { id:44, name: '病理科' ,pinyin:'Bingli'},
         { id:45, name: '病案科' ,pinyin:'Bingan'},
-        { id:46, name: '临床营养科' ,pinyin:'Linchuang'},
-        // ... 其他科室  
+        { id:46, name: '临床营养科' ,pinyin:'Linchuang'}, 
       ],
       doctors: [  
-        {  
-          id:0,
-          name: '医生A',  
-          title: '主任医师',  
-          department:{id:0,name:'心血管内科'},
-          avatar: 'img/avatar/lsy.jpg', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-        },
-        {  
-          id:1,
-          name: '医生B',  
-          title: '副主任医师',  
-          avatar: 'img/avatar/touxiang.png', // 头像URL  
-          department:{id:1,name:'呼吸与危重症医学科'},
-          research: '生物信息', // 主要研究方向  
-        }, 
-        {  
-          id:2,
-          name: '医生C',  
-          title: '副主任医师',  
-          avatar: 'img/avatar/touxiang (1).png', // 头像URL  
-          department:{id:0,name:'心血管内科'},
-          research: '生物信息', // 主要研究方向  
-        }, 
-        {  
-          id:3,
-          name: '医生A',  
-          title: '主任医师',  
-          department:{id:0,name:'心血管内科'},
-          avatar: 'img/avatar/lsy.jpg', // 头像URL  
-          research: '生物信息', // 主要研究方向  
-        },
-        {  
-          id:4,
-          name: '医生B',  
-          title: '副主任医师',  
-          avatar: 'img/avatar/touxiang.png', // 头像URL  
-          department:{id:1,name:'呼吸与危重症医学科'},
-          research: '生物信息', // 主要研究方向  
-        }, 
-        { 
-          id:5, 
-          name: '医生C',  
-          title: '副主任医师',  
-          avatar: 'img/avatar/touxiang (1).png', // 头像URL  
-          department:{id:0,name:'心血管内科'},
-          research: '生物信息', // 主要研究方向  
-        }, 
-        // ... 其他医生数据  
+        
       ],     
       departmentLetters: ['ALL', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],  
 
@@ -217,14 +169,11 @@ export default {
       search_name_id:-1,
     };  
   }  ,
-  computed: {  
-    // 根据当前选中的索引来过滤科室  
+  computed: {   
     filteredDepartments() {   
-      if (this.selectedLetterIndex === -1) {  
-        // 如果选择了“全部”，则显示所有科室  
+      if (this.selectedLetterIndex === -1) {    
         return this.departments;  
-      } else {  
-        // 否则，只显示以选中字母为拼音首字母的科室  
+      } else {   
         const letter = this.departmentLetters[this.selectedLetterIndex].toUpperCase();  
         return this.departments.filter(department =>  
           department.pinyin[0].toUpperCase() === letter  
@@ -232,15 +181,13 @@ export default {
       }  
     }
   },  
-  methods: {  
-    // 选中科室的方法  
+  methods: {    
     selectDepartment(index) { 
       if(index==0)
         this.selectedLetterIndex=-1; 
       else
         this.selectedLetterIndex = index;  
     },  
-    // 判断圆形按钮是否选中的方法  
     isActive(index) {  
       if(index==0)
         return this.selectedLetterIndex===-1;
@@ -254,28 +201,28 @@ export default {
     filteredDoctors(id) {  
       if(this.search_name_id!=-1){
         return this.doctors.filter(doctor =>
-        doctor.id===this.search_name_id
-      );
+          doctor.name==this.doctors[this.search_name_id-1].name
+        );
       }
-      return this.doctors.filter(doctor =>
-        doctor.department.id===id
-      );
+      else if(this.square_selected!=-1){
+        return this.doctors.filter(doctor =>
+          doctor.department==this.departments[this.square_selected].name
+        );
+      }
+      
     },  
     querySearch(queryString, cb) {   
       console.log(queryString)
       const results = this.doctors.filter(doctor =>  
         doctor.name.includes(queryString)  
-      );       // 调用 callback 返回建议列表的数据  
+      ); 
       console.log(results)
       cb(results);  
     },  
     handleSelect(item) {  
       this.search_name_id=item.id;
-
-      // 选中某个建议项时的回调函数  
       console.log(item);  
       input.value = item.name;
-      // 你可以在这里处理选中项的逻辑，比如跳转到医生详情页面  
     },
     getDutyData() {
       return new Promise((resolve, reject) => {
@@ -296,7 +243,7 @@ export default {
       });
     }, 
   },
-  created(){
+  mounted(){
     this.getDutyData();
   }
 };  
@@ -428,14 +375,13 @@ export default {
   font-size: 14px;  
 }  
 
-.doctor-item {  
-  /* 每个医生框的样式 */  
-  border: 1px solid #ccc; /* 边框 */  
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 阴影 */  
-  padding: 10px; /* 可选，添加一些内边距 */  
-  margin: 10px; /* 可选，添加一些外边距以防止它们靠得太近 */  
-  width: 500px; /* 可选，设置固定宽度或最大宽度 */  
-  text-align: center; /* 文本居中（对于非 Flexbox 布局或内部元素）*/  
+.doctor-item {   
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px; 
+  margin: 10px; 
+  width: 500px; 
+  text-align: center;
 }  
 
 .searchTable {
@@ -450,7 +396,7 @@ export default {
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: row; /* 将组件横向排列 */
+  flex-direction: row;
   align-items: center;
 }
 .shuru {

@@ -1,3 +1,4 @@
+<!-- 开具处方的具体实现逻辑界面 -->
 <template>
   <div class="modal-background" v-if="isVisible">
     <div class="modal-container">
@@ -19,12 +20,10 @@
           <el-autocomplete v-model="medicine.name" :trigger-on-focus="false" :fetch-suggestions="querySearch"
             placeholder="药物名称或症状" @select="handleSelect(index)" :show-all="true"></el-autocomplete>
           <el-input-number v-model="medicine.cnt" :min="0" :step="1" placeholder="数量"
-            @change="calculatePrice(medicine)"></el-input-number>
-          <el-row>
-            <el-col :span="12">
-              <el-input v-model="medicine.totalPrice" disabled placeholder="总价" style="margin-left: 10px;"></el-input>
-            </el-col>
-          </el-row>
+            @change="calculatePrice(medicine)">药物数</el-input-number>
+          <el-form-item label="疗程">
+            <el-input-number v-model="medicine.times" :min="0"></el-input-number>
+          </el-form-item>
           <el-button type="danger" icon="el-icon-delete" @click="removeMedicine(index)" v-if="form.medicines.length > 1"
             class="delete-button">删除药物</el-button>
         </el-form-item>
@@ -58,23 +57,26 @@ export default {
     return {
       isVisible: false,
       image: null,
+      totalPrice: 0,
       form: {
         id: "",/*这里的id是问诊单号*/
         name: '',
         date: new Date().toISOString().substr(0, 10), /*就诊日期 年月日*/
         gender: '',
         advice: '',
-        medicines: [{ name: '', cnt: 0, price: 0, totalPrice: 0 }]
+        medicines: [{ name: '', cnt: 0, price: 0, times: 0, totalPrice: 0 }]
       },
       medicinesDB: [
-        // { name: '布洛芬', stock 改成num: 80, price: 5.0, use: ['发热', '炎症'] }
-        // { name: '布洛芬', num: 80, price: 5.0, use: ['发热', '炎症'] }
-        // 可以添加更多药物数据
       ]
     };
   },
   computed: {
     totalPrice () {
+      this.totalPrice = this.form.medicines
+        .reduce((total, medicine) => total + parseFloat(medicine.totalPrice || 0), 0)
+        .toFixed(2);
+
+
       return this.form.medicines
         .reduce((total, medicine) => total + parseFloat(medicine.totalPrice || 0), 0)
         .toFixed(2);
@@ -87,19 +89,21 @@ export default {
         let requestData = {
           /*问诊单字段：单号+开具的药物+时间+医师建议+总价*/
           id: this.form.id,
-          medicines: this.medicines,
-          date: new Date().toISOString,
+          medicines: this.form.medicines,
+          suggestion: this.form.advice,
           totalPrice: this.totalPrice,
+          action: "addTreatmentData"
         };
+        console.log("写回处方前的数据" + requestData.id + " " + requestData.totalPrice + " " + requestData.medicines + " " + requestData.suggestion);
         this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
-            resolve(); // 数据获取完成，resolve Promise
+            resolve(); 
           })
           .catch(function (error) {
             console.log(error);
             console.log("Prescription Details Write Back Failed")
-            reject(error); // 数据获取失败，reject Promise
+            reject(error); 
           });
       });
     },
@@ -120,20 +124,21 @@ export default {
           .then(function (response) {
             ts.medicinesDB = response.data['medicine'];
             console.log(ts.medicinesDB);
-            resolve(); // 数据获取完成，resolve Promise
+            resolve(); 
           })
           .catch(function (error) {
             console.log(error);
-            reject(error); // 数据获取失败，reject Promise
+            reject(error); 
           });
       });
     },
     openModal (row) {
-      this.id = row.Id;
+      this.form.id = row.Id;
       this.isVisible = true;
       document.body.style.overflow = 'hidden'; // 禁止滚动
       this.form.name = row.name;
       this.form.gender = row.sex;
+      console.log("打开订单时的列的信息" + this.form.id + " " + this.form.name);
     },
     closeModal () {
       this.isVisible = false;
@@ -148,17 +153,25 @@ export default {
       this.closeModal();
     },
     submitForm () {
+      console.log('Submitting form:', this.form); // 打印整个表单状态
       ElMessage({
         showClose: true,
         message: "提交成功 ╰(*°▽°*)╯",
         type: "success"
       });
-      console.log('提交表单', this.form);
-      writeBackPrescriptionDetailsData();
+      console.log('提交表单 完成' + this.form);
+      this.writeBackPrescriptionDetailsData();
+      this.form.advice = "";
+      this.form.date = "";
+      this.form.gender = "";
+      this.form.id = "";
+      this.form.medicines = [{ name: '', cnt: 0, price: 0, times: 0, totalPrice: 0 }];
+      this.form.name = "";
+      this.totalPrice = 0;
       this.closeModal();
     },
     addMedicine () {
-      this.form.medicines.push({ name: '', cnt: 0, price: 0, totalPrice: 0 });
+      this.form.medicines.push({ name: '', cnt: 0, price: 0, times: 0, totalPrice: 0 });
     },
     removeMedicine (index) {
       this.form.medicines.splice(index, 1);
@@ -167,7 +180,7 @@ export default {
       const selectedMedicine = this.medicinesDB.find(med => med.name === medicine.name);
       if (selectedMedicine) {
         medicine.price = selectedMedicine.price;
-        medicine.totalPrice = (selectedMedicine.price * medicine.quantity).toFixed(2);
+        medicine.totalPrice = (selectedMedicine.price * medicine.cnt).toFixed(2);
       }
     },
     querySearch (queryString, cb) {
@@ -183,9 +196,7 @@ export default {
     createFilter (queryString) {
       return medicine => {
         const nameMatch = medicine.value.toLowerCase().includes(queryString.toLowerCase());
-        const symptomMatch = medicine.symptoms.some(symptom =>
-          symptom.toLowerCase().includes(queryString.toLowerCase())
-        );
+        const symptomMatch = medicine.symptoms.toLowerCase().includes(queryString.toLowerCase());
         return nameMatch || symptomMatch;
       };
     },
@@ -210,7 +221,7 @@ export default {
       就诊日期: ${this.form.date} <br/>
       性别: ${this.form.gender} <br/>
       药物列表: <br/>
-      ${this.form.medicines.map(med => `  - ${med.name}: ${med.quantity} 个，总价: ¥${med.totalPrice}`).join('<br/>')}
+      ${this.form.medicines.map(med => `  - ${med.name}: ${med.cnt} 个，总价: ¥${med.totalPrice}`).join('<br/>')}
       <br/>
       医师建议: <br/>
       ${this.form.advice} <br/>
@@ -229,10 +240,8 @@ export default {
       link.click();
       document.body.removeChild(link);
 
-      // 清理 URL 对象
       URL.revokeObjectURL(url);
 
-      // 提示报告生成成功
       ElMessage({
         showClose: true,
         message: "报告生成成功 ╰(*°▽°*)╯",

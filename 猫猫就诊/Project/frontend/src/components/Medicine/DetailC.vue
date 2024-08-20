@@ -200,7 +200,7 @@ export default {
       console.log(`传入的sign是：${this.sign}`)
     },
     closeModal() {
-      if (this.fileList.length !== 0) {
+      if (this.fileList.length !== 0 && this.sign == 'add') {
         this.removePhoto().then(() => {
           this.isVisible = false
           document.body.style.overflow = '' // 恢复滚动

@@ -1,3 +1,15 @@
+<!--
+BillDetails.vue 组件是一个用于展示就诊账单详情的界面组件。
+
+该组件的主要功能包括：
+1. 显示就诊账单的基本信息，如账单编号、就诊日期、就诊医生等。
+2. 展示就诊账单的支付状态，以及提供进行支付或查看支付记录的操作按钮。
+
+组件内部通过props接收账单数据，并使用Vue的模板语法进行渲染。
+此外，组件内部还包含了一些方法，用于处理用户交互，比如查看支付记录等。
+
+通过此组件，用户可以方便地查看和理解就诊账单详情，并进行相关操作。
+-->
 <template>
   <div class="modal-background" v-if="isVisible">
     <div class="modal-container">
@@ -11,13 +23,13 @@
         <el-form-item label="类型">
           {{ form.type }}
         </el-form-item>
-        <el-form-item label="具体事由">
-          {{ form.issue }}
+        <el-form-item label="科室">
+          {{ form.department }}
         </el-form-item>
-        <el-form-item label="费用（元）">
-          {{ form.price }}
+        <el-form-item label="费用">
+          {{ form.price }} 元
         </el-form-item>
-        <el-form-item label="创建时间">
+        <el-form-item label="时间">
           {{ form.date }}
         </el-form-item>
         <div class="button-group">
@@ -56,7 +68,7 @@ export default {
       this.isVisible = true;
       document.body.style.overflow = "hidden"; // 禁止滚动
       this.form.type = row.type;
-      this.form.issue = row.issue;
+      this.form.department = row.department;
       this.form.price = row.price;
       this.form.date = row.date;
       this.form.id = row.id;

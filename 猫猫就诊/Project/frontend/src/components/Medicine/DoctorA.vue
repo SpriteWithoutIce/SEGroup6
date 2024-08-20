@@ -98,16 +98,7 @@ const pagination = ref({
   currentPage: 1,
   pageSize: 9
 })
-const tableData = ref([
-  // {
-  //   name: '王秋',
-  //   id:'',
-  //   office: '心血管内科', //科室
-  //   title: '副主任医师', //职称
-  //   cost: '10.00', //出诊费
-  //   research: '生物医学工程' //主要研究方向
-  // }
-])
+const tableData = ref([])
 
 const filterData = computed(() => {
   return input4.value

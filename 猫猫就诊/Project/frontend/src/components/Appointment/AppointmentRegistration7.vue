@@ -1,10 +1,9 @@
+<!-- 确认预约信息并缴费 -->
 <template>  
   <Header :squares2="squares2"/> 
   <BillDetails @billDetailsUpdated="onBillDetailsUpdated" ref="BillDetails"> </BillDetails>
   <div class="notice-box" style="height: 1500px;">  
-    <div>{{ this.info.inumber }}</div>
-    <div>{{ this.info.identity_num }}</div>
-    <div>{{ this.billstatus }}</div>
+   
     <!-- 上一步/下一步 -->
     <div class="container2">  
       <router-link :to="{
@@ -23,6 +22,9 @@
           >缴费</el-button>
       </div>  
     </div> 
+    <div class="countdown">
+      <p style="">倒计时: {{ countDown }}</p> 
+    </div>
     <div class="doctor-item">
       <div class="doctor-header"> 
         <img :src="info.doctorAvatar" alt="" class="avatar">
@@ -72,6 +74,7 @@
 <script>  
 import BillDetails from './Appointments/AppointmentBillDetails.vue'
 import Header from './Appointments/AppointmentHeader.vue'
+import { GlobalState } from '../../global.js';
 export default {  
   inject: ['$identity_num'],
   components: {
@@ -79,6 +82,8 @@ export default {
   },
   data() {  
     return {  
+      countDown: 180, // 3分钟 = 180秒  
+      intervalId: null,  
       checked: false,  
       currentSquareIndex: 0,  
       squares2: [  
@@ -113,6 +118,7 @@ export default {
         inumber:'',//患者的证件号
         identity_num: this.$identityNum,
         info_last:{},
+        doctor_id:'',
       },
       info_last:{},
     };  
@@ -122,21 +128,14 @@ export default {
   },
   methods: {  
     submit(){
-      this.form.address='猫猫就诊';
-      this.form.selectTimeTable=this.selectTimeTable;
-      this.form.order=this.doctor.cost;
-      this.form.people=this.people;
-      this.form.isMedicalInsurance=this.isMedicalInsurance;
-      
-      this.form.doctorname=this.doctor.name;
-      // console.log(this.form)
+      this.setAppointmentData().then(() =>{})
     },
     selectTimeSlot(index){
       this.selectTime=index
       this.checked=true
     }, 
     togglePaymentType() {  
-      this.isMedicalInsurance = !this.isMedicalInsurance; // 切换支付类型  
+      this.isMedicalInsurance = !this.isMedicalInsurance; 
       if(this.isMedicalInsurance)
         this.info.paymentType='医保';
       else
@@ -172,14 +171,38 @@ export default {
           starttime:this.info.starttime,//开始时间
           endtime:this.info.endtime,
           number:this.info.number,//挂号序号
+          doctorId:this.info.doctor_id,
           doctorName:this.info.doctorName,//医生名字
           doctorTitle:this.info.doctorAvatar,//医生title
           doctorAvatar:this.info.doctorAvatar,//医生头像
           doctorRearch:this.info.doctorRearch,//医生领域
           cost:this.info.cost,//医生的挂号费
           inumber:this.info.inumber,//患者的证件号
-          identity_num: this.$identityNum,
+          identity_num: GlobalState.identityNum,
+          id:this.info.doctor_id,
         };
+        console.log(requestData)
+        requestData = {
+          name:this.info.name,//就诊人
+          paymentType:this.info.paymentType,
+          department:this.info.department,
+          time:this.info.time,//日期05-30
+          starttime:this.info.starttime,//开始时间
+          endtime:this.info.endtime,
+          number:this.info.number,//挂号序号
+          doctorId:this.info.doctor_id,
+          doctorName:this.info.doctorName,//医生名字
+          doctorTitle:this.info.doctorAvatar,//医生title
+          doctorAvatar:this.info.doctorAvatar,//医生头像
+          doctorRearch:this.info.doctorRearch,//医生领域
+          cost:this.info.cost,//医生的挂号费
+          inumber:this.info.inumber,//患者的证件号
+          identity_num: GlobalState.identityNum,
+          id:this.info.doctor_id,
+          action:"addRegisterData"
+        };
+        if(this.info.paymentType=='医保')
+          requestData.cost=0;
         // 这里的api
         this.$axios.post('/api/appointment/add/', requestData)
           .then(function (response) {
@@ -192,7 +215,35 @@ export default {
           });
       });
     },
-  }  ,
+    
+    navigateToOtherPage() {  
+      this.$router.push('/AppointmentRegistration');  
+    },  
+    cancel(){
+      return new Promise((resolve, reject) => {
+        let ts = this;
+        let requestData = {
+          number:this.info.number,
+          time:this.info.time,
+          starttime:this.info.starttime,
+          doctorId:this.info.doctor_id,
+          action:"unlockRegister"
+        };
+        this.$axios.post('/api/register/unlock/', requestData)
+          .then(function (response) {
+            console.log(response.data['msg']);
+            resolve();
+          })
+          .catch(function (error) {
+            console.log(error);
+            reject(error);
+          });
+      });
+    },
+  },
+  beforeDestroy() {  
+    clearInterval(this.intervalId);  
+  },  
   created(){
     const info_Str = this.$route.query.info;  
     if (info_Str) {  
@@ -200,10 +251,13 @@ export default {
     }
     this.info.info_last=this.info_last;
     this.info.name=this.info_last.name;
-    if(this.isMedicalInsurance)
+  
+    this.info.paymentType=this.info_last.paymentType;
+    if(this.info.paymentType=='非医保')
+      this.isMedicalInsurance=false;
+    else{
       this.info.paymentType='医保';
-    else
-      this.info.paymentType='非医保';
+    }
     this.info.department=this.info_last.department;
     this.info.time=this.info_last.time;
     this.info.starttime=this.info_last.starttime;
@@ -215,7 +269,19 @@ export default {
     this.info.doctorRearch=this.info_last.doctorRearch;
     this.info.cost=this.info_last.cost;
     this.info.inumber=this.info_last.inumber;
+    this.info.doctor_id=this.info_last.doctor_id;
     console.log(this.info.info_last)
+    console.log(this.info)
+    this.intervalId = setInterval(() => {  
+      if (this.countDown > 0) {  
+        this.countDown--;  
+      } else {  
+        this.cancel();
+        this.navigateToOtherPage();  
+        
+        clearInterval(this.intervalId);
+      }  
+    }, 1000); 
   }
 };  
 </script>  
@@ -226,7 +292,15 @@ export default {
   flex-wrap: wrap;  
   justify-content: center;  
 }  
-
+.countdown {
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
+  height: 100px; 
+  font-size: large;
+  font-weight: bold;
+  color: orange;
+}
 button {  
   margin: auto auto;  
   padding: 5px 10px;  
@@ -237,13 +311,13 @@ button {
   border-radius: 10px;
 }  
 .notice-box {  
-  background-color: #f5f5f5; /* 浅灰色背景 */  
+  background-color: #f5f5f5; 
   border-left: 30px solid #fff;
-  border-right: 30px solid #fff; /* 白色边框 */  
-  padding: 20px; /* 内边距 */  
-  margin: 10px; /* 外边距 */  
+  border-right: 30px solid #fff;
+  padding: 20px; 
+  margin: 10px; 
   margin-bottom: 100px;
-  box-sizing: border-box; /* 确保边框和内边距包含在元素的总宽度和高度内 */  
+  box-sizing: border-box;
 }  
 
 .button2 {  
@@ -259,19 +333,19 @@ button {
   background-color: #fcfcfc;  
   color: #000000;  
   cursor: pointer;  
-  transition: background-color 0.3s, color 0.3s; /* 添加过渡效果 */  
+  transition: background-color 0.3s, color 0.3s; 
   text-decoration: none;
 }  
 .button-next {  
-  background-color: #003366; /* 浅蓝色 */  
-  color: #fcfcfc; /* 深蓝色 */  
+  background-color: #003366;
+  color: #fcfcfc;
 }  
 .button-prev {  
-  background-color: #e5ecff; /* 深蓝色 */  
-  color: #003366; /* 白色 */  
+  background-color: #e5ecff; 
+  color: #003366;
 }  
 .button:hover {  
-  opacity: 0.8; /* 鼠标悬停时透明度降低 */  
+  opacity: 0.8;
 }  
 .doctor-header {  
   display: flex;  
@@ -303,7 +377,7 @@ button {
 
 .doctor-item {  
   width: 800px;
-  margin: 10px auto; /* 如果垂直排列，通常只需要上下边距 */
+  margin: 10px auto;
   border: 1px solid #ccc;  
   padding: 15px;  
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  
@@ -314,25 +388,25 @@ button {
   margin: 20px auto;
   display: flex;  
   flex-wrap: wrap;  
-  justify-content: flex-start; /* 水平方向对齐方式，这里使用默认即可 */  
+  justify-content: flex-start;
 }  
   
 .button-row {  
   display: flex;  
-  margin-bottom: 10px; /* 可选，用于按钮行之间的间距 */  
+  margin-bottom: 10px; 
 }  
 
 .button-down {  
   width: 120px;
   height: 100px;  
   display: flex;  
-  flex-direction: column; /* 垂直排列文字 */  
-  justify-content: center; /* 垂直居中文字 */  
-  align-items: center; /* 水平居中文字（在这个场景里其实不需要，但保持一致性）*/  
-  text-align: center; /* 水平居中文字内容 */  
-  border: none; /* 去除默认边框 */  
-  background-color: #eee; /* 示例背景色 */  
-  cursor: pointer; /* 鼠标悬停时变为小手形状 */  
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center; 
+  text-align: center;
+  border: none; 
+  background-color: #eee; 
+  cursor: pointer; 
   color: black;
   margin-left: 50px;
   margin-right: 50px;
@@ -343,7 +417,7 @@ button {
   border: 1px solid #1736ff;
 } 
 span {  
-  margin-top: 5px; /* 上下排列的文字之间的间距 */  
+  margin-top: 5px; 
 }
 .detail{
   height: 50px;
@@ -354,7 +428,7 @@ span {
 }
 .detail-container {  
   display: flex;  
-  justify-content: space-between; /* 可选：在 div 之间添加一些空间 */  
+  justify-content: space-between; 
   height: 50px;
   border: 1px solid #ccc; 
   background-color: white;
@@ -363,13 +437,13 @@ span {
 }  
   
 .detail-item {  
-  flex: 1; /* 让 div 均匀地占用可用空间 */  
-  margin: 1%; /* 添加一些外边距以防止它们紧挨着 */  
-  background-color: white; /* 可选：添加一个背景色以便于查看 */  
+  flex: 1;
+  margin: 1%; 
+  background-color: white;
 }  
 .toggle-arrow {  
-    margin-left: auto; /* 将箭头推到右边 */  
-    cursor: pointer; /* 鼠标悬停时显示小手图标，表示可点击 */  
+    margin-left: auto; 
+    cursor: pointer; 
 }
 
 .pay-button {

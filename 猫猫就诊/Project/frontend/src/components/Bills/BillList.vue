@@ -1,3 +1,17 @@
+<!--
+BillList.vue 组件用于展示就诊账单的列表界面。
+
+该组件的主要功能包括：
+1. 列出用户所有猫猫的就诊账单记录，包括账单编号、就诊日期、总金额等关键信息。
+2. 提供分页功能，允许用户查看不同页码的账单记录。
+3. 允许用户对账单进行筛选，如按日期范围、就诊医生等条件进行筛选。
+4. 提供跳转到账单详情页面的功能，通过点击某个账单项，用户可以查看该账单的详细信息。
+
+组件内部通过异步请求获取账单数据，并根据获取到的数据进行渲染。它使用了Vue的列表渲染指令`v-for`来展示账单列表，并使用Vue Router进行页面跳转。
+此外，组件还包含了一些用于处理分页、筛选等交互逻辑的方法。
+通过此组件，用户可以方便地查看和管理猫猫的就诊账单列表，从而更好地了解和管理宠物的健康状况。
+-->
+
 <template>
   <!-- 注意调用的位置 -->
   <div>
@@ -67,43 +81,20 @@
 
 <script>
 import { inject } from 'vue'
+import { GlobalState } from '../../global.js';
 import BillDetails from './BillDetails.vue'
 export default {
-  inject: ['$identity_num'],
+  // inject: ['$identity_num'],
   created() {
-    this.identityNum = this.$identity_num;
-    // console.log("获取的identityNum为：",this.identityNum); 
+    // this.identityNum = this.$identity_num;
+    this.identityNum = GlobalState.identityNum;
+    console.log("BillList获取的identityNum为：",this.identityNum); 
   },
   data() {
     return {
       identityNum: 0,
       desc: '缴费列表统计',
-      bill: [
-        // {
-        //   id: 1,
-        //   type: '挂号',
-        //   department: '皮肤科',
-        //   price: 10,
-        //   date: '2024年3月15日',
-        //   payStatus: true
-        // },
-        // {
-        //   id: 2,
-        //   type: '处方',
-        //   department: '眼科',
-        //   price: 200,
-        //   date: '2024年2月15日',
-        //   payStatus: false
-        // },
-        // {
-        //   id: 3,
-        //   type: '挂号',
-        //   department: '全科',
-        //   price: 5,
-        //   date: '2024年1月15日',
-        //   payStatus: false
-        // },
-      ],
+      bill: [],
       pagination: {
         total: 0,
         currentPage: 1,
@@ -131,7 +122,7 @@ export default {
             console.log(error);
             reject(error); // 数据获取失败，reject Promise
           });
-          console.log('发送的请求参数:', {identity_num: this.identityNum});
+          console.log('BillList发送的请求参数:', {identity_num: this.identityNum});
       });
     },
     handleCurrentChange(e) {

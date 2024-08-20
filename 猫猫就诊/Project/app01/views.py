@@ -1,5 +1,6 @@
 import asyncio
 from datetime import timedelta
+import datetime
 import os
 from urllib.parse import quote, unquote
 from django.utils import timezone
@@ -8,7 +9,7 @@ from django.forms import model_to_dict
 from django.http import Http404, JsonResponse
 from django.shortcuts import render, HttpResponse
 from rest_framework.views import APIView
-from django.db.models import F
+from django.db.models import F, Q
 from django.contrib.auth.hashers import check_password
 
 import json
@@ -20,6 +21,14 @@ from django.utils.deprecation import MiddlewareMixin
 # Create your views here.
 
 class MyCore(MiddlewareMixin):
+    """
+    处理HTTP响应，设置跨域请求的相关头部信息。
+    Args:
+        request: 请求对象，包含请求方法、请求头等信息。
+        response: 响应对象，包含响应头、响应体等信息。
+    Returns:
+        修改后的响应对象，包含跨域请求相关的头部信息。
+    """
     def process_response(self, request, response):
         response["Access-Control-Allow-Origin"] = '*'
         if request.method == 'OPTIONS':
@@ -28,6 +37,14 @@ class MyCore(MiddlewareMixin):
         return response
 
 class UserView(APIView):
+    """
+    处理用户登录和注册请求
+    Args:
+        request: HTTP请求对象，包含请求头和请求体
+    Returns:
+        JsonResponse: JSON格式的响应对象，包含以下键值对：
+            - msg: 字符串类型，表示操作结果，可选值为'Successfully Login'、'Wrong Password'、'Successfully Register'
+    """
     def post(self, request):
         data = json.loads(request.body)
         identity_num = data["idCard"]
@@ -52,49 +69,71 @@ class UserView(APIView):
                 type = type,
             )
             user.save()
+            patient = Patients.objects.filter(identity_num=identity_num).first()
+            if patient is None:
+                patient = Patients()
+                patient.identity = 1
+                patient.identity_num = identity_num
+                patient.name = "未填写"
+                patient.health_insurance = 1
+                patient.gender = 1
+                patient.birthday = datetime.date.today()
+                patient.phone_num = "未填写"
+                patient.address = "未填写"
+                patient.save()
             return JsonResponse({'msg': 'Successfully Register'})
 
 class PatientView(APIView):
+    """
+    添加患者信息。
+    Args:
+        request (HttpRequest): 请求对象，包含请求体等属性。
+    Returns:
+        JsonResponse: 包含添加成功信息的JsonResponse对象。
+    """
     def post(self, request):
         data = json.loads(request.body)
-        name = data['name']
-        paymentType = data['paymentType']
-        gender = data['gender']
-        birthday = data['birthday']
-        idType = data['idType']
-        phone = data['phone']
-        identity_num = data['number']
-        addr = data['addr']
-        patient = Patients()
-        if idType == '身份证':
+        patient = Patients.objects.filter(identity_num=data['number']).first()
+        if patient is None:
+            patient = Patients()
+        if data['idType'] == '身份证':
             patient.identity = 1
-        elif idType == '医保卡':
+        elif data['idType'] == '医保卡':
             patient.identity = 2
-        elif idType == '诊疗卡':
+        elif data['idType'] == '诊疗卡':
             patient.identity = 3
-        elif idType == '护照':
+        elif data['idType'] == '护照':
             patient.identity = 4
-        elif idType == '军官证':
+        elif data['idType'] == '军官证':
             patient.identity = 5
-        elif idType == '港澳通行证':
+        elif data['idType'] == '港澳通行证':
             patient.identity = 6
-        patient.identity_num = identity_num
-        patient.name = name
-        if paymentType == '医保':
+        patient.identity_num = data['number']
+        patient.name = data['name']
+        if data['paymentType'] == '医保':
             patient.health_insurance = 1
-        elif paymentType == '非医保':
+        elif data['paymentType'] == '非医保':
             patient.health_insurance = 2
-        if gender == '男':
+        if data['gender'] == '男':
             patient.gender = 1
-        elif gender == '女':
+        elif data['gender'] == '女':
             patient.gender = 2
-        patient.birthday = birthday
-        patient.phone_num = phone
-        patient.address = addr
+        patient.birthday = data['birthday']
+        patient.phone_num = data['phone']
+        patient.address = data['addr']
         patient.save()
         return JsonResponse({'msg': 'Successfully add patient'})
 
 class RegisterView(APIView):
+    """
+    处理POST请求，根据action参数执行相应的操作。
+    Args:
+        request: Django框架的HttpRequest对象，包含客户端发送的POST请求数据。
+    Returns:
+        JsonResponse: 返回JsonResponse对象，包含操作结果的数据。
+    Raises:
+        无。
+    """
     def post(self, request):
         action = json.loads(request.body)['action']
         if action == 'getRegistersData':
@@ -103,18 +142,34 @@ class RegisterView(APIView):
             return self.cancelRegister(request)
         elif action == 'getDoctorRegisters':
             return self.getDoctorRegisters(request)
+        elif action == 'addRegisterData':
+            return self.addRegisterData(request)
+        elif action == 'lockRegister':
+            return self.lockRegister(request)
+        elif action == 'unlockRegister':
+            return self.unlockRegister(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
-        
+    
+    """
+    根据传入的身份证号查询该医生的挂号信息，并返回JsonResponse格式数据
+    Args:
+        request: 包含挂号信息的请求对象
+    Returns:
+        包含挂号信息的JsonResponse格式数据
+    Raises:
+        无
+    """
     def getRegistersData(self, request):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
-        user = User.objects.get(identity_num=identity_num)
-        if user.type == 1:
+        filter = {}
+        try:
+            doctor = Doctors.objects.get(identity_num=identity_num)
             filter = {'doctor__identity_num': identity_num}
-        elif user.type == 2:
+        except Doctors.DoesNotExist:
             filter = {'register': identity_num}
-        for item in Register.objects.filter(**filter).annotate(
+        for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
             doctor_name=F('doctor__name')
@@ -122,29 +177,27 @@ class RegisterView(APIView):
                 'doctor_name', 'time', 'position'):
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M')
+            start_time = item['time']
             end_time = start_time + timedelta(minutes=10)
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
             if start_time.hour < 12:
-                middle_index = len(formatted_datetime) // 2
-                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_AM + formatted_datetime[middle_index:]
+                formatted_datetime = formatted_datetime[:10] + ' '+ CHINESE_AM + formatted_datetime[10:]
             else:
-                middle_index = len(formatted_datetime) // 2
-                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_PM + formatted_datetime[middle_index:]
+                formatted_datetime = formatted_datetime[:10] + ' '+ CHINESE_PM + formatted_datetime[10:]
             
             state = ""
             current_time = timezone.now()
-            if start_time > current_time:
+            if start_time < current_time:
                 state = "已就诊"
             else:
                 state = "已预约"
             
-            bill = Bill.objects.get(register=item['id']).values('price')
+            bill = Bill.objects.get(register=item['id'])
             registers.append({'id': item['id'],
                             'office': item['doctor_department'],
                             'orderNum': item['id'],
-                            'price': bill['price'],
+                            'price': bill.price,
                             'name': item['patient_name'],
                             'cardNum': item['patient'],
                             'position': item['position'],
@@ -153,44 +206,171 @@ class RegisterView(APIView):
                             'state': state,
                             'doctor': item['doctor_name']})
         return JsonResponse({'registers': registers})
-
+    
+    """
+    取消挂号
+    Args:
+        request: 请求对象，包含请求体
+    Returns:
+        JsonResponse: 返回JSON响应，包含取消挂号成功信息
+    """
     def cancelRegister(self, request):
         id = json.loads(request.body)['id']
-        item = Register.objects.get(id=id)
-        Bill.objects.get(register=id).delete()
+        register = Register.objects.get(id=id)
+        bill = Bill.objects.get(register=id)
+        time = 1
+        if register.time.hour > 12:
+            time = 2
+        onDuty = OnDuty.objects.get(doctor=register.doctor, date=register.time.date(), time=time)
+        onDuty.state = onDuty.state & (~(1 << (register.queue_id - 1)))
+        onDuty.save()
         notice = Notice()
-        notice.patient = item.patient
-        notice.register = item.register
-        notice.doctor = item.doctor
+        notice.patient = register.patient
+        notice.registerMan = register.register
+        notice.doctor = register.doctor
         notice.msg_type = 2
-        notice.date = datetime.date.today()
-        notice.register = id
+        notice.time = timezone.now()
+        notice.register = register
+        notice.isRead = False
         notice.save()
-        item.delete()
+        register.queue_id = -1
+        register.save()
+        bill.delete()
         return JsonResponse({'msg': "Successfully cancel register"})
     
+    """
+    获取指定医生下的挂号记录
+    Args:
+        request: HttpRequest对象，请求对象
+    Returns:
+        JsonResponse对象，包含挂号记录的Json数据
+    """
     def getDoctorRegisters(self, request):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
         current_date = datetime.date.today()
-        for item in Register.objects.filter(**{'doctor__identity_num': identity_num}).annotate(
+        filter = {'doctor__identity_num': identity_num}
+        for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
             patient_gender=F('patient__gender')
-        ).values('queue_id', 'patient_name', 'patient_birthday', 'patient_gender', 'time'):
+        ).values('id', 'patient_name', 'patient_birthday', 'patient_gender', 'time'):
             age = current_date.year - item['patient_birthday'].year - ((current_date.month, current_date.day) < (item['patient_birthday'].month, item['patient_birthday'].day))
             registers.append({
-                "Id": item['queue_id'],
+                "Id": item['id'],
                 "name": item['patient_name'],
                 "age": age,
                 "sex": "男" if item['patient_gender'] == 1 else "女",
-                "date": datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').date().strftime('%Y年%m月%d日')
+                "date": item['time'].date().strftime('%Y年%m月%d日')
             })
         return JsonResponse({'registers': registers})
-
+    
+    """
+    新增挂号信息
+    Args:
+    - request: HTTP请求对象，包含请求体
+    Returns:
+    - JsonResponse: 包含成功信息的JsonResponse对象
+    """
+    def addRegisterData(self, request):
+        data = json.loads(request.body)
+        register = Register()
+        register.queue_id = data['number']
+        register.patient = Patients.objects.get(identity_num=data['inumber'])
+        register.register = Patients.objects.get(identity_num=data['identity_num'])
+        register.doctor = Doctors.objects.get(id=data['doctorId'])
+        month, day = map(int, data['time'][:5].split('-'))
+        hour, minute = map(int, data['starttime'].split(':'))
+        register.time = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
+        register.position = "猫猫医院" + data['department']
+        register.save()
+        bill = Bill()
+        bill.type = 1
+        bill.state = True
+        bill.patient = register.patient
+        bill.register = register
+        bill.price = data['cost']
+        bill.save()
+        notice = Notice()
+        notice.patient = register.patient
+        notice.registerMan = register.register
+        notice.doctor = register.doctor
+        notice.msg_type = 1
+        notice.time = timezone.now()
+        notice.register = register
+        notice.isRead = False
+        notice.save()
+        return JsonResponse({'msg': "Successfully add register"})
+    
+    """
+    锁定挂号
+    Args:
+        request (HttpRequest): 请求对象，包含请求体中的json数据
+    Returns:
+        JsonResponse: 包含锁定挂号结果的JsonResponse对象
+    """
+    def lockRegister(self, request):
+        data = json.loads(request.body)
+        queue_id = data['number']
+        month, day = map(int, data['time'][:5].split('-'))
+        hour, minute = map(int, data['starttime'].split(':'))
+        startTime = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
+        doctor = Doctors.objects.get(id=data['doctorId'])
+        time = 1
+        if startTime.hour > 12:
+            time = 2
+        onDuty = OnDuty.objects.get(doctor=doctor, date=startTime.date(), time=time)
+        if (onDuty.state & (1 << (queue_id - 1))) != 0:
+            return JsonResponse({"msg": "This register has been locked by others"})
+        onDuty.state = onDuty.state | (1 << (queue_id - 1))
+        onDuty.save()
+        return JsonResponse({'msg': "Successfully lock register"})
+    
+    """
+    解锁医生挂号
+    Args:
+        request: 请求对象，包含请求体body
+    Returns:
+        JsonResponse: 返回解锁挂号的结果，成功返回{"msg": "Successfully unlock register"}
+    Raises:
+        无
+    """
+    def unlockRegister(self, request):
+        data = json.loads(request.body)
+        queue_id = data['number']
+        month, day = map(int, data['time'][:5].split('-'))
+        hour, minute = map(int, data['starttime'].split(':'))
+        startTime = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
+        doctor = Doctors.objects.get(id=data['doctorId'])
+        time = 1
+        if startTime.hour > 12:
+            time = 2
+        onDuty = OnDuty.objects.get(doctor=doctor, date=startTime.date(), time=time)
+        onDuty.state = onDuty.state & (~(1 << (queue_id - 1)))
+        onDuty.save()
+        return JsonResponse({'msg': "Successfully unlock register"})
 
 class TreatmentView(APIView):
-    # 返回所有就诊记录
+    """
+    获取就诊列表信息
+    Args:
+        request: Django请求对象
+    Returns:
+        JsonResponse: 包含预约信息的Json响应对象
+    Returns的JsonResponse格式:
+        {
+            "treatments": [
+                {
+                    "Id": int,             # 预约ID
+                    "name": str,           # 患者姓名
+                    "age": int,            # 患者年龄
+                    "sex": str,            # 患者性别
+                    "date": str            # 预约日期，格式为'%Y年%m月%d日'
+                },
+                ...
+            ]
+        }
+    """
     def get(self, request):
         treatments = []
         current_date = datetime.date.today()
@@ -200,22 +380,50 @@ class TreatmentView(APIView):
             patient_gender=F('patient__gender')
         ).values('queue_id', 'patient_name', 'patient_birthday', 'patient_gender', 'time'):
             age = current_date.year - item['patient_birthday'].year - ((current_date.month, current_date.day) < (item['patient_birthday'].month, item['patient_birthday'].day))
+            year, month, day, hour, minute = map(int, item['time'].split('-') + item['time'].split()[1].split(':'))
+            date = datetime(year, month, day, hour, minute).date()
             treatments.append({
                 "Id": item['queue_id'],
                 "name": item['patient_name'],
                 "age": age,
                 "sex": "男" if item['patient_gender'] == 1 else "女",
-                "date": datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S').date().strftime('%Y年%m月%d日')
+                "date": item['time'].date().strftime('%Y年%m月%d日')
             })
         return JsonResponse({'treatments': treatments})
     
+    """
+    处理POST请求
+    Args:
+        request (HttpRequest): HTTP请求对象
+    Returns:
+        JsonResponse: JSON格式的响应对象
+    Raises:
+        无
+    """
     def post(self, request):
+        action = json.loads(request.body)['action']
+        if action == 'getTreatmentsData':
+            return self.getTreatmentsData(request)
+        elif action == 'addTreatmentData':
+            return self.addTreatmentData(request)
+        else:
+            return JsonResponse({'error': 'Invalid action'}, status=400)
+    
+    """
+    获取治疗数据
+    Args:
+        request: 请求对象，需要包含identity_num字段
+    Returns:
+        JsonResponse: 包含治疗数据的JsonResponse对象
+    """
+    def getTreatmentsData(self, request):
         treatments = []
         identity_num = json.loads(request.body)['identity_num']
-        user = User.objects.get(identity_num=identity_num)
-        if user.type == 1:
+        filter = {}
+        try:
+            doctor = Doctors.objects.get(identity_num=identity_num)
             filter = {'doctor__identity_num': identity_num}
-        elif user.type == 2:
+        except Doctors.DoesNotExist:
             filter = {'patient': identity_num}
         for item in Treatment.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
@@ -225,16 +433,14 @@ class TreatmentView(APIView):
                 'doctor_name', 'time', 'advice', 'medicine'):
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M')
+            start_time = item['time']
             end_time = start_time + timedelta(minutes=10)
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
             if start_time.hour < 12:
-                middle_index = len(formatted_datetime) // 2
-                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_AM + formatted_datetime[middle_index:]
+                formatted_datetime = formatted_datetime[:10] + ' ' + CHINESE_AM + formatted_datetime[10:]
             else:
-                middle_index = len(formatted_datetime) // 2
-                formatted_datetime = formatted_datetime[:middle_index] + CHINESE_PM + formatted_datetime[middle_index:]
+                formatted_datetime = formatted_datetime[:10] + ' ' + CHINESE_PM + formatted_datetime[10:]
             treatments.append({'office': item['doctor_department'],
                             'time': formatted_datetime,
                             'patient': item['patient_name'],
@@ -243,18 +449,64 @@ class TreatmentView(APIView):
                             'medicine': json.loads(item['medicine']),
             })
         return JsonResponse({'treatments': treatments})
+    
+    """
+    添加治疗记录
+    Args:
+        request (HttpRequest): 包含治疗记录的请求体
+    Returns:
+        JsonResponse: 返回添加治疗记录的结果，成功时返回包含"msg"字段的JsonResponse，值为"Successfully add treatment"
+    """
+    def addTreatmentData(self, request):
+        data = json.loads(request.body)
+        treatment = Treatment()
+        register = Register.objects.get(id=data['id'])
+        treatment.queue_id = register.queue_id
+        treatment.patient = register.patient
+        treatment.doctor = register.doctor
+        treatment.time = timezone.now()
+        treatment.advice = data['suggestion']
+        treatment.medicine = json.dumps(data['medicines'])
+        treatment.price = data['totalPrice']
+        treatment.save()
+        bill = Bill()
+        bill.type = 2
+        bill.state = False
+        bill.patient = register.patient
+        bill.treatment = treatment
+        bill.price = data['totalPrice']
+        bill.save()
+        notice = Notice()
+        notice.patient = register.patient
+        notice.registerMan = register.register
+        notice.doctor = register.doctor
+        notice.msg_type = 3
+        notice.time = timezone.now()
+        notice.treatment = treatment
+        notice.isRead = False
+        notice.save()
+        return JsonResponse({'msg': "Successfully add treatment"})
 
 class DoctorView(APIView):
+    """
+    获取医生列表
+    Args:
+        request: HTTP请求对象
+    Returns:
+        JsonResponse: 返回一个包含医生信息的JsonResponse对象
+    """
     def get(self, request):
         doctors = []
-        for item in Doctors.objects.values('identity_num', 'name', 'department', 'title', 'research', 'cost'):
+        for item in Doctors.objects.values('identity_num', 'name', 'department',
+                                        'title', 'research', 'cost', 'avatar_name'):
             doctors.append({
                 'id': item['identity_num'],
                 'name': item['name'],
                 'office': item['department'],
                 'title': item['title'],
                 'research': item['research'],
-                'cost': item['cost']
+                'cost': item['cost'],
+                'avatar_name': item['avatar_name']
             })
         return JsonResponse({'doctors': doctors})
             
@@ -297,7 +549,7 @@ class DoctorView(APIView):
     
     def deleteDoctor(self, request):
         id = json.loads(request.body)['id']
-        Doctors.objects.get(id=id).delete()
+        Doctors.objects.get(identity_num=id).delete()
         return self.get(request)
     
     def removeAvatar(self, request):
@@ -317,8 +569,8 @@ class DoctorView(APIView):
             doctor.cost = data['cost']
             doctor.identity_num = data['id']
             doctor.research = data['research']
-            doctor.avatar = '/api/doctor/avatar/' + data['avatar_name']
             doctor.avatar_name = data['avatar_name']
+            doctor.save()
             return JsonResponse({'msg': "Successfully add doctor data"})
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
@@ -333,7 +585,6 @@ class DoctorView(APIView):
             doctor.cost = data['cost']
             doctor.identity_num = data['id']
             doctor.research = data['research']
-            doctor.avatar = '/api/doctor/avatar/' + data['avatar_name']
             doctor.avatar_name = data['avatar_name']
             doctor.save()
             return JsonResponse({'msg': "Successfully altered doctor data"})
@@ -360,8 +611,10 @@ class OnDutyView(APIView):
             doctor_name=F('doctor__name'),
             doctor_title=F('doctor__title'),
             doctor_research=F('doctor__research'),
-            doctor_avatar_name=F('doctor__avatar_name')
-        ).values('doctor_id', 'doctor_name', 'doctor_title', 'date', 'doctor_research', 'doctor_avatar_name', 'time', 'state'):
+            doctor_avatar_name=F('doctor__avatar_name'),
+            doctor_cost=F('doctor__cost')
+        ).values('doctor_id', 'doctor_name', 'doctor_title', 'doctor_cost',
+                'date', 'doctor_research', 'doctor_avatar_name', 'time', 'state'):
             time = ""
             if (item['time'] == 1):
                 time = "(上午)"
@@ -401,6 +654,7 @@ class OnDutyView(APIView):
                     "title": item['doctor_title'],
                     "research": item['doctor_research'],
                     "avatar": '/api/doctor/avatar/' + item['doctor_avatar_name'],
+                    "cost": item['doctor_cost'],
                     "schedule": [{'time': item['date'].strftime('%m-%d') + time,
                                     'status': 'full' if rest == 0 else 'empty',
                                     'number': rest,
@@ -497,10 +751,18 @@ class BillView(APIView):
     
     def changeBillStatus(self, request):
         data = json.loads(request.body)
-        item_id = data['item_id']
-        item = Bill.objects.get(id=item_id)
-        item.state = True
-        item.save()
+        bill = Bill.objects.get(id=data['item_id'])
+        bill.state = True
+        bill.save()
+        treatment = bill.treatment
+        notice = Notice()
+        notice.patient = treatment.patient
+        notice.doctor = treatment.doctor
+        notice.msg_type = 4
+        notice.time = timezone.now()
+        notice.treatment = treatment
+        notice.isRead = False
+        notice.save()
         return self.getBillsData(request)
 
 class NoticeView(APIView):
@@ -517,11 +779,11 @@ class NoticeView(APIView):
         resMes = []
         billMes = []
         identity_num = json.loads(request.body)['identity_num']
-        for item in Notice.objects.filter(patient=identity_num).annotate(
+        for item in Notice.objects.filter(Q(patient=identity_num) | Q(registerMan=identity_num)).annotate(
             doctor_name=F('doctor__name'),
             patient_name=F('patient__name'),
             doctor_department=F('doctor__department'),
-        ).values('id', 'patient', 'msg_type', 'patient_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
+        ).values('id', 'patient', 'registerMan', 'msg_type', 'patient_name', 'doctor_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
             type = ""
             if item['msg_type'] == 1:
                 type = "预约成功"
@@ -531,20 +793,21 @@ class NoticeView(APIView):
                 type = "处方缴费提醒"
             else:
                 type = "处方缴费成功"
-            if item['msg_type'] == 1 or item['msg_type'] == 2:
+            if (item['msg_type'] == 1 or item['msg_type'] == 2) and item['registerMan'] == identity_num:
+                register = Register.objects.get(id=item['register'])
                 resMes.append({
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
                     "department": item['doctor_department'],
                     "doctor": item['doctor_name'],
-                    "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
+                    "time": register.time.strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
-                    "timetamp": item['date'],
+                    "timetamp": item['time'],
                     "read": item['isRead']
                 })
-            else:
-                treatment = Treatment.objects.get(id=item['treatment']).value('price')
+            elif (item['msg_type'] == 3 or item['msg_type'] == 4) and item['patient'] == identity_num:
+                treatment = Treatment.objects.get(id=item['treatment'])
                 billMes.append({
                     "item_id": item['id'],
                     "type": type,
@@ -553,8 +816,8 @@ class NoticeView(APIView):
                     "doctor": item['doctor_name'],
                     "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
-                    "timetamp": item['date'],
-                    "price": treatment['price'],
+                    "timetamp": item['time'],
+                    "price": treatment.price,
                     "read": item['isRead']
                 })
         return JsonResponse({"resMes": resMes, "billMes": billMes})
@@ -618,12 +881,7 @@ class MedicineView(APIView):
         try:
             medicine = Medicine()
             medicine.name = data['name']
-            if data['type'] == '3':
-                medicine.medicine_type = 1
-            elif data['type'] == '6':
-                medicine.medicine_type = 2
-            else:
-                medicine.medicine_type = 3
+            medicine.medicine_type = data['type']
             medicine.symptom = data['symptom']
             medicine.price = data['price']
             medicine.quantity = data['quantity']
@@ -638,12 +896,7 @@ class MedicineView(APIView):
         try:
             medicine = Medicine.objects.get(id=data['id'])
             medicine.name = data['name']
-            if data['type'] == '3':
-                medicine.medicine_type = 1
-            elif data['type'] == '6':
-                medicine.medicine_type = 2
-            else:
-                medicine.medicine_type = 3
+            medicine.medicine_type = data['type']
             medicine.symptom = data['symptom']
             medicine.price = data['price']
             medicine.quantity = data['quantity']
