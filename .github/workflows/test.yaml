@@ -42,5 +42,7 @@ jobs:
     - name: Unit Test
       run: |
         cd 猫猫就诊/Project
+        pip install djangorestframework
+        pip install Pillow
         python manage.py test app01
 
