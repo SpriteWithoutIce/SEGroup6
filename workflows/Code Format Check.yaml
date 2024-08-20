@@ -1,0 +1,49 @@
+name: Code Format Check
+
+on:
+  push:
+  pull_request:
+jobs:
+  format-check:
+    name: Check Code Formatting
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        python-version: [3.9]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Python code formatting check
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black flake8
+
+      - name: Run Black (Python)
+        run: black --check backend/
+
+      - name: Run Flake8 (Python)
+        run: flake8 backend/
+
+      # Vue.js code formatting check
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Node.js dependencies
+        working-directory: frontend
+        run: npm install
+
+      - name: Run ESLint (Vue.js)
+        working-directory: frontend
+        run: npm run lint
