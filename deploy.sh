@@ -11,7 +11,6 @@ SSH_PASSWORD="22371468Se"  #
 
 # 安装 sshpass 工具
 sudo apt-get update && sudo apt-get install -y sshpass
-
 # 前端部署
 echo "Starting front-end deployment..."
 sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
