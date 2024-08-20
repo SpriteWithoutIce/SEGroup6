@@ -44,7 +44,5 @@ jobs:
           cd 猫猫就诊/Project
           pip install djangorestframework
           pip install Pillow
-          python manage.py dbshell
-          DROP DATABASE IF EXISTS test_seproject;
-          python manage.py test app01
+          yes | python manage.py test app01
           yes
