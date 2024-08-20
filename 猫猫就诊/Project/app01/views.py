@@ -457,7 +457,9 @@ class TreatmentView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         filter = {}
         try:
-            doctor = Doctors.objects.get(identity_num=identity_num)
+            doctor = Doctors.objects.filter(identity_num=identity_num).first()
+            if doctor is None:
+                return JsonResponse({'error': 'Invalid doctor'}, status=400)
             filter = {'doctor__identity_num': identity_num}
         except Doctors.DoesNotExist:
             filter = {'patient': identity_num}
@@ -499,7 +501,10 @@ class TreatmentView(APIView):
     def addTreatmentData(self, request):
         data = json.loads(request.body)
         treatment = Treatment()
-        register = Register.objects.get(id=data['id'])
+        register = Register.objects.filter(id=data['id']).first()
+        if register is None:
+            return JsonResponse({'error': 'Invalid id'}, status=400)
+        # register = Register.objects.get(id=data['id'])
         treatment.queue_id = register.queue_id
         treatment.patient = register.patient
         treatment.doctor = register.doctor
