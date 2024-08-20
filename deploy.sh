@@ -36,9 +36,8 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     # 收集静态文件（如果使用 Django）
     python manage.py collectstatic --noinput
     # 重启 uWSGI 和 Nginx 服务
-    #这里说是没有这俩服务
     echo "启动 uWSGI 服务..."
-    uwsgi --ini $UWSGI_INI_PATH
+    sudo /etc/init.d/uwsgi restart
     sudo systemctl restart $NGINX_SERVICE_NAME
 
     echo "Deployment completed successfully!"
