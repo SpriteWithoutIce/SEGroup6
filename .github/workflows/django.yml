@@ -33,14 +33,16 @@ jobs:
       with:
         node-version: '16' 
 
-    - name: Set up Node.js
+    - name: ChangeDirectory Node.js
       run: |
         cd 猫猫就诊/Project/frontend
 
     - name: Install Node.js Dependencies
       run: |
         npm install
-
+     - name: print
+      run: |
+        pwd
     - name: Build Frontend
       run: |
         npm run build
