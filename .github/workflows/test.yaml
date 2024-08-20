@@ -32,5 +32,5 @@ jobs:
     - name: Unit Test
       run: |
         cd 猫猫就诊/Project
-        python .\manage.py test app01
+        python manage.py test app01
 
