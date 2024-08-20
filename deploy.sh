@@ -3,8 +3,8 @@
 # 配置项
 SERVER_USER="ubuntu"
 SERVER_IP="101.42.36.160"
-FRONTEND_PATH="./猫猫就诊/Project/frontend/dist"  # 前端静态文件的部署路径
-BACKEND_PATH="./猫猫就诊/Project"    # 后端代码的部署路径
+FRONTEND_PATH="猫猫就诊/Project/frontend/dist"  # 前端静态文件的部署路径
+BACKEND_PATH="猫猫就诊/Project/backend"    # 后端代码的部署路径
 UWSGI_SERVICE_NAME="uwsgi"  # uWSGI 服务名
 NGINX_SERVICE_NAME="nginx"  # Nginx 服务名
 SSH_PASSWORD="22371468Se"  # 
@@ -23,6 +23,9 @@ sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Pro
 echo "Connecting to server to finalize deployment..."
 sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
     # 进入后端项目目录
+    echo "Current directory:"
+    pwd
+    ls -l
     cd $BACKEND_PATH
 
     # 激活虚拟环境
