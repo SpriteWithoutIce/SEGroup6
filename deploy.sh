@@ -7,20 +7,22 @@ FRONTEND_PATH="猫猫就诊/Project/frontend/dist"  # 前端静态文件的部�
 BACKEND_PATH="猫猫就诊/Project"    # 后端代码的部署路径
 UWSGI_SERVICE_NAME="uwsgi"  # uWSGI 服务名
 NGINX_SERVICE_NAME="nginx"  # Nginx 服务名
+SSH_PASSWORD="22371468Se"  # 
 
-SSH_OPTIONS="-o StrictHostKeyChecking=no"
+# 安装 sshpass 工具
+sudo apt-get update && sudo apt-get install -y sshpass
 
 # 前端部署
 echo "Starting front-end deployment..."
-scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
+sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
 
 # 后端部署
 echo "Starting back-end deployment..."
-scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
+sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
 
 # SSH 到服务器上，执行后续命令
 echo "Connecting to server to finalize deployment..."
-ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
+sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
     # 进入后端项目目录
     cd $BACKEND_PATH
 
