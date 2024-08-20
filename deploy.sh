@@ -3,6 +3,7 @@
 # 配置项
 SERVER_USER="ubuntu"
 SERVER_IP="101.42.36.160"
+REQUIREMENTS_PATH="SEGroup6/requirements.txt"
 FRONTEND_PATH="SEGroup6/猫猫就诊/Project/frontend/dist"  # 前端静态文件的部署路径
 BACKEND_PATH="SEGroup6/猫猫就诊/Project/backend"    # 后端代码的部署路径
 UWSGI_SERVICE_NAME="uwsgi"  # uWSGI 服务名
@@ -12,6 +13,8 @@ SSH_PASSWORD="22371468Se"  #
 # 安装 sshpass 工具
 sudo apt-get update && sudo apt-get install -y sshpass
 # 前端部署
+echo "Starting requirement deployment"
+sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no ./requirements.txt * $SERVER_USER@$SERVER_IP:$REQUIREMENTS_PATH
 echo "Starting front-end deployment..."
 sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
 
