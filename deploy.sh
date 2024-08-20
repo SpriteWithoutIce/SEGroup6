@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # 配置项
-SERVER_USER="your_username"
-SERVER_IP="your_server_ip"
-FRONTEND_PATH="/path/to/frontend/deploy"  # 前端静态文件的部署路径
-BACKEND_PATH="/path/to/backend/deploy"    # 后端代码的部署路径
+SERVER_USER="ubuntu"
+SERVER_IP="101.42.36.160"
+FRONTEND_PATH="猫猫就诊/Project/frontend/dist"  # 前端静态文件的部署路径
+BACKEND_PATH="猫猫就诊/Project"    # 后端代码的部署路径
 UWSGI_SERVICE_NAME="uwsgi"  # uWSGI 服务名
 NGINX_SERVICE_NAME="nginx"  # Nginx 服务名
 
