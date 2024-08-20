@@ -82,9 +82,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "SEProject",
         "USER": "root",
-        "PASSWORD": "22371468Se",
-        "HOST": "bj-cynosdbmysql-grp-8do8ws2a.sql.tencentcdb.com",
-        "PORT": 24621,
+        "PASSWORD": "@15755083308Ab",
+        "HOST": "bj-cynosdbmysql-grp-ehn4evu8.sql.tencentcdb.com",
+        "PORT": 22339,
     }
 }
 
