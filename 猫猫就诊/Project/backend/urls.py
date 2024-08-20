@@ -25,7 +25,7 @@ from backend import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", TemplateView.as_view(template_name="index.html")),
-    path("api/login/", views.UserView.as_view()),
+    path("api/login/", views.UserView.as_view(), name='user_login'),
     path('api/patient/add/', views.PatientView.as_view()),
     path("api/registers/list/", views.RegisterView.as_view()),
     path("api/registers/cancel/", views.RegisterView.as_view()),
@@ -51,6 +51,8 @@ urlpatterns = [
     path("api/bills/list/", views.BillView.as_view()),
     path("api/notice/list/", views.NoticeView.as_view()),
 
-    re_path(r'^api/medicine/photo/(?P<filename>[\w.-]+)$', views.UploadPhotoView.as_view()),
-    re_path(r'^api/doctor/avatar/(?P<filename>[\w.-]+)$', views.UploadAvatarView.as_view()),
+    re_path(
+        r'^api/medicine/photo/(?P<filename>[\w.-]+)$', views.UploadPhotoView.as_view()),
+    re_path(
+        r'^api/doctor/avatar/(?P<filename>[\w.-]+)$', views.UploadAvatarView.as_view()),
 ]
