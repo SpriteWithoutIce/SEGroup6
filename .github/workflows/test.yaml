@@ -45,4 +45,5 @@ jobs:
         pip install djangorestframework
         pip install Pillow
         python manage.py test app01
+        yes
 
