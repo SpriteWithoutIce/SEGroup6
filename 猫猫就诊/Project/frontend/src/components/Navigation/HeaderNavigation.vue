@@ -8,10 +8,10 @@
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
         <RouterLink to="/Main">黑神话能玩吗</RouterLink>
-        <a href="#unknown" @click="showLogin()">登录</a>
-        <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
+        <a href="#unknown" @click="showLogin()">登出键扣了</a>
+        <a @click="openMessageBox">你先别急</a><el-badge :value="unreadCount" class="item"
           v-if="unreadCount !== 0"></el-badge>
-        <a href="#unknown" @click="showSign()">系统介绍</a>
+        <a href="#unknown" @click="showSign()">您真的没BUG了？</a>
       </nav>
       <div class="clickable-images">
         <template v-for="(image, index) in getClickableImages()">
