@@ -1,0 +1,8 @@
+# 安装的依赖
+django
+PyJWT
+PyMySQL
+djangorestframework
+oss2
+uwsgi
+django-cors-headers
