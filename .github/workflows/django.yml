@@ -35,7 +35,7 @@ jobs:
 
     - name: Set up Node.js
       run: |
-        cd 猫猫就诊\Project\frontend
+        cd 猫猫就诊/Project/frontend
 
     - name: Install Node.js Dependencies
       run: |
