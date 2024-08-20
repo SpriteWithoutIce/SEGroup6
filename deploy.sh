@@ -38,13 +38,14 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     pip install -r requirements.txt
     cd ..
     # 迁移数据库（如果使用 Django）
+    python manage.py makemigrations
     python manage.py migrate
 
     # 收集静态文件（如果使用 Django）
     python manage.py collectstatic --noinput
-
     # 重启 uWSGI 和 Nginx 服务
     #这里说是没有这俩服务
+    pip install uwsgi
     sudo systemctl restart $UWSGI_SERVICE_NAME
     sudo systemctl restart $NGINX_SERVICE_NAME
 
