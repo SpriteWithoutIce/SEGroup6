@@ -39,6 +39,6 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     echo "启动 uWSGI 服务..."
     sudo /etc/init.d/uwsgi restart
     sudo systemctl restart $NGINX_SERVICE_NAME
-
+    sudo systemctl status $NGINX_SERVICE_NAME
     echo "Deployment completed successfully!"
 EOF
