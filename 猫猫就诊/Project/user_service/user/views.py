@@ -18,7 +18,7 @@ from user_service import settings
 from .models import *
 
 from django.utils.deprecation import MiddlewareMixin
-from patient.models import Patients
+import requests
 # Create your views here.
 
 class MyCore(MiddlewareMixin):
@@ -70,16 +70,18 @@ class UserView(APIView):
                 type = type,
             )
             user.save()
-            patient = Patients.objects.using('patient_service').filter(identity_num=identity_num).first()
-            if patient is None:
-                patient = Patients()
-                patient.identity = 1
-                patient.identity_num = identity_num
-                patient.name = "未填写"
-                patient.health_insurance = 1
-                patient.gender = 1
-                patient.birthday = datetime.date.today()
-                patient.phone_num = "未填写"
-                patient.address = "未填写"
-                patient.save(using='patient_service')
+            # API 服务器地址
+            api_url = 'http://101.42.36.160:80/api/patient/add/'
+            # 请求数据（如果需要的话）
+            requestData = {'name': "未填写",
+                'paymentType': "非医保",
+                'gender': "男",
+                'birthday': datetime.date.today(),
+                'idType': "身份证",
+                'phone': "未填写",
+                'number': identity_num,
+                'addr': "未填写",
+            }
+            # 发送 POST 请求
+            requests.post(api_url, json=requestData)
             return JsonResponse({'msg': 'Successfully Register'})

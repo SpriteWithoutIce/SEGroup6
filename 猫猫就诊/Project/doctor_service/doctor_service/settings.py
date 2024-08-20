@@ -38,8 +38,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "doctor",
-    "administrator",
-    "patient",
     "corsheaders",
 ]
 
@@ -87,25 +85,8 @@ DATABASES = {
         "PASSWORD": "@15755083308Ab",
         "HOST": "bj-cynosdbmysql-grp-ehn4evu8.sql.tencentcdb.com",
         "PORT": 22339,
-    },
-    "administrator_service": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "ADMINISTRATOR",
-        "USER": "root",
-        "PASSWORD": "@15755083308Ab",
-        "HOST": "bj-cynosdbmysql-grp-ehn4evu8.sql.tencentcdb.com",
-        "PORT": 22339,
-    },
-    "patient_service": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "PATIENT",
-        "USER": "root",
-        "PASSWORD": "@15755083308Ab",
-        "HOST": "bj-cynosdbmysql-grp-ehn4evu8.sql.tencentcdb.com",
-        "PORT": 22339,
     }
 }
-DATABASE_ROUTERS = ['doctor.db_router.AdministratorDBRouter', 'doctor.db_router.PatientDBRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

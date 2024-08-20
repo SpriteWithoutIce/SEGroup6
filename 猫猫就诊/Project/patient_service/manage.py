@@ -3,9 +3,6 @@
 import os
 import sys
 
-sys.path.append('../administrator_service')
-sys.path.append('../doctor_service')
-
 def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patient_service.settings")

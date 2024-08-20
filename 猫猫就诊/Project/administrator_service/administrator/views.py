@@ -74,6 +74,8 @@ class DoctorView(APIView):
             return self.addDoctor(request)
         elif action == 'alterDoctor':
             return self.alterDoctor(request)
+        elif action == 'searchDoctor':
+            return self.searchDoctor(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -143,8 +145,16 @@ class DoctorView(APIView):
             doctor.avatar_name = data['avatar_name']
             doctor.save()
             return JsonResponse({'msg': "Successfully altered doctor data"})
-        except Medicine.DoesNotExist:
+        except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
+
+    def searchDoctor(self, request):
+        data = json.loads(request.body)
+        try:
+            doctor = Doctors.objects.get(identity_num=data['identity_num']).values('id')
+            return JsonResponse({'msg': "Doctor Exist", 'id': doctor['id']})
+        except Doctors.DoesNotExist:
+            return JsonResponse({'msg': "Doctor Not Exist"})
 
 class UploadAvatarView(APIView):
     def get(self, request, filename, *args, **kwargs):
@@ -168,7 +178,7 @@ class MedicineView(APIView):
     # api/medicine/list/
     def get(self, request):
         medicine = []
-        for item in Medicine.objects.values('id', 'name', 'medicine_type', 'symptom', 'price', 'quantity', 'photo_name'):
+        for item in Medicine.objects.values('id', 'name', 'medicine_type', 'symptom', 'price', 'quantity', 'photo_name', 'symptom'):
             type = ""
             if item['medicine_type'] == 1:
                 type = "中药"

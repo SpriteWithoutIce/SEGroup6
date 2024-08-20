@@ -18,8 +18,7 @@ from patient_service import settings
 from .models import *
 
 from django.utils.deprecation import MiddlewareMixin
-from doctor.models import OnDuty, Treatment
-from administrator.models import Doctors
+import requests
 # Create your views here.
 
 class MyCore(MiddlewareMixin):
@@ -103,6 +102,8 @@ class RegisterView(APIView):
             return self.lockRegister(request)
         elif action == 'unlockRegister':
             return self.unlockRegister(request)
+        elif action == 'filterRegister':
+            return self.filterRegister(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
     
@@ -120,17 +121,34 @@ class RegisterView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
         filter = {}
-        try:
-            doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num).values('id')
-            filter = {'doctor': doctor['id']}
-        except Doctors.DoesNotExist:
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/doctors/exist/'
+        # 请求数据（如果需要的话）
+        requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        if response.json()['msg'] == "Doctor Exist":
+            filter = {'doctor': response.json()['id']}
+        else:
             filter = {'register': identity_num}
-        for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
-            patient_name=F('patient__name'),
-        ).values('id', 'queue_id', 'doctor', 'patient', 'patient_name', 'time', 'position'):
-            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values('department', 'name')
-            doctor_department = doctor[0]['department']
-            doctor_name = doctor[0]['name']
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/registers/filter/'
+        # 请求数据（如果需要的话）
+        requestData = {'filter': filter, 'action': "filterRegister"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        registerList = response.json().get('registers', [])
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/doctors/list/'
+        # 请求数据（如果需要的话）
+        requestData = {'action': "getDoctorsData"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        doctor_list = response.json().get('doctors', [])
+        for item in registerList:
+            doctor = next((doctor for doctor in doctor_list if doctor['id'] == item['doctor']), None)
+            doctor_department = doctor['department']
+            doctor_name = doctor['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
             start_time = item['time']
@@ -149,11 +167,17 @@ class RegisterView(APIView):
             else:
                 state = "已预约"
             
-            bill = Bill.objects.get(register=item['id'])
+            # API 服务器地址
+            api_url = 'http://101.42.36.160:80/api/bills/register/'
+            # 请求数据（如果需要的话）
+            requestData = {'register': item['id'], 'action': "registerBill"}
+            # 发送 POST 请求
+            response = requests.post(api_url, json=requestData)
+            bill = response.json().get('bill')
             registers.append({'id': item['id'],
                             'office': doctor_department,
                             'orderNum': item['id'],
-                            'price': bill.price,
+                            'price': bill['price'],
                             'name': item['patient_name'],
                             'cardNum': item['patient'],
                             'position': item['position'],
@@ -178,9 +202,16 @@ class RegisterView(APIView):
         time = 1
         if register.time.hour > 12:
             time = 2
-        onDuty = OnDuty.objects.using('doctor_service').get(doctor=register.doctor, date=register.time.date(), time=time)
-        onDuty.state = onDuty.state & (~(1 << (register.queue_id - 1)))
-        onDuty.save()
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/changeDutyState/'
+        # 请求数据（如果需要的话）
+        requestData = {'doctor': register.doctor,
+                    'date': register.time.date(),
+                    'time': time,
+                    'queue_id': register.queue_id,
+                    'action': "changeDutyState"}
+        # 发送 POST 请求
+        requests.post(api_url, json=requestData)
         notice = Notice()
         notice.patient = register.patient
         notice.registerMan = register.register
@@ -207,8 +238,13 @@ class RegisterView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
         current_date = datetime.date.today()
-        doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num).values('id')
-        filter = {'doctor': doctor['id']}
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/doctors/exist/'
+        # 请求数据（如果需要的话）
+        requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        filter = {'doctor': response.json()['id']}
         for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
@@ -311,6 +347,27 @@ class RegisterView(APIView):
         onDuty.state = onDuty.state & (~(1 << (queue_id - 1)))
         onDuty.save()
         return JsonResponse({'msg': "Successfully unlock register"})
+
+    def filterRegister(self, request):
+        data = json.loads(request.body)
+        registers = []
+        for item in Register.objects.filter(**data['filter']).exclude(queue_id=-1).annotate(
+            patient_name=F('patient__name'),
+            patient_birthday=F('patient__birthday'),
+            patient_gender=F('patient__gender')
+        ).values('id', 'queue_id', 'register', 'patient', 'patient_name',
+                'patient_birthday', 'patient_gender', 'doctor', 'time', 'position'):
+            registers.append({'id': item['id'],
+                            'queue_id': item['queue_id'],
+                            'register': item['register'],
+                            'patient': item['patient'],
+                            'patient_name': item['patient_name'],
+                            'patient_birthday': item['patient_birthday'],
+                            'patient_gender': item['patient_gender'],
+                            'doctor': item['doctor'],
+                            'time': item['time'],
+                            'position': item['position']})
+        return JsonResponse({'registers': registers})
 
 class TreatmentView(APIView):
     """
@@ -514,6 +571,10 @@ class BillView(APIView):
             return self.getBillsData(request)
         elif action == 'changeBillStatus':
             return self.changeBillStatus(request)
+        elif action == 'registerBill':
+            return self.registerBill(request)
+        elif action == 'addBill':
+            return self.addBill(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
     
@@ -548,6 +609,22 @@ class BillView(APIView):
         notice.isRead = False
         notice.save()
         return self.getBillsData(request)
+
+    def registerBill(self, request):
+        data = json.loads(request.body)
+        bill = Bill.objects.get(register=data['register']).value('price')
+        bill_data = {'price': bill['price']}
+        return JsonResponse({'bill': bill_data})
+
+    def addBill(self, request):
+        data = json.loads(request.body)
+        bill = Bill()
+        bill.type = data['type']
+        bill.state = data['state']
+        bill.patient = data['patient']
+        bill.treatment = data['treatment']
+        bill.price = data['price']
+        bill.save()
 
 class NoticeView(APIView):
     def post(self, request):
@@ -613,3 +690,15 @@ class NoticeView(APIView):
         item.isRead = True
         item.save()
         return JsonResponse({'msg': 'Successfully read'})
+
+    def addNotice(self, request):
+        data = json.loads(request.body)
+        notice = Notice()
+        notice.patient = data['patient']
+        notice.registerMan = data['registerMan']
+        notice.doctor = data['doctor']
+        notice.msg_type = data['msg_type']
+        notice.time = data['time']
+        notice.treatment = data['treatment']
+        notice.isRead = data['isRead']
+        notice.save()

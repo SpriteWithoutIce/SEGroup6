@@ -36,4 +36,9 @@ urlpatterns = [
     path("api/duty/all_next_seven_days/", views.OnDutyView.as_view()),
     path("api/bills/list/", views.BillView.as_view()),
     path("api/notice/list/", views.NoticeView.as_view()),
+    
+    path("api/registers/filter/", views.RegisterView.as_view()),
+    path("api/bills/register/", views.BillView.as_view()),
+    path("api/add/bill/", views.BillView.as_view()),
+    path("api/add/Notice/", views.NoticeView.as_view()),
 ]
