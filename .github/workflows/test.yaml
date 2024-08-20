@@ -44,4 +44,4 @@ jobs:
           cd 猫猫就诊/Project
           pip install djangorestframework
           pip install Pillow
-          yes | python manage.py test app01
+          python manage.py test app01 | yes
