@@ -23,6 +23,7 @@ jobs:
       run: |
         cd 猫猫就诊/Project/frontend
         npm install
+        
     - name: Build Frontend
       run: |
         cd 猫猫就诊/Project/frontend
