@@ -72,16 +72,16 @@ class RegisterView(APIView):
         registers = []
         filter = {}
         try:
-            doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num)
-            filter = {'doctor__identity_num': identity_num}
-        except Doctors.using('administrator_service').DoesNotExist:
+            doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num).values('id')
+            filter = {'doctor': doctor['id']}
+        except Doctors.DoesNotExist:
             filter = {'register': identity_num}
         for item in Register.objects.using('patient_service').filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
-            doctor_department=F('doctor__department'),
-            doctor_name=F('doctor__name')
-        ).values('id', 'queue_id', 'patient', 'patient_name', 'doctor_department',
-                'doctor_name', 'time', 'position'):
+        ).values('id', 'queue_id', 'patient', 'patient_name', 'doctor', 'time', 'position'):
+            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values('department', 'name')
+            doctor_department = doctor[0]['department']
+            doctor_name = doctor[0]['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
             start_time = item['time']
@@ -102,7 +102,7 @@ class RegisterView(APIView):
             
             bill = Bill.objects.using('patient_service').get(register=item['id'])
             registers.append({'id': item['id'],
-                            'office': item['doctor_department'],
+                            'office': doctor_department,
                             'orderNum': item['id'],
                             'price': bill.price,
                             'name': item['patient_name'],
@@ -111,7 +111,7 @@ class RegisterView(APIView):
                             'time': formatted_datetime + '-' + end_time,
                             'line': item['queue_id'],
                             'state': state,
-                            'doctor': item['doctor_name']})
+                            'doctor': doctor_name})
         return JsonResponse({'registers': registers})
     
     """
@@ -126,7 +126,8 @@ class RegisterView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
         current_date = datetime.date.today()
-        filter = {'doctor__identity_num': identity_num}
+        doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num).values('id')
+        filter = {'doctor': doctor['id']}
         for item in Register.objects.using('patient_service').filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
@@ -174,16 +175,16 @@ class TreatmentView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         filter = {}
         try:
-            doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num)
-            filter = {'doctor__identity_num': identity_num}
+            doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num).values('id')
+            filter = {'doctor': doctor['id']}
         except Doctors.using('administrator_service').DoesNotExist:
             filter = {'patient': identity_num}
         for item in Treatment.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
-            doctor_department=F('doctor__department'),
-            doctor_name=F('doctor__name')
-        ).values('patient_name', 'doctor_department',
-                'doctor_name', 'time', 'advice', 'medicine'):
+        ).values('patient_name', 'doctor', 'time', 'advice', 'medicine'):
+            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values('department', 'name')
+            doctor_department = doctor[0]['department']
+            doctor_name = doctor[0]['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
             start_time = item['time']
@@ -194,10 +195,10 @@ class TreatmentView(APIView):
                 formatted_datetime = formatted_datetime[:10] + ' ' + CHINESE_AM + formatted_datetime[10:]
             else:
                 formatted_datetime = formatted_datetime[:10] + ' ' + CHINESE_PM + formatted_datetime[10:]
-            treatments.append({'office': item['doctor_department'],
+            treatments.append({'office': doctor_department,
                             'time': formatted_datetime,
                             'patient': item['patient_name'],
-                            'doctor': item['doctor_name'],
+                            'doctor': doctor_name,
                             'advice': item['advice'],
                             'medicine': json.loads(item['medicine']),
             })

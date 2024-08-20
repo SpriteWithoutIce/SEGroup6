@@ -121,16 +121,16 @@ class RegisterView(APIView):
         registers = []
         filter = {}
         try:
-            doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num)
-            filter = {'doctor__identity_num': identity_num}
+            doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num).values('id')
+            filter = {'doctor': doctor['id']}
         except Doctors.DoesNotExist:
             filter = {'register': identity_num}
         for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
-            doctor_department=F('doctor__department'),
-            doctor_name=F('doctor__name')
-        ).values('id', 'queue_id', 'patient', 'patient_name', 'doctor_department',
-                'doctor_name', 'time', 'position'):
+        ).values('id', 'queue_id', 'doctor', 'patient', 'patient_name', 'time', 'position'):
+            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values('department', 'name')
+            doctor_department = doctor[0]['department']
+            doctor_name = doctor[0]['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
             start_time = item['time']
@@ -151,7 +151,7 @@ class RegisterView(APIView):
             
             bill = Bill.objects.get(register=item['id'])
             registers.append({'id': item['id'],
-                            'office': item['doctor_department'],
+                            'office': doctor_department,
                             'orderNum': item['id'],
                             'price': bill.price,
                             'name': item['patient_name'],
@@ -160,7 +160,7 @@ class RegisterView(APIView):
                             'time': formatted_datetime + '-' + end_time,
                             'line': item['queue_id'],
                             'state': state,
-                            'doctor': item['doctor_name']})
+                            'doctor': doctor_name})
         return JsonResponse({'registers': registers})
     
     """
@@ -207,7 +207,8 @@ class RegisterView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
         current_date = datetime.date.today()
-        filter = {'doctor__identity_num': identity_num}
+        doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num).values('id')
+        filter = {'doctor': doctor['id']}
         for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
@@ -341,16 +342,16 @@ class TreatmentView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         filter = {}
         try:
-            doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num)
-            filter = {'doctor__identity_num': identity_num}
+            doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num).values('id')
+            filter = {'doctor': doctor['id']}
         except Doctors.DoesNotExist:
             filter = {'patient': identity_num}
         for item in Treatment.objects.using('doctor_service').filter(**filter).annotate(
             patient_name=F('patient__name'),
-            doctor_department=F('doctor__department'),
-            doctor_name=F('doctor__name')
-        ).values('patient_name', 'doctor_department',
-                'doctor_name', 'time', 'advice', 'medicine'):
+        ).values('patient_name', 'time', 'doctor', 'advice', 'medicine'):
+            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values('department', 'name')
+            doctor_department = doctor[0]['department']
+            doctor_name = doctor[0]['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
             start_time = item['time']
@@ -361,10 +362,10 @@ class TreatmentView(APIView):
                 formatted_datetime = formatted_datetime[:10] + ' ' + CHINESE_AM + formatted_datetime[10:]
             else:
                 formatted_datetime = formatted_datetime[:10] + ' ' + CHINESE_PM + formatted_datetime[10:]
-            treatments.append({'office': item['doctor_department'],
+            treatments.append({'office': doctor_department,
                             'time': formatted_datetime,
                             'patient': item['patient_name'],
-                            'doctor': item['doctor_name'],
+                            'doctor': doctor_name,
                             'advice': item['advice'],
                             'medicine': json.loads(item['medicine']),
             })
@@ -386,14 +387,17 @@ class OnDutyView(APIView):
         duty = []
         seven_days_later = (timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
         department = json.loads(request.body)['department']
-        for item in OnDuty.objects.using('doctor_service').filter(date__lte=seven_days_later, doctor__department=department).annotate(
-            doctor_name=F('doctor__name'),
-            doctor_title=F('doctor__title'),
-            doctor_research=F('doctor__research'),
-            doctor_avatar_name=F('doctor__avatar_name'),
-            doctor_cost=F('doctor__cost')
-        ).values('doctor_id', 'doctor_name', 'doctor_title', 'doctor_cost',
-                'date', 'doctor_research', 'doctor_avatar_name', 'time', 'state'):
+        for item in OnDuty.objects.using('doctor_service').filter(date__lte=seven_days_later).values(
+            'doctor', 'date', 'time', 'state'):
+            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values(
+                'department', 'name', 'title', 'research', 'avatar_name', 'cost')
+            if doctor[0]['department'] != department:
+                continue
+            doctor_name = doctor[0]['name']
+            doctor_title = doctor[0]['title']
+            doctor_research = doctor[0]['research']
+            doctor_avatar_name = doctor[0]['avatar_name']
+            doctor_cost = doctor[0]['cost']
             time = ""
             if (item['time'] == 1):
                 time = "(上午)"
@@ -407,7 +411,7 @@ class OnDutyView(APIView):
                     rest += 1
             find = False
             for d in duty:
-                if d['id'] == item['doctor_id']:
+                if d['id'] == item['doctor']:
                     emptyTime = []
                     for i in range(20):
                         emptyTime.append({
@@ -428,12 +432,12 @@ class OnDutyView(APIView):
                         "status": "empty" if not (item['state'] & (1<<i)) else 'full',
                     })
                 duty.append({
-                    "id": item['doctor_id'],
-                    "name": item['doctor_name'],
-                    "title": item['doctor_title'],
-                    "research": item['doctor_research'],
-                    "avatar": '/api/doctor/avatar/' + item['doctor_avatar_name'],
-                    "cost": item['doctor_cost'],
+                    "id": item['doctor'],
+                    "name": doctor_name,
+                    "title": doctor_title,
+                    "research": doctor_research,
+                    "avatar": '/api/doctor/avatar/' + doctor_avatar_name,
+                    "cost": doctor_cost,
                     "schedule": [{'time': item['date'].strftime('%m-%d') + time,
                                     'status': 'full' if rest == 0 else 'empty',
                                     'number': rest,
@@ -445,15 +449,16 @@ class OnDutyView(APIView):
     def getAllNextSevenDaysDuty(self, request):
         duty = []
         seven_days_later = (timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
-        for item in OnDuty.objects.using('doctor_service').filter(date__lte=seven_days_later).annotate(
-            doctor_name=F('doctor__name'),
-            doctor_title=F('doctor__title'),
-            doctor_research=F('doctor__research'),
-            doctor_department=F('doctor__department'),
-            doctor_avatar_name=F('doctor__avatar_name'),
-            doctor_cost=F('doctor__cost')
-        ).values('doctor_id', 'doctor_name', 'doctor_title', 'doctor_department', 'doctor_cost',
-                'date', 'doctor_research', 'doctor_avatar_name', 'time', 'state'):
+        for item in OnDuty.objects.using('doctor_service').filter(date__lte=seven_days_later).values(
+            'doctor', 'date', 'time', 'state'):
+            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values(
+                'department', 'name', 'title', 'research', 'avatar_name', 'cost')
+            doctor_department = doctor[0]['department']
+            doctor_name = doctor[0]['name']
+            doctor_title = doctor[0]['title']
+            doctor_research = doctor[0]['research']
+            doctor_avatar_name = doctor[0]['avatar_name']
+            doctor_cost = doctor[0]['cost']
             time = ""
             if (item['time'] == 1):
                 time = "(上午)"
@@ -467,7 +472,7 @@ class OnDutyView(APIView):
                     rest += 1
             find = False
             for d in duty:
-                if d['id'] == item['doctor_id']:
+                if d['id'] == item['doctor']:
                     emptyTime = []
                     for i in range(20):
                         emptyTime.append({
@@ -488,17 +493,17 @@ class OnDutyView(APIView):
                         "status": "empty" if not (item['state'] & (1<<i)) else 'full',
                     })
                 duty.append({
-                    "id": item['doctor_id'],
-                    "name": item['doctor_name'],
-                    "title": item['doctor_title'],
-                    "department": item['doctor_department'],
-                    "research": item['doctor_research'],
-                    "avatar": '/api/doctor/avatar/' + item['doctor_avatar_name'],
+                    "id": item['doctor'],
+                    "name": doctor_name,
+                    "title": doctor_title,
+                    "department": doctor_department,
+                    "research": doctor_research,
+                    "avatar": '/api/doctor/avatar/' + doctor_avatar_name,
                     "schedule": [{'time': item['date'].strftime('%m-%d') + time,
                                     'status': 'full' if rest == 0 else 'empty',
                                     'number': rest,
                                     "emptytime": emptyTime}],
-                    "cost": item['doctor_cost']
+                    "cost": doctor_cost
                 })
         return JsonResponse({"duty": duty})
 
@@ -559,10 +564,11 @@ class NoticeView(APIView):
         billMes = []
         identity_num = json.loads(request.body)['identity_num']
         for item in Notice.objects.filter(Q(patient=identity_num) | Q(registerMan=identity_num)).annotate(
-            doctor_name=F('doctor__name'),
             patient_name=F('patient__name'),
-            doctor_department=F('doctor__department'),
-        ).values('id', 'patient', 'registerMan', 'msg_type', 'patient_name', 'doctor_name', 'doctor_department', 'treatment', 'register', 'time', 'isRead'):
+        ).values('id', 'patient', 'doctor', 'registerMan', 'msg_type', 'patient_name', 'treatment', 'register', 'time', 'isRead'):
+            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values('department', 'name')
+            doctor_name = doctor[0]['name']
+            doctor_department = doctor[0]['department']
             type = ""
             if item['msg_type'] == 1:
                 type = "预约成功"
@@ -578,8 +584,8 @@ class NoticeView(APIView):
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
-                    "department": item['doctor_department'],
-                    "doctor": item['doctor_name'],
+                    "department": doctor_department,
+                    "doctor": doctor_name,
                     "time": register.time.strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
                     "timetamp": item['time'],
@@ -591,8 +597,8 @@ class NoticeView(APIView):
                     "item_id": item['id'],
                     "type": type,
                     "name": item['patient_name'],
-                    "department": item['doctor_department'],
-                    "doctor": item['doctor_name'],
+                    "department": doctor_department,
+                    "doctor": doctor_name,
                     "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
                     "timetamp": item['time'],
