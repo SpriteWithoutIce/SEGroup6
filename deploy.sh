@@ -13,11 +13,11 @@ SSH_PASSWORD="22371468Se"  #
 sudo apt-get update && sudo apt-get install -y sshpass
 # 前端部署
 echo "Starting front-end deployment..."
-sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
+sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
 
 # 后端部署
 echo "Starting back-end deployment..."
-sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
+sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
 
 # SSH 到服务器上，执行后续命令
 echo "Connecting to server to finalize deployment..."
