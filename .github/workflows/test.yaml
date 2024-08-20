@@ -2,9 +2,9 @@ name: Unit Test
 
 on:
   push:
-    branches: [ "zqstmp" ]
+    branches: ["zqstmp"]
   pull_request:
-    branches: [ "zqstmp" ]
+    branches: ["zqstmp"]
 
 jobs:
   build:
@@ -12,38 +12,39 @@ jobs:
     strategy:
       max-parallel: 4
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16' 
+      - uses: actions/checkout@v4
 
-    - name: Install Node.js Dependencies
-      run: |
-        cd 猫猫就诊/Project/frontend
-        npm install
-        
-    - name: Build Frontend
-      run: |
-        cd 猫猫就诊/Project/frontend
-        npm run build
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-          python-version: '3.9'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
 
-    - name: Install back-end dependencies
-      working-directory: ./猫猫就诊/Project/backend
-      run: |
+      - name: Install Node.js Dependencies
+        run: |
+          cd 猫猫就诊/Project/frontend
+          npm install
+
+      - name: Build Frontend
+        run: |
+          cd 猫猫就诊/Project/frontend
+          npm run build
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install back-end dependencies
+        working-directory: ./猫猫就诊/Project/backend
+        run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-        
-    - name: Unit Test
-      run: |
-        cd 猫猫就诊/Project
-        pip install djangorestframework
-        pip install Pillow
-        python manage.py test app01
-        yes
 
+      - name: Unit Test
+        run: |
+          cd 猫猫就诊/Project
+          pip install djangorestframework
+          pip install Pillow
+          python manage.py dbshell
+          DROP DATABASE IF EXISTS test_seproject;
+          python manage.py test app01
+          yes
