@@ -39,9 +39,6 @@ jobs:
     - name: Install Node.js Dependencies
       run: |
         npm install
-     - name: print
-      run: |
-        pwd
     - name: Build Frontend
       run: |
         npm run build
