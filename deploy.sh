@@ -7,18 +7,25 @@ FRONTEND_PATH="猫猫就诊/Project/frontend/dist"  # 前端静态文件的部�
 BACKEND_PATH="猫猫就诊/Project"    # 后端代码的部署路径
 UWSGI_SERVICE_NAME="uwsgi"  # uWSGI 服务名
 NGINX_SERVICE_NAME="nginx"  # Nginx 服务名
+SSH_PRIVATE_KEY="${{ secrets.SSH_PRIVATE_KEY }}"  # 这里替换成SSH Key
+
+# 设置 SSH 配置
+mkdir -p ~/.ssh
+echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+chmod 600 ~/.ssh/id_rsa
+ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
 
 # 前端部署
 echo "Starting front-end deployment..."
-scp -r ./frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
+scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
 
 # 后端部署
 echo "Starting back-end deployment..."
-scp -r ./backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
+scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
 
 # SSH 到服务器上，执行后续命令
 echo "Connecting to server to finalize deployment..."
-ssh $SERVER_USER@$SERVER_IP << EOF
+ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
     # 进入后端项目目录
     cd $BACKEND_PATH
 

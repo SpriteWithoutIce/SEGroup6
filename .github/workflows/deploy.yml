@@ -37,6 +37,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+         # 设置 SSH 密钥和已知主机
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
           
       - name: Deploy to server
         run: bash ./deploy.sh
