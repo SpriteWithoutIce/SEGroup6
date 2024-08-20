@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-#这里ZQS添
+# 这里ZQS添
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Quick-start development settings - unsuitable for production
@@ -155,7 +155,8 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'django.log'),  # 修改为你想要保存日志文件的路径
+            # 修改为你想要保存日志文件的路径
+            'filename': os.path.join(BASE_DIR, 'django.log'),
             'formatter': 'verbose',
         },
     },
@@ -166,4 +167,8 @@ LOGGING = {
             'propagate': True,
         },
     },
+}
+
+TEST = {
+    'create_test_db': False,
 }
