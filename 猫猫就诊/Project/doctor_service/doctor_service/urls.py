@@ -16,11 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from app01 import views
+from doctor import views
 from django.views.generic.base import TemplateView
 from django.conf.urls.static import static
 
-from backend import settings
+from doctor_service import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),

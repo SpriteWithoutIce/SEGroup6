@@ -3,6 +3,8 @@
 import os
 import sys
 
+sys.path.append('../administrator_service')
+sys.path.append('../doctor_service')
 
 def main():
     """Run administrative tasks."""

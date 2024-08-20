@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "user",
+    "patient",
     "corsheaders",
 ]
 
@@ -94,7 +95,7 @@ DATABASES = {
         "PORT": 22339,
     }
 }
-DATABASE_ROUTERS = ['path.to.db_router.PatientDBRouter']
+DATABASE_ROUTERS = ['user.db_router.PatientDBRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

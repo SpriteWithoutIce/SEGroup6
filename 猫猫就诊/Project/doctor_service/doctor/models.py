@@ -1,11 +1,10 @@
 import datetime
 import django
 from django.db import models
-
 # Create your models here.
 
 class OnDuty(models.Model):
-    doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
+    doctor = models.IntegerField(verbose_name="医生编号")
     date = models.DateField(verbose_name="值班日期", default=django.utils.timezone.now)
     time_choices = (
         (1, "上午"),
@@ -17,8 +16,8 @@ class OnDuty(models.Model):
 
 class Treatment(models.Model):
     queue_id = models.IntegerField(verbose_name="排队号", default=1)
-    patient = models.ForeignKey(verbose_name="患者证件号", to="Patients", to_field="identity_num", on_delete=models.CASCADE)
-    doctor = models.ForeignKey(verbose_name="医生编号", to="Doctors", to_field="id", on_delete=models.CASCADE)
+    patient = models.IntegerField(verbose_name="患者证件号")
+    doctor = models.IntegerField(verbose_name="医生编号")
     time = models.DateTimeField(verbose_name="就诊时间")
     advice = models.CharField(verbose_name="诊断结果", max_length=256)
     medicine = models.TextField(verbose_name="开具药物")
