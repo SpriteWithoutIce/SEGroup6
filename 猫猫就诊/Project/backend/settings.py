@@ -168,3 +168,7 @@ LOGGING = {
         },
     },
 }
+
+TEST = {
+    'create_test_db': False,
+}
