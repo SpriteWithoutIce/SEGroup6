@@ -13,18 +13,18 @@ SSH_PASSWORD="22371468Se"  #
 
 # 安装 sshpass 工具
 sudo apt-get update && sudo apt-get install -y sshpass
-sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
+#sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
     # 进入前端项目目录
-    cd $(dirname "$FRONTEND_PATH")
-    cd ..
-    npm install
+   # cd $(dirname "$FRONTEND_PATH")
+    #cd ..
+    #npm install
     # 运行 npm build
-    npm run build
-    cd ..
-    cd ..
-    cd .. 
-    cd ..
-EOF
+    #npm run build
+    #cd ..
+   # cd ..
+    #cd .. 
+    #cd ..
+#EOF
 # 前端部署
 #sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/dist/ $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
