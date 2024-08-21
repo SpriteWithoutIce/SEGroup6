@@ -8,12 +8,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
     - name: Build frontend on Windows
       run: npm run build
       working-directory: ./猫猫就诊/Project/frontend
-    
-      - name: Upload frontend build artifacts
+    - name: Upload frontend build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: frontend-build
