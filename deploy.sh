@@ -17,6 +17,7 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     # 进入前端项目目录
     cd $(dirname "$FRONTEND_PATH")
     cd ..
+    npm install
     # 运行 npm build
     npm run build
     cd ..
