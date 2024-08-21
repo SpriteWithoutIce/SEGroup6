@@ -86,7 +86,7 @@ class RegisterView(APIView):
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        doctor_list = response.json().get('doctors', [])
+        doctorList = response.json().get('doctors', [])
         # API 服务器地址
         api_url = 'http://101.42.36.160:80/api/registers/filter/'
         # 请求数据（如果需要的话）
@@ -95,7 +95,7 @@ class RegisterView(APIView):
         response = requests.post(api_url, json=requestData)
         registerList = response.json().get('registers', [])
         for item in registerList:
-            doctor = next((doctor for doctor in doctor_list if doctor['id'] == item['doctor']), None)
+            doctor = next((doctor for doctor in doctorList if doctor['id'] == item['doctor']), None)
             doctor_department = doctor['department']
             doctor_name = doctor['name']
             CHINESE_AM = '上午'
@@ -189,6 +189,10 @@ class TreatmentView(APIView):
             return self.getTreatmentsData(request)
         elif action == 'addTreatmentData':
             return self.addTreatmentData(request)
+        elif action == 'filterTreatment':
+            return self.filterTreatment(request)
+        elif action == 'searchTreatment':
+            return self.searchTreatment(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
     
@@ -220,11 +224,11 @@ class TreatmentView(APIView):
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        doctor_list = response.json().get('doctors', [])
+        doctorList = response.json().get('doctors', [])
         for item in Treatment.objects.filter(**filter).annotate(
             patient_name=F('patient__name'),
         ).values('patient_name', 'doctor', 'time', 'advice', 'medicine'):
-            doctor = next((doctor for doctor in doctor_list if doctor['id'] == item['doctor']), None)
+            doctor = next((doctor for doctor in doctorList if doctor['id'] == item['doctor']), None)
             doctor_department = doctor['department']
             doctor_name = doctor['name']
             CHINESE_AM = '上午'
@@ -299,6 +303,26 @@ class TreatmentView(APIView):
         requests.post(api_url, json=requestData)
         return JsonResponse({'msg': "Successfully add treatment"})
 
+    def filterTreatment(self, request):
+        data = json.loads(request.body)
+        treatments = []
+        for item in Treatment.objects.filter(**data['filter']).values(
+            'patient', 'time', 'doctor', 'advice', 'medicine'):
+            treatments.append({'medicine': item['medicine'],
+                            'doctor': item['doctor'],
+                            'patient': item['patient'],
+                            'time': item['time'],
+                            'advice': item['advice']})
+        return JsonResponse({'treatments': treatments})
+
+    def searchTreatment(self, request):
+        data = json.loads(request.body)
+        try:
+            treatment = Treatment.objects.get(id=data['id']).values('price')
+            return JsonResponse({'msg': "Treatment Exist", 'price': treatment['price']})
+        except Treatment.DoesNotExist:
+            return JsonResponse({'msg': "Treatment Not Exist"})
+
 class MedicineView(APIView):
     # api/medicine/list/
     def get(self, request):
@@ -314,6 +338,10 @@ class OnDutyView(APIView):
         action = json.loads(request.body)['action']
         if action == 'changeDutyState':
             return self.changeDutyState(request)
+        elif action == 'judgeDutyState':
+            return self.judgeDutyState(request)
+        elif action == 'dutyListSevenDays':
+            return self.dutyListSevenDays(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
 
@@ -322,3 +350,24 @@ class OnDutyView(APIView):
         onDuty = OnDuty.objects.get(doctor=data['doctor'], date=data['date'], time=data['time'])
         onDuty.state = onDuty.state & (~(1 << (data['queue_id'] - 1)))
         onDuty.save()
+
+    def judgeDutyState(self, request):
+        data = json.loads(request.body)
+        onDuty = OnDuty.objects.get(doctor=data['doctor'], date=data['date'], time=data['time'])
+        if (onDuty.state & (1 << (data['queue_id'] - 1))) != 0:
+            return JsonResponse({"msg": "This register has been locked by others"})
+        onDuty.state = onDuty.state | (1 << (data['queue_id'] - 1))
+        onDuty.save()
+        return JsonResponse({'msg': "Successfully lock register"})
+
+    def dutyListSevenDays(self, request):
+        data = json.loads(request.body)
+        onDutyList = []
+        seven_days_later = (timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+        for item in OnDuty.objects.filter(date__lte=seven_days_later).values(
+            'doctor', 'date', 'time', 'state'):
+            onDutyList.append({'doctor': item['doctor'],
+                            'date': item['date'],
+                            'time': item['time'],
+                            'state': item['state']})
+        return JsonResponse({'onDutyList': onDutyList})

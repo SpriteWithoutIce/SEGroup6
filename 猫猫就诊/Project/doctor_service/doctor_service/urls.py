@@ -29,4 +29,9 @@ urlpatterns = [
     path("api/treatments/list/", views.TreatmentView.as_view()),
     path("api/prescriptionDetailsWriteBack/", views.TreatmentView.as_view()),
     path("api/medicine/list/", views.MedicineView.as_view()),
+
+    path("api/treatments/filter/", views.TreatmentView.as_view()),
+    path("api/changeDutyState/", views.OnDutyView.as_view()),
+    path("api/judgeDutyState/", views.OnDutyView.as_view()),
+    path("api/duty_list/seven_days", views.OnDutyView.as_view()),
 ]

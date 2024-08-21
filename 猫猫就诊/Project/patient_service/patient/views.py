@@ -144,9 +144,9 @@ class RegisterView(APIView):
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        doctor_list = response.json().get('doctors', [])
+        doctorList = response.json().get('doctors', [])
         for item in registerList:
-            doctor = next((doctor for doctor in doctor_list if doctor['id'] == item['doctor']), None)
+            doctor = next((doctor for doctor in doctorList if doctor['id'] == item['doctor']), None)
             doctor_department = doctor['department']
             doctor_name = doctor['name']
             CHINESE_AM = '上午'
@@ -274,7 +274,7 @@ class RegisterView(APIView):
         register.queue_id = data['number']
         register.patient = Patients.objects.get(identity_num=data['inumber'])
         register.register = Patients.objects.get(identity_num=data['identity_num'])
-        register.doctor = Doctors.objects.using('administrator_service').get(id=data['doctorId'])
+        register.doctor = data['doctorId']
         month, day = map(int, data['time'][:5].split('-'))
         hour, minute = map(int, data['starttime'].split(':'))
         register.time = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
@@ -312,16 +312,19 @@ class RegisterView(APIView):
         month, day = map(int, data['time'][:5].split('-'))
         hour, minute = map(int, data['starttime'].split(':'))
         startTime = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
-        doctor = Doctors.objects.using('administrator_service').get(id=data['doctorId'])
         time = 1
         if startTime.hour > 12:
             time = 2
-        onDuty = OnDuty.objects.using('doctor_service').get(doctor=doctor, date=startTime.date(), time=time)
-        if (onDuty.state & (1 << (queue_id - 1))) != 0:
-            return JsonResponse({"msg": "This register has been locked by others"})
-        onDuty.state = onDuty.state | (1 << (queue_id - 1))
-        onDuty.save()
-        return JsonResponse({'msg': "Successfully lock register"})
+        api_url = 'http://101.42.36.160:80/api/judgeDutyState/'
+        # 请求数据（如果需要的话）
+        requestData = {'doctor': data['doctorId'],
+                    'date': startTime.date(),
+                    'time': time,
+                    'queue_id': queue_id,
+                    'action': "judgeDutyState"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        return JsonResponse(response.json())
     
     """
     api/register/unlock/
@@ -339,13 +342,19 @@ class RegisterView(APIView):
         month, day = map(int, data['time'][:5].split('-'))
         hour, minute = map(int, data['starttime'].split(':'))
         startTime = timezone.now().replace(month=month, day=day, hour=hour, minute=minute)
-        doctor = Doctors.objects.using('administrator_service').get(id=data['doctorId'])
         time = 1
         if startTime.hour > 12:
             time = 2
-        onDuty = OnDuty.objects.using('doctor_service').get(doctor=doctor, date=startTime.date(), time=time)
-        onDuty.state = onDuty.state & (~(1 << (queue_id - 1)))
-        onDuty.save()
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/changeDutyState/'
+        # 请求数据（如果需要的话）
+        requestData = {'doctor': data['doctorId'],
+                    'date': startTime.date(),
+                    'time': time,
+                    'queue_id': queue_id,
+                    'action': "changeDutyState"}
+        # 发送 POST 请求
+        requests.post(api_url, json=requestData)
         return JsonResponse({'msg': "Successfully unlock register"})
 
     def filterRegister(self, request):
@@ -398,17 +407,34 @@ class TreatmentView(APIView):
         treatments = []
         identity_num = json.loads(request.body)['identity_num']
         filter = {}
-        try:
-            doctor = Doctors.objects.using('administrator_service').get(identity_num=identity_num).values('id')
-            filter = {'doctor': doctor['id']}
-        except Doctors.DoesNotExist:
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/doctors/exist/'
+        # 请求数据（如果需要的话）
+        requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        if response.json()['msg'] == "Doctor Exist":
+            filter = {'doctor': response.json()['id']}
+        else:
             filter = {'patient': identity_num}
-        for item in Treatment.objects.using('doctor_service').filter(**filter).annotate(
-            patient_name=F('patient__name'),
-        ).values('patient_name', 'time', 'doctor', 'advice', 'medicine'):
-            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values('department', 'name')
-            doctor_department = doctor[0]['department']
-            doctor_name = doctor[0]['name']
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/treatments/filter/'
+        # 请求数据（如果需要的话）
+        requestData = {'filter': filter, 'action': "filterTreatment"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        treatmentList = response.json().get('treatments', [])
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/doctors/list/'
+        # 请求数据（如果需要的话）
+        requestData = {'action': "getDoctorsData"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        doctorList = response.json().get('doctors', [])
+        for item in treatmentList:
+            doctor = next((doctor for doctor in doctorList if doctor['id'] == item['doctor']), None)
+            doctor_department = doctor['department']
+            doctor_name = doctor['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
             start_time = item['time']
@@ -421,7 +447,7 @@ class TreatmentView(APIView):
                 formatted_datetime = formatted_datetime[:10] + ' ' + CHINESE_PM + formatted_datetime[10:]
             treatments.append({'office': doctor_department,
                             'time': formatted_datetime,
-                            'patient': item['patient_name'],
+                            'patient': Patients.objects.get(identity_num=item['patient']).name,
                             'doctor': doctor_name,
                             'advice': item['advice'],
                             'medicine': json.loads(item['medicine']),
@@ -442,19 +468,30 @@ class OnDutyView(APIView):
     # 返回一个科室接下来七天内所有医生值班情况
     def getNextSevenDaysDuty(self, request):
         duty = []
-        seven_days_later = (timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
         department = json.loads(request.body)['department']
-        for item in OnDuty.objects.using('doctor_service').filter(date__lte=seven_days_later).values(
-            'doctor', 'date', 'time', 'state'):
-            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values(
-                'department', 'name', 'title', 'research', 'avatar_name', 'cost')
-            if doctor[0]['department'] != department:
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/duty_list/seven_days'
+        # 请求数据（如果需要的话）
+        requestData = {'action': "dutyListSevenDays"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        onDutyList = response.json().get('onDutyList', [])
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/doctors/list/'
+        # 请求数据（如果需要的话）
+        requestData = {'action': "getDoctorsData"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        doctorList = response.json().get('doctors', [])
+        for item in onDutyList:
+            doctor = next((doctor for doctor in doctorList if doctor['id'] == item['doctor']), None)
+            if doctor['department'] != department:
                 continue
-            doctor_name = doctor[0]['name']
-            doctor_title = doctor[0]['title']
-            doctor_research = doctor[0]['research']
-            doctor_avatar_name = doctor[0]['avatar_name']
-            doctor_cost = doctor[0]['cost']
+            doctor_name = doctor['name']
+            doctor_title = doctor['title']
+            doctor_research = doctor['research']
+            doctor_avatar_name = doctor['avatar_name']
+            doctor_cost = doctor['cost']
             time = ""
             if (item['time'] == 1):
                 time = "(上午)"
@@ -505,17 +542,28 @@ class OnDutyView(APIView):
     
     def getAllNextSevenDaysDuty(self, request):
         duty = []
-        seven_days_later = (timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
-        for item in OnDuty.objects.using('doctor_service').filter(date__lte=seven_days_later).values(
-            'doctor', 'date', 'time', 'state'):
-            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values(
-                'department', 'name', 'title', 'research', 'avatar_name', 'cost')
-            doctor_department = doctor[0]['department']
-            doctor_name = doctor[0]['name']
-            doctor_title = doctor[0]['title']
-            doctor_research = doctor[0]['research']
-            doctor_avatar_name = doctor[0]['avatar_name']
-            doctor_cost = doctor[0]['cost']
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/duty_list/seven_days'
+        # 请求数据（如果需要的话）
+        requestData = {'action': "dutyListSevenDays"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        onDutyList = response.json().get('onDutyList', [])
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/doctors/list/'
+        # 请求数据（如果需要的话）
+        requestData = {'action': "getDoctorsData"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        doctorList = response.json().get('doctors', [])
+        for item in onDutyList:
+            doctor = next((doctor for doctor in doctorList if doctor['id'] == item['doctor']), None)
+            doctor_department = doctor['department']
+            doctor_name = doctor['name']
+            doctor_title = doctor['title']
+            doctor_research = doctor['research']
+            doctor_avatar_name = doctor['avatar_name']
+            doctor_cost = doctor['cost']
             time = ""
             if (item['time'] == 1):
                 time = "(上午)"
@@ -640,12 +688,19 @@ class NoticeView(APIView):
         resMes = []
         billMes = []
         identity_num = json.loads(request.body)['identity_num']
+        # API 服务器地址
+        api_url = 'http://101.42.36.160:80/api/doctors/list/'
+        # 请求数据（如果需要的话）
+        requestData = {'action': "getDoctorsData"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        doctorList = response.json().get('doctors', [])
         for item in Notice.objects.filter(Q(patient=identity_num) | Q(registerMan=identity_num)).annotate(
             patient_name=F('patient__name'),
         ).values('id', 'patient', 'doctor', 'registerMan', 'msg_type', 'patient_name', 'treatment', 'register', 'time', 'isRead'):
-            doctor = Doctors.objects.using('administrator_service').get(id=item['doctor']).values('department', 'name')
-            doctor_name = doctor[0]['name']
-            doctor_department = doctor[0]['department']
+            doctor = next((doctor for doctor in doctorList if doctor['id'] == item['doctor']), None)
+            doctor_name = doctor['name']
+            doctor_department = doctor['department']
             type = ""
             if item['msg_type'] == 1:
                 type = "预约成功"
@@ -669,7 +724,13 @@ class NoticeView(APIView):
                     "read": item['isRead']
                 })
             elif (item['msg_type'] == 3 or item['msg_type'] == 4) and item['patient'] == identity_num:
-                treatment = Treatment.objects.using('doctor_service').get(id=item['treatment'])
+                # API 服务器地址
+                api_url = 'http://101.42.36.160:80/api/treatment/exist/'
+                # 请求数据（如果需要的话）
+                requestData = {'id': item['treatment'], 'action': "searchTreatment"}
+                # 发送 POST 请求
+                response = requests.post(api_url, json=requestData)
+                price = response.json().get('price', None)
                 billMes.append({
                     "item_id": item['id'],
                     "type": type,
@@ -679,7 +740,7 @@ class NoticeView(APIView):
                     "time": item['time'].strftime('%Y-%m-%d %H:%M:%S'),
                     "id": item['patient'],
                     "timetamp": item['time'],
-                    "price": treatment.price,
+                    "price": price,
                     "read": item['isRead']
                 })
         return JsonResponse({"resMes": resMes, "billMes": billMes})
