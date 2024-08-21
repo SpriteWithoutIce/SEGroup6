@@ -11,7 +11,7 @@
         <a href="#unknown" @click="showLogin()">登出键扣了</a>
         <a @click="openMessageBox">你先别急</a><el-badge :value="unreadCount" class="item"
           v-if="unreadCount !== 0"></el-badge>
-        <a href="#unknown" @click="showSign()">您真的没BUG了？</a>
+        <a href="#unknown" @click="showSign()">再看看有无问题</a>
       </nav>
       <div class="clickable-images">
         <template v-for="(image, index) in getClickableImages()">

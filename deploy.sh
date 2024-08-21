@@ -15,7 +15,7 @@ SSH_PASSWORD="22371468Se"  #
 sudo apt-get update && sudo apt-get install -y sshpass
 # 前端部署
 sshpass -p "$SSH_PASSWORD"
-    cd FRONTEND_PATH
+    cd $FRONTEND_PATH
     cd ..
     cd ..
     npm run build
