@@ -7,11 +7,10 @@
     <Sign ref="Sign"> </Sign>
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
-        <RouterLink to="/Main">黑神话能玩吗</RouterLink>
-        <a href="#unknown" @click="showLogin()">登出键扣了</a>
-        <a @click="openMessageBox">你先别急</a><el-badge :value="unreadCount" class="item"
-          v-if="unreadCount !== 0"></el-badge>
-        <a href="#unknown" @click="showSign()">再看看有无问题</a>
+        <RouterLink to="/Main">我</RouterLink>
+        <a href="#unknown" @click="showLogin()">要</a>
+        <a @click="openMessageBox">放</a><el-badge :value="unreadCount" class="item" v-if="unreadCount !== 0"></el-badge>
+        <a href="#unknown" @click="showSign()">假</a>
       </nav>
       <div class="clickable-images">
         <template v-for="(image, index) in getClickableImages()">
