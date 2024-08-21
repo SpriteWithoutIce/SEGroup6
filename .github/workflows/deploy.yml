@@ -40,3 +40,4 @@ jobs:
           
       - name: Deploy to server
         run: bash ./deploy.sh
+        shell: pwsh
