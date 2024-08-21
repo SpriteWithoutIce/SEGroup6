@@ -127,8 +127,8 @@ class RegisterView(APIView):
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        if response.json()['msg'] == "Doctor Exist":
-            filter = {'doctor': response.json()['id']}
+        if response.json().get('msg') == "Doctor Exist":
+            filter = {'doctor': response.json().get('id')}
         else:
             filter = {'register': identity_num}
         # API 服务器地址
@@ -244,7 +244,7 @@ class RegisterView(APIView):
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        filter = {'doctor': response.json()['id']}
+        filter = {'doctor': response.json().get('id')}
         for item in Register.objects.filter(**filter).exclude(queue_id=-1).annotate(
             patient_name=F('patient__name'),
             patient_birthday=F('patient__birthday'),
@@ -413,8 +413,8 @@ class TreatmentView(APIView):
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        if response.json()['msg'] == "Doctor Exist":
-            filter = {'doctor': response.json()['id']}
+        if response.json().get('msg') == "Doctor Exist":
+            filter = {'doctor': response.json().get('id')}
         else:
             filter = {'patient': identity_num}
         # API 服务器地址

@@ -76,8 +76,8 @@ class RegisterView(APIView):
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        if response.json()['msg'] == "Doctor Exist":
-            filter = {'doctor': response.json()['id']}
+        if response.json().get('msg') == "Doctor Exist":
+            filter = {'doctor': response.json().get('id')}
         else:
             filter = {'register': identity_num}
         # API 服务器地址
@@ -154,7 +154,7 @@ class RegisterView(APIView):
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        filter = {'doctor': response.json()['id']}
+        filter = {'doctor': response.json().get('id')}
         # API 服务器地址
         api_url = 'http://101.42.36.160:80/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
@@ -214,8 +214,8 @@ class TreatmentView(APIView):
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        if response.json()['msg'] == "Doctor Exist":
-            filter = {'doctor': response.json()['id']}
+        if response.json().get('msg') == "Doctor Exist":
+            filter = {'doctor': response.json().get('id')}
         else:
             filter = {'register': identity_num}
         # API 服务器地址

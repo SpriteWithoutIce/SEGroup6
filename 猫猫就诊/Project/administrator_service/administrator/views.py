@@ -151,8 +151,8 @@ class DoctorView(APIView):
     def searchDoctor(self, request):
         data = json.loads(request.body)
         try:
-            doctor = Doctors.objects.get(identity_num=data['identity_num']).values('id')
-            return JsonResponse({'msg': "Doctor Exist", 'id': doctor['id']})
+            doctor = Doctors.objects.get(identity_num=data['identity_num'])
+            return JsonResponse({'msg': "Doctor Exist", 'id': doctor.id})
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor Not Exist"})
 
