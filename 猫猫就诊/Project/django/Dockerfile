@@ -1,18 +1,20 @@
-# 添加 Debian 清华镜像源
-RUN echo \
-deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free\
-deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free\
-deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free\
-deb https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free\
-    > /etc/apt/sources.list
+# 使用官方的 Python 镜像作为基础镜像
+FROM python:3.10
 
-RUN mkdir /code
-WORKDIR /code
-# 添加 pip 清华镜像源
-RUN pip install pip -U -i https://pypi.tuna.tsinghua.edu.cn/simple
-ADD requirements.txt /code/
-RUN pip install cython
+# 设置工作目录
+WORKDIR /app
+# 设置 pip 使用清华源
+ENV PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+# 将当前目录下的所有文件复制到工作目录
+COPY . /app/
+
+# 安装项目所需的依赖
 RUN pip install django-cors-headers
-# 添加 pip 清华镜像源
+RUN pip install Pillow
 RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
-ADD . /code/
+
+# 将容器内的端口暴露出来，这里使用 Django 默认的端口 8000
+EXPOSE 8000
+
+# 启动 Django 项目
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
