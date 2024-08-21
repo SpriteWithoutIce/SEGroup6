@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.10
 ENV PYTHONUNBUFFERED 1
 
 # 添加 Debian 清华镜像源
@@ -14,6 +14,7 @@ WORKDIR /code
 # 添加 pip 清华镜像源
 RUN pip install pip -U -i https://pypi.tuna.tsinghua.edu.cn/simple
 ADD requirements.txt /code/
+RUN pip install cython
 # 添加 pip 清华镜像源
 RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 ADD . /code/
