@@ -170,5 +170,5 @@ LOGGING = {
 }
 
 TEST = {
-    'create_test_db': False,
+    'NAME': 'test_seproject_1',
 }

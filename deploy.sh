@@ -14,9 +14,8 @@ SSH_PASSWORD="22371468Se"  #
 # 安装 sshpass 工具
 sudo apt-get update && sudo apt-get install -y sshpass
 # 前端部署
-echo "Starting front-end deployment..."
-sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
-
+#sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/dist/ $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
 # 后端部署
 echo "Starting back-end deployment..."
 sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
@@ -28,10 +27,12 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     cd $BACKEND_PATH
     # 安装后端依赖
     cd ..
+    
     # 迁移数据库（如果使用 Django）
-    python manage.py migrate --noinput
-    python manage.py makemigrations --noinput
-    python manage.py migrate --noinput
+    #这里全给注释了
+    #python manage.py migrate --noinput
+    #python manage.py makemigrations --noinput
+    #python manage.py migrate --noinput
     
     # 收集静态文件（如果使用 Django）
     python manage.py collectstatic --noinput
@@ -39,6 +40,6 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     echo "启动 uWSGI 服务..."
     sudo /etc/init.d/uwsgi restart
     sudo systemctl restart $NGINX_SERVICE_NAME
-
+    sudo systemctl status $NGINX_SERVICE_NAME
     echo "Deployment completed successfully!"
 EOF
