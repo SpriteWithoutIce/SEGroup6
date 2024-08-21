@@ -2156,3 +2156,71 @@ WARNING 2024-08-21 11:38:12,494 log Bad Request: /api/duty/next_seven_days/
 WARNING 2024-08-21 11:38:13,296 log Bad Request: /api/registers/list/
 WARNING 2024-08-21 11:38:13,628 log Bad Request: /api/treatments/list/
 WARNING 2024-08-21 11:38:13,926 log Bad Request: /api/treatments/list/
+DEBUG 2024-08-21 14:10:38,187 schema CREATE TABLE `django_migrations` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `app` varchar(255) NOT NULL, `name` varchar(255) NOT NULL, `applied` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,204 schema CREATE TABLE `django_content_type` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(100) NOT NULL, `app_label` varchar(100) NOT NULL, `model` varchar(100) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,222 schema ALTER TABLE `django_content_type` ADD CONSTRAINT `django_content_type_app_label_model_76bd3d3b_uniq` UNIQUE (`app_label`, `model`); (params ())
+DEBUG 2024-08-21 14:10:38,265 schema CREATE TABLE `auth_permission` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `content_type_id` integer NOT NULL, `codename` varchar(100) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,293 schema CREATE TABLE `auth_group` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(80) NOT NULL UNIQUE); (params None)
+DEBUG 2024-08-21 14:10:38,310 schema CREATE TABLE `auth_group_permissions` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `group_id` integer NOT NULL, `permission_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,352 schema CREATE TABLE `auth_user` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `password` varchar(128) NOT NULL, `last_login` datetime(6) NOT NULL, `is_superuser` bool NOT NULL, `username` varchar(30) NOT NULL UNIQUE, `first_name` varchar(30) NOT NULL, `last_name` varchar(30) NOT NULL, `email` varchar(75) NOT NULL, `is_staff` bool NOT NULL, `is_active` bool NOT NULL, `date_joined` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,370 schema CREATE TABLE `auth_user_groups` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `user_id` integer NOT NULL, `group_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,407 schema CREATE TABLE `auth_user_user_permissions` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `user_id` integer NOT NULL, `permission_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,448 schema ALTER TABLE `auth_permission` ADD CONSTRAINT `auth_permission_content_type_id_codename_01ab375a_uniq` UNIQUE (`content_type_id`, `codename`); (params ())
+DEBUG 2024-08-21 14:10:38,465 schema ALTER TABLE `auth_permission` ADD CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`); (params ())
+DEBUG 2024-08-21 14:10:38,489 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` UNIQUE (`group_id`, `permission_id`); (params ())
+DEBUG 2024-08-21 14:10:38,506 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`); (params ())
+DEBUG 2024-08-21 14:10:38,530 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`); (params ())
+DEBUG 2024-08-21 14:10:38,556 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_user_id_group_id_94350c0c_uniq` UNIQUE (`user_id`, `group_id`); (params ())
+DEBUG 2024-08-21 14:10:38,583 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 14:10:38,607 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`); (params ())
+DEBUG 2024-08-21 14:10:38,639 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` UNIQUE (`user_id`, `permission_id`); (params ())
+DEBUG 2024-08-21 14:10:38,655 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 14:10:38,682 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`); (params ())
+DEBUG 2024-08-21 14:10:38,737 schema CREATE TABLE `django_admin_log` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `action_time` datetime(6) NOT NULL, `object_id` longtext NULL, `object_repr` varchar(200) NOT NULL, `action_flag` smallint UNSIGNED NOT NULL CHECK (`action_flag` >= 0), `change_message` longtext NOT NULL, `content_type_id` integer NULL, `user_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,794 schema ALTER TABLE `django_admin_log` ADD CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`); (params ())
+DEBUG 2024-08-21 14:10:38,821 schema ALTER TABLE `django_admin_log` ADD CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 14:10:38,927 schema CREATE TABLE `app01_doctors` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `identity_num` varchar(64) NOT NULL, `name` varchar(20) NOT NULL, `title` varchar(50) NOT NULL, `department` varchar(20) NOT NULL, `research` varchar(150) NULL, `cost` numeric(5, 2) NOT NULL, `avatar` varchar(100) NULL, `avatar_name` varchar(128) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,946 schema CREATE TABLE `app01_medicine` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `medicine_type` smallint NOT NULL, `symptom` varchar(200) NOT NULL, `price` numeric(5, 2) NOT NULL, `quantity` integer NOT NULL, `photo_name` varchar(128) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,963 schema CREATE TABLE `app01_patients` (`identity` smallint NOT NULL, `identity_num` varchar(64) NOT NULL PRIMARY KEY, `name` varchar(20) NOT NULL, `health_insurance` smallint NOT NULL, `gender` smallint NOT NULL, `birthday` date NOT NULL, `phone_num` varchar(15) NOT NULL, `address` varchar(128) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,981 schema CREATE TABLE `app01_user` (`type` smallint NOT NULL, `identity_num` varchar(64) NOT NULL PRIMARY KEY, `password` varchar(64) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:38,997 schema CREATE TABLE `app01_treatment` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `queue_id` integer NOT NULL, `time` datetime(6) NOT NULL, `advice` varchar(256) NOT NULL, `medicine` longtext NOT NULL, `price` numeric(5, 2) NOT NULL, `doctor_id` bigint NOT NULL, `patient_id` varchar(64) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:39,039 schema CREATE TABLE `app01_register` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `queue_id` integer NOT NULL, `time` datetime(6) NOT NULL, `position` varchar(128) NOT NULL, `doctor_id` bigint NOT NULL, `patient_id` varchar(64) NOT NULL, `register_id` varchar(64) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:39,095 schema CREATE TABLE `app01_onduty` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `date` date NOT NULL, `time` smallint NOT NULL, `state` integer NOT NULL, `doctor_id` bigint NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:39,128 schema CREATE TABLE `app01_notice` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `msg_type` smallint NOT NULL, `time` datetime(6) NOT NULL, `isRead` bool NOT NULL, `doctor_id` bigint NOT NULL, `patient_id` varchar(64) NOT NULL, `register_id` bigint NULL, `registerMan_id` varchar(64) NULL, `treatment_id` bigint NULL); (params None)
+DEBUG 2024-08-21 14:10:39,232 schema CREATE TABLE `app01_bill` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `type` smallint NOT NULL, `state` bool NOT NULL, `price` numeric(5, 2) NOT NULL, `patient_id` varchar(64) NULL, `register_id` bigint NULL, `treatment_id` bigint NULL); (params None)
+DEBUG 2024-08-21 14:10:39,283 schema ALTER TABLE `app01_treatment` ADD CONSTRAINT `app01_treatment_doctor_id_a47beada_fk_app01_doctors_id` FOREIGN KEY (`doctor_id`) REFERENCES `app01_doctors` (`id`); (params ())
+DEBUG 2024-08-21 14:10:39,309 schema ALTER TABLE `app01_treatment` ADD CONSTRAINT `app01_treatment_patient_id_52a8e1e5_fk_app01_pat` FOREIGN KEY (`patient_id`) REFERENCES `app01_patients` (`identity_num`); (params ())
+DEBUG 2024-08-21 14:10:39,333 schema ALTER TABLE `app01_register` ADD CONSTRAINT `app01_register_doctor_id_e0ea61dc_fk_app01_doctors_id` FOREIGN KEY (`doctor_id`) REFERENCES `app01_doctors` (`id`); (params ())
+DEBUG 2024-08-21 14:10:39,357 schema ALTER TABLE `app01_register` ADD CONSTRAINT `app01_register_patient_id_4a065a29_fk_app01_pat` FOREIGN KEY (`patient_id`) REFERENCES `app01_patients` (`identity_num`); (params ())
+DEBUG 2024-08-21 14:10:39,384 schema ALTER TABLE `app01_register` ADD CONSTRAINT `app01_register_register_id_e85a8e5b_fk_app01_pat` FOREIGN KEY (`register_id`) REFERENCES `app01_patients` (`identity_num`); (params ())
+DEBUG 2024-08-21 14:10:39,420 schema ALTER TABLE `app01_onduty` ADD CONSTRAINT `app01_onduty_doctor_id_9b012eb7_fk_app01_doctors_id` FOREIGN KEY (`doctor_id`) REFERENCES `app01_doctors` (`id`); (params ())
+DEBUG 2024-08-21 14:10:39,442 schema ALTER TABLE `app01_notice` ADD CONSTRAINT `app01_notice_doctor_id_2d7f7104_fk_app01_doctors_id` FOREIGN KEY (`doctor_id`) REFERENCES `app01_doctors` (`id`); (params ())
+DEBUG 2024-08-21 14:10:39,470 schema ALTER TABLE `app01_notice` ADD CONSTRAINT `app01_notice_patient_id_74974826_fk_app01_patients_identity_num` FOREIGN KEY (`patient_id`) REFERENCES `app01_patients` (`identity_num`); (params ())
+DEBUG 2024-08-21 14:10:39,498 schema ALTER TABLE `app01_notice` ADD CONSTRAINT `app01_notice_register_id_6c54784c_fk_app01_register_id` FOREIGN KEY (`register_id`) REFERENCES `app01_register` (`id`); (params ())
+DEBUG 2024-08-21 14:10:39,530 schema ALTER TABLE `app01_notice` ADD CONSTRAINT `app01_notice_registerMan_id_1bd9adce_fk_app01_pat` FOREIGN KEY (`registerMan_id`) REFERENCES `app01_patients` (`identity_num`); (params ())
+DEBUG 2024-08-21 14:10:39,569 schema ALTER TABLE `app01_notice` ADD CONSTRAINT `app01_notice_treatment_id_596ea92a_fk_app01_treatment_id` FOREIGN KEY (`treatment_id`) REFERENCES `app01_treatment` (`id`); (params ())
+DEBUG 2024-08-21 14:10:39,601 schema ALTER TABLE `app01_bill` ADD CONSTRAINT `app01_bill_patient_id_96fe396a_fk_app01_patients_identity_num` FOREIGN KEY (`patient_id`) REFERENCES `app01_patients` (`identity_num`); (params ())
+DEBUG 2024-08-21 14:10:39,628 schema ALTER TABLE `app01_bill` ADD CONSTRAINT `app01_bill_register_id_cf59300e_fk_app01_register_id` FOREIGN KEY (`register_id`) REFERENCES `app01_register` (`id`); (params ())
+DEBUG 2024-08-21 14:10:39,656 schema ALTER TABLE `app01_bill` ADD CONSTRAINT `app01_bill_treatment_id_73ef4d98_fk_app01_treatment_id` FOREIGN KEY (`treatment_id`) REFERENCES `app01_treatment` (`id`); (params ())
+DEBUG 2024-08-21 14:10:39,716 schema ALTER TABLE `django_content_type` MODIFY `name` varchar(100) NULL; (params [])
+DEBUG 2024-08-21 14:10:39,785 schema ALTER TABLE `django_content_type` DROP COLUMN `name`; (params ())
+DEBUG 2024-08-21 14:10:39,838 schema ALTER TABLE `auth_permission` MODIFY `name` varchar(255) NOT NULL; (params [])
+DEBUG 2024-08-21 14:10:39,894 schema ALTER TABLE `auth_user` MODIFY `email` varchar(254) NOT NULL; (params [])
+DEBUG 2024-08-21 14:10:39,981 schema ALTER TABLE `auth_user` MODIFY `last_login` datetime(6) NULL; (params [])
+DEBUG 2024-08-21 14:10:40,096 schema ALTER TABLE `auth_user` MODIFY `username` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 14:10:40,155 schema ALTER TABLE `auth_user` MODIFY `last_name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 14:10:40,210 schema ALTER TABLE `auth_group` MODIFY `name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 14:10:40,327 schema ALTER TABLE `auth_user` MODIFY `first_name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 14:10:40,377 schema CREATE TABLE `django_session` (`session_key` varchar(40) NOT NULL PRIMARY KEY, `session_data` longtext NOT NULL, `expire_date` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 14:10:40,404 schema CREATE INDEX `django_session_expire_date_a5c62663` ON `django_session` (`expire_date`); (params ())
+WARNING 2024-08-21 14:10:41,683 log Bad Request: /api/bills/list/
+WARNING 2024-08-21 14:10:41,875 log Bad Request: /api/bills/list/
+WARNING 2024-08-21 14:10:42,070 log Bad Request: /api/bills/list/
+WARNING 2024-08-21 14:10:42,316 log Bad Request: /api/bills/list/
+WARNING 2024-08-21 14:10:42,538 log Bad Request: /api/doctors/setData/
+WARNING 2024-08-21 14:10:42,761 log Bad Request: /api/doctors/delete/
+WARNING 2024-08-21 14:10:43,330 log Bad Request: /api/duty/all_next_seven_days/
+WARNING 2024-08-21 14:10:43,467 log Bad Request: /api/duty/next_seven_days/
+WARNING 2024-08-21 14:10:44,236 log Bad Request: /api/registers/list/
+WARNING 2024-08-21 14:10:44,580 log Bad Request: /api/treatments/list/
+WARNING 2024-08-21 14:10:44,875 log Bad Request: /api/treatments/list/
