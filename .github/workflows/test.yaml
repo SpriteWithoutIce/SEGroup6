@@ -44,7 +44,5 @@ jobs:
           cd 猫猫就诊/Project
           pip install djangorestframework
           pip install Pillow
-          cd app01
-          python delete.py
-          cd ../
+          python ./app01/delete.py
           python manage.py test app01
