@@ -54,7 +54,7 @@ urlpatterns = [
     path("api/medicine/removePhoto/", views.MedicineView.as_view()),
     path("api/medicine/setData/", views.MedicineView.as_view()),
     path("api/duty/doctor_status/", views.OnDutyView.as_view()),
-    path("api/bills/list/", views.BillView.as_view()),
+    path("api/bills/list/", views.BillView.as_view(), name='bill_list'),
     path("api/notice/list/", views.NoticeView.as_view()),
 
     re_path(

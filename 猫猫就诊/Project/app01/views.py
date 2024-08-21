@@ -794,6 +794,9 @@ class BillView(APIView):
 
     def getBillsData(self, request):
         bill = []
+        data = json.loads(request.body)
+        if 'identity_num' not in data:
+            return JsonResponse({'error': 'Invalid id'}, status=400)
         identity_num = json.loads(request.body)['identity_num']
         for item in Bill.objects.filter(patient=identity_num):
             department = item.register.doctor.department if item.type == 1 else item.treatment.doctor.department
@@ -810,7 +813,10 @@ class BillView(APIView):
 
     def changeBillStatus(self, request):
         data = json.loads(request.body)
-        bill = Bill.objects.get(id=data['item_id'])
+        if data['item_id'] < 0:
+            return JsonResponse({'error': 'Invalid id'}, status=400)
+        bill = Bill.objects.filter(id=data['item_id']).first()
+        # bill = Bill.objects.get(id=data['item_id'])
         bill.state = True
         bill.save()
         treatment = bill.treatment
