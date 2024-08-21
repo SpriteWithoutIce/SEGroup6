@@ -20,6 +20,7 @@ from .models import *
 from django.utils.deprecation import MiddlewareMixin
 # Create your views here.
 
+
 class MyCore(MiddlewareMixin):
     """
     处理HTTP响应，设置跨域请求的相关头部信息。
@@ -29,12 +30,14 @@ class MyCore(MiddlewareMixin):
     Returns:
         修改后的响应对象，包含跨域请求相关的头部信息。
     """
+
     def process_response(self, request, response):
         response["Access-Control-Allow-Origin"] = '*'
         if request.method == 'OPTIONS':
             response["Access-Control-Allow-Headers"] = 'Content-Type'
             response["Access-Control-Allow-Methods"] = 'POST, DELETE, PUT'
         return response
+
 
 class DoctorView(APIView):
     """
@@ -45,10 +48,11 @@ class DoctorView(APIView):
     Returns:
         JsonResponse: 返回一个包含医生信息的JsonResponse对象
     """
+
     def get(self, request):
         doctors = []
         for item in Doctors.objects.values('identity_num', 'name', 'department',
-                                        'title', 'research', 'cost', 'avatar_name'):
+                                           'title', 'research', 'cost', 'avatar_name'):
             doctors.append({
                 'id': item['identity_num'],
                 'name': item['name'],
@@ -59,7 +63,7 @@ class DoctorView(APIView):
                 'avatar_name': item['avatar_name']
             })
         return JsonResponse({'doctors': doctors}, status=200)
-            
+
     def post(self, request):
         action = json.loads(request.body)['action']
         if action == 'upload_avatar':
@@ -78,16 +82,24 @@ class DoctorView(APIView):
             return self.searchDoctor(request)
         elif action == 'testAddDoctor':
             return self.testAddDoctor(request)
+        elif action == 'getDoctor':
+            return self.getDoctor(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
-        
+
     # 上传医生头像, 返回该医生数据
     def upload_avatar(self, request):
         doctor = Doctors.objects.get(account=request.POST.get("account"))
         doctor.avatar = request.FILES.get('avatar')
         doctor.save()
         return JsonResponse({"doctor": doctor})
-    
+
+    # api/administrator_service/doctors/getDoctor/
+    def getDoctor(self, request):
+        id = json.loads(request.body)['identity_num']
+        doctor = Doctors.objects.get(identity_num=id)
+        return doctor
+
     # api/administrator_service/doctors/list/
     def getDoctorsData(self, request):
         doctors = []
@@ -99,10 +111,11 @@ class DoctorView(APIView):
                 'title': item['title'],
                 'research': item['research'],
                 'avatar': '/api/administrator_service/doctor/avatar/' + item['avatar_name']
-            }) 
+            })
         return JsonResponse({'doctors': doctors})
-    
+
     # api/administrator_service/doctors/delete/
+
     def deleteDoctor(self, request):
         id = json.loads(request.body)['id']
         doctor = Doctors.objects.filter(identity_num=id).first()
@@ -110,7 +123,7 @@ class DoctorView(APIView):
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=400)
         Doctors.objects.get(identity_num=id).delete()
         return self.get(request)
-    
+
     # api/administrator_service/doctors/removeAvatar/
     def removeAvatar(self, request):
         avatar_name = json.loads(request.body)['avatar_name']
@@ -118,7 +131,7 @@ class DoctorView(APIView):
         if os.path.exists(file_path):
             os.remove(file_path)
         return JsonResponse({'msg': "Successfully removed avatar"})
-    
+
     # api/administrator_service/doctors/setData/
     def addDoctor(self, request):
         data = json.loads(request.body)
@@ -138,7 +151,7 @@ class DoctorView(APIView):
             return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
-    
+
     # api/administrator_service/doctors/setData/
     def alterDoctor(self, request):
         data = json.loads(request.body)
@@ -159,7 +172,8 @@ class DoctorView(APIView):
     def searchDoctor(self, request):
         data = json.loads(request.body)
         try:
-            doctor = Doctors.objects.filter(identity_num=data['identity_num']).first()
+            doctor = Doctors.objects.filter(
+                identity_num=data['identity_num']).first()
             return JsonResponse({'msg': "Doctor Exist", 'id': doctor.id})
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor Not Exist"})
@@ -185,15 +199,17 @@ class DoctorView(APIView):
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
 
+
 class UploadAvatarView(APIView):
     def get(self, request, filename, *args, **kwargs):
         photo_path = os.path.join(settings.DOCTOR_AVATAR_ROOT, filename)
         if os.path.exists(photo_path):
             with open(photo_path, 'rb') as f:
-                return HttpResponse(f.read(), content_type='image/jpeg')  # 根据实际图片类型调整 content_type
+                # 根据实际图片类型调整 content_type
+                return HttpResponse(f.read(), content_type='image/jpeg')
         else:
             raise Http404("Photo not found")
-    
+
     def post(self, request):
         file = request.FILES.get('file')
         file_path = os.path.join(settings.DOCTOR_AVATAR_ROOT, file.name)
@@ -202,6 +218,7 @@ class UploadAvatarView(APIView):
             f.write(file.read())
         url = '/api/administrator_service/doctor/avatar/' + file.name
         return JsonResponse({'msg': "Successfully uploaded photo", 'name': file.name, 'url': url})
+
 
 class MedicineView(APIView):
     # api/administrator_service/medicine/list/
@@ -215,7 +232,7 @@ class MedicineView(APIView):
                 type = "中成药"
             else:
                 type = "西药"
-            medicine.append({ 
+            medicine.append({
                 'id': item['id'],
                 "name": item['name'],
                 "type": type,
@@ -225,7 +242,7 @@ class MedicineView(APIView):
                 "photo_name": item['photo_name'],
             })
         return JsonResponse({'medicine': medicine})
-    
+
     def post(self, request):
         action = json.loads(request.body)['action']
         if action == 'deleteMedicine':
@@ -238,7 +255,7 @@ class MedicineView(APIView):
             return self.alterMedicine(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
-    
+
     # api/administrator_service/medicine/delete/
     def deleteMedicine(self, request):
         id = json.loads(request.body)['id']
@@ -247,7 +264,7 @@ class MedicineView(APIView):
             return JsonResponse({'error': 'Medicine with id {} not found'.format(id)}, status=400)
         Medicine.objects.get(id=id).delete()
         return self.get(request)
-    
+
     # api/administrator_service/medicine/removePhoto/
     def removePhoto(self, request):
         photo_name = json.loads(request.body)['photo_name']
@@ -255,7 +272,7 @@ class MedicineView(APIView):
         if os.path.exists(file_path):
             os.remove(file_path)
         return JsonResponse({'msg': "Successfully removed photo"})
-    
+
     # api/administrator_service/medicine/setData/
     def addMedicine(self, request):
         data = json.loads(request.body)
@@ -273,7 +290,7 @@ class MedicineView(APIView):
             return JsonResponse({'msg': "Successfully add medicine data"})
         except Medicine.DoesNotExist:
             return JsonResponse({'msg': "Medicine with id {} not found".format(id)}, status=404)
-    
+
     # api/administrator_service/medicine/setData/
     def alterMedicine(self, request):
         data = json.loads(request.body)
@@ -290,15 +307,17 @@ class MedicineView(APIView):
         except Medicine.DoesNotExist:
             return JsonResponse({'msg': "Medicine with id {} not found".format(id)}, status=404)
 
+
 class UploadPhotoView(APIView):
     def get(self, request, filename, *args, **kwargs):
         photo_path = os.path.join(settings.MEDICINE_PHOTO_ROOT, filename)
         if os.path.exists(photo_path):
             with open(photo_path, 'rb') as f:
-                return HttpResponse(f.read(), content_type='image/jpeg')  # 根据实际图片类型调整 content_type
+                # 根据实际图片类型调整 content_type
+                return HttpResponse(f.read(), content_type='image/jpeg')
         else:
             raise Http404("Photo not found")
-    
+
     def post(self, request):
         file = request.FILES.get('file')
         file_path = os.path.join(settings.MEDICINE_PHOTO_ROOT, file.name)

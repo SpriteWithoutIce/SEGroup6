@@ -3052,3 +3052,253 @@ DEBUG 2024-08-21 20:16:37,292 schema ALTER TABLE `auth_user` MODIFY `first_name`
 DEBUG 2024-08-21 20:16:37,352 schema CREATE TABLE `django_session` (`session_key` varchar(40) NOT NULL PRIMARY KEY, `session_data` longtext NOT NULL, `expire_date` datetime(6) NOT NULL); (params None)
 DEBUG 2024-08-21 20:16:37,385 schema CREATE INDEX `django_session_expire_date_a5c62663` ON `django_session` (`expire_date`); (params ())
 DEBUG 2024-08-21 20:16:37,435 schema CREATE TABLE `user_user` (`type` smallint NOT NULL, `identity_num` varchar(64) NOT NULL PRIMARY KEY, `password` varchar(64) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:21,638 schema CREATE TABLE `django_migrations` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `app` varchar(255) NOT NULL, `name` varchar(255) NOT NULL, `applied` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:21,658 schema CREATE TABLE `django_content_type` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(100) NOT NULL, `app_label` varchar(100) NOT NULL, `model` varchar(100) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:21,684 schema ALTER TABLE `django_content_type` ADD CONSTRAINT `django_content_type_app_label_model_76bd3d3b_uniq` UNIQUE (`app_label`, `model`); (params ())
+DEBUG 2024-08-21 21:15:21,729 schema CREATE TABLE `auth_permission` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `content_type_id` integer NOT NULL, `codename` varchar(100) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:21,758 schema CREATE TABLE `auth_group` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(80) NOT NULL UNIQUE); (params None)
+DEBUG 2024-08-21 21:15:21,773 schema CREATE TABLE `auth_group_permissions` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `group_id` integer NOT NULL, `permission_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:21,821 schema CREATE TABLE `auth_user` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `password` varchar(128) NOT NULL, `last_login` datetime(6) NOT NULL, `is_superuser` bool NOT NULL, `username` varchar(30) NOT NULL UNIQUE, `first_name` varchar(30) NOT NULL, `last_name` varchar(30) NOT NULL, `email` varchar(75) NOT NULL, `is_staff` bool NOT NULL, `is_active` bool NOT NULL, `date_joined` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:21,841 schema CREATE TABLE `auth_user_groups` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `user_id` integer NOT NULL, `group_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:21,882 schema CREATE TABLE `auth_user_user_permissions` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `user_id` integer NOT NULL, `permission_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:21,922 schema ALTER TABLE `auth_permission` ADD CONSTRAINT `auth_permission_content_type_id_codename_01ab375a_uniq` UNIQUE (`content_type_id`, `codename`); (params ())
+DEBUG 2024-08-21 21:15:21,940 schema ALTER TABLE `auth_permission` ADD CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`); (params ())
+DEBUG 2024-08-21 21:15:21,966 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` UNIQUE (`group_id`, `permission_id`); (params ())
+DEBUG 2024-08-21 21:15:21,982 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`); (params ())
+DEBUG 2024-08-21 21:15:22,012 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`); (params ())
+DEBUG 2024-08-21 21:15:22,039 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_user_id_group_id_94350c0c_uniq` UNIQUE (`user_id`, `group_id`); (params ())
+DEBUG 2024-08-21 21:15:22,056 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:15:22,082 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`); (params ())
+DEBUG 2024-08-21 21:15:22,108 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` UNIQUE (`user_id`, `permission_id`); (params ())
+DEBUG 2024-08-21 21:15:22,125 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:15:22,150 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`); (params ())
+DEBUG 2024-08-21 21:15:22,209 schema CREATE TABLE `django_admin_log` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `action_time` datetime(6) NOT NULL, `object_id` longtext NULL, `object_repr` varchar(200) NOT NULL, `action_flag` smallint UNSIGNED NOT NULL CHECK (`action_flag` >= 0), `change_message` longtext NOT NULL, `content_type_id` integer NULL, `user_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:22,250 schema ALTER TABLE `django_admin_log` ADD CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`); (params ())
+DEBUG 2024-08-21 21:15:22,278 schema ALTER TABLE `django_admin_log` ADD CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:15:22,417 schema ALTER TABLE `django_content_type` MODIFY `name` varchar(100) NULL; (params [])
+DEBUG 2024-08-21 21:15:22,513 schema ALTER TABLE `django_content_type` DROP COLUMN `name`; (params ())
+DEBUG 2024-08-21 21:15:22,588 schema ALTER TABLE `auth_permission` MODIFY `name` varchar(255) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:22,648 schema ALTER TABLE `auth_user` MODIFY `email` varchar(254) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:22,759 schema ALTER TABLE `auth_user` MODIFY `last_login` datetime(6) NULL; (params [])
+DEBUG 2024-08-21 21:15:22,875 schema ALTER TABLE `auth_user` MODIFY `username` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:22,935 schema ALTER TABLE `auth_user` MODIFY `last_name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:22,997 schema ALTER TABLE `auth_group` MODIFY `name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:23,116 schema ALTER TABLE `auth_user` MODIFY `first_name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:23,172 schema CREATE TABLE `django_session` (`session_key` varchar(40) NOT NULL PRIMARY KEY, `session_data` longtext NOT NULL, `expire_date` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:23,202 schema CREATE INDEX `django_session_expire_date_a5c62663` ON `django_session` (`expire_date`); (params ())
+DEBUG 2024-08-21 21:15:23,248 schema CREATE TABLE `user_user` (`type` smallint NOT NULL, `identity_num` varchar(64) NOT NULL PRIMARY KEY, `password` varchar(64) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:36,088 schema CREATE TABLE `django_migrations` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `app` varchar(255) NOT NULL, `name` varchar(255) NOT NULL, `applied` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:36,107 schema CREATE TABLE `django_content_type` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(100) NOT NULL, `app_label` varchar(100) NOT NULL, `model` varchar(100) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:36,123 schema ALTER TABLE `django_content_type` ADD CONSTRAINT `django_content_type_app_label_model_76bd3d3b_uniq` UNIQUE (`app_label`, `model`); (params ())
+DEBUG 2024-08-21 21:15:36,168 schema CREATE TABLE `auth_permission` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `content_type_id` integer NOT NULL, `codename` varchar(100) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:36,196 schema CREATE TABLE `auth_group` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(80) NOT NULL UNIQUE); (params None)
+DEBUG 2024-08-21 21:15:36,211 schema CREATE TABLE `auth_group_permissions` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `group_id` integer NOT NULL, `permission_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:36,252 schema CREATE TABLE `auth_user` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `password` varchar(128) NOT NULL, `last_login` datetime(6) NOT NULL, `is_superuser` bool NOT NULL, `username` varchar(30) NOT NULL UNIQUE, `first_name` varchar(30) NOT NULL, `last_name` varchar(30) NOT NULL, `email` varchar(75) NOT NULL, `is_staff` bool NOT NULL, `is_active` bool NOT NULL, `date_joined` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:36,269 schema CREATE TABLE `auth_user_groups` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `user_id` integer NOT NULL, `group_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:36,310 schema CREATE TABLE `auth_user_user_permissions` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `user_id` integer NOT NULL, `permission_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:36,351 schema ALTER TABLE `auth_permission` ADD CONSTRAINT `auth_permission_content_type_id_codename_01ab375a_uniq` UNIQUE (`content_type_id`, `codename`); (params ())
+DEBUG 2024-08-21 21:15:36,367 schema ALTER TABLE `auth_permission` ADD CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`); (params ())
+DEBUG 2024-08-21 21:15:36,389 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` UNIQUE (`group_id`, `permission_id`); (params ())
+DEBUG 2024-08-21 21:15:36,421 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`); (params ())
+DEBUG 2024-08-21 21:15:36,443 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`); (params ())
+DEBUG 2024-08-21 21:15:36,469 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_user_id_group_id_94350c0c_uniq` UNIQUE (`user_id`, `group_id`); (params ())
+DEBUG 2024-08-21 21:15:36,487 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:15:36,511 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`); (params ())
+DEBUG 2024-08-21 21:15:36,537 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` UNIQUE (`user_id`, `permission_id`); (params ())
+DEBUG 2024-08-21 21:15:36,553 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:15:36,575 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`); (params ())
+DEBUG 2024-08-21 21:15:36,637 schema CREATE TABLE `django_admin_log` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `action_time` datetime(6) NOT NULL, `object_id` longtext NULL, `object_repr` varchar(200) NOT NULL, `action_flag` smallint UNSIGNED NOT NULL CHECK (`action_flag` >= 0), `change_message` longtext NOT NULL, `content_type_id` integer NULL, `user_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:36,681 schema ALTER TABLE `django_admin_log` ADD CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`); (params ())
+DEBUG 2024-08-21 21:15:36,707 schema ALTER TABLE `django_admin_log` ADD CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:15:36,822 schema ALTER TABLE `django_content_type` MODIFY `name` varchar(100) NULL; (params [])
+DEBUG 2024-08-21 21:15:36,882 schema ALTER TABLE `django_content_type` DROP COLUMN `name`; (params ())
+DEBUG 2024-08-21 21:15:36,932 schema ALTER TABLE `auth_permission` MODIFY `name` varchar(255) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:36,989 schema ALTER TABLE `auth_user` MODIFY `email` varchar(254) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:37,081 schema ALTER TABLE `auth_user` MODIFY `last_login` datetime(6) NULL; (params [])
+DEBUG 2024-08-21 21:15:37,197 schema ALTER TABLE `auth_user` MODIFY `username` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:37,257 schema ALTER TABLE `auth_user` MODIFY `last_name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:37,310 schema ALTER TABLE `auth_group` MODIFY `name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:37,422 schema ALTER TABLE `auth_user` MODIFY `first_name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:15:37,474 schema CREATE TABLE `django_session` (`session_key` varchar(40) NOT NULL PRIMARY KEY, `session_data` longtext NOT NULL, `expire_date` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:15:37,501 schema CREATE INDEX `django_session_expire_date_a5c62663` ON `django_session` (`expire_date`); (params ())
+DEBUG 2024-08-21 21:15:37,544 schema CREATE TABLE `user_user` (`type` smallint NOT NULL, `identity_num` varchar(64) NOT NULL PRIMARY KEY, `password` varchar(64) NOT NULL); (params None)
+ERROR 2024-08-21 21:15:38,744 log Internal Server Error: /api/user_service/login/
+Traceback (most recent call last):
+  File "C:\Users\86185\Desktop\SEGroup6\Ã¨Ã¨¾ÍÕï\Project\user_service\user\views.py", line 61, in post
+    user = User.objects.get(identity_num=identity_num)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\django\db\models\query.py", line 637, in get
+    raise self.model.DoesNotExist(
+user.models.User.DoesNotExist: User matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\anacoda\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "D:\anacoda\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "D:\anacoda\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\86185\Desktop\SEGroup6\Ã¨Ã¨¾ÍÕï\Project\user_service\user\views.py", line 86, in post
+    requests.post(api_url, json=requestData)
+  File "D:\anacoda\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\requests\sessions.py", line 575, in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\requests\sessions.py", line 486, in prepare_request
+    p.prepare(
+  File "D:\anacoda\Lib\site-packages\requests\models.py", line 368, in prepare
+    self.prepare_url(url, params)
+  File "D:\anacoda\Lib\site-packages\requests\models.py", line 439, in prepare_url
+    raise MissingSchema(
+requests.exceptions.MissingSchema: Invalid URL '/api/patient_service/patient/add/': No scheme supplied. Perhaps you meant https:///api/patient_service/patient/add/?
+DEBUG 2024-08-21 21:17:24,298 schema CREATE TABLE `django_migrations` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `app` varchar(255) NOT NULL, `name` varchar(255) NOT NULL, `applied` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:17:24,315 schema CREATE TABLE `django_content_type` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(100) NOT NULL, `app_label` varchar(100) NOT NULL, `model` varchar(100) NOT NULL); (params None)
+DEBUG 2024-08-21 21:17:24,334 schema ALTER TABLE `django_content_type` ADD CONSTRAINT `django_content_type_app_label_model_76bd3d3b_uniq` UNIQUE (`app_label`, `model`); (params ())
+DEBUG 2024-08-21 21:17:24,383 schema CREATE TABLE `auth_permission` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `content_type_id` integer NOT NULL, `codename` varchar(100) NOT NULL); (params None)
+DEBUG 2024-08-21 21:17:24,415 schema CREATE TABLE `auth_group` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(80) NOT NULL UNIQUE); (params None)
+DEBUG 2024-08-21 21:17:24,433 schema CREATE TABLE `auth_group_permissions` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `group_id` integer NOT NULL, `permission_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:17:24,480 schema CREATE TABLE `auth_user` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `password` varchar(128) NOT NULL, `last_login` datetime(6) NOT NULL, `is_superuser` bool NOT NULL, `username` varchar(30) NOT NULL UNIQUE, `first_name` varchar(30) NOT NULL, `last_name` varchar(30) NOT NULL, `email` varchar(75) NOT NULL, `is_staff` bool NOT NULL, `is_active` bool NOT NULL, `date_joined` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:17:24,498 schema CREATE TABLE `auth_user_groups` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `user_id` integer NOT NULL, `group_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:17:24,542 schema CREATE TABLE `auth_user_user_permissions` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `user_id` integer NOT NULL, `permission_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:17:24,582 schema ALTER TABLE `auth_permission` ADD CONSTRAINT `auth_permission_content_type_id_codename_01ab375a_uniq` UNIQUE (`content_type_id`, `codename`); (params ())
+DEBUG 2024-08-21 21:17:24,600 schema ALTER TABLE `auth_permission` ADD CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`); (params ())
+DEBUG 2024-08-21 21:17:24,641 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` UNIQUE (`group_id`, `permission_id`); (params ())
+DEBUG 2024-08-21 21:17:24,658 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`); (params ())
+DEBUG 2024-08-21 21:17:24,688 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`); (params ())
+DEBUG 2024-08-21 21:17:24,716 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_user_id_group_id_94350c0c_uniq` UNIQUE (`user_id`, `group_id`); (params ())
+DEBUG 2024-08-21 21:17:24,737 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:17:24,765 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`); (params ())
+DEBUG 2024-08-21 21:17:24,797 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` UNIQUE (`user_id`, `permission_id`); (params ())
+DEBUG 2024-08-21 21:17:24,818 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:17:24,852 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`); (params ())
+DEBUG 2024-08-21 21:17:24,909 schema CREATE TABLE `django_admin_log` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `action_time` datetime(6) NOT NULL, `object_id` longtext NULL, `object_repr` varchar(200) NOT NULL, `action_flag` smallint UNSIGNED NOT NULL CHECK (`action_flag` >= 0), `change_message` longtext NOT NULL, `content_type_id` integer NULL, `user_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:17:24,951 schema ALTER TABLE `django_admin_log` ADD CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`); (params ())
+DEBUG 2024-08-21 21:17:24,978 schema ALTER TABLE `django_admin_log` ADD CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:17:25,100 schema ALTER TABLE `django_content_type` MODIFY `name` varchar(100) NULL; (params [])
+DEBUG 2024-08-21 21:17:25,169 schema ALTER TABLE `django_content_type` DROP COLUMN `name`; (params ())
+DEBUG 2024-08-21 21:17:25,229 schema ALTER TABLE `auth_permission` MODIFY `name` varchar(255) NOT NULL; (params [])
+DEBUG 2024-08-21 21:17:25,296 schema ALTER TABLE `auth_user` MODIFY `email` varchar(254) NOT NULL; (params [])
+DEBUG 2024-08-21 21:17:25,384 schema ALTER TABLE `auth_user` MODIFY `last_login` datetime(6) NULL; (params [])
+DEBUG 2024-08-21 21:17:25,497 schema ALTER TABLE `auth_user` MODIFY `username` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:17:25,555 schema ALTER TABLE `auth_user` MODIFY `last_name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:17:25,613 schema ALTER TABLE `auth_group` MODIFY `name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:17:25,735 schema ALTER TABLE `auth_user` MODIFY `first_name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:17:25,790 schema CREATE TABLE `django_session` (`session_key` varchar(40) NOT NULL PRIMARY KEY, `session_data` longtext NOT NULL, `expire_date` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:17:25,821 schema CREATE INDEX `django_session_expire_date_a5c62663` ON `django_session` (`expire_date`); (params ())
+DEBUG 2024-08-21 21:17:25,867 schema CREATE TABLE `user_user` (`type` smallint NOT NULL, `identity_num` varchar(64) NOT NULL PRIMARY KEY, `password` varchar(64) NOT NULL); (params None)
+ERROR 2024-08-21 21:17:27,157 log Internal Server Error: /api/user_service/login/
+Traceback (most recent call last):
+  File "C:\Users\86185\Desktop\SEGroup6\Ã¨Ã¨¾ÍÕï\Project\user_service\user\views.py", line 61, in post
+    user = User.objects.get(identity_num=identity_num)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\django\db\models\query.py", line 637, in get
+    raise self.model.DoesNotExist(
+user.models.User.DoesNotExist: User matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\anacoda\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "D:\anacoda\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "D:\anacoda\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\86185\Desktop\SEGroup6\Ã¨Ã¨¾ÍÕï\Project\user_service\user\views.py", line 86, in post
+    requests.post(api_url, json=requestData)
+  File "D:\anacoda\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\requests\sessions.py", line 575, in request
+    prep = self.prepare_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\anacoda\Lib\site-packages\requests\sessions.py", line 486, in prepare_request
+    p.prepare(
+  File "D:\anacoda\Lib\site-packages\requests\models.py", line 368, in prepare
+    self.prepare_url(url, params)
+  File "D:\anacoda\Lib\site-packages\requests\models.py", line 439, in prepare_url
+    raise MissingSchema(
+requests.exceptions.MissingSchema: Invalid URL '/api/patient_service/patient/add/': No scheme supplied. Perhaps you meant https:///api/patient_service/patient/add/?
+DEBUG 2024-08-21 21:22:05,088 schema CREATE TABLE `django_migrations` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `app` varchar(255) NOT NULL, `name` varchar(255) NOT NULL, `applied` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:22:05,107 schema CREATE TABLE `django_content_type` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(100) NOT NULL, `app_label` varchar(100) NOT NULL, `model` varchar(100) NOT NULL); (params None)
+DEBUG 2024-08-21 21:22:05,124 schema ALTER TABLE `django_content_type` ADD CONSTRAINT `django_content_type_app_label_model_76bd3d3b_uniq` UNIQUE (`app_label`, `model`); (params ())
+DEBUG 2024-08-21 21:22:05,169 schema CREATE TABLE `auth_permission` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(50) NOT NULL, `content_type_id` integer NOT NULL, `codename` varchar(100) NOT NULL); (params None)
+DEBUG 2024-08-21 21:22:05,198 schema CREATE TABLE `auth_group` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(80) NOT NULL UNIQUE); (params None)
+DEBUG 2024-08-21 21:22:05,217 schema CREATE TABLE `auth_group_permissions` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `group_id` integer NOT NULL, `permission_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:22:05,260 schema CREATE TABLE `auth_user` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `password` varchar(128) NOT NULL, `last_login` datetime(6) NOT NULL, `is_superuser` bool NOT NULL, `username` varchar(30) NOT NULL UNIQUE, `first_name` varchar(30) NOT NULL, `last_name` varchar(30) NOT NULL, `email` varchar(75) NOT NULL, `is_staff` bool NOT NULL, `is_active` bool NOT NULL, `date_joined` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:22:05,277 schema CREATE TABLE `auth_user_groups` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `user_id` integer NOT NULL, `group_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:22:05,316 schema CREATE TABLE `auth_user_user_permissions` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `user_id` integer NOT NULL, `permission_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:22:05,356 schema ALTER TABLE `auth_permission` ADD CONSTRAINT `auth_permission_content_type_id_codename_01ab375a_uniq` UNIQUE (`content_type_id`, `codename`); (params ())
+DEBUG 2024-08-21 21:22:05,372 schema ALTER TABLE `auth_permission` ADD CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`); (params ())
+DEBUG 2024-08-21 21:22:05,394 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` UNIQUE (`group_id`, `permission_id`); (params ())
+DEBUG 2024-08-21 21:22:05,410 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`); (params ())
+DEBUG 2024-08-21 21:22:05,431 schema ALTER TABLE `auth_group_permissions` ADD CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`); (params ())
+DEBUG 2024-08-21 21:22:05,456 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_user_id_group_id_94350c0c_uniq` UNIQUE (`user_id`, `group_id`); (params ())
+DEBUG 2024-08-21 21:22:05,474 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_user_id_6a12ed8b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:22:05,496 schema ALTER TABLE `auth_user_groups` ADD CONSTRAINT `auth_user_groups_group_id_97559544_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`); (params ())
+DEBUG 2024-08-21 21:22:05,520 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` UNIQUE (`user_id`, `permission_id`); (params ())
+DEBUG 2024-08-21 21:22:05,536 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:22:05,557 schema ALTER TABLE `auth_user_user_permissions` ADD CONSTRAINT `auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`); (params ())
+DEBUG 2024-08-21 21:22:05,611 schema CREATE TABLE `django_admin_log` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `action_time` datetime(6) NOT NULL, `object_id` longtext NULL, `object_repr` varchar(200) NOT NULL, `action_flag` smallint UNSIGNED NOT NULL CHECK (`action_flag` >= 0), `change_message` longtext NOT NULL, `content_type_id` integer NULL, `user_id` integer NOT NULL); (params None)
+DEBUG 2024-08-21 21:22:05,652 schema ALTER TABLE `django_admin_log` ADD CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`); (params ())
+DEBUG 2024-08-21 21:22:05,678 schema ALTER TABLE `django_admin_log` ADD CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`); (params ())
+DEBUG 2024-08-21 21:22:05,797 schema ALTER TABLE `django_content_type` MODIFY `name` varchar(100) NULL; (params [])
+DEBUG 2024-08-21 21:22:05,859 schema ALTER TABLE `django_content_type` DROP COLUMN `name`; (params ())
+DEBUG 2024-08-21 21:22:05,911 schema ALTER TABLE `auth_permission` MODIFY `name` varchar(255) NOT NULL; (params [])
+DEBUG 2024-08-21 21:22:05,970 schema ALTER TABLE `auth_user` MODIFY `email` varchar(254) NOT NULL; (params [])
+DEBUG 2024-08-21 21:22:06,065 schema ALTER TABLE `auth_user` MODIFY `last_login` datetime(6) NULL; (params [])
+DEBUG 2024-08-21 21:22:06,171 schema ALTER TABLE `auth_user` MODIFY `username` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:22:06,227 schema ALTER TABLE `auth_user` MODIFY `last_name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:22:06,283 schema ALTER TABLE `auth_group` MODIFY `name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:22:06,400 schema ALTER TABLE `auth_user` MODIFY `first_name` varchar(150) NOT NULL; (params [])
+DEBUG 2024-08-21 21:22:06,456 schema CREATE TABLE `django_session` (`session_key` varchar(40) NOT NULL PRIMARY KEY, `session_data` longtext NOT NULL, `expire_date` datetime(6) NOT NULL); (params None)
+DEBUG 2024-08-21 21:22:06,483 schema CREATE INDEX `django_session_expire_date_a5c62663` ON `django_session` (`expire_date`); (params ())
+DEBUG 2024-08-21 21:22:06,526 schema CREATE TABLE `user_user` (`type` smallint NOT NULL, `identity_num` varchar(64) NOT NULL PRIMARY KEY, `password` varchar(64) NOT NULL); (params None)

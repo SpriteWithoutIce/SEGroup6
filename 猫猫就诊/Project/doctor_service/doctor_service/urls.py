@@ -21,13 +21,13 @@ from django.views.generic.base import TemplateView
 from django.conf.urls.static import static
 
 from doctor_service import settings
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", TemplateView.as_view(template_name="index.html")),
     path("api/doctor_service/registers/list/", views.RegisterView.as_view()),
     path("api/doctor_service/treatments/list/", views.TreatmentView.as_view()),
-    path("api/doctor_service/prescriptionDetailsWriteBack/", views.TreatmentView.as_view()),
+    path("api/doctor_service/prescriptionDetailsWriteBack/",
+         views.TreatmentView.as_view()),
     path("api/doctor_service/medicine/list/", views.MedicineView.as_view()),
 
     path("api/doctor_service/treatments/filter/", views.TreatmentView.as_view()),

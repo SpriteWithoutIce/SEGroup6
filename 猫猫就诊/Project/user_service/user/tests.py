@@ -67,6 +67,7 @@ class UserViewTest(APITestCase):
     # 负向测试：测试密码错误
     def test_failed_login_wrong_password(self):
         url = reverse('user_login')
+        print(url)
         data = {
             'idCard': '123456',
             'password': 'wrongpassword',
@@ -99,16 +100,3 @@ class UserViewTest(APITestCase):
         response = client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {'msg': 'Successfully Register'})
-
-
-
-
-
-
-
-
-
-
-
-
-

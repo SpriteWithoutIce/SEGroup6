@@ -10,40 +10,51 @@ from datetime import date
 from django.utils import timezone
 from .models import *
 import json
+import requests
 
 client = APIClient()
+
 
 class TreatmentViewTest(APITestCase):
     def setUp(self):
         # 创建测试数据
-        self.patient = Patients.objects.create(
-            identity_num='123456',
-            identity=1,
-            name='Existing Patient',
-            health_insurance=1,
-            gender=1,
-            birthday=date.today(),
-            phone_num='1234567890',
-            address='Existing Address'
-        )
-        self.doctor = Doctors.objects.create(
-            identity_num='1234567890',  # 证件号
-            name='张三',                # 医生姓名
-            title='主任医师',           # 医生职称
-            department='内科',          # 医生科室
-            research='心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
-            cost=200,                   # 出诊费，例如200元
-            avatar='path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
-            avatar_name='dr_zhang_san.jpg'  # 图片名字
-        )
-        self.register = Register.objects.create(
-            queue_id=1,
-            patient=self.patient,
-            register=self.patient,
-            doctor=self.doctor,
-            time=timezone.now(),
-            position="门诊大楼1楼内科"
-        )
+        api_url = 'http://127.0.0.1:8080/api/patient_service/patient/add/'
+        requestData = {
+            'name': "Existing Patient",
+            'paymentType': "非医保",
+            'gender': "男",
+            'birthday': datetime.date.today().isoformat(),
+            'idType': "身份证",
+            'phone': "1234567890",
+            'number': '123456',
+            'addr': "Existing Address",
+        }
+        requests.post(api_url, json=requestData)
+        self.patient = requests.post(api_url, json=requestData)
+
+        api_url = 'http://127.0.0.1:8080/api/administrator_service/doctors/setData/'
+        # 请求数据（如果需要的话）
+        requestData = {
+            'identity_num': '1234567890',  # 证件号
+            'name': '张三',                # 医生姓名
+            'title': '主任医师',           # 医生职称
+            'department': '内科',          # 医生科室
+            'research': '心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
+            'cost': 200,                   # 出诊费，例如200元
+            'avatar': 'path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
+            'avatar_name': 'dr_zhang_san.jpg',  # 图片名字
+            'action': 'testAddDoctor'
+        }
+        requests.post(api_url, json=requestData)
+        # self.client.post(url, requestData, format='json')
+        api_url = "http://127.0.0.1:8080/api/administrator_service/doctors/getDoctor/"
+        requestData = {
+            'identity_num': '1234567890',  # 证件号
+            'action': 'getDoctor'
+        }
+        # url = reverse('getDoctor')
+        # self.doctor = self.client.post(url, requestData, format='json')
+
         self.data = {
             'action': 'getTreatmentsData',
             'identity_num': self.doctor.identity_num
@@ -54,7 +65,7 @@ class TreatmentViewTest(APITestCase):
         url = reverse('treatment_list')
         add_data = {
             'action': 'addTreatmentData',
-            'id': self.register.id,
+            'id': '1234567890',
             'suggestion': 'Take a rest',
             'medicines': ['Aspirin', 'Paracetamol'],
             'totalPrice': 100
@@ -94,19 +105,30 @@ class TreatmentViewTest(APITestCase):
         self.assertEqual(response.json(), {
                          'error': 'Invalid doctor'})
 
+
 class OnDutyViewTestCase(APITestCase):
     def setUp(self):
         # 设置测试数据
         self.client = APIClient()
-        self.doctor = Doctors.objects.create(
-            name='John Doe',
-            title='Dr.',
-            department='Cardiology',
-            research='Heart diseases',
-            cost=150,
-            identity_num='123456',
-            avatar_name='avatar1.png'
-        )
+        api_url = 'http://127.0.0.1:8080/api/administrator_service/doctors/setData/'
+        # 请求数据（如果需要的话）
+        requestData = {
+            'identity_num': '123456',  # 证件号
+            'name': 'John Doe',                # 医生姓名
+            'title': 'Dr.',           # 医生职称
+            'department': 'Cardiology',          # 医生科室
+            'research': 'Heart diseases',     # 研究方向，如果不需要可以省略或设置为None
+            'cost': 150,                   # 出诊费，例如200元
+            'avatar_name': 'avatar1.png',  # 图片名字
+            'action': 'testAddDoctor'
+        }
+        requests.post(api_url, json=requestData)
+        api_url = "http://127.0.0.1:8080/administrator_service/doctors/getDoctor/"
+        requestData = {
+            'identity_num': '123456',  # 证件号
+            'action': 'getDoctor'
+        }
+        self.doctor = requests.post(api_url, json=requestData)
         self.on_duty = OnDuty.objects.create(
             doctor=self.doctor,
             date=timezone.now(),

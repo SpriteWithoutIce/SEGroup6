@@ -21,6 +21,7 @@ from django.utils.deprecation import MiddlewareMixin
 import requests
 # Create your views here.
 
+
 class MyCore(MiddlewareMixin):
     """
     处理HTTP响应，设置跨域请求的相关头部信息。
@@ -30,12 +31,14 @@ class MyCore(MiddlewareMixin):
     Returns:
         修改后的响应对象，包含跨域请求相关的头部信息。
     """
+
     def process_response(self, request, response):
         response["Access-Control-Allow-Origin"] = '*'
         if request.method == 'OPTIONS':
             response["Access-Control-Allow-Headers"] = 'Content-Type'
             response["Access-Control-Allow-Methods"] = 'POST, DELETE, PUT'
         return response
+
 
 class UserView(APIView):
     """
@@ -46,6 +49,7 @@ class UserView(APIView):
         JsonResponse: JSON格式的响应对象，包含以下键值对：
             - msg: 字符串类型，表示操作结果，可选值为'Successfully Login'、'Wrong Password'、'Successfully Register'
     """
+
     def post(self, request):
         data = json.loads(request.body)
         identity_num = data["idCard"]
@@ -65,23 +69,23 @@ class UserView(APIView):
                 return JsonResponse({'msg': 'Wrong Password'})
         except User.DoesNotExist:
             user = User(
-                identity_num = identity_num,
-                password = pwd,
-                type = type,
+                identity_num=identity_num,
+                password=pwd,
+                type=type,
             )
             user.save()
-            # API 服务器地址
-            api_url = '/api/patient_service/patient/add/'
-            # 请求数据（如果需要的话）
-            requestData = {'name': "未填写",
-                'paymentType': "非医保",
-                'gender': "男",
-                'birthday': datetime.date.today().isoformat(),
-                'idType': "身份证",
-                'phone': "未填写",
-                'number': identity_num,
-                'addr': "未填写",
-            }
-            # 发送 POST 请求
-            requests.post(api_url, json=requestData)
+            # # API 服务器地址
+            # api_url = '/api/patient_service/patient/add/'
+            # # 请求数据（如果需要的话）
+            # requestData = {'name': "未填写",
+            #     'paymentType': "非医保",
+            #     'gender': "男",
+            #     'birthday': datetime.date.today().isoformat(),
+            #     'idType': "身份证",
+            #     'phone': "未填写",
+            #     'number': identity_num,
+            #     'addr': "未填写",
+            # }
+            # # 发送 POST 请求
+            # requests.post(api_url, json=requestData)
             return JsonResponse({'msg': 'Successfully Register'})
