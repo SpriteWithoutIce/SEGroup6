@@ -13,12 +13,24 @@ jobs:
       run: npm run build
       working-directory: ./猫猫就诊/Project/frontend
 
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: frontend-build
+        path: ./猫猫就诊/Project/frontend/dist  # 指定构建产物的路径
+
   deploy-on-ubuntu:
     runs-on: ubuntu-latest
     needs: build-on-windows
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: frontend-build
+        path: ./猫猫就诊/Project/frontend/dist  # 下载到的路径
 
     - name: Deploy to server
       run: bash ./deploy.sh
