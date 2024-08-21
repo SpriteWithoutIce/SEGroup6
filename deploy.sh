@@ -19,6 +19,10 @@ sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --pro
 # 后端部署
 echo "Starting back-end deployment..."
 sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
+sudo killall -9 uwsgi
+pwd
+sudo uwsgi --ini uwsgi.ini
+sudo nginx -s reload
 
 # SSH 到服务器上，执行后续命令
 echo "Connecting to server to finalize deployment..."
