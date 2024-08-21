@@ -277,3 +277,68 @@ class TreatmentViewTest(APITestCase):
                          status.HTTP_400_BAD_REQUEST)  # 状态码根据业务逻辑调整
         self.assertEqual(response.json(), {
                          'error': 'Invalid doctor'})
+
+
+class DoctorViewTest(TestCase):
+    def setUp(self):
+        self.doctor = Doctors.objects.create(
+            name='John Doe',
+            title='Dr.',
+            department='Cardiology',
+            research='Heart diseases',
+            cost=150,
+            identity_num='123456',
+            avatar_name='avatar1.png'
+        )
+        self.doctor_data = {
+            'action': 'addDoctor',
+            'name': 'John Doe',
+            'title': 'Dr.',
+            'department': 'Cardiology',
+            'research': 'Heart diseases',
+            'cost': 150,
+            'id': '123456',
+            'avatar_name': 'avatar1.png'
+        }
+
+    def test_get_doctors_positive(self):
+        # 正向测试用例：获取医生列表
+        response = self.client.get(reverse('doctor_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.doctor.name)
+
+    def test_get_doctors_negative(self):
+        # 反向测试用例：数据库中没有医生数据
+        Doctors.objects.all().delete()
+        response = self.client.get(reverse('doctor_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, self.doctor.name)
+
+    def test_add_doctor_positive(self):
+        # 正向测试用例：成功添加医生信息
+        url = reverse('doctor_setdata')
+        Doctors.objects.all().delete()
+        response = self.client.post(
+            url, self.doctor_data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+                         'msg': "Successfully add doctor data"})
+
+    def test_add_doctor_negative(self):
+        # 反向测试用例：尝试添加已存在的医生编号
+        url = reverse('doctor_setdata')
+        response = self.client.post(
+            url, self.doctor_data, content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_doctor_positive(self):
+        # 正向测试用例：删除存在的医生
+        response = self.client.post(reverse(
+            'doctor_delete'), {'action': 'deleteDoctor', 'id': self.doctor.identity_num}, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_doctor_negative(self):
+        # 反向测试用例：尝试删除不存在的医生
+        response = self.client.post(reverse(
+            'doctor_delete'), {'action': 'deleteDoctor', 'id': 'non_existent_id'}, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
