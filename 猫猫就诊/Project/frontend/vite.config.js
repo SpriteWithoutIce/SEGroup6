@@ -18,12 +18,25 @@ export default defineConfig({
   transpileDependencies: true,
   devServer : {
     proxy: {
-      '/api': {
+      '/api/user_service': {
         target: 'http://127.0.0.1:5000',
         changeOrigin: true,
-        pathRewrite: {
-          '/api': ''
-        }
+        pathRewrite: { '^/api/user_service': '' }
+      },
+      '/api/patient_service': {
+      target: 'http://127.0.0.1:5001',
+      changeOrigin: true,
+      pathRewrite: { '^/api/patient_service': '' }
+      },
+      '/api/doctor_service': {
+        target: 'http://127.0.0.1:5002',
+        changeOrigin: true,
+        pathRewrite: { '^/api/doctor_service': '' }
+      },
+      '/api/administrator_service': {
+        target: 'http://127.0.0.1:5003',
+        changeOrigin: true,
+        pathRewrite: { '^/api/administrator_service': '' }
       }
     }
   },

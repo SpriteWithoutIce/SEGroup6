@@ -179,7 +179,7 @@ export default {
         let requestData = {
           action: 'getAllNextSevenDaysDuty',
         };
-        this.$axios.post('/api/duty/all_next_seven_days/', requestData)
+        this.$axios.post('/api/patient_service/duty/all_next_seven_days/', requestData)
           .then(function (response) {
             ts.doctors = response.data['duty'];
             console.log(ts.doctors);

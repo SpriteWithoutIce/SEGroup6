@@ -94,7 +94,7 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         // 需要传入当前用户的identity_num
-        this.$axios.post('/api/registers/list/', { action: "getDoctorRegisters", identity_num: GlobalState.identityNum })
+        this.$axios.post('/api/patient_service/registers/list/', { action: "getDoctorRegisters", identity_num: GlobalState.identityNum })
           .then(function (response) {
             ts.patient = response.data['registers'];
             console.log(ts.patient);

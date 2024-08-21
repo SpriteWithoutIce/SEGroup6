@@ -57,7 +57,7 @@ ROOT_URLCONF = "user_service.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["frontend/dist"],
+        "DIRS": [os.path.join(BASE_DIR, "../frontend/dist")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -122,6 +122,11 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "../frontend/dist/static"),
+    os.path.join(BASE_DIR, '../static/images/medicine'),
+    os.path.join(BASE_DIR, '../static/images/doctors')
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

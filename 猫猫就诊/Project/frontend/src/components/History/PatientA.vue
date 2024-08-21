@@ -60,7 +60,7 @@ const getRegistersData = () => {
       identity_num: GlobalState.identityNum
     }
     axios
-      .post('/api/registers/list/', requestData)
+      .post('/api/patient_service/registers/list/', requestData)
       .then((response) => {
         info.value = response.data['registers']
         console.log('Registers data fetched:', info.value)

@@ -157,7 +157,7 @@ export default {
           number: this.formData.number,
           addr: this.formData.addr,
         };
-        this.$axios.post('/api/patient/add/', requestData)
+        this.$axios.post('/api/patient_service/patient/add/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
             resolve(); // 数据获取完成，resolve Promise

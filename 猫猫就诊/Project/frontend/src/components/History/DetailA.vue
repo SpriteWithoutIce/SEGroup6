@@ -95,7 +95,7 @@ export default {
           id: this.form.id
         }
         this.$axios
-          .post('/api/registers/cancel/', requestData)
+          .post('/api/patient_service/registers/cancel/', requestData)
           .then(function (response) {
             console.log(response.data['msg'])
             resolve() // 数据获取完成，resolve Promise

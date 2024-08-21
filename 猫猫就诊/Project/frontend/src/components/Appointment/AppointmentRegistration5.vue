@@ -157,7 +157,7 @@ export default {
           department: this.$route.query.department,
         };
         console.log(requestData.department)
-        this.$axios.post('/api/duty/next_seven_days/', requestData)
+        this.$axios.post('/api/patient_service/duty/next_seven_days/', requestData)
           .then(function (response) {
             ts.doctors = response.data['duty'];
             console.log(ts.doctors);

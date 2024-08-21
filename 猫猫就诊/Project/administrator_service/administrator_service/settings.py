@@ -58,7 +58,7 @@ ROOT_URLCONF = "administrator_service.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["frontend/dist"],  #地址可能不对
+        "DIRS": [os.path.join(BASE_DIR, "../frontend/dist")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -129,6 +129,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../static/images/medicine'),
     os.path.join(BASE_DIR, '../static/images/doctors')
 ]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

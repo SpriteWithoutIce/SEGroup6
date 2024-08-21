@@ -230,7 +230,7 @@ export default {
         let requestData = {
           action: 'getDoctorsData',
         };
-        this.$axios.post('api/doctors/list/', requestData)
+        this.$axios.post('api/administrator_service/doctors/list/', requestData)
           .then(function (response) {
             ts.doctors = response.data['doctors'];
             console.log(ts.doctors);

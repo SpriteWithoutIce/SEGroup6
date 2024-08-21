@@ -137,7 +137,7 @@ watch(input4, () => {
 const getMedicineData = () => {
   return new Promise((resolve, reject) => {
     axios
-      .get('/api/medicine/list/')
+      .get('/api/administrator_service/medicine/list/')
       .then((response) => {
         tableData.value = response.data['medicine']
         pagination.value.total = tableData.value.length // 更新总条目数
@@ -154,7 +154,7 @@ const getMedicineData = () => {
 const deleteMedicine = (row) => {
   return new Promise((resolve, reject) => {
     axios
-      .post('/api/medicine/delete/', { id: row.id, action: 'deleteMedicine' })
+      .post('/api/administrator_service/medicine/delete/', { id: row.id, action: 'deleteMedicine' })
       .then((response) => {
         tableData.value = response.data['medicine']
         pagination.value.total = tableData.value.length // 更新总条目数

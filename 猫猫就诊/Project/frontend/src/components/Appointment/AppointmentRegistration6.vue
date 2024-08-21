@@ -200,7 +200,7 @@ export default {
           doctorId:this.info_detail.doctor_id,
           action:"lockRegister"
         };
-        this.$axios.post('/api/register/lock/', requestData)
+        this.$axios.post('/api/patient_service/register/lock/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
             resolve();

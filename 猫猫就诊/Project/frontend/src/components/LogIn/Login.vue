@@ -96,7 +96,7 @@ export default {
           userType: userType
         };
         this.$axios
-          .post('/api/login/', requestData)
+          .post('/api/user_service/login/', requestData)
           .then(function (response) {
             ts.msg = response.data['msg'];
             console.log(ts.msg);

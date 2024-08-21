@@ -112,7 +112,7 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         //已完成 注意：需要前端传入当前登录用户的证件号
-        this.$axios.post('/api/bills/list/', {identity_num: this.identityNum, action: "getBillsData"})
+        this.$axios.post('/api/patient_service/bills/list/', {identity_num: this.identityNum, action: "getBillsData"})
           .then(function (response) {
             ts.bill = response.data['bill'];
             console.log(ts.bill);
@@ -146,7 +146,7 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         //已完成 注意：需要前端传入当前登录用户的证件号
-        this.$axios.post('/api/bills/list/', {identity_num: this.identityNum, action: "changeBillStatus", item_id: id})
+        this.$axios.post('/api/patient_service/bills/list/', {identity_num: this.identityNum, action: "changeBillStatus", item_id: id})
           .then(function (response) {
             ts.bill = response.data['bill'];
             console.log(ts.bill);

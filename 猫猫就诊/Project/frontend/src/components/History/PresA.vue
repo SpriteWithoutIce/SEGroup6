@@ -57,7 +57,7 @@ const identityNum = inject('$identity_num')
 const getTreatmentsData = () => {
   return new Promise((resolve, reject) => {
     axios
-      .post('/api/treatments/list/', {
+      .post('/api/patient_service/treatments/list/', {
         identity_num: GlobalState.identityNum,
         action: 'getTreatmentsData'
       })

@@ -11,7 +11,7 @@
           <el-upload
             v-model:file-list="fileList"
             class="upload-demo"
-            action="/api/doctors/uploadAvatar/"
+            action="/api/administrator_service/doctors/uploadAvatar/"
             :before-upload="handleBeforeUpload"
             :on-success="handleSuccess"
             :on-preview="handlePreview"
@@ -120,7 +120,7 @@ export default {
           action: this.sign == 'add' ? 'addDoctor' : 'alterDoctor'
         }
         this.$axios
-          .post('/api/doctors/setData/', requestData)
+          .post('/api/administrator_service/doctors/setData/', requestData)
           .then(function (response) {
             console.log(response.data['msg'])
             resolve() // 数据获取完成，resolve Promise
@@ -134,7 +134,7 @@ export default {
     removePhoto() {
       return new Promise((resolve, reject) => {
         axios
-          .post('/api/doctors/removeAvatar/', {
+          .post('/api/administrator_service/doctors/removeAvatar/', {
             id: this.info.id,
             avatar_name: this.fileList[0].name,
             action: 'removeAvatar'
@@ -200,7 +200,7 @@ export default {
       this.sign = sign
       this.fileList = []
       if (row.avatar_name !== undefined && row.avatar_name != '')
-        this.fileList.push({ name: row.avatar_name, url: '/api/doctor/avatar/' + row.avatar_name })
+        this.fileList.push({ name: row.avatar_name, url: '/api/administrator_service/doctor/avatar/' + row.avatar_name })
       console.log(`传入的sign是：${this.sign}`)
     },
     closeModal() {

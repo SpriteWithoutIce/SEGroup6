@@ -25,13 +25,13 @@ from doctor_service import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", TemplateView.as_view(template_name="index.html")),
-    path("api/registers/list/", views.RegisterView.as_view()),
-    path("api/treatments/list/", views.TreatmentView.as_view()),
-    path("api/prescriptionDetailsWriteBack/", views.TreatmentView.as_view()),
-    path("api/medicine/list/", views.MedicineView.as_view()),
+    path("api/doctor_service/registers/list/", views.RegisterView.as_view()),
+    path("api/doctor_service/treatments/list/", views.TreatmentView.as_view()),
+    path("api/doctor_service/prescriptionDetailsWriteBack/", views.TreatmentView.as_view()),
+    path("api/doctor_service/medicine/list/", views.MedicineView.as_view()),
 
-    path("api/treatments/filter/", views.TreatmentView.as_view()),
-    path("api/changeDutyState/", views.OnDutyView.as_view()),
-    path("api/judgeDutyState/", views.OnDutyView.as_view()),
-    path("api/duty_list/seven_days", views.OnDutyView.as_view()),
+    path("api/doctor_service/treatments/filter/", views.TreatmentView.as_view()),
+    path("api/doctor_service/changeDutyState/", views.OnDutyView.as_view()),
+    path("api/doctor_service/judgeDutyState/", views.OnDutyView.as_view()),
+    path("api/doctor_service/duty_list/seven_days", views.OnDutyView.as_view()),
 ]

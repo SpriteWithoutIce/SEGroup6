@@ -178,7 +178,7 @@ export default {
       this.$emit('update:result', this.unreadCount)
     },
     // post请求，请求数据体中包含用户证件号identityNum
-    // url为api/notice/list/
+    // url为api/patient_service/notice/list/
     // 返回数据为resMes和billMes两个字典数组
     getMesData(){
       if (GlobalState.identityNum === 0) {
@@ -191,7 +191,7 @@ export default {
       }
       return new Promise((resolve, reject) => {
         let ts = this;
-        this.$axios.post('api/notice/list/', {identity_num: GlobalState.identityNum, action: "getMesData"})
+        this.$axios.post('api/patient_service/notice/list/', {identity_num: GlobalState.identityNum, action: "getMesData"})
           .then(function (response) {
             ts.resMes = response.data['resMes'];
             ts.oriBillMes = response.data['billMes'];
@@ -263,7 +263,7 @@ export default {
       return new Promise((resolve, reject) => {
         let ts = this;
         //TODO:需要后端在Notice的api里添加action"readMes"，根据传入的item_id找到对应数据将其item['isRead']改为true，不用后端返回更新后的数据，前端直接再调用一次getMesData()就可以
-        this.$axios.post('api/notice/list/', {action: "readMes", item_id: row.item_id})
+        this.$axios.post('api/patient_service/notice/list/', {action: "readMes", item_id: row.item_id})
           .then(function (response) {
             ts.getMesData().then(() => {
                 resolve(); // 数据获取完成，resolve Promise

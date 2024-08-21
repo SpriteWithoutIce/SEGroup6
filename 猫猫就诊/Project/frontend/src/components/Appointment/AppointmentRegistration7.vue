@@ -204,7 +204,7 @@ export default {
         if(this.info.paymentType=='医保')
           requestData.cost=0;
         // 这里的api
-        this.$axios.post('/api/appointment/add/', requestData)
+        this.$axios.post('/api/patient_service/appointment/add/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
             resolve(); // 数据获取完成，resolve Promise
@@ -229,7 +229,7 @@ export default {
           doctorId:this.info.doctor_id,
           action:"unlockRegister"
         };
-        this.$axios.post('/api/register/unlock/', requestData)
+        this.$axios.post('/api/patient_service/register/unlock/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
             resolve();

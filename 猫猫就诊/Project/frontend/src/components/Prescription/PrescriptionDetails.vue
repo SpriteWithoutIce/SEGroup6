@@ -95,7 +95,7 @@ export default {
           action: "addTreatmentData"
         };
         console.log("写回处方前的数据" + requestData.id + " " + requestData.totalPrice + " " + requestData.medicines + " " + requestData.suggestion);
-        this.$axios.post('/api/prescriptionDetailsWriteBack/', requestData)
+        this.$axios.post('/api/doctor_service/prescriptionDetailsWriteBack/', requestData)
           .then(function (response) {
             console.log(response.data['msg']);
             resolve(); 
@@ -120,7 +120,7 @@ export default {
     getMedicineData () {
       return new Promise((resolve, reject) => {
         let ts = this;
-        this.$axios.get('/api/medicine/list/')
+        this.$axios.get('/api/administrator_service/medicine/list/')
           .then(function (response) {
             ts.medicinesDB = response.data['medicine'];
             console.log(ts.medicinesDB);
