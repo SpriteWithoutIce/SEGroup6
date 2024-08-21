@@ -15,6 +15,7 @@ WORKDIR /code
 RUN pip install pip -U -i https://pypi.tuna.tsinghua.edu.cn/simple
 ADD requirements.txt /code/
 RUN pip install cython
+RUN pip install django-cors-headers
 # 添加 pip 清华镜像源
 RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 ADD . /code/

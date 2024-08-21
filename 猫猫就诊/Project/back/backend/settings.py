@@ -80,13 +80,14 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "SEProject",
+        "NAME": "seproject",
         "USER": "root",
         "PASSWORD": "@15755083308Ab",
         "HOST": "bj-cynosdbmysql-grp-ehn4evu8.sql.tencentcdb.com",
         "PORT": 22339,
     }
 }
+
 
 
 # Password validation
@@ -124,11 +125,11 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "frontend/dist/static"),
-    os.path.join(BASE_DIR, 'static/images/medicine'),
-    os.path.join(BASE_DIR, 'static/images/doctors')
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "frontend/dist/static"),
+#     os.path.join(BASE_DIR, 'static/images/medicine'),
+#     os.path.join(BASE_DIR, 'static/images/doctors')
+# ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
