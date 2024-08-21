@@ -100,7 +100,7 @@ class RegisterView(APIView):
             doctor_name = doctor['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = item['time']
+            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S')
             end_time = start_time + timedelta(minutes=10)
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
@@ -233,7 +233,7 @@ class TreatmentView(APIView):
             doctor_name = doctor['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = item['time']
+            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S')
             end_time = start_time + timedelta(minutes=10)
             end_time = end_time.strftime('%H:%M')
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
