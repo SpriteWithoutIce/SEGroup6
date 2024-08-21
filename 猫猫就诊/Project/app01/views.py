@@ -844,6 +844,9 @@ class NoticeView(APIView):
     def getNoticeData(self, request):
         resMes = []
         billMes = []
+        data = json.loads(request.body)
+        if 'identity_num' not in data:
+            return JsonResponse({'error': 'Missing identity number'}, status=400)
         identity_num = json.loads(request.body)['identity_num']
         for item in Notice.objects.filter(Q(patient=identity_num) | Q(registerMan=identity_num)).annotate(
             doctor_name=F('doctor__name'),
@@ -886,14 +889,16 @@ class NoticeView(APIView):
                     "price": treatment.price,
                     "read": item['isRead']
                 })
-        return JsonResponse({"resMes": resMes, "billMes": billMes})
+        return JsonResponse({"resMes": resMes, "billMes": billMes}, status=200)
 
     def readNotice(self, request):
         item_id = json.loads(request.body)['item_id']
+        if item_id < 0:
+            return JsonResponse({'error': 'Invalid id'}, status=400)
         item = Notice.objects.get(id=item_id)
         item.isRead = True
         item.save()
-        return JsonResponse({'msg': 'Successfully read'})
+        return JsonResponse({'msg': 'Successfully read'}, status=200)
 
 
 class MedicineView(APIView):
@@ -933,6 +938,9 @@ class MedicineView(APIView):
 
     def deleteMedicine(self, request):
         id = json.loads(request.body)['id']
+        medicine = Medicine.objects.filter(id=id).first()
+        if medicine is None:
+            return JsonResponse({'error': 'Medicine with id {} not found'.format(id)}, status=400)
         Medicine.objects.get(id=id).delete()
         return self.get(request)
 
@@ -946,6 +954,8 @@ class MedicineView(APIView):
     def addMedicine(self, request):
         data = json.loads(request.body)
         try:
+            if 'name' not in data or 'type' not in data or 'symptom' not in data or 'price' not in data or 'quantity' not in data or 'photo_name' not in data:
+                return JsonResponse({'error': 'Invalid data'}, status=400)
             medicine = Medicine()
             medicine.name = data['name']
             medicine.medicine_type = data['type']
