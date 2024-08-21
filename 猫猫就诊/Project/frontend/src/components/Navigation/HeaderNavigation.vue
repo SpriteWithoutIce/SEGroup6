@@ -9,8 +9,8 @@
       <nav>
         <RouterLink to="/Main">我</RouterLink>
         <a href="#unknown" @click="showLogin()">要</a>
-        <a @click="openMessageBox">放</a><el-badge :value="unreadCount" class="item" v-if="unreadCount !== 0"></el-badge>
-        <a href="#unknown" @click="showSign()">假</a>
+        <a @click="openMessageBox">睡</a><el-badge :value="unreadCount" class="item" v-if="unreadCount !== 0"></el-badge>
+        <a href="#unknown" @click="showSign()">觉</a>
       </nav>
       <div class="clickable-images">
         <template v-for="(image, index) in getClickableImages()">
