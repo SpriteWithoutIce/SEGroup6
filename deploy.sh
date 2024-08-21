@@ -11,6 +11,7 @@ NGINX_SERVICE_NAME="nginx"  # Nginx 服务名
 UWSGI_INI_PATH="uwsgi.ini"  # uWSGI 的 ini 文件路径
 SSH_PASSWORD="22371468Se"  # 
 
+
 # 安装 sshpass 工具
 sudo apt-get update && sudo apt-get install -y sshpass
 
@@ -45,7 +46,7 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     echo "$SSH_PASSWORD" | sudo -S killall -9 uwsgi
     pwd
     ls
-    
+
     echo "$SSH_PASSWORD" | sudo uwsgi --ini uwsgi.ini
     echo "$SSH_PASSWORD" | sudo nginx -s reload
 
