@@ -1,19 +1,10 @@
-db:
-  image: mysql
-  expose:
-    - "22339"
-  volumes:
-    - ./db:/var/lib/mysql
-  environment:
-    - MYSQL_DATABASE=django.db.backends.mysql
-    - MYSQL_ROOT_PASSWORD=@15755083308Ab
-web:
-  build: .
-  command: python ./mysite/manage.py runserver 0.0.0.0:8000
-  volumes:
-    - .:/code
-  ports:
-    - "8000:8000"
-  links:
-    - db
-
+version: "3"
+services:
+  app:
+    restart: always
+    build: .  # '点'代表当前目录
+    command: "python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
