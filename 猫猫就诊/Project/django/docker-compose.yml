@@ -5,8 +5,6 @@ services:
     container_name: mysql5.7
     ports:
       - "3307:3306"
-    volumes:
-      - ./mysql_data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: '@15755083308Ab'
       MYSQL_DATABASE: 'seproject'
@@ -16,8 +14,8 @@ services:
   web:
     image: my-django-app
     container_name: django-app
-    command: bash -c "python manage.py migrate && python manage.py runserver 8000"
     ports:
       - "8000:8000"
+    command: dockerize -wait tcp://database:3306 -timeout 60s python manage.py runserver 0.0.0.0:8000   
     depends_on:
       - database
