@@ -76,6 +76,8 @@ class DoctorView(APIView):
             return self.alterDoctor(request)
         elif action == 'searchDoctor':
             return self.searchDoctor(request)
+        elif action == 'testAddDoctor':
+            return self.testAddDoctor(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
         
@@ -161,6 +163,27 @@ class DoctorView(APIView):
             return JsonResponse({'msg': "Doctor Exist", 'id': doctor.id})
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor Not Exist"})
+
+    # api/administrator_service/test/addDoctor/
+    def testAddDoctor(self, request):
+        data = json.loads(request.body)
+        try:
+            doctor = Doctors.objects.filter(identity_num=data['id']).first()
+            if doctor is not None:
+                return JsonResponse({'msg': "Doctor with id {} already exists".format(id)}, status=400)
+            doctor = Doctors()
+            doctor.name = data['name']
+            doctor.title = data['title']
+            doctor.department = data['department']
+            doctor.cost = data['cost']
+            doctor.identity_num = data['id']
+            doctor.research = data['research']
+            doctor.avatar = data['avatar']
+            doctor.avatar_name = data['avatar_name']
+            doctor.save()
+            return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
+        except Doctors.DoesNotExist:
+            return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
 
 class UploadAvatarView(APIView):
     def get(self, request, filename, *args, **kwargs):

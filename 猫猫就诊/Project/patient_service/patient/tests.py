@@ -2,6 +2,7 @@ from django.test import TestCase
 
 # Create your tests here.
 from django.urls import reverse
+import requests
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.urls import reverse
@@ -61,16 +62,21 @@ class PatientViewTest(APITestCase):
 class RegisterViewTest(APITestCase):
     def setUp(self):
         # 准备测试数据
-        self.doctor = Doctors.objects.create(
-            identity_num='1234567890',  # 证件号
-            name='张三',                # 医生姓名
-            title='主任医师',           # 医生职称
-            department='内科',          # 医生科室
-            research='心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
-            cost=200,                   # 出诊费，例如200元
-            avatar='path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
-            avatar_name='dr_zhang_san.jpg'  # 图片名字
-        )
+        # API 服务器地址
+        api_url = '/api/administrator_service/doctors/setData/'
+        # 请求数据（如果需要的话）
+        requestData = {'identity_num': '1234567890',  # 证件号
+            'name': '张三',                # 医生姓名
+            'title': '主任医师',           # 医生职称
+            'department': '内科',          # 医生科室
+            'research': '心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
+            'cost': 200,                   # 出诊费，例如200元
+            'avatar': 'path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
+            'avatar_name': 'dr_zhang_san.jpg',  # 图片名字
+            'action': 'testAddDoctor'
+        }
+        requests.post(api_url, json=requestData)
+        # 发送 POST 请求
         self.patient = Patients.objects.create(
             identity_num='123456',
             identity=1,
@@ -136,16 +142,20 @@ class BillViewTestCase(APITestCase):
             phone_num='1234567890',
             address='Existing Address'
         )
-        self.doctor = Doctors.objects.create(
-            identity_num='1234567890',  # 证件号
-            name='张三',                # 医生姓名
-            title='主任医师',           # 医生职称
-            department='内科',          # 医生科室
-            research='心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
-            cost=200,                   # 出诊费，例如200元
-            avatar='path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
-            avatar_name='dr_zhang_san.jpg'  # 图片名字
-        )
+        # API 服务器地址
+        api_url = '/api/administrator_service/doctors/setData/'
+        # 请求数据（如果需要的话）
+        requestData = {'identity_num': '1234567890',  # 证件号
+            'name': '张三',                # 医生姓名
+            'title': '主任医师',           # 医生职称
+            'department': '内科',          # 医生科室
+            'research': '心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
+            'cost': 200,                   # 出诊费，例如200元
+            'avatar': 'path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
+            'avatar_name': 'dr_zhang_san.jpg',  # 图片名字
+            'action': 'testAddDoctor'
+        }
+        requests.post(api_url, json=requestData)
         self.register = Register.objects.create(
             queue_id=1,
             patient=self.patient,
@@ -154,15 +164,19 @@ class BillViewTestCase(APITestCase):
             time=timezone.now(),
             position="门诊大楼1楼内科"
         )
-        self.treatment = Treatment.objects.create(
-            queue_id=self.register.queue_id,
-            patient=self.patient,
-            doctor=self.doctor,
-            time=timezone.now(),
-            advice='suggestion',
-            medicine=['Aspirin', 'Paracetamol'],
-            price=100
-        )
+        # API 服务器地址
+        api_url = '/api/doctor_service/test/addTreatment'
+        # 请求数据（如果需要的话）
+        requestData = {'queue_id': self.register.queue_id,
+            'patient': self.patient,
+            'doctor': self.doctor,
+            'time': timezone.now(),
+            'advice': 'suggestion',
+            'medicine': ['Aspirin', 'Paracetamol'],
+            'price': 100,
+            'action': 'testAddTreatment'
+        }
+        requests.post(api_url, json=requestData)
         self.bill = Bill.objects.create(
             patient=self.patient,
             type=1,
@@ -232,16 +246,19 @@ class NoticeViewTestCase(APITestCase):
             phone_num='1234567890',
             address='Existing Address'
         )
-        self.doctor = Doctors.objects.create(
-            identity_num='1234567890',  # 证件号
-            name='张三',                # 医生姓名
-            title='主任医师',           # 医生职称
-            department='内科',          # 医生科室
-            research='心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
-            cost=200,                   # 出诊费，例如200元
-            avatar='path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
-            avatar_name='dr_zhang_san.jpg'  # 图片名字
-        )
+        # API 服务器地址
+        api_url = '/api/administrator_service/doctors/setData/'
+        # 请求数据（如果需要的话）
+        requestData = {'identity_num': '1234567890',  # 证件号
+            'name': '张三',                # 医生姓名
+            'title': '主任医师',           # 医生职称
+            'department': '内科',          # 医生科室
+            'research': '心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
+            'cost': 200,                   # 出诊费，例如200元
+            'avatar': 'path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
+            'avatar_name': 'dr_zhang_san.jpg',  # 图片名字
+            'action': 'testAddDoctor'
+        }
         self.register = Register.objects.create(
             queue_id=1,
             patient=self.patient,
@@ -250,15 +267,18 @@ class NoticeViewTestCase(APITestCase):
             time=timezone.now(),
             position="门诊大楼1楼内科"
         )
-        self.treatment = Treatment.objects.create(
-            queue_id=self.register.queue_id,
-            patient=self.patient,
-            doctor=self.doctor,
-            time=timezone.now(),
-            advice='suggestion',
-            medicine=['Aspirin', 'Paracetamol'],
-            price=100
-        )
+        # API 服务器地址
+        api_url = '/api/doctor_service/test/addTreatment'
+        # 请求数据（如果需要的话）
+        requestData = {'queue_id': self.register.queue_id,
+            'patient': self.patient,
+            'doctor': self.doctor,
+            'time': timezone.now(),
+            'advice': 'suggestion',
+            'medicine': ['Aspirin', 'Paracetamol'],
+            'price': 100,
+            'action': 'testAddTreatment'
+        }
         self.bill = Bill.objects.create(
             patient=self.patient,
             type=1,

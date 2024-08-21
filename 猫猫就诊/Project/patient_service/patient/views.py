@@ -122,7 +122,7 @@ class RegisterView(APIView):
         registers = []
         filter = {}
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/administrator_service/doctors/exist/'
+        api_url = '/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
@@ -132,14 +132,14 @@ class RegisterView(APIView):
         else:
             filter = {'register': identity_num}
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/patient_service/registers/filter/'
+        api_url = '/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': filter, 'action': "filterRegister"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
         registerList = response.json().get('registers', [])
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/administrator_service/doctors/list/'
+        api_url = '/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
@@ -168,7 +168,7 @@ class RegisterView(APIView):
                 state = "已预约"
             
             # API 服务器地址
-            api_url = 'http://101.42.36.160:80/api/patient_service/bills/register/'
+            api_url = '/api/patient_service/bills/register/'
             # 请求数据（如果需要的话）
             requestData = {'register': item['id'], 'action': "registerBill"}
             # 发送 POST 请求
@@ -205,7 +205,7 @@ class RegisterView(APIView):
         if register.time.hour > 12:
             time = 2
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/doctor_service/changeDutyState/'
+        api_url = '/api/doctor_service/changeDutyState/'
         # 请求数据（如果需要的话）
         requestData = {'doctor': register.doctor,
                     'date': register.time.date(),
@@ -241,7 +241,7 @@ class RegisterView(APIView):
         registers = []
         current_date = datetime.date.today()
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/administrator_service/doctors/exist/'
+        api_url = '/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
@@ -319,7 +319,7 @@ class RegisterView(APIView):
         time = 1
         if startTime.hour > 12:
             time = 2
-        api_url = 'http://101.42.36.160:80/api/doctor_service/judgeDutyState/'
+        api_url = '/api/doctor_service/judgeDutyState/'
         # 请求数据（如果需要的话）
         requestData = {'doctor': data['doctorId'],
                     'date': startTime.date(),
@@ -350,7 +350,7 @@ class RegisterView(APIView):
         if startTime.hour > 12:
             time = 2
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/doctor_service/changeDutyState/'
+        api_url = '/api/doctor_service/changeDutyState/'
         # 请求数据（如果需要的话）
         requestData = {'doctor': data['doctorId'],
                     'date': startTime.date(),
@@ -412,7 +412,7 @@ class TreatmentView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         filter = {}
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/administrator_service/doctors/exist/'
+        api_url = '/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
@@ -422,14 +422,14 @@ class TreatmentView(APIView):
         else:
             filter = {'patient': identity_num}
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/doctor_service/treatments/filter/'
+        api_url = '/api/doctor_service/treatments/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': filter, 'action': "filterTreatment"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
         treatmentList = response.json().get('treatments', [])
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/administrator_service/doctors/list/'
+        api_url = '/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
@@ -477,14 +477,14 @@ class OnDutyView(APIView):
             return JsonResponse({'error': 'Missing "department" key'}, status=400)
         department = json.loads(request.body)['department']
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/doctor_service/duty_list/seven_days'
+        api_url = '/api/doctor_service/duty_list/seven_days'
         # 请求数据（如果需要的话）
         requestData = {'action': "dutyListSevenDays"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
         onDutyList = response.json().get('onDutyList', [])
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/administrator_service/doctors/list/'
+        api_url = '/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
@@ -550,14 +550,14 @@ class OnDutyView(APIView):
     def getAllNextSevenDaysDuty(self, request):
         duty = []
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/doctor_service/duty_list/seven_days'
+        api_url = '/api/doctor_service/duty_list/seven_days'
         # 请求数据（如果需要的话）
         requestData = {'action': "dutyListSevenDays"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
         onDutyList = response.json().get('onDutyList', [])
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/administrator_service/doctors/list/'
+        api_url = '/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
@@ -704,7 +704,7 @@ class NoticeView(APIView):
             return JsonResponse({'error': 'Missing identity number'}, status=400)
         identity_num = json.loads(request.body)['identity_num']
         # API 服务器地址
-        api_url = 'http://101.42.36.160:80/api/administrator_service/doctors/list/'
+        api_url = '/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
@@ -740,7 +740,7 @@ class NoticeView(APIView):
                 })
             elif (item['msg_type'] == 3 or item['msg_type'] == 4) and item['patient'] == identity_num:
                 # API 服务器地址
-                api_url = 'http://101.42.36.160:80/api/treatment/exist/'
+                api_url = '/api/treatment/exist/'
                 # 请求数据（如果需要的话）
                 requestData = {'id': item['treatment'], 'action': "searchTreatment"}
                 # 发送 POST 请求

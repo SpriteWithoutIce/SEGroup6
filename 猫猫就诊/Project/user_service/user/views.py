@@ -71,7 +71,7 @@ class UserView(APIView):
             )
             user.save()
             # API 服务器地址
-            api_url = 'http://101.42.36.160:80/api/patient_service/patient/add/'
+            api_url = '/api/patient_service/patient/add/'
             # 请求数据（如果需要的话）
             requestData = {'name': "未填写",
                 'paymentType': "非医保",

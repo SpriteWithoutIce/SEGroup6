@@ -37,6 +37,7 @@ urlpatterns = [
     path("api/administrator_service/medicine/setData/", views.MedicineView.as_view()),
     
     path("api/administrator_service/doctors/exist/", views.DoctorView.as_view()),
+    path("api/administrator_service/test/addDoctor/", views.DoctorView.as_view()),
 
     re_path(r'^api/administrator_service/medicine/photo/(?P<filename>[\w.-]+)$', views.UploadPhotoView.as_view()),
     re_path(r'^api/administrator_service/doctor/avatar/(?P<filename>[\w.-]+)$', views.UploadAvatarView.as_view()),
