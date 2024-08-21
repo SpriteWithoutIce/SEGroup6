@@ -14,6 +14,14 @@ SSH_PASSWORD="22371468Se"  #
 # 安装 sshpass 工具
 sudo apt-get update && sudo apt-get install -y sshpass
 # 前端部署
+sshpass -p "$SSH_PASSWORD"
+    cd FRONTEND_PATH
+    cd ..
+    cd ..
+    npm run build
+    cd ..
+    cd ..
+    cd ..
 echo "Starting front-end deployment..."
 #sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/dist/ $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
