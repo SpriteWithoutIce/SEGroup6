@@ -16,6 +16,6 @@ services:
     container_name: django-app
     ports:
       - "8000:8000"
-    command: dockerize -wait tcp://database:3306 -timeout 60s python manage.py runserver 0.0.0.0:8000   
+    command: python manage.py runserver 0.0.0.0:8000   
     depends_on:
       - database
