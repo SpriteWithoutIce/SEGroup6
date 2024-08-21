@@ -125,8 +125,8 @@ USE_TZ = False
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "../frontend/dist/static"),
-    os.path.join(BASE_DIR, '../static/images/medicine'),
-    os.path.join(BASE_DIR, '../static/images/doctors')
+    os.path.join(BASE_DIR, '../django/static/images/medicine'),
+    os.path.join(BASE_DIR, '../django/static/images/doctors')
 ]
 
 # Default primary key field type
@@ -134,7 +134,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-DOCTOR_AVATAR_ROOT = os.path.join(BASE_DIR, '../static/images/doctors')
+DOCTOR_AVATAR_ROOT = os.path.join(BASE_DIR, '../django/static/images/doctors')
 
 LOGGING = {
     'version': 1,
