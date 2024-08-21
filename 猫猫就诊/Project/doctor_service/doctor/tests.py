@@ -18,7 +18,7 @@ client = APIClient()
 class TreatmentViewTest(APITestCase):
     def setUp(self):
         # 创建测试数据
-        api_url = 'http://127.0.0.1:8080/api/patient_service/patient/add/'
+        api_url = 'http://127.0.0.1:8001/api/patient_service/patient/add/'
         requestData = {
             'name': "Existing Patient",
             'paymentType': "非医保",
@@ -32,7 +32,7 @@ class TreatmentViewTest(APITestCase):
         requests.post(api_url, json=requestData)
         self.patient = requests.post(api_url, json=requestData)
 
-        api_url = 'http://127.0.0.1:8080/api/administrator_service/doctors/setData/'
+        api_url = 'http://127.0.0.1:8002/api/administrator_service/doctors/addDoctor/'
         # 请求数据（如果需要的话）
         requestData = {
             'identity_num': '1234567890',  # 证件号
@@ -46,18 +46,21 @@ class TreatmentViewTest(APITestCase):
             'action': 'testAddDoctor'
         }
         requests.post(api_url, json=requestData)
+
         # self.client.post(url, requestData, format='json')
-        api_url = "http://127.0.0.1:8080/api/administrator_service/doctors/getDoctor/"
+        api_url = "http://127.0.0.1:8002/api/administrator_service/doctors/getDoctor/"
         requestData = {
             'identity_num': '1234567890',  # 证件号
             'action': 'getDoctor'
         }
+        self.doctor = requests.post(api_url, json=requestData)
+        # print(self.doctor)
         # url = reverse('getDoctor')
         # self.doctor = self.client.post(url, requestData, format='json')
 
         self.data = {
             'action': 'getTreatmentsData',
-            'identity_num': self.doctor.identity_num
+            'identity_num': '1234567890'
         }
 
     def test_add_treatment_success(self):
@@ -110,7 +113,7 @@ class OnDutyViewTestCase(APITestCase):
     def setUp(self):
         # 设置测试数据
         self.client = APIClient()
-        api_url = 'http://127.0.0.1:8080/api/administrator_service/doctors/setData/'
+        api_url = 'http://127.0.0.1:8002/api/administrator_service/doctors/setData/'
         # 请求数据（如果需要的话）
         requestData = {
             'identity_num': '123456',  # 证件号
@@ -123,7 +126,7 @@ class OnDutyViewTestCase(APITestCase):
             'action': 'testAddDoctor'
         }
         requests.post(api_url, json=requestData)
-        api_url = "http://127.0.0.1:8080/administrator_service/doctors/getDoctor/"
+        api_url = "http://127.0.0.1:8002/administrator_service/doctors/getDoctor/"
         requestData = {
             'identity_num': '123456',  # 证件号
             'action': 'getDoctor'
