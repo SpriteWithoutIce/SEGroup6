@@ -197,7 +197,9 @@ class RegisterView(APIView):
     """
     def cancelRegister(self, request):
         id = json.loads(request.body)['id']
-        register = Register.objects.get(id=id)
+        register = Register.objects.filter(id=id).first()
+        if register is None:
+            return JsonResponse({'error': 'No such register'}, status=400)
         bill = Bill.objects.get(register=id)
         time = 1
         if register.time.hour > 12:
@@ -272,6 +274,8 @@ class RegisterView(APIView):
         data = json.loads(request.body)
         register = Register()
         register.queue_id = data['number']
+        if register.queue_id < 0:
+            return JsonResponse({'msg': "No such queue"})
         register.patient = Patients.objects.get(identity_num=data['inumber'])
         register.register = Patients.objects.get(identity_num=data['identity_num'])
         register.doctor = data['doctorId']
@@ -468,6 +472,9 @@ class OnDutyView(APIView):
     # 返回一个科室接下来七天内所有医生值班情况
     def getNextSevenDaysDuty(self, request):
         duty = []
+        data = json.loads(request.body)
+        if 'department' not in data:
+            return JsonResponse({'error': 'Missing "department" key'}, status=400)
         department = json.loads(request.body)['department']
         # API 服务器地址
         api_url = 'http://101.42.36.160:80/api/doctor_service/duty_list/seven_days'
@@ -538,7 +545,7 @@ class OnDutyView(APIView):
                                     "emptytime": emptyTime}],
                     
                 })
-        return JsonResponse({"duty": duty})
+        return JsonResponse({"duty": duty}, status=200)
     
     def getAllNextSevenDaysDuty(self, request):
         duty = []
@@ -628,6 +635,9 @@ class BillView(APIView):
     
     def getBillsData(self, request):
         bill = []
+        data = json.loads(request.body)
+        if 'identity_num' not in data:
+            return JsonResponse({'error': 'Invalid id'}, status=400)
         identity_num = json.loads(request.body)['identity_num']
         for item in Bill.objects.filter(patient=identity_num):
             department = item.register.doctor.department if item.type == 1 else item.treatment.doctor.department
@@ -644,6 +654,8 @@ class BillView(APIView):
     
     def changeBillStatus(self, request):
         data = json.loads(request.body)
+        if data['item_id'] < 0:
+            return JsonResponse({'error': 'Invalid id'}, status=400)
         bill = Bill.objects.get(id=data['item_id'])
         bill.state = True
         bill.save()
@@ -687,6 +699,9 @@ class NoticeView(APIView):
     def getNoticeData(self, request):
         resMes = []
         billMes = []
+        data = json.loads(request.body)
+        if 'identity_num' not in data:
+            return JsonResponse({'error': 'Missing identity number'}, status=400)
         identity_num = json.loads(request.body)['identity_num']
         # API 服务器地址
         api_url = 'http://101.42.36.160:80/api/administrator_service/doctors/list/'
@@ -743,14 +758,16 @@ class NoticeView(APIView):
                     "price": price,
                     "read": item['isRead']
                 })
-        return JsonResponse({"resMes": resMes, "billMes": billMes})
+        return JsonResponse({"resMes": resMes, "billMes": billMes}, status=200)
     
     def readNotice(self, request):
         item_id = json.loads(request.body)['item_id']
+        if item_id < 0:
+            return JsonResponse({'error': 'Invalid id'}, status=400)
         item = Notice.objects.get(id=item_id)
         item.isRead = True
         item.save()
-        return JsonResponse({'msg': 'Successfully read'})
+        return JsonResponse({'msg': 'Successfully read'}, status=200)
 
     def addNotice(self, request):
         data = json.loads(request.body)

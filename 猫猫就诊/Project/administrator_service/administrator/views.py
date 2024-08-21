@@ -58,7 +58,7 @@ class DoctorView(APIView):
                 'cost': item['cost'],
                 'avatar_name': item['avatar_name']
             })
-        return JsonResponse({'doctors': doctors})
+        return JsonResponse({'doctors': doctors}, status=200)
             
     def post(self, request):
         action = json.loads(request.body)['action']
@@ -103,6 +103,9 @@ class DoctorView(APIView):
     # api/administrator_service/doctors/delete/
     def deleteDoctor(self, request):
         id = json.loads(request.body)['id']
+        doctor = Doctors.objects.filter(identity_num=id).first()
+        if doctor is None:
+            return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=400)
         Doctors.objects.get(identity_num=id).delete()
         return self.get(request)
     
@@ -118,6 +121,9 @@ class DoctorView(APIView):
     def addDoctor(self, request):
         data = json.loads(request.body)
         try:
+            doctor = Doctors.objects.filter(identity_num=data['id']).first()
+            if doctor is not None:
+                return JsonResponse({'msg': "Doctor with id {} already exists".format(id)}, status=400)
             doctor = Doctors()
             doctor.name = data['name']
             doctor.title = data['title']
@@ -127,7 +133,7 @@ class DoctorView(APIView):
             doctor.research = data['research']
             doctor.avatar_name = data['avatar_name']
             doctor.save()
-            return JsonResponse({'msg': "Successfully add doctor data"})
+            return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
     
@@ -151,7 +157,7 @@ class DoctorView(APIView):
     def searchDoctor(self, request):
         data = json.loads(request.body)
         try:
-            doctor = Doctors.objects.get(identity_num=data['identity_num'])
+            doctor = Doctors.objects.filter(identity_num=data['identity_num']).first()
             return JsonResponse({'msg': "Doctor Exist", 'id': doctor.id})
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor Not Exist"})
@@ -213,6 +219,9 @@ class MedicineView(APIView):
     # api/administrator_service/medicine/delete/
     def deleteMedicine(self, request):
         id = json.loads(request.body)['id']
+        medicine = Medicine.objects.filter(id=id).first()
+        if medicine is None:
+            return JsonResponse({'error': 'Medicine with id {} not found'.format(id)}, status=400)
         Medicine.objects.get(id=id).delete()
         return self.get(request)
     
@@ -228,6 +237,8 @@ class MedicineView(APIView):
     def addMedicine(self, request):
         data = json.loads(request.body)
         try:
+            if 'name' not in data or 'type' not in data or 'symptom' not in data or 'price' not in data or 'quantity' not in data or 'photo_name' not in data:
+                return JsonResponse({'error': 'Invalid data'}, status=400)
             medicine = Medicine()
             medicine.name = data['name']
             medicine.medicine_type = data['type']
