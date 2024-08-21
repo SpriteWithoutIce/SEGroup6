@@ -72,7 +72,7 @@ class PatientView(APIView):
             patient.gender = 1
         elif data['gender'] == '女':
             patient.gender = 2
-        patient.birthday = data['birthday']
+        patient.birthday = datetime.date.fromisoformat(data['birthday'])
         patient.phone_num = data['phone']
         patient.address = data['addr']
         patient.save()
