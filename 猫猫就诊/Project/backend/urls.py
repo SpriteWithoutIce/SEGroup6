@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 from backend import settings
 
+# modify
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", TemplateView.as_view(template_name="index.html")),

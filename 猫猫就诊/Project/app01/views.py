@@ -231,8 +231,8 @@ class RegisterView(APIView):
 
     def cancelRegister(self, request):
         id = json.loads(request.body)['id']
+        # modify
         register = Register.objects.filter(id=id).first()
-        # register = Register.objects.get(id=id)
         if register is None:
             return JsonResponse({'error': 'No such register'}, status=400)
         bill = Bill.objects.get(register=id)
@@ -298,6 +298,7 @@ class RegisterView(APIView):
         data = json.loads(request.body)
         register = Register()
         register.queue_id = data['number']
+        # modify
         if register.queue_id < 0:
             return JsonResponse({'msg': "No such queue"})
         register.patient = Patients.objects.get(identity_num=data['inumber'])
@@ -457,6 +458,7 @@ class TreatmentView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         filter = {}
         try:
+            # modify
             doctor = Doctors.objects.filter(identity_num=identity_num).first()
             if doctor is None:
                 return JsonResponse({'error': 'Invalid doctor'}, status=400)
@@ -501,6 +503,7 @@ class TreatmentView(APIView):
     def addTreatmentData(self, request):
         data = json.loads(request.body)
         treatment = Treatment()
+        # modify
         register = Register.objects.filter(id=data['id']).first()
         if register is None:
             return JsonResponse({'error': 'Invalid id'}, status=400)
@@ -554,6 +557,7 @@ class DoctorView(APIView):
                 'cost': item['cost'],
                 'avatar_name': item['avatar_name']
             })
+        # modify
         return JsonResponse({'doctors': doctors}, status=200)
 
     def post(self, request):
@@ -571,6 +575,7 @@ class DoctorView(APIView):
         elif action == 'alterDoctor':
             return self.alterDoctor(request)
         else:
+            # mofify
             return JsonResponse({'error': 'Invalid action'})
 
     # 上传医生头像, 返回该医生数据
@@ -595,6 +600,7 @@ class DoctorView(APIView):
 
     def deleteDoctor(self, request):
         id = json.loads(request.body)['id']
+        # modify
         doctor = Doctors.objects.filter(identity_num=id).first()
         if doctor is None:
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=400)
@@ -611,6 +617,7 @@ class DoctorView(APIView):
     def addDoctor(self, request):
         data = json.loads(request.body)
         try:
+            # modify
             doctor = Doctors.objects.filter(identity_num=data['id']).first()
             if doctor is not None:
                 return JsonResponse({'msg': "Doctor with id {} already exists".format(id)}, status=400)
@@ -623,6 +630,7 @@ class DoctorView(APIView):
             doctor.research = data['research']
             doctor.avatar_name = data['avatar_name']
             doctor.save()
+            # modify
             return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
@@ -660,6 +668,7 @@ class OnDutyView(APIView):
         duty = []
         seven_days_later = (
             timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+        # modify
         data = json.loads(request.body)
         if 'department' not in data:
             return JsonResponse({'error': 'Missing "department" key'}, status=400)
@@ -718,6 +727,7 @@ class OnDutyView(APIView):
                                   "emptytime": emptyTime}],
 
                 })
+        # modify
         return JsonResponse({"duty": duty}, status=200)
 
     def getAllNextSevenDaysDuty(self, request):
@@ -794,6 +804,7 @@ class BillView(APIView):
 
     def getBillsData(self, request):
         bill = []
+        # modify
         data = json.loads(request.body)
         if 'identity_num' not in data:
             return JsonResponse({'error': 'Invalid id'}, status=400)
@@ -813,6 +824,7 @@ class BillView(APIView):
 
     def changeBillStatus(self, request):
         data = json.loads(request.body)
+        # modify
         if data['item_id'] < 0:
             return JsonResponse({'error': 'Invalid id'}, status=400)
         bill = Bill.objects.filter(id=data['item_id']).first()
@@ -845,6 +857,7 @@ class NoticeView(APIView):
         resMes = []
         billMes = []
         data = json.loads(request.body)
+        # modify
         if 'identity_num' not in data:
             return JsonResponse({'error': 'Missing identity number'}, status=400)
         identity_num = json.loads(request.body)['identity_num']
@@ -889,15 +902,18 @@ class NoticeView(APIView):
                     "price": treatment.price,
                     "read": item['isRead']
                 })
+        # modify
         return JsonResponse({"resMes": resMes, "billMes": billMes}, status=200)
 
     def readNotice(self, request):
         item_id = json.loads(request.body)['item_id']
+        # modify
         if item_id < 0:
             return JsonResponse({'error': 'Invalid id'}, status=400)
         item = Notice.objects.get(id=item_id)
         item.isRead = True
         item.save()
+        # modify
         return JsonResponse({'msg': 'Successfully read'}, status=200)
 
 
@@ -938,6 +954,7 @@ class MedicineView(APIView):
 
     def deleteMedicine(self, request):
         id = json.loads(request.body)['id']
+        # modify
         medicine = Medicine.objects.filter(id=id).first()
         if medicine is None:
             return JsonResponse({'error': 'Medicine with id {} not found'.format(id)}, status=400)
@@ -954,6 +971,7 @@ class MedicineView(APIView):
     def addMedicine(self, request):
         data = json.loads(request.body)
         try:
+            # modify
             if 'name' not in data or 'type' not in data or 'symptom' not in data or 'price' not in data or 'quantity' not in data or 'photo_name' not in data:
                 return JsonResponse({'error': 'Invalid data'}, status=400)
             medicine = Medicine()
