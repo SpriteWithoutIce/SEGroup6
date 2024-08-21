@@ -20,7 +20,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: backend
-        path: ./猫猫就诊/Project/backend  # 前端构建产物
+        path: ./猫猫就诊/Project/backend  # 后端构建产物
 
   deploy-on-ubuntu:
     runs-on: ubuntu-latest
