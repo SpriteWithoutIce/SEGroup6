@@ -76,7 +76,7 @@ class UserView(APIView):
             requestData = {'name': "未填写",
                 'paymentType': "非医保",
                 'gender': "男",
-                'birthday': datetime.date.today(),
+                'birthday': datetime.date.today().isoformat(),
                 'idType': "身份证",
                 'phone': "未填写",
                 'number': identity_num,
