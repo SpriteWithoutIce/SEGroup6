@@ -37,7 +37,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
+      - name: install bash
+        run: choco install git
+
       - name: Deploy to server
-        run: bash ./deploy.sh
-        shell: pwsh
+        run: ./deploy.sh
+        shell: bash
