@@ -554,7 +554,7 @@ class DoctorView(APIView):
                 'cost': item['cost'],
                 'avatar_name': item['avatar_name']
             })
-        return JsonResponse({'doctors': doctors})
+        return JsonResponse({'doctors': doctors}, status=200)
 
     def post(self, request):
         action = json.loads(request.body)['action']
@@ -571,7 +571,7 @@ class DoctorView(APIView):
         elif action == 'alterDoctor':
             return self.alterDoctor(request)
         else:
-            return JsonResponse({'error': 'Invalid action'}, status=400)
+            return JsonResponse({'error': 'Invalid action'})
 
     # 上传医生头像, 返回该医生数据
     def upload_avatar(self, request):
@@ -595,6 +595,9 @@ class DoctorView(APIView):
 
     def deleteDoctor(self, request):
         id = json.loads(request.body)['id']
+        doctor = Doctors.objects.filter(identity_num=id).first()
+        if doctor is None:
+            return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=400)
         Doctors.objects.get(identity_num=id).delete()
         return self.get(request)
 
@@ -608,6 +611,9 @@ class DoctorView(APIView):
     def addDoctor(self, request):
         data = json.loads(request.body)
         try:
+            doctor = Doctors.objects.filter(identity_num=data['id']).first()
+            if doctor is not None:
+                return JsonResponse({'msg': "Doctor with id {} already exists".format(id)}, status=400)
             doctor = Doctors()
             doctor.name = data['name']
             doctor.title = data['title']
@@ -617,7 +623,7 @@ class DoctorView(APIView):
             doctor.research = data['research']
             doctor.avatar_name = data['avatar_name']
             doctor.save()
-            return JsonResponse({'msg': "Successfully add doctor data"})
+            return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
         except Doctors.DoesNotExist:
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
 
