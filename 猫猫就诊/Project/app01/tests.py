@@ -342,3 +342,63 @@ class DoctorViewTest(TestCase):
         response = self.client.post(reverse(
             'doctor_delete'), {'action': 'deleteDoctor', 'id': 'non_existent_id'}, content_type='application/json')
         self.assertEqual(response.status_code, 400)
+
+
+class OnDutyViewTestCase(APITestCase):
+
+    def setUp(self):
+        # 设置测试数据
+        self.client = APIClient()
+        self.doctor = Doctors.objects.create(
+            name='John Doe',
+            title='Dr.',
+            department='Cardiology',
+            research='Heart diseases',
+            cost=150,
+            identity_num='123456',
+            avatar_name='avatar1.png'
+        )
+        self.on_duty = OnDuty.objects.create(
+            doctor=self.doctor,
+            date=timezone.now(),
+            time=1,
+            state=12
+        )
+
+    def test_get_next_seven_days_duty_successful(self):
+        # 正向测试用例：成功的获取接下来七天的值班情况
+        url = reverse('duty_next_seven_days')
+        response = self.client.post(url, {
+            'action': 'getNextSevenDaysDuty',
+            'department': self.doctor.department
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('duty', response.json())
+
+    def test_get_next_seven_days_duty_fault_no_department(self):
+        # 负向测试用例：缺少部门信息，导致获取失败
+        url = reverse('duty_next_seven_days')
+        response = self.client.post(url, {
+            'action': 'getNextSevenDaysDuty'
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.json(), {
+                         'error': 'Missing "department" key'})
+
+    def test_get_all_next_seven_days_duty_successful(self):
+        # 正向测试用例：成功的获取所有接下来七天的值班情况
+        url = reverse('duty_all_next_seven_days')
+        response = self.client.post(url, {
+            'action': 'getAllNextSevenDaysDuty'
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('duty', response.json())
+
+    def test_get_all_next_seven_days_duty_fault_invalid_action(self):
+        # 负向测试用例：无效的操作导致失败
+        url = reverse('duty_all_next_seven_days')
+        response = self.client.post(url, {
+            'action': 'invalidAction'
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.json(), {'error': 'Invalid action'})

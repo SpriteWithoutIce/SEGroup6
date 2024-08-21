@@ -660,6 +660,9 @@ class OnDutyView(APIView):
         duty = []
         seven_days_later = (
             timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+        data = json.loads(request.body)
+        if 'department' not in data:
+            return JsonResponse({'error': 'Missing "department" key'}, status=400)
         department = json.loads(request.body)['department']
         for item in OnDuty.objects.filter(date__lte=seven_days_later, doctor__department=department).annotate(
             doctor_name=F('doctor__name'),
@@ -715,7 +718,7 @@ class OnDutyView(APIView):
                                   "emptytime": emptyTime}],
 
                 })
-        return JsonResponse({"duty": duty})
+        return JsonResponse({"duty": duty}, status=200)
 
     def getAllNextSevenDaysDuty(self, request):
         duty = []
