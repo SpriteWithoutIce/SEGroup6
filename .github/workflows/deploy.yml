@@ -24,7 +24,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: frontend-build
-        path: ./猫猫就诊/Project/frontend  # 前端构建产物
+        path: ./猫猫就诊/Project/frontend/dist  # 前端构建产物
 
     - name: Upload backend artifacts
       uses: actions/upload-artifact@v3
