@@ -19,7 +19,7 @@ class TreatmentViewTest(APITestCase):
     def setUp(self):
         # 创建测试数据
         self.client = client
-        api_url = 'http://127.0.0.1:8001/api/patient_service/patient/add/'
+        api_url = 'http://127.0.0.1:5001/api/patient_service/patient/add/'
         requestData = {
             'name': "Existing Patient",
             'paymentType': "非医保",
@@ -31,12 +31,10 @@ class TreatmentViewTest(APITestCase):
             'addr': "Existing Address",
             'action': "getPatient"
         }
-        respond = self.client.post(api_url, requestData, format='json')
-        print(respond)
-        self.patient = self.client.get(api_url, requestData, format='json')
-        print(self.patient.status_code)
-        exit()
-        api_url = 'http://127.0.0.1:8002/api/administrator_service/doctors/addDoctor/'
+        self.patient = requests.post(
+            api_url, json=requestData).json()['patients']
+
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/test/addDoctor/'
         # 请求数据（如果需要的话）
         requestData = {
             'identity_num': '1234567890',  # 证件号
@@ -50,29 +48,48 @@ class TreatmentViewTest(APITestCase):
             'action': 'testAddDoctor'
         }
         respond = requests.post(api_url, json=requestData)
-        print(respond)
-        # self.client.post(url, requestData, format='json')
-        api_url = "http://127.0.0.1:8002/api/administrator_service/doctors/getDoctor/"
+        api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
         requestData = {
             'identity_num': '1234567890',  # 证件号
             'action': 'getDoctor'
         }
-        self.doctor = requests.post(api_url, json=requestData)
-        print(self.doctor)
-        # url = reverse('getDoctor')
-        # self.doctor = self.client.post(url, requestData, format='json')
+        respond = requests.post(api_url, json=requestData)
+        self.doctor = respond.json()['doctor']
 
+        api_url = "http://127.0.0.1:5001/api/patient_service/appointment/add/"
+        requestData = {
+            'action': 'addRegisterData',
+            'number': 1,
+            'inumber': self.patient[0]['identity_num'],
+            'identity_num': self.patient[0]['identity_num'],
+            'doctorId': self.doctor[0]['id'],
+            'time': "08-20-2024",
+            'starttime': '09:00',
+            'department': 'cat',
+            'cost': 100
+        }
+        respond = requests.post(api_url, json=requestData)
+        self.register_id = respond.json()['registers'][0]['id']
         self.data = {
             'action': 'getTreatmentsData',
             'identity_num': '1234567890'
         }
+        requestData = {
+            'action': 'addTreatmentData',
+            'id': self.register_id,
+            'suggestion': 'Take a rest',
+            'medicines': ['Aspirin', 'Paracetamol'],
+            'totalPrice': 100
+        }
+        url = reverse('treatment_list')
+        self.client.post(url, requestData, format='json')
 
     def test_add_treatment_success(self):
         # 正向测试用例：成功添加治疗记录
         url = reverse('treatment_list')
         add_data = {
             'action': 'addTreatmentData',
-            'id': '1234567890',
+            'id': self.register_id,
             'suggestion': 'Take a rest',
             'medicines': ['Aspirin', 'Paracetamol'],
             'totalPrice': 100
@@ -82,35 +99,25 @@ class TreatmentViewTest(APITestCase):
         self.assertEqual(response.json(), {
                          'msg': 'Successfully add treatment'})
 
-    # def test_add_treatment_invalid_data(self):
-    #     # 负向测试用例：使用无效数据添加治疗记录
-    #     url = reverse('treatment_list')
-    #     add_data = {
-    #         'action': 'addTreatmentData',
-    #         'id': -1,  # 无效的 register id
-    #         'suggestion': '',
-    #         'medicines': [],
-    #         'totalPrice': 0
-    #     }
-    #     response = self.client.post(url, add_data, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_add_treatment_invalid_data(self):
+        # 负向测试用例：使用无效数据添加治疗记录
+        url = reverse('treatment_list')
+        add_data = {
+            'action': 'addTreatmentData',
+            'id': -1,  # 无效的 register id
+            'suggestion': '',
+            'medicines': [],
+            'totalPrice': 0
+        }
+        response = self.client.post(url, add_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    # def test_get_treatments_success(self):
-    #     # 正向测试用例：成功获取治疗数据
-    #     url = reverse('treatment_list')
-    #     response = self.client.post(url, self.data, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertIn('treatments', response.json())
-
-    # def test_get_treatments_invalid_identity(self):
-    #     # 负向测试用例：使用无效的 identity_num 获取治疗数据
-    #     self.data['identity_num'] = 'invalid_identity'
-    #     url = reverse('treatment_list')
-    #     response = self.client.post(url, self.data, format='json')
-    #     self.assertEqual(response.status_code,
-    #                      status.HTTP_400_BAD_REQUEST)  # 状态码根据业务逻辑调整
-    #     self.assertEqual(response.json(), {
-    #                      'error': 'Invalid doctor'})
+    def test_get_treatments_success(self):
+        # 正向测试用例：成功获取治疗数据
+        url = reverse('treatment_list')
+        response = self.client.post(url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('treatments', response.json())
 
 
 # class OnDutyViewTestCase(APITestCase):

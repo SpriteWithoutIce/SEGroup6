@@ -98,7 +98,18 @@ class DoctorView(APIView):
     def getDoctor(self, request):
         id = json.loads(request.body)['identity_num']
         doctor = Doctors.objects.get(identity_num=id)
-        return doctor
+        respond = []
+        respond.append({
+            'id': doctor.id,
+            'identity_num': doctor.identity_num,
+            'name': doctor.name,
+            'department': doctor.department,
+            'title': doctor.title,
+            'research': doctor.research,
+            'cost': doctor.cost,
+            'avatar': '/api/administrator_service/doctor/avatar/' + doctor.avatar_name
+        })
+        return JsonResponse({"doctor": respond})
 
     # api/administrator_service/doctors/list/
     def getDoctorsData(self, request):
@@ -135,22 +146,33 @@ class DoctorView(APIView):
     # api/administrator_service/doctors/setData/
     def addDoctor(self, request):
         data = json.loads(request.body)
-        try:
-            doctor = Doctors.objects.filter(identity_num=data['id']).first()
-            if doctor is not None:
-                return JsonResponse({'msg': "Doctor with id {} already exists".format(id)}, status=400)
+        doctor = Doctors.objects.filter(identity_num=data['id']).first()
+        if doctor is None:
             doctor = Doctors()
-            doctor.name = data['name']
-            doctor.title = data['title']
-            doctor.department = data['department']
-            doctor.cost = data['cost']
-            doctor.identity_num = data['id']
-            doctor.research = data['research']
-            doctor.avatar_name = data['avatar_name']
-            doctor.save()
-            return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
-        except Doctors.DoesNotExist:
-            return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
+        doctor.name = data['name']
+        doctor.title = data['title']
+        doctor.department = data['department']
+        doctor.cost = data['cost']
+        doctor.identity_num = data['id']
+        doctor.research = data['research']
+        doctor.avatar_name = data['avatar_name']
+        doctor.save()
+        return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
+        # try:
+        #     doctor = Doctors.objects.filter(identity_num=data['id']).first()
+        #     if doctor is None:
+        #         doctor = Doctors()
+        #     doctor.name = data['name']
+        #     doctor.title = data['title']
+        #     doctor.department = data['department']
+        #     doctor.cost = data['cost']
+        #     doctor.identity_num = data['id']
+        #     doctor.research = data['research']
+        #     doctor.avatar_name = data['avatar_name']
+        #     doctor.save()
+        #     return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
+        # except Doctors.DoesNotExist:
+        #     return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
 
     # api/administrator_service/doctors/setData/
     def alterDoctor(self, request):
@@ -181,15 +203,15 @@ class DoctorView(APIView):
     # api/administrator_service/test/addDoctor/
     def testAddDoctor(self, request):
         data = json.loads(request.body)
-        doctor = Doctors.objects.filter(identity_num=data['id']).first()
-        if doctor is not None:
-            return JsonResponse({'msg': "Doctor with id {} already exists".format(id)}, status=400)
-        doctor = Doctors()
+        doctor = Doctors.objects.filter(
+            identity_num=data['identity_num']).first()
+        if doctor is None:
+            doctor = Doctors()
         doctor.name = data['name']
         doctor.title = data['title']
         doctor.department = data['department']
         doctor.cost = data['cost']
-        doctor.identity_num = data['id']
+        doctor.identity_num = data['identity_num']
         doctor.research = data['research']
         doctor.avatar = data['avatar']
         doctor.avatar_name = data['avatar_name']

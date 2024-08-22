@@ -41,13 +41,6 @@ class MyCore(MiddlewareMixin):
 
 
 class PatientView(APIView):
-    def get(self, request):
-        data = json.loads(request.body)
-        patient = Patients.objects.filter(identity_num=data['number']).first()
-        if patient is not None:
-            return JsonResponse({'patient': patient}, status=200)
-        else:
-            return JsonResponse({'error': 'Patient not found'}, status=404)
     """
     添加患者信息。
     Args:
@@ -58,6 +51,10 @@ class PatientView(APIView):
 
     def post(self, request):
         data = json.loads(request.body)
+        if 'action' in data and data['action'] == 'getPatient':
+            return self.getPatient(request)
+        if 'action' in data and data['action'] == 'getPatientName':
+            return self.getPatientName(request)
         patient = Patients.objects.filter(identity_num=data['number']).first()
         if patient is None:
             patient = Patients()
@@ -87,10 +84,28 @@ class PatientView(APIView):
         patient.phone_num = data['phone']
         patient.address = data['addr']
         patient.save()
-        if 'action' in data and data['action']=='getPatient':
-            return JsonResponse({'patient': patient})
-        return JsonResponse({'msg': 'Successfully add patient'})
+        return JsonResponse({'msg': 'Successfully add patient'}, status=201)
 
+    def getPatient(self, request):
+        data = json.loads(request.body)
+        patient = Patients.objects.get(identity_num=data['number'])
+        patient_respond = []
+        patient_respond.append({
+            'id': patient.pk,
+            'identity_num': patient.identity_num,
+            'name': patient.name,
+            'health_insurance': patient.get_health_insurance_display(),
+            'gender': patient.get_gender_display(),
+            'birthday': str(patient.birthday),
+            'phone_num': patient.phone_num,
+            'address': patient.address
+        })
+        return JsonResponse({'patients': patient_respond}, status=200)
+
+    def getPatientName(self,request):
+        data = json.loads(request.body)
+        patient = Patients.objects.get(identity_num=data['number'])
+        return JsonResponse({'name': patient.name}, status=200)
 
 class RegisterView(APIView):
     """
@@ -325,7 +340,11 @@ class RegisterView(APIView):
         notice.register = register
         notice.isRead = False
         notice.save()
-        return JsonResponse({'msg': "Successfully add register"})
+        registers = []
+        registers.append({
+            'id': register.id
+        })
+        return JsonResponse({'msg': "Successfully add register", 'registers': registers})
 
     """
     api/patient_service/register/lock/
@@ -718,8 +737,9 @@ class BillView(APIView):
         bill = Bill()
         bill.type = data['type']
         bill.state = data['state']
-        bill.patient = data['patient']
+        bill.patient = Patients.objects.get(identity_num=data['patient'])
         bill.treatment = data['treatment']
+        bill.register = Register.objects.get(id=data['register'])
         bill.price = data['price']
         bill.save()
 
@@ -731,6 +751,8 @@ class NoticeView(APIView):
             return self.getNoticeData(request)
         elif action == 'readMes':
             return self.readNotice(request)
+        elif action == 'addNotice':
+            return self.addNotice(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
 
@@ -812,8 +834,9 @@ class NoticeView(APIView):
     def addNotice(self, request):
         data = json.loads(request.body)
         notice = Notice()
-        notice.patient = data['patient']
-        notice.registerMan = data['registerMan']
+        notice.patient = Patients.objects.get(identity_num=data['patient'])
+        notice.registerMan = Patients.objects.get(
+            identity_num=data['registerMan'])
         notice.doctor = data['doctor']
         notice.msg_type = data['msg_type']
         notice.time = data['time']

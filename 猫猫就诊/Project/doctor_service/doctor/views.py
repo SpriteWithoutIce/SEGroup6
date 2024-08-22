@@ -1,6 +1,6 @@
 import asyncio
 from datetime import timedelta
-import datetime
+from datetime import datetime
 import os
 from urllib.parse import quote, unquote
 from django.utils import timezone
@@ -76,7 +76,7 @@ class RegisterView(APIView):
         registers = []
         filter = {}
         # API 服务器地址
-        api_url = 'http://127.0.0.1:8002//api/administrator_service/doctors/exist/'
+        api_url = 'http://127.0.0.1:5002/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
@@ -224,7 +224,7 @@ class TreatmentView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         filter = {}
         # API 服务器地址
-        api_url = 'http://127.0.0.1:8002/api/administrator_service/doctors/exist/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
@@ -234,24 +234,24 @@ class TreatmentView(APIView):
         else:
             filter = {'register': identity_num}
         # API 服务器地址
-        api_url = '/api/administrator_service/doctors/list/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
         doctorList = response.json().get('doctors', [])
-        for item in Treatment.objects.filter(**filter).annotate(
-            patient_name=F('patient__name'),
-        ).values('patient_name', 'doctor', 'time', 'advice', 'medicine'):
+        treatment = Treatment.objects.filter(**filter).first()
+
+        for item in Treatment.objects.filter(doctor=filter['doctor']).values('patient', 'doctor', 'time', 'advice', 'medicine'):
             doctor = next(
                 (doctor for doctor in doctorList if doctor['id'] == item['doctor']), None)
             doctor_department = doctor['department']
             doctor_name = doctor['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S')
-            end_time = start_time + timedelta(minutes=10)
-            end_time = end_time.strftime('%H:%M')
+            # print(type(item['time']))
+            # start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S')
+            start_time = item['time']
             formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
             if start_time.hour < 12:
                 formatted_datetime = formatted_datetime[:10] + \
@@ -259,9 +259,17 @@ class TreatmentView(APIView):
             else:
                 formatted_datetime = formatted_datetime[:10] + \
                     ' ' + CHINESE_PM + formatted_datetime[10:]
+            patient_id = item['patient']
+            # API 服务器地址
+            api_url = 'http://127.0.0.1:5001/api/patient_service/patient/add/'
+            requestData = {
+                'number': patient_id,
+                'action': "getPatientName"
+            }
+            patient_name = response.json().get('name')
             treatments.append({'office': doctor_department,
                                'time': formatted_datetime,
-                               'patient': item['patient_name'],
+                               'patient': patient_name,
                                'doctor': doctor_name,
                                'advice': item['advice'],
                                'medicine': json.loads(item['medicine']),
@@ -279,17 +287,17 @@ class TreatmentView(APIView):
 
     def addTreatmentData(self, request):
         data = json.loads(request.body)
+        if data['id'] < 0:
+            return JsonResponse({'msg': "Invalid id"}, status=400)
         treatment = Treatment()
         # API 服务器地址
-        api_url = 'http://127.0.0.1:8000/api/patient_service/registers/filter/'
+        api_url = 'http://127.0.0.1:5001/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': {
             'id': data['id']}, 'action': "filterRegister"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        print(response.json()['registers'])
-        registerList = response.json().get('registers', [])
-        register = registerList[0]
+        register = response.json()['registers'][0]
         treatment.queue_id = register['queue_id']
         treatment.patient = register['patient']
         treatment.doctor = register['doctor']
@@ -299,27 +307,30 @@ class TreatmentView(APIView):
         treatment.price = data['totalPrice']
         treatment.save()
         # API 服务器地址
-        api_url = '/api/patient_service/add/bill/'
+        api_url = 'http://127.0.0.1:5001/api/patient_service/add/bill/'
         # 请求数据（如果需要的话）
+
         requestData = {'type': 2,
-                       'state': False,
+                       'state': "False",
                        'patient': register['patient'],
-                       'treatment': treatment,
+                       'treatment': treatment.id,
+                       'register': data['id'],
                        'price': data['totalPrice'],
                        'action': "addBill"}
         # 发送 POST 请求
         requests.post(api_url, json=requestData)
         # API 服务器地址
-        api_url = '/api/patient_service/add/Notice/'
+        api_url = 'http://127.0.0.1:5001/api/patient_service/add/Notice/'
         # 请求数据（如果需要的话）
-        requestData = {'patient': register['patient'],
-                       'registerMan': register['register'],
-                       'doctor': register['doctor'],
-                       'msg_type': 3,
-                       'time': timezone.now(),
-                       'treatment': treatment,
-                       'isRead': False,
-                       'action': "addNotice"}
+        requestData = {
+            'patient': register['patient'],
+            'registerMan': register['register'],
+            'doctor': register['doctor'],
+            'msg_type': 3,
+            'time': '2024-08-20',
+            'treatment': treatment.id,
+            'isRead': "False",
+            'action': "addNotice"}
         # 发送 POST 请求
         requests.post(api_url, json=requestData)
         return JsonResponse({'msg': "Successfully add treatment"})
@@ -362,7 +373,7 @@ class MedicineView(APIView):
     # api/doctor_service/medicine/list/
     def get(self, request):
         # API 服务器地址
-        api_url = '/api/administrator_service/medicine/list/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/medicine/list/'
         # 发送 POST 请求
         response = requests.get(api_url)
         medicineList = response.json().get('medicine', [])
