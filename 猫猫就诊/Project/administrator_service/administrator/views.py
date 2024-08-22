@@ -96,9 +96,23 @@ class DoctorView(APIView):
 
     # api/administrator_service/doctors/getDoctor/
     def getDoctor(self, request):
+        data = json.loads(request.body)
+        respond = []
+        if 'id' in data:
+            doctor = Doctors.objects.get(id=data['id'])
+            respond.append({
+                'id': doctor.id,
+                'identity_num': doctor.identity_num,
+                'name': doctor.name,
+                'department': doctor.department,
+                'title': doctor.title,
+                'research': doctor.research,
+                'cost': doctor.cost,
+                'avatar': '/api/administrator_service/doctor/avatar/' + doctor.avatar_name
+            })
+            return JsonResponse({"doctor": respond})
         id = json.loads(request.body)['identity_num']
         doctor = Doctors.objects.get(identity_num=id)
-        respond = []
         respond.append({
             'id': doctor.id,
             'identity_num': doctor.identity_num,

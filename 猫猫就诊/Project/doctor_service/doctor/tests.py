@@ -7,6 +7,8 @@ from rest_framework import status
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from datetime import date
+from datetime import timedelta
+
 from django.utils import timezone
 from .models import *
 import json
@@ -120,70 +122,51 @@ class TreatmentViewTest(APITestCase):
         self.assertIn('treatments', response.json())
 
 
-# class OnDutyViewTestCase(APITestCase):
-#     def setUp(self):
-#         # 设置测试数据
-#         self.client = APIClient()
-#         api_url = 'http://127.0.0.1:8002/api/administrator_service/doctors/setData/'
-#         # 请求数据（如果需要的话）
-#         requestData = {
-#             'identity_num': '123456',  # 证件号
-#             'name': 'John Doe',                # 医生姓名
-#             'title': 'Dr.',           # 医生职称
-#             'department': 'Cardiology',          # 医生科室
-#             'research': 'Heart diseases',     # 研究方向，如果不需要可以省略或设置为None
-#             'cost': 150,                   # 出诊费，例如200元
-#             'avatar_name': 'avatar1.png',  # 图片名字
-#             'action': 'testAddDoctor'
-#         }
-#         requests.post(api_url, json=requestData)
-#         api_url = "http://127.0.0.1:8002/administrator_service/doctors/getDoctor/"
-#         requestData = {
-#             'identity_num': '123456',  # 证件号
-#             'action': 'getDoctor'
-#         }
-#         self.doctor = requests.post(api_url, json=requestData)
-#         self.on_duty = OnDuty.objects.create(
-#             doctor=self.doctor,
-#             date=timezone.now(),
-#             time=1,
-#             state=12
-#         )
+class OnDutyViewTestCase(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/test/addDoctor/'
+        # 请求数据（如果需要的话）
+        requestData = {
+            'identity_num': '1234567890',  # 证件号
+            'name': '张三',                # 医生姓名
+            'title': '主任医师',           # 医生职称
+            'department': '内科',          # 医生科室
+            'research': '心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
+            'cost': 200,                   # 出诊费，例如200元
+            'avatar': 'path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
+            'avatar_name': 'dr_zhang_san.jpg',  # 图片名字
+            'action': 'testAddDoctor'
+        }
+        requests.post(api_url, json=requestData)
+        api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+        requestData = {
+            'identity_num': '1234567890',  # 证件号
+            'action': 'getDoctor'
+        }
+        respond = requests.post(api_url, json=requestData)
+        self.doctor = respond.json()['doctor'][0]
 
-#     def test_get_next_seven_days_duty_successful(self):
-#         # 正向测试用例：成功的获取接下来七天的值班情况
-#         url = reverse('duty_next_seven_days')
-#         response = self.client.post(url, {
-#             'action': 'getNextSevenDaysDuty',
-#             'department': self.doctor.department
-#         }, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertIn('duty', response.json())
+        self.on_duty = OnDuty.objects.create(
+            doctor=self.doctor['id'],
+            date=timezone.now() + timedelta(days=1),
+            time=1,
+            state=123
+        )
 
-#     def test_get_next_seven_days_duty_fault_no_department(self):
-#         # 负向测试用例：缺少部门信息，导致获取失败
-#         url = reverse('duty_next_seven_days')
-#         response = self.client.post(url, {
-#             'action': 'getNextSevenDaysDuty'
-#         }, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-#         self.assertEqual(response.json(), {
-#                          'error': 'Missing "department" key'})
+    def test_get_next_seven_days_duty_successful(self):
+        # 正向测试用例：成功的获取接下来七天的值班情况
+        url = reverse('seven_days')
+        response = self.client.post(url, {
+            'action': 'dutyListSevenDays',
+            'department': self.doctor['department']
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-#     def test_get_all_next_seven_days_duty_successful(self):
-#         # 正向测试用例：成功的获取所有接下来七天的值班情况
-#         url = reverse('duty_all_next_seven_days')
-#         response = self.client.post(url, {
-#             'action': 'getAllNextSevenDaysDuty'
-#         }, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertIn('duty', response.json())
-
-#     def test_get_all_next_seven_days_duty_fault_invalid_action(self):
-#         # 负向测试用例：无效的操作导致失败
-#         url = reverse('duty_all_next_seven_days')
-#         response = self.client.post(url, {
-#             'action': 'invalidAction'
-#         }, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-#         self.assertEqual(response.json(), {'error': 'Invalid action'})
+    def test_get_all_next_seven_days_duty_successful(self):
+        # 正向测试用例：成功的获取所有接下来七天的值班情况
+        url = reverse('seven_days')
+        response = self.client.post(url, {
+            'action': 'dutyListSevenDays'
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

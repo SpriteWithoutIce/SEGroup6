@@ -158,7 +158,7 @@ class RegisterView(APIView):
         registers = []
         current_date = datetime.date.today()
         # API 服务器地址
-        api_url = 'http://127.0.0.1:8002//api/administrator_service/doctors/exist/'
+        api_url = 'http://127.0.0.1:8002/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
@@ -412,12 +412,34 @@ class OnDutyView(APIView):
     def dutyListSevenDays(self, request):
         data = json.loads(request.body)
         onDutyList = []
-        seven_days_later = (
-            timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
-        for item in OnDuty.objects.filter(date__lte=seven_days_later).values(
-                'doctor', 'date', 'time', 'state'):
-            onDutyList.append({'doctor': item['doctor'],
-                               'date': item['date'],
-                               'time': item['time'],
-                               'state': item['state']})
-        return JsonResponse({'onDutyList': onDutyList})
+        if 'department' in data:
+            seven_days_later = (
+                timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+
+            for item in OnDuty.objects.filter(date__lte=seven_days_later).values(
+                    'doctor', 'date', 'time', 'state'):
+                # doctor=Doctors.objects.get(id=item['doctor'])
+                api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+                requestData = {
+                    'identity_num': item['doctor'],
+                    'id': item['doctor'],  # 医生编号
+                    'action': 'getDoctor'
+                }
+                respond = requests.post(api_url, json=requestData)
+                doctor = respond.json()['doctor'][0]
+                if doctor['department'] == data['department']:
+                    onDutyList.append({'doctor': item['doctor'],
+                                       'date': item['date'],
+                                       'time': item['time'],
+                                       'state': item['state']})
+            return JsonResponse({'onDutyList': onDutyList})
+        else:
+            seven_days_later = (
+                timezone.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+            for item in OnDuty.objects.filter(date__lte=seven_days_later).values(
+                    'doctor', 'date', 'time', 'state'):
+                onDutyList.append({'doctor': item['doctor'],
+                                   'date': item['date'],
+                                   'time': item['time'],
+                                   'state': item['state']})
+            return JsonResponse({'onDutyList': onDutyList})
