@@ -1,7 +1,8 @@
 name: Build and Deploy
 
-on: [push]
-
+on:
+  push:
+    branches: ["zqstmp"]
 jobs:
   build-on-windows:
     runs-on: windows-latest
