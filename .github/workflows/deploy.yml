@@ -45,11 +45,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: DownLoad composefile
-      uses: actions/download-artifact@v3
-      with:
-        name: compose
-        path: ./猫猫就诊/Project/docker-compose.yml  # compose
+   # - name: DownLoad composefile
+    #  uses: actions/download-artifact@v3
+     # with:
+      #  name: compose
+       # path: ./猫猫就诊/Project/docker-compose.yml  # compose
 
     - name: Download frontend build artifacts
       uses: actions/download-artifact@v3
