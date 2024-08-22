@@ -1,6 +1,6 @@
 version: '3'
 services:
-  database: 
+  database:
     image: mysql
     container_name: mysql5.7
     ports:
@@ -8,9 +8,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: '@15755083308Ab'
       MYSQL_DATABASE: 'seproject'
-    command: 
-      --character-set-server=utf8mb4
-      --collation-server=utf8mb4_unicode_ci
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
   web:
     image: my-django-app
     container_name: django-app
@@ -18,6 +16,8 @@ services:
       - "5000:5000"
     # command: /usr/sbin/nginx -s reload 
     # command: uwsgi /app/uwsgi.ini
+    build:
+
     depends_on:
       - database
 
