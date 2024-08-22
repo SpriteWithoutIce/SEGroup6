@@ -43,7 +43,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: frontend-build
-        path: ./猫猫就诊/Project/frontend
+        path: ./猫猫就诊/Project/frontend/dist
 
     - name: Download backend artifacts
       uses: actions/download-artifact@v3
