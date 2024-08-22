@@ -2,21 +2,30 @@ name: Build and Deploy
 
 on:
   push:
-    branches: ["zqstmp"]
+    branches: ["zjh"]
+
 jobs:
   build-on-windows:
     runs-on: windows-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
     - name: Build frontend on Windows
       run: npm run build
       working-directory: ./猫猫就诊/Project/frontend
+
     - name: Upload frontend build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: frontend-build
         path: ./猫猫就诊/Project/frontend/dist  # 前端构建产物
+
     - name: Upload backend artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -30,15 +39,25 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Download build artifacts
+    - name: Download frontend build artifacts
       uses: actions/download-artifact@v3
       with:
         name: frontend-build
-        path: ./猫猫就诊/Project/frontend/dist  
+        path: ./猫猫就诊/Project/frontend/dist
+
     - name: Download backend artifacts
       uses: actions/download-artifact@v3
       with:
         name: backend
-        path: ./猫猫就诊/Project/backend 
-    - name: Deploy to server
-      run: bash ./deploy.sh
+        path: ./猫猫就诊/Project/backend
+
+    - name: Set up Docker
+      run: sudo apt-get update && sudo apt-get install -y docker.io
+
+    - name: Build and Tag Docker Images
+      run: |
+        docker build -t vue-hello ./猫猫就诊/Project/frontend
+        docker build -t my-django-app ./猫猫就诊/Project/backend
+
+    - name: Deploy with docker-compose
+      run: docker-compose up -d
