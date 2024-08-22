@@ -181,23 +181,20 @@ class DoctorView(APIView):
     # api/administrator_service/test/addDoctor/
     def testAddDoctor(self, request):
         data = json.loads(request.body)
-        try:
-            doctor = Doctors.objects.filter(identity_num=data['id']).first()
-            if doctor is not None:
-                return JsonResponse({'msg': "Doctor with id {} already exists".format(id)}, status=400)
-            doctor = Doctors()
-            doctor.name = data['name']
-            doctor.title = data['title']
-            doctor.department = data['department']
-            doctor.cost = data['cost']
-            doctor.identity_num = data['id']
-            doctor.research = data['research']
-            doctor.avatar = data['avatar']
-            doctor.avatar_name = data['avatar_name']
-            doctor.save()
-            return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
-        except Doctors.DoesNotExist:
-            return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=404)
+        doctor = Doctors.objects.filter(identity_num=data['id']).first()
+        if doctor is not None:
+            return JsonResponse({'msg': "Doctor with id {} already exists".format(id)}, status=400)
+        doctor = Doctors()
+        doctor.name = data['name']
+        doctor.title = data['title']
+        doctor.department = data['department']
+        doctor.cost = data['cost']
+        doctor.identity_num = data['id']
+        doctor.research = data['research']
+        doctor.avatar = data['avatar']
+        doctor.avatar_name = data['avatar_name']
+        doctor.save()
+        return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
 
 
 class UploadAvatarView(APIView):

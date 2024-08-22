@@ -224,7 +224,7 @@ class TreatmentView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         filter = {}
         # API 服务器地址
-        api_url = 'http://127.0.0.1:8002//api/administrator_service/doctors/exist/'
+        api_url = 'http://127.0.0.1:8002/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
@@ -281,12 +281,13 @@ class TreatmentView(APIView):
         data = json.loads(request.body)
         treatment = Treatment()
         # API 服务器地址
-        api_url = '/api/patient_service/registers/filter/'
+        api_url = 'http://127.0.0.1:8000/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': {
             'id': data['id']}, 'action': "filterRegister"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
+        print(response.json()['registers'])
         registerList = response.json().get('registers', [])
         register = registerList[0]
         treatment.queue_id = register['queue_id']

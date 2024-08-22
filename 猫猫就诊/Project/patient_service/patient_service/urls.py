@@ -33,10 +33,11 @@ urlpatterns = [
     path("api/patient_service/register/unlock/", views.RegisterView.as_view()),
     path("api/patient_service/treatments/list/", views.TreatmentView.as_view()),
     path("api/patient_service/duty/next_seven_days/", views.OnDutyView.as_view()),
-    path("api/patient_service/duty/all_next_seven_days/", views.OnDutyView.as_view()),
+    path("api/patient_service/duty/all_next_seven_days/",
+         views.OnDutyView.as_view()),
     path("api/patient_service/bills/list/", views.BillView.as_view()),
     path("api/patient_service/notice/list/", views.NoticeView.as_view()),
-    
+
     path("api/patient_service/registers/filter/", views.RegisterView.as_view()),
     path("api/patient_service/bills/register/", views.BillView.as_view()),
     path("api/patient_service/add/bill/", views.BillView.as_view()),
