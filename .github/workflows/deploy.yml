@@ -52,7 +52,7 @@ jobs:
         path: ./猫猫就诊/Project/backend
 
     - name: Set up Docker
-      run: sudo apt-get update && sudo apt-get install -y docker.io
+      run: sudo apt-get remove containerd && sudo apt-get update && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
 
     - name: Build and Tag Docker Images
       run: |
