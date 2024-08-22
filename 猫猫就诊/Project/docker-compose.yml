@@ -1,0 +1,45 @@
+version: '3'
+services:
+  database: 
+    image: mysql
+    container_name: mysql5.7
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: '@15755083308Ab'
+      MYSQL_DATABASE: 'seproject'
+    command: 
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+  user_service:
+    image: my-django-app
+    container_name: user_service
+    ports:
+      - "5000:5000"  # 映射端口
+    command: python manage.py runserver 0.0.0.0:5000
+    depends_on:
+      - database
+  patient_service:
+    image: my-django-app
+    container_name: patient_service
+    ports:
+      - "5001:5001"  # 映射端口
+    command: python manage.py runserver 0.0.0.0:5001
+    depends_on:
+      - database
+  doctor_service:
+    image: my-django-app
+    container_name: doctor_service
+    ports:
+      - "5002:5002"  # 映射端口
+    command: python manage.py runserver 0.0.0.0:5002
+    depends_on:
+      - database
+  administrator_service:
+    image: my-django-app
+    container_name: administrator_service
+    ports:
+      - "5003:5003"  # 映射端口
+    command: python manage.py runserver 0.0.0.0:5003
+    depends_on:
+      - database
