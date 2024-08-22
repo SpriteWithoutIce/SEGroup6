@@ -15,7 +15,17 @@ services:
     image: my-django-app
     container_name: django-app
     ports:
-      - "8000:8000"
-    command: python manage.py runserver 0.0.0.0:8000   
+      - "5000:5000"
+    # command: /usr/sbin/nginx -s reload 
+    # command: uwsgi /app/uwsgi.ini
     depends_on:
       - database
+
+  nginx:
+    image: vue-hello
+    container_name: nginx
+    ports:
+      - "80:80"
+    restart: always # always表容器运行发生错误时一直重启
+    depends_on:
+      - web

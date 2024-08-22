@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-9d(@z+^#ndq-#(x$(88=mahim#gsmbl=qgihen!06s$i3=n$5s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['101.42.36.160', '127.0.0.1']
+ALLOWED_HOSTS = ['101.42.36.160', '127.0.0.1','localhost']
 
 
 # Application definition
@@ -125,12 +125,12 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-# STATIC_URL = "static/"
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "../frontend/dist/static"),
-#     os.path.join(BASE_DIR, 'static/images/medicine'),
-#     os.path.join(BASE_DIR, 'static/images/doctors')
-# ]
+STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "../frontend/dist/static"),
+    os.path.join(BASE_DIR, 'static/images/medicine'),
+    os.path.join(BASE_DIR, 'static/images/doctors')
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
