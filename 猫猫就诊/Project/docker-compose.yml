@@ -16,7 +16,6 @@ services:
       - "5000:5000"
     # command: /usr/sbin/nginx -s reload 
     # command: uwsgi /app/uwsgi.ini
-    build:
 
     depends_on:
       - database
