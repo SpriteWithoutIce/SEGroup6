@@ -30,10 +30,10 @@ sudo apt-get update && sudo apt-get install -y sshpass
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/dist/ $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
 # 后端部署
 echo "Starting back-end deployment..."
-sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/administrator_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/administrator_service
-sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/doctor_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/doctor_service
-sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/user_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/user_service
-sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/patient_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/patient_service
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/administrator_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/doctor_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/user_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/patient_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/
 echo "传dockerfile和配置文件"
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/doctor_service/Dockerfile $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/doctor_service/Dockerfile
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/user_service/Dockerfile $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/user_service/Dockerfile
