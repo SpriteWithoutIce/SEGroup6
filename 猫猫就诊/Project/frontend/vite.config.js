@@ -21,22 +21,22 @@ export default defineConfig({
       '/api/user_service': {
         target: 'http://127.0.0.1:5004',
         changeOrigin: true,
-        pathRewrite: { '^/api/user_service': '' }
+        pathRewrite: { '/api/user_service': '' }
       },
       '/api/patient_service': {
       target: 'http://127.0.0.1:5001',
       changeOrigin: true,
-      pathRewrite: { '^/api/patient_service': '' }
+      pathRewrite: { '/api/patient_service': '' }
       },
       '/api/doctor_service': {
         target: 'http://127.0.0.1:5002',
         changeOrigin: true,
-        pathRewrite: { '^/api/doctor_service': '' }
+        pathRewrite: { '/api/doctor_service': '' }
       },
       '/api/administrator_service': {
         target: 'http://127.0.0.1:5003',
         changeOrigin: true,
-        pathRewrite: { '^/api/administrator_service': '' }
+        pathRewrite: { '/api/administrator_service': '' }
       }
     }
   },
