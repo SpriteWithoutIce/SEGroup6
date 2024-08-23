@@ -7,7 +7,7 @@
     <Sign ref="Sign"> </Sign>
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
-        <RouterLink to="/Main">首页</RouterLink>
+        <RouterLink to="/Main">microservice</RouterLink>
         <a href="#unknown" @click="showLogin()">登录</a>
         <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
           v-if="unreadCount !== 0"></el-badge>
