@@ -40,6 +40,8 @@ echo "Connecting to server to finalize deployment..."
 sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
     # 进入后端项目目录
 
+    echo "$SSH_PASSWORD" | sudo killall -9 nginx
+    
     cd $BACKEND_PATH
     echo "$SSH_PASSWORD" | sudo docker build -t my-django-app .
     cd ..
