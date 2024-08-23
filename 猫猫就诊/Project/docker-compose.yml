@@ -13,8 +13,8 @@ services:
       --collation-server=utf8mb4_unicode_ci
   user_service:
     build:
-      context: ../user_service
-      dockerfile: ../user_service/Dockerfile
+      context: user_service
+      dockerfile: Dockerfile
     container_name: user_service
     ports:
       - "5000:5000"  # 映射端口
@@ -22,8 +22,8 @@ services:
       - database
   patient_service:
     build:
-      context: ../patient_service
-      dockerfile: ../patient_service/Dockerfile
+      context: patient_service
+      dockerfile: Dockerfile
     container_name: patient_service
     ports:
       - "5001:5001"  # 映射端口
@@ -31,8 +31,8 @@ services:
       - database
   doctor_service:
     build:
-      context: ../doctor_service
-      dockerfile: ../doctor_service/Dockerfile
+      context: doctor_service
+      dockerfile: Dockerfile
     container_name: doctor_service
     ports:
       - "5002:5002"  # 映射端口
@@ -40,15 +40,17 @@ services:
       - database
   administrator_service:
     build:
-      context: ../administrator_service
-      dockerfile: ../administrator_service/Dockerfile
+      context: administrator_service
+      dockerfile: Dockerfile
     container_name: administrator_service
     ports:
       - "5003:5003"  # 映射端口
     depends_on:
       - database
   nginx:
-    image: vue-hello
+    build:
+      context: frontend
+      dockerfile: Dockerfile
     container_name: nginx
     ports:
       - "80:80"
