@@ -231,6 +231,8 @@ class TreatmentView(APIView):
             return self.searchTreatment(request)
         elif action == 'testAddTreatment':
             return self.testAddTreatment(request)
+        elif action == 'getTreatment':
+            return self.getTreatment(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
 
@@ -381,16 +383,40 @@ class TreatmentView(APIView):
 
     def testAddTreatment(self, request):
         data = json.loads(request.body)
+        if data['id'] < 0:
+            return JsonResponse({'msg': "Invalid id"}, status=400)
         treatment = Treatment()
-        treatment.queue_id = data['queue_id']
-        treatment.patient = data['patient']
-        treatment.doctor = data['doctor']
-        treatment.time = data['time']
-        treatment.advice = data['advice']
-        treatment.medicine = json.dumps(data['medicine'])
-        treatment.price = data['price']
+        # API 服务器地址
+        api_url = 'http://127.0.0.1:5001/api/patient_service/registers/filter/'
+        # 请求数据（如果需要的话）
+        requestData = {'filter': {
+            'id': data['id']}, 'action': "filterRegister"}
+        # 发送 POST 请求
+        response = requests.post(api_url, json=requestData)
+        register = response.json()['registers'][0]
+        treatment.queue_id = register['queue_id']
+        treatment.patient = register['patient']
+        treatment.doctor = register['doctor']
+        treatment.time = timezone.now()
+        treatment.advice = data['suggestion']
+        treatment.medicine = json.dumps(data['medicines'])
+        treatment.price = data['totalPrice']
         treatment.save()
-        return JsonResponse({'msg': "Successfully add treatment"})
+        return JsonResponse({'msg': "Successfully add treatment", 'treatment_id': treatment.id})
+
+    def getTreatment(self, request):
+        data = json.loads(request.body)
+        treatment = Treatment.objects.get(id=data['id'])
+        treatments = []
+        treatments.append({'id': treatment.id,
+                           'queue_id': treatment.queue_id,
+                           'patient': treatment.patient,
+                           'doctor': treatment.doctor,
+                           'time': treatment.time,
+                           'advice': treatment.advice,
+                           'medicine': treatment.medicine,
+                           'price': treatment.price})
+        return JsonResponse({'treatments': treatments})
 
 
 class MedicineView(APIView):
