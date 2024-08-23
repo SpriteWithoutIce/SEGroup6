@@ -32,10 +32,10 @@ jobs:
       with:
         name: frontend-build
         path: ./猫猫就诊/Project/frontend/dist  
-        
+
     #后端产物没有下载了
     - name: ls content
       run: ls
 
     - name: Deploy to server
-      run: bash ./deploy.sh
+      run: bash ./猫猫就诊/Project/deploy.sh
