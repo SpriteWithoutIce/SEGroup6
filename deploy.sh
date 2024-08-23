@@ -11,6 +11,13 @@ NGINX_SERVICE_NAME="nginx"  # Nginx 服务名
 UWSGI_INI_PATH="uwsgi.ini"  # uWSGI 的 ini 文件路径
 SSH_PASSWORD="22371468Se"  # 
 
+sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
+    cd SEGroup6
+    git reset --hard
+    git clean -fd
+    git checkout zjh
+    cd ..
+EOF
 # 安装 sshpass 工具
 sudo apt-get update && sudo apt-get install -y sshpass
 
@@ -21,7 +28,7 @@ sudo apt-get update && sudo apt-get install -y sshpass
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/dist/ $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
 # 后端部署
 echo "Starting back-end deployment..."
-sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
+sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/django/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
 echo "传dockerfile和配置文件"
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/Dockerfile $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/Dockerfile
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/nginx.conf $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/nginx.conf
@@ -33,6 +40,8 @@ echo "Connecting to server to finalize deployment..."
 sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
     # 进入后端项目目录
 
+    echo "$SSH_PASSWORD" | sudo killall -9 nginx
+
     cd $BACKEND_PATH
     echo "$SSH_PASSWORD" | sudo docker build -t my-django-app .
     cd ..
@@ -40,7 +49,7 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     echo "$SSH_PASSWORD" | sudo docker build -t vue-hello .
     cd ..
     ls
-    echo "$SSH_PASSWORD" | sudo docker-compose up -d
+    echo "$SSH_PASSWORD" | sudo docker-compose up -d --remove-orphans
 
 
 
