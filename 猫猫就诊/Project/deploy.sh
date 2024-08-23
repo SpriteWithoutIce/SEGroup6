@@ -45,12 +45,7 @@ echo "Connecting to server to finalize deployment..."
 sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
     # 进入后端项目目录
 
-    cd $BACKEND_PATH
-    # echo "$SSH_PASSWORD" | sudo docker build -t my-django-app .
-    cd ..
-    cd frontend
-    # echo "$SSH_PASSWORD" | sudo docker build -t vue-hello .
-    cd ..
+    cd SEGroup6/猫猫就诊/Project
     ls
     echo "$SSH_PASSWORD" | sudo docker-compose up -d
 
