@@ -21,7 +21,10 @@ sudo apt-get update && sudo apt-get install -y sshpass
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/dist/ $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
 # 后端部署
 echo "Starting back-end deployment..."
-sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/backend/* $SERVER_USER@$SERVER_IP:$BACKEND_PATH
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/administrator_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/administrator_service
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/doctor_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/doctor_service
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/user_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/user_service
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/patient_service $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/patient_service
 echo "传dockerfile和配置文件"
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/Dockerfile $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/Dockerfile
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/nginx.conf $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/nginx.conf
@@ -34,10 +37,10 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     # 进入后端项目目录
 
     cd $BACKEND_PATH
-    echo "$SSH_PASSWORD" | sudo docker build -t my-django-app .
+    # echo "$SSH_PASSWORD" | sudo docker build -t my-django-app .
     cd ..
     cd frontend
-    echo "$SSH_PASSWORD" | sudo docker build -t vue-hello .
+    # echo "$SSH_PASSWORD" | sudo docker build -t vue-hello .
     cd ..
     ls
     echo "$SSH_PASSWORD" | sudo docker-compose up -d
