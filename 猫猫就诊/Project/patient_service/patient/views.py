@@ -58,6 +58,8 @@ class PatientView(APIView):
         patient = Patients.objects.filter(identity_num=data['number']).first()
         if patient is None:
             patient = Patients()
+        else:
+            return JsonResponse({'msg': 'Patient already exists'}, status=400)
         if data['idType'] == '身份证':
             patient.identity = 1
         elif data['idType'] == '医保卡':
@@ -84,7 +86,7 @@ class PatientView(APIView):
         patient.phone_num = data['phone']
         patient.address = data['addr']
         patient.save()
-        return JsonResponse({'msg': 'Successfully add patient'}, status=201)
+        return JsonResponse({'msg': 'Successfully add patient'}, status=200)
 
     def getPatient(self, request):
         data = json.loads(request.body)
@@ -154,24 +156,25 @@ class RegisterView(APIView):
         registers = []
         filter = {}
         # API 服务器地址
-        api_url = '/api/administrator_service/doctors/exist/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
+
         if response.json().get('msg') == "Doctor Exist":
             filter = {'doctor': response.json().get('id')}
         else:
             filter = {'register': identity_num}
         # API 服务器地址
-        api_url = '/api/patient_service/registers/filter/'
+        api_url = 'http://127.0.0.1:5001/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': filter, 'action': "filterRegister"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
         registerList = response.json().get('registers', [])
         # API 服务器地址
-        api_url = '/api/administrator_service/doctors/list/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
@@ -184,11 +187,11 @@ class RegisterView(APIView):
             doctor_name = doctor['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S')
-            end_time = start_time + timedelta(minutes=10)
-            end_time = end_time.strftime('%H:%M')
-            formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
-            if start_time.hour < 12:
+            start_time = item['time'].replace('T', ' ').split('.')[0]
+
+            formatted_datetime = start_time
+            hour = start_time[12:14]
+            if hour < "12":
                 formatted_datetime = formatted_datetime[:10] + \
                     ' ' + CHINESE_AM + formatted_datetime[10:]
             else:
@@ -196,19 +199,35 @@ class RegisterView(APIView):
                     ' ' + CHINESE_PM + formatted_datetime[10:]
 
             state = ""
-            current_time = timezone.now()
-            if start_time < current_time:
+            current_time = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+            date_time_parts1 = [
+                int(part) for part in start_time.split(' ', 1)[1].split(':')]
+            date_time_parts2 = [
+                int(part) for part in current_time.split(' ', 1)[1].split(':')]
+            if date_time_parts1 < date_time_parts2:
                 state = "已就诊"
             else:
                 state = "已预约"
 
+            hour, minute, second = start_time.split(' ', 1)[1].split(':')
+            hour = int(hour)
+            minute = int(minute)
+            minute += 10
+            if minute >= 60:
+                hour += 1
+                minute -= 60
+            end_time = f"{hour:02d}:{minute:02d}"
+
             # API 服务器地址
-            api_url = '/api/patient_service/bills/register/'
+            api_url = 'http://127.0.0.1:5001/api/patient_service/bills/register/'
             # 请求数据（如果需要的话）
             requestData = {'register': item['id'], 'action': "registerBill"}
             # 发送 POST 请求
             response = requests.post(api_url, json=requestData)
+
+            # 请求数据（如果需要的话）'})
             bill = response.json().get('bill')
+
             registers.append({'id': item['id'],
                               'office': doctor_department,
                               'orderNum': item['id'],
@@ -691,15 +710,43 @@ class BillView(APIView):
             return JsonResponse({'error': 'Invalid action'}, status=400)
 
     def getBillsData(self, request):
-        bill = []
+        bills = []
         data = json.loads(request.body)
         if 'identity_num' not in data:
             return JsonResponse({'error': 'Invalid id'}, status=400)
         identity_num = json.loads(request.body)['identity_num']
-        for item in Bill.objects.filter(patient=identity_num):
-            department = item.register.doctor.department if item.type == 1 else item.treatment.doctor.department
-            date = item.register.time.date() if item.type == 1 else item.treatment.time.date()
-            bill.append({
+        bill = Bill.objects.all()
+        for item in bill:
+            patient_id = item.patient
+            if patient_id is None:
+                continue
+
+            if item.patient != identity_num:
+                continue
+            patient = Patients.objects.get(identity_num=patient_id)
+            if item.type == 1:
+                register = item.register
+                api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+                requestData = {
+                    'identity_num': register.doctor,
+                    'action': 'getDoctor'
+                }
+                respond = requests.post(api_url, json=requestData)
+                doctor = respond.json()['doctor'][0]
+                department = doctor['department']
+                date = item.register.time.date()
+            else:
+                treatment = item.treatment
+                api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+                requestData = {
+                    'id': treatment.doctor,  # 证件号
+                    'action': 'getDoctor'
+                }
+                respond = requests.post(api_url, json=requestData)
+                doctor = respond.json()['doctor'][0]
+                department = doctor['department']
+                date = item.treatment.time.date()
+            bills.append({
                 "id": item.id,
                 "type": '挂号' if item.type == 1 else '处方',
                 "department": department,
@@ -707,7 +754,21 @@ class BillView(APIView):
                 "date": date.strftime('%Y年%m月%d日'),
                 "payStatus": item.state
             })
-        return JsonResponse({"bill": bill})
+            return JsonResponse({"bill": bills}, status=200)
+        return JsonResponse({"bill": bills}, status=200)
+        # for item in Bill.objects.filter(patient__identity_num=identity_num):
+        #     department = item.register.doctor.department if item.type == 1 else item.treatment.doctor.department
+        #     return JsonResponse({'department': department})
+        #     date = item.register.time.date() if item.type == 1 else item.treatment.time.date()
+        #     bill.append({
+        #         "id": item.id,
+        #         "type": '挂号' if item.type == 1 else '处方',
+        #         "department": department,
+        #         "price": item.price,
+        #         "date": date.strftime('%Y年%m月%d日'),
+        #         "payStatus": str(item.state)
+        #     })
+        # return JsonResponse({"bill": bill})
 
     def changeBillStatus(self, request):
         data = json.loads(request.body)
@@ -716,13 +777,20 @@ class BillView(APIView):
         bill = Bill.objects.get(id=data['item_id'])
         bill.state = True
         bill.save()
-        treatment = bill.treatment
+        api_url = "http://127.0.0.1:5002/api/doctor_service/treatments/list/"
+        requestData = {
+            'id': bill.treatment,
+            'action': 'getTreatment'
+        }
+        respond = requests.post(api_url, json=requestData)
+        treatment = respond.json()['treatments'][0]
         notice = Notice()
-        notice.patient = treatment.patient
-        notice.doctor = treatment.doctor
+        notice.patient = Patients.objects.get(
+            identity_num=treatment['patient'])
+        notice.doctor = treatment['doctor']
         notice.msg_type = 4
         notice.time = timezone.now()
-        notice.treatment = treatment
+        notice.treatment = bill.treatment
         notice.isRead = False
         notice.save()
         return self.getBillsData(request)
