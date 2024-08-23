@@ -54,7 +54,6 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
 
 
 
-
     # 重启 uWSGI 和 Nginx 服务
     #echo "启动 uWSGI 和nginx服务..."
     #echo "$SSH_PASSWORD" | sudo -S killall -9 uwsgi
