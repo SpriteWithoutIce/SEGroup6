@@ -13,14 +13,14 @@ SSH_PASSWORD="22371468Se"  #
 
 # 安装 sshpass 工具
 
-echo "checkout branch"
-sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
-    cd SEGroup6
-    git reset --hard
-    git clean -fd
-    git checkout microservice
-    cd ..
-EOF
+# echo "checkout branch"
+# sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
+#     cd SEGroup6
+#     git reset --hard
+#     git clean -fd
+#     git checkout microservice
+#     cd ..
+# EOF
 
 sudo apt-get update && sudo apt-get install -y sshpass
 #echo "Copying Other files"
