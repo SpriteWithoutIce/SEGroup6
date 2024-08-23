@@ -12,28 +12,36 @@ services:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
   user_service:
-    image: my-django-app
+    build:
+      context: ../user_service
+      dockerfile: ../user_service/Dockerfile
     container_name: user_service
     ports:
       - "5000:5000"  # 映射端口
     depends_on:
       - database
   patient_service:
-    image: my-django-app
+    build:
+      context: ../patient_service
+      dockerfile: ../patient_service/Dockerfile
     container_name: patient_service
     ports:
       - "5001:5001"  # 映射端口
     depends_on:
       - database
   doctor_service:
-    image: my-django-app
+    build:
+      context: ../doctor_service
+      dockerfile: ../doctor_service/Dockerfile
     container_name: doctor_service
     ports:
       - "5002:5002"  # 映射端口
     depends_on:
       - database
   administrator_service:
-    image: my-django-app
+    build:
+      context: ../administrator_service
+      dockerfile: ../administrator_service/Dockerfile
     container_name: administrator_service
     ports:
       - "5003:5003"  # 映射端口
