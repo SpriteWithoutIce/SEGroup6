@@ -17,7 +17,7 @@ services:
       dockerfile: Dockerfile
     container_name: user_service
     ports:
-      - "5000:5000" # 映射端口
+      - "5004:5004" # 映射端口
     # depends_on:
     #   - database
   patient_service:

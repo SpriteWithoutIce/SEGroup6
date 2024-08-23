@@ -19,7 +19,7 @@ export default defineConfig({
   devServer : {
     proxy: {
       '/api/user_service': {
-        target: 'http://127.0.0.1:5000',
+        target: 'http://127.0.0.1:5004',
         changeOrigin: true,
         pathRewrite: { '^/api/user_service': '' }
       },

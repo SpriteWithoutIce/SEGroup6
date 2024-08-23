@@ -51,7 +51,6 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
 
     cd SEGroup6/猫猫就诊/Project
     ls
-    cd ..
     echo "$SSH_PASSWORD" | sudo killall -9 nginx
     echo "$SSH_PASSWORD" | sudo docker-compose up -d --remove-orphans
 
