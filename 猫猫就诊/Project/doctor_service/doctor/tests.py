@@ -240,9 +240,12 @@ class RegisterViewTestCase(APITestCase):
             reverse('register_list'), data, format='json')
         self.assertEqual(response.status_code, 200)
 
-    # def test_get_doctor_registers(self):
-    #     # 测试 getDoctorRegisters 方法
-    #     data = {'identity_num': self.doctor['identity_num']}
-    #     response = self.client.post(
-    #         reverse('register_list'), data, content_type='application/json')
-    #     self.assertEqual(response.status_code, 200)
+    def test_get_doctor_registers(self):
+        # 测试 getDoctorRegisters 方法
+        data = {
+            'identity_num': self.doctor['identity_num'],
+            'action': 'getDoctorRegisters'
+        }
+        response = self.client.post(
+            reverse('register_list'), data, format='json')
+        self.assertEqual(response.status_code, 200)
