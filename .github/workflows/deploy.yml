@@ -44,6 +44,7 @@ jobs:
           python manage.py test app01
   build-on-windows:
     runs-on: windows-latest
+    needs: UnitTest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
