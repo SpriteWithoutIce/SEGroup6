@@ -1,8 +1,6 @@
 name: Build and Deploy
 
-on:
-  push:
-    branches: ["zjh"]
+on: [push]
 
 jobs:
   build-on-windows:
@@ -10,33 +8,19 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-
     - name: Build frontend on Windows
       run: npm run build
       working-directory: ./猫猫就诊/Project/frontend
-
-    - name: Upload composefile
-      uses: actions/upload-artifact@v3
-      with:
-        name: compose
-        path: ./猫猫就诊/Project/docker-compose.yml  # compose
-
     - name: Upload frontend build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: frontend-build
         path: ./猫猫就诊/Project/frontend/dist  # 前端构建产物
-
     - name: Upload backend artifacts
       uses: actions/upload-artifact@v3
       with:
         name: backend
-        path: ./猫猫就诊/Project/django  # 后端构建产物
+        path: ./猫猫就诊/Project/backend  # 后端构建产物
 
   deploy-on-ubuntu:
     runs-on: ubuntu-latest
@@ -45,36 +29,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-   # - name: DownLoad composefile
-    #  uses: actions/download-artifact@v3
-     # with:
-      #  name: compose
-       # path: ./猫猫就诊/Project/docker-compose.yml  # compose
-
-    - name: Download frontend build artifacts
+    - name: Download build artifacts
       uses: actions/download-artifact@v3
       with:
         name: frontend-build
-        path: ./猫猫就诊/Project/frontend/dist
-
+        path: ./猫猫就诊/Project/frontend/dist  
     - name: Download backend artifacts
       uses: actions/download-artifact@v3
       with:
         name: backend
-        path: ./猫猫就诊/Project/backend
-
-    - name: Set up Docker
-      run: sudo apt-get remove containerd && sudo apt-get update && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
-    #这里过会儿可以分成两个去build
-    - name: Install Docker Compose
-      run: |
-        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        sudo chmod +x /usr/local/bin/docker-compose
-    - name: Build and Tag Docker Images
-      run: |
-        docker build -t vue-hello ./猫猫就诊/Project/frontend
-        docker build -t my-django-app ./猫猫就诊/Project/backend
-    - name: Verify Docker Compose Installation
-      run: docker-compose --version
-    - name: Deploy with docker-compose
-      run: docker-compose up -d
+        path: ./猫猫就诊/Project/backend 
+    - name: Deploy to server
+      run: bash ./deploy.sh
