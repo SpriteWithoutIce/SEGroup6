@@ -29,10 +29,10 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     # 进入后端项目目录
 
     cd $BACKEND_PATH
-    docker build -t my-django-app
+    docker build -t my-django-app .
     cd ..
     cd frontend
-    docker build -t vue-hello
+    docker build -t vue-hello .
     cd ..
     ls
     docker-compose up -d
