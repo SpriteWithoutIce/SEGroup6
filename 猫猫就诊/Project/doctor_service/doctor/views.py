@@ -76,29 +76,31 @@ class RegisterView(APIView):
         registers = []
         filter = {}
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5002/api/administrator_service/doctors/exist/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
+
         if response.json().get('msg') == "Doctor Exist":
             filter = {'doctor': response.json().get('id')}
         else:
             filter = {'register': identity_num}
         # API 服务器地址
-        api_url = '/api/administrator_service/doctors/list/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
         doctorList = response.json().get('doctors', [])
         # API 服务器地址
-        api_url = '/api/patient_service/registers/filter/'
+        api_url = 'http://127.0.0.1:5001/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': filter, 'action': "filterRegister"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
         registerList = response.json().get('registers', [])
+
         for item in registerList:
             doctor = next(
                 (doctor for doctor in doctorList if doctor['id'] == item['doctor']), None)
@@ -106,11 +108,11 @@ class RegisterView(APIView):
             doctor_name = doctor['name']
             CHINESE_AM = '上午'
             CHINESE_PM = '下午'
-            start_time = datetime.strptime(item['time'], '%Y-%m-%d %H:%M:%S')
-            end_time = start_time + timedelta(minutes=10)
-            end_time = end_time.strftime('%H:%M')
-            formatted_datetime = start_time.strftime('%Y-%m-%d %H:%M')
-            if start_time.hour < 12:
+            start_time = item['time'].replace('T', ' ').split('.')[0]
+
+            formatted_datetime = start_time
+            hour = start_time[12:14]
+            if hour < "12":
                 formatted_datetime = formatted_datetime[:10] + \
                     ' ' + CHINESE_AM + formatted_datetime[10:]
             else:
@@ -118,19 +120,35 @@ class RegisterView(APIView):
                     ' ' + CHINESE_PM + formatted_datetime[10:]
 
             state = ""
-            current_time = timezone.now()
-            if start_time < current_time:
+            current_time = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+            date_time_parts1 = [
+                int(part) for part in start_time.split(' ', 1)[1].split(':')]
+            date_time_parts2 = [
+                int(part) for part in current_time.split(' ', 1)[1].split(':')]
+            if date_time_parts1 < date_time_parts2:
                 state = "已就诊"
             else:
                 state = "已预约"
 
+            hour, minute, second = start_time.split(' ', 1)[1].split(':')
+            hour = int(hour)
+            minute = int(minute)
+            minute += 10
+            if minute >= 60:
+                hour += 1
+                minute -= 60
+            end_time = f"{hour:02d}:{minute:02d}"
+
             # API 服务器地址
-            api_url = '/api/patient_service/bills/register/'
+            api_url = 'http://127.0.0.1:5001/api/patient_service/bills/register/'
             # 请求数据（如果需要的话）
             requestData = {'register': item['id'], 'action': "registerBill"}
             # 发送 POST 请求
             response = requests.post(api_url, json=requestData)
+
+            # 请求数据（如果需要的话）'})
             bill = response.json().get('bill')
+
             registers.append({'id': item['id'],
                               'office': doctor_department,
                               'orderNum': item['id'],
@@ -158,19 +176,21 @@ class RegisterView(APIView):
         registers = []
         current_date = datetime.date.today()
         # API 服务器地址
-        api_url = 'http://127.0.0.1:8002/api/administrator_service/doctors/exist/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
-        filter = {'doctor': response.json().get('id')}
+
+        filter = {'id': response.json().get('id')}
         # API 服务器地址
-        api_url = '/api/patient_service/registers/filter/'
+        api_url = 'http://127.0.0.1:5001/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': filter, 'action': "filterRegister"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
         registerList = response.json().get('registers', [])
+
         for item in registerList:
             age = current_date.year - item['patient_birthday'].year - ((current_date.month, current_date.day) < (
                 item['patient_birthday'].month, item['patient_birthday'].day))

@@ -24,7 +24,8 @@ from doctor_service import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", TemplateView.as_view(template_name="index.html")),
-    path("api/doctor_service/registers/list/", views.RegisterView.as_view()),
+    path("api/doctor_service/registers/list/",
+         views.RegisterView.as_view(), name="register_list"),
     path("api/doctor_service/treatments/list/",
          views.TreatmentView.as_view(), name="treatment_list"),
     path("api/doctor_service/prescriptionDetailsWriteBack/",

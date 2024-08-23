@@ -170,3 +170,79 @@ class OnDutyViewTestCase(APITestCase):
             'action': 'dutyListSevenDays'
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class RegisterViewTestCase(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        # add patient
+        api_url = 'http://127.0.0.1:5001/api/patient_service/patient/add/'
+        requestData = {
+            'name': "Existing Patient",
+            'paymentType': "非医保",
+            'gender': "男",
+            'birthday': datetime.date.today().isoformat(),
+            'idType': "身份证",
+            'phone': "1234567890",
+            'number': '123456',
+            'addr': "Existing Address",
+            'action': "getPatient"
+        }
+        self.patient = requests.post(
+            api_url, json=requestData).json()['patients']
+
+        # add doctor
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/test/addDoctor/'
+        # 请求数据（如果需要的话）
+        requestData = {
+            'identity_num': '1234567890',
+            'name': '张三',
+            'title': '主任医师',
+            'department': '内科',
+            'research': '心脏病研究',
+            'cost': 200,
+            'avatar': 'path/to/avatar.jpg',
+            'avatar_name': 'dr_zhang_san.jpg',
+            'action': 'testAddDoctor'
+        }
+        respond = requests.post(api_url, json=requestData)
+        api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+        requestData = {
+            'identity_num': '1234567890',  # 证件号
+            'action': 'getDoctor'
+        }
+        respond = requests.post(api_url, json=requestData)
+        self.doctor = respond.json()['doctor'][0]
+
+        # add register
+        api_url = "http://127.0.0.1:5001/api/patient_service/appointment/add/"
+        requestData = {
+            'action': 'addRegisterData',
+            'number': 1,
+            'inumber': self.patient[0]['identity_num'],
+            'identity_num': self.patient[0]['identity_num'],
+            'doctorId': self.doctor['id'],
+            'time': "08-20-2024",
+            'starttime': '09:00',
+            'department': 'cat',
+            'cost': 100
+        }
+        respond = requests.post(api_url, json=requestData)
+        self.register_id = respond.json()['registers'][0]['id']
+
+    def test_get_registers_data(self):
+        # 测试 getRegistersData 方法
+        data = {
+            'identity_num': self.doctor['identity_num'],
+            'action': 'getRegistersData'
+        }
+        response = self.client.post(
+            reverse('register_list'), data, format='json')
+        self.assertEqual(response.status_code, 200)
+
+    # def test_get_doctor_registers(self):
+    #     # 测试 getDoctorRegisters 方法
+    #     data = {'identity_num': self.doctor['identity_num']}
+    #     response = self.client.post(
+    #         reverse('register_list'), data, content_type='application/json')
+    #     self.assertEqual(response.status_code, 200)
