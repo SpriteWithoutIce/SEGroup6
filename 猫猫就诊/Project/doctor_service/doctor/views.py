@@ -174,7 +174,8 @@ class RegisterView(APIView):
     def getDoctorRegisters(self, request):
         identity_num = json.loads(request.body)['identity_num']
         registers = []
-        current_date = datetime.date.today()
+        current_date = datetime.date.today().strftime("%Y-%m-%d")
+        current_year, current_month, current_day = current_date.split('-')
         # API 服务器地址
         api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
@@ -192,14 +193,17 @@ class RegisterView(APIView):
         registerList = response.json().get('registers', [])
 
         for item in registerList:
-            age = current_date.year - item['patient_birthday'].year - ((current_date.month, current_date.day) < (
-                item['patient_birthday'].month, item['patient_birthday'].day))
+            birthday_year, birthday_month, birthday_day = item['patient_birthday'].split(
+                '-')
+            age = int(current_year) - int(birthday_year) - (int(current_month)
+                                                            < int(birthday_month) or int(current_day) < int(birthday_day))
+            year, month, day = item['time'].split('T')[0].split('-')
             registers.append({
                 "Id": item['id'],
                 "name": item['patient_name'],
                 "age": age,
                 "sex": "男" if item['patient_gender'] == 1 else "女",
-                "date": item['time'].date().strftime('%Y年%m月%d日')
+                "date": f"{year}年{month}月{day}日"
             })
         return JsonResponse({'registers': registers})
 
