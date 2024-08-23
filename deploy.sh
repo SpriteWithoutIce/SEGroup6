@@ -31,7 +31,7 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     cd $BACKEND_PATH
     # 安装后端依赖
     cd ..
-    
+     
     # 迁移数据库（如果使用 Django）
     #这里全给注释了
     #python manage.py migrate --noinput
