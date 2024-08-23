@@ -22,7 +22,7 @@ RUN pip install uwsgi==2.0.19.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 # 将容器内的端口暴露出来，这里使用 Django 默认的端口 8000
-EXPOSE 5000
+EXPOSE 5001
 
 # 启动 Django 项目
 CMD ["uwsgi", "--ini", "uwsgi.ini"]

@@ -13,7 +13,7 @@ services:
     image: my-django-app
     container_name: django-app
     ports:
-      - "5000:5000"
+      - "5001:5001"
     # command: /usr/sbin/nginx -s reload 
     # command: uwsgi /app/uwsgi.ini
 
