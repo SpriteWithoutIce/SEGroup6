@@ -102,10 +102,11 @@ class PatientView(APIView):
         })
         return JsonResponse({'patients': patient_respond}, status=200)
 
-    def getPatientName(self,request):
+    def getPatientName(self, request):
         data = json.loads(request.body)
         patient = Patients.objects.get(identity_num=data['number'])
         return JsonResponse({'name': patient.name}, status=200)
+
 
 class RegisterView(APIView):
     """
@@ -728,7 +729,17 @@ class BillView(APIView):
 
     def registerBill(self, request):
         data = json.loads(request.body)
-        bill = Bill.objects.get(register=data['register']).value('price')
+        bill = Bill.objects.all()
+        for item in bill:
+            register = item.register
+            if register is None:
+                continue
+            if register.id == data['register']:
+                bill_data = {'price': item.price}
+                break
+        return JsonResponse({'bill': bill_data})
+        return JsonResponse({'id': register.doctor})
+        bill = Bill.objects.get(register=register).value('price')
         bill_data = {'price': bill['price']}
         return JsonResponse({'bill': bill_data})
 
