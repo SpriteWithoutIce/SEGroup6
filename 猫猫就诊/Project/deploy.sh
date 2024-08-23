@@ -16,7 +16,8 @@ SSH_PASSWORD="22371468Se"  #
 echo "checkout branch"
 sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
     cd SEGroup6
-    git pull
+    git reset --hard
+    git clean -fd
     git checkout microservice
     cd ..
 EOF
