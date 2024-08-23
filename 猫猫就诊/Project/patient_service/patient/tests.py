@@ -221,85 +221,93 @@ class BillViewTestCase(APITestCase):
         self.assertTrue(Bill.objects.get(id=self.bill.id).state)
 
 
-# class NoticeViewTestCase(APITestCase):
-#     def setUp(self):
-#         self.client = APIClient()
-#         self.patient = Patients.objects.create(
-#             identity_num='123456',
-#             identity=1,
-#             name='Existing Patient',
-#             health_insurance=1,
-#             gender=1,
-#             birthday=date.today(),
-#             phone_num='1234567890',
-#             address='Existing Address'
-#         )
-#         # API 服务器地址
-#         api_url = '/api/administrator_service/doctors/setData/'
-#         # 请求数据（如果需要的话）
-#         requestData = {'identity_num': '1234567890',  # 证件号
-#                        'name': '张三',                # 医生姓名
-#                        'title': '主任医师',           # 医生职称
-#                        'department': '内科',          # 医生科室
-#                        'research': '心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
-#                        'cost': 200,                   # 出诊费，例如200元
-#                        'avatar': 'path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
-#                        'avatar_name': 'dr_zhang_san.jpg',  # 图片名字
-#                        'action': 'testAddDoctor'
-#                        }
-#         self.register = Register.objects.create(
-#             queue_id=1,
-#             patient=self.patient,
-#             register=self.patient,
-#             doctor=self.doctor,
-#             time=timezone.now(),
-#             position="门诊大楼1楼内科"
-#         )
-#         # API 服务器地址
-#         api_url = '/api/doctor_service/test/addTreatment'
-#         # 请求数据（如果需要的话）
-#         requestData = {'queue_id': self.register.queue_id,
-#                        'patient': self.patient,
-#                        'doctor': self.doctor,
-#                        'time': timezone.now(),
-#                        'advice': 'suggestion',
-#                        'medicine': ['Aspirin', 'Paracetamol'],
-#                        'price': 100,
-#                        'action': 'testAddTreatment'
-#                        }
-#         self.bill = Bill.objects.create(
-#             patient=self.patient,
-#             type=1,
-#             price=100,
-#             state=False,
-#             register=self.register,
-#             treatment=self.treatment,
-#             id=1
-#         )
-#         self.notice_unread = Notice.objects.create(
-#             id=1,
-#             patient=self.patient, doctor=self.doctor, msg_type=1, time=timezone.now(), isRead=False)
-#         self.notice_read = Notice.objects.create(
-#             id=2,
-#             patient=self.patient, doctor=self.doctor, msg_type=2, time=timezone.now(), isRead=True)
+class NoticeViewTestCase(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.patient = Patients.objects.create(
+            identity_num='123456',
+            identity=1,
+            name='Existing Patient',
+            health_insurance=1,
+            gender=1,
+            birthday=date.today(),
+            phone_num='1234567890',
+            address='Existing Address'
+        )
+        # API 服务器地址
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/test/addDoctor/'
+        # 请求数据（如果需要的话）
+        requestData = {
+            'identity_num': '1234567890',  # 证件号
+            'name': '张三',                # 医生姓名
+            'title': '主任医师',           # 医生职称
+            'department': '内科',          # 医生科室
+            'research': '心脏病研究',     # 研究方向，如果不需要可以省略或设置为None
+            'cost': 200,                   # 出诊费，例如200元
+            'avatar': 'path/to/avatar.jpg',  # 头像图片路径，如果不需要可以省略或设置为None
+            'avatar_name': 'dr_zhang_san.jpg',  # 图片名字
+            'action': 'testAddDoctor'
+        }
+        requests.post(api_url, json=requestData)
+        api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+        requestData = {
+            'identity_num': '1234567890',  # 证件号
+            'action': 'getDoctor'
+        }
+        respond = requests.post(api_url, json=requestData)
+        self.doctor = respond.json()['doctor']
 
-#     def test_get_notice_data_success(self):
-#         # 正向测试用例：成功的获取通知数据
-#         url = reverse('notice_list')  # 确保使用正确的 URL 名称
-#         response = self.client.post(url, {
-#             'action': 'getMesData',
-#             'identity_num': self.patient.identity_num
-#         }, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertIn('resMes', response.json())
-#         self.assertIn('billMes', response.json())
+        self.register = Register.objects.create(
+            queue_id=1,
+            patient=self.patient,
+            register=self.patient,
+            doctor=self.doctor[0]['id'],
+            time=timezone.now(),
+            position="门诊大楼1楼内科"
+        )
+        # API 服务器地址
+        api_url = 'http://127.0.0.1:5002/api/doctor_service/test/addTreatment'
+        requestData = {
+            'action': 'testAddTreatment',
+            'id': self.register.id,
+            'suggestion': 'Take a rest',
+            'medicines': ['Aspirin', 'Paracetamol'],
+            'totalPrice': 100
+        }
+        respond = requests.post(api_url, json=requestData)
 
-#     def test_read_notice_success(self):
-#         # 正向测试用例：成功的标记通知为已读
-#         url = reverse('notice_list')
-#         response = self.client.post(url, {
-#             'action': 'readMes',
-#             'item_id': self.notice_unread.id
-#         }, format='json')
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertEqual(response.json(), {'msg': 'Successfully read'})
+        self.bill = Bill.objects.create(
+            register=self.register,
+            state=False,
+            patient=self.patient,
+            treatment=respond.json()['treatment_id'],
+            price=100,
+            type=2
+        )
+        self.notice_unread = Notice.objects.create(
+            id=1,
+            patient=self.patient, doctor=self.doctor[0]['id'], msg_type=1, time=timezone.now(), isRead=False)
+        self.notice_read = Notice.objects.create(
+            id=2,
+            patient=self.patient, doctor=self.doctor[0]['id'], msg_type=2, time=timezone.now(), isRead=True)
+
+    def test_get_notice_data_success(self):
+        # 正向测试用例：成功的获取通知数据
+        url = reverse('notice_list')  # 确保使用正确的 URL 名称
+        response = self.client.post(url, {
+            'action': 'getMesData',
+            'identity_num': self.patient.identity_num
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('resMes', response.json())
+        self.assertIn('billMes', response.json())
+
+    def test_read_notice_success(self):
+        # 正向测试用例：成功的标记通知为已读
+        url = reverse('add_notice')
+        response = self.client.post(url, {
+            'action': 'readMes',
+            'item_id': self.notice_unread.id
+        }, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), {'msg': 'Successfully read'})

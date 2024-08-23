@@ -40,10 +40,12 @@ urlpatterns = [
          views.OnDutyView.as_view()),
     path("api/patient_service/bills/list/",
          views.BillView.as_view(), name="bill_list"),
-    path("api/patient_service/notice/list/", views.NoticeView.as_view()),
+    path("api/patient_service/notice/list/",
+         views.NoticeView.as_view(), name="notice_list"),
 
     path("api/patient_service/registers/filter/", views.RegisterView.as_view()),
     path("api/patient_service/bills/register/", views.BillView.as_view()),
     path("api/patient_service/add/bill/", views.BillView.as_view()),
-    path("api/patient_service/add/Notice/", views.NoticeView.as_view()),
+    path("api/patient_service/add/Notice/",
+         views.NoticeView.as_view(), name="add_notice"),
 ]

@@ -498,7 +498,7 @@ class TreatmentView(APIView):
         response = requests.post(api_url, json=requestData)
         treatmentList = response.json().get('treatments', [])
         # API 服务器地址
-        api_url = '/api/administrator_service/doctors/list/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
@@ -557,7 +557,7 @@ class OnDutyView(APIView):
         response = requests.post(api_url, json=requestData)
         onDutyList = response.json().get('onDutyList', [])
         # API 服务器地址
-        api_url = '/api/administrator_service/doctors/list/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
@@ -631,7 +631,7 @@ class OnDutyView(APIView):
         response = requests.post(api_url, json=requestData)
         onDutyList = response.json().get('onDutyList', [])
         # API 服务器地址
-        api_url = '/api/administrator_service/doctors/list/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
@@ -843,7 +843,7 @@ class NoticeView(APIView):
             return JsonResponse({'error': 'Missing identity number'}, status=400)
         identity_num = json.loads(request.body)['identity_num']
         # API 服务器地址
-        api_url = '/api/administrator_service/doctors/list/'
+        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
