@@ -1,9 +1,11 @@
 # 使用官方的 Python 镜像作为基础镜像
 FROM python:3.8
 
-ENV DOCKERIZE_VERSION v0.6.1
-RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+#ENV DOCKERIZE_VERSION v0.6.1
+#这条命令下载的很慢
+#RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+#  && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
 # # 设置工作目录
 WORKDIR /app
 # 设置 pip 使用清华源
