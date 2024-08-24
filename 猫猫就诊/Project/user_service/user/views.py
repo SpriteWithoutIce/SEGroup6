@@ -74,18 +74,19 @@ class UserView(APIView):
                 type=type,
             )
             user.save()
-            # # API 服务器地址
-            # api_url = '/api/patient_service/patient/add/'
-            # # 请求数据（如果需要的话）
-            # requestData = {'name': "未填写",
-            #     'paymentType': "非医保",
-            #     'gender': "男",
-            #     'birthday': datetime.date.today().isoformat(),
-            #     'idType': "身份证",
-            #     'phone': "未填写",
-            #     'number': identity_num,
-            #     'addr': "未填写",
-            # }
-            # # 发送 POST 请求
-            # requests.post(api_url, json=requestData)
+            # API 服务器地址
+            api_url = 'http://127.0.0.1:5001/api/patient_service/patient/add/'
+            # 请求数据（如果需要的话）
+            requestData = {
+                'name': "未填写",
+                'paymentType': "非医保",
+                'gender': "男",
+                'birthday': datetime.date.today().isoformat(),
+                'idType': "身份证",
+                'phone': "未填写",
+                'number': identity_num,
+                'addr': "未填写",
+            }
+            # 发送 POST 请求
+            requests.post(api_url, json=requestData)
             return JsonResponse({'msg': 'Successfully Register'})

@@ -41,6 +41,19 @@ class MyCore(MiddlewareMixin):
 
 
 class PatientView(APIView):
+    def get(self, request):
+        patient=[]
+        for item in Patients.objects.values('identity_num','name','health_insurance','gender','birthday','phone_num'):
+            patient.append({
+                'id':item['identity_num'],
+                'name':item['name'],
+                'health_insurance':item['health_insurance'],
+                'gender':item['gender'],
+                'birthday':item['birthday'].isoformat(),
+                'phone_num':item['phone_num']
+            })
+        return JsonResponse({'data': patient}, status=200)
+
     """
     添加患者信息。
     Args:

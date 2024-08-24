@@ -87,13 +87,6 @@ class DoctorView(APIView):
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
 
-    # 上传医生头像, 返回该医生数据
-    def upload_avatar(self, request):
-        doctor = Doctors.objects.get(account=request.POST.get("account"))
-        doctor.avatar = request.FILES.get('avatar')
-        doctor.save()
-        return JsonResponse({"doctor": doctor})
-
     # api/administrator_service/doctors/getDoctor/
     def getDoctor(self, request):
         data = json.loads(request.body)
@@ -112,7 +105,10 @@ class DoctorView(APIView):
             })
             return JsonResponse({"doctor": respond})
         id = json.loads(request.body)['identity_num']
-        doctor = Doctors.objects.get(identity_num=id)
+        doctor = Doctors.objects.filter(identity_num=id).first()
+        if doctor is None:
+            return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=400)
+        # doctor = Doctors.objects.get(identity_num=id)
         respond.append({
             'id': doctor.id,
             'identity_num': doctor.identity_num,
@@ -140,7 +136,6 @@ class DoctorView(APIView):
         return JsonResponse({'doctors': doctors})
 
     # api/administrator_service/doctors/delete/
-
     def deleteDoctor(self, request):
         id = json.loads(request.body)['id']
         doctor = Doctors.objects.filter(identity_num=id).first()
@@ -148,14 +143,6 @@ class DoctorView(APIView):
             return JsonResponse({'msg': "Doctor with id {} not found".format(id)}, status=400)
         Doctors.objects.get(identity_num=id).delete()
         return self.get(request)
-
-    # api/administrator_service/doctors/removeAvatar/
-    def removeAvatar(self, request):
-        avatar_name = json.loads(request.body)['avatar_name']
-        file_path = os.path.join(settings.DOCTOR_AVATAR_ROOT, avatar_name)
-        if os.path.exists(file_path):
-            os.remove(file_path)
-        return JsonResponse({'msg': "Successfully removed avatar"})
 
     # api/administrator_service/doctors/setData/
     def addDoctor(self, request):
@@ -231,6 +218,21 @@ class DoctorView(APIView):
         doctor.avatar_name = data['avatar_name']
         doctor.save()
         return JsonResponse({'msg': "Successfully add doctor data"}, status=200)
+
+    # 上传医生头像, 返回该医生数据
+    def upload_avatar(self, request):
+        doctor = Doctors.objects.get(account=request.POST.get("account"))
+        doctor.avatar = request.FILES.get('avatar')
+        doctor.save()
+        return JsonResponse({"doctor": doctor})
+
+    # api/administrator_service/doctors/removeAvatar/
+    def removeAvatar(self, request):
+        avatar_name = json.loads(request.body)['avatar_name']
+        file_path = os.path.join(settings.DOCTOR_AVATAR_ROOT, avatar_name)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        return JsonResponse({'msg': "Successfully removed avatar"})
 
 
 class UploadAvatarView(APIView):
