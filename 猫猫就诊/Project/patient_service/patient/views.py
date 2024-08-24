@@ -782,7 +782,7 @@ class BillView(APIView):
                 register = item.register
                 api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
                 requestData = {
-                    'identity_num': register.doctor,
+                    'id': register.doctor,
                     'action': 'getDoctor'
                 }
                 respond = requests.post(api_url, json=requestData)
@@ -826,8 +826,6 @@ class BillView(APIView):
 
     def changeBillStatus(self, request):
         data = json.loads(request.body)
-        if data['item_id'] < 0:
-            return JsonResponse({'error': 'Invalid id'}, status=400)
         bill = Bill.objects.get(id=data['item_id'])
         bill.state = True
         bill.save()

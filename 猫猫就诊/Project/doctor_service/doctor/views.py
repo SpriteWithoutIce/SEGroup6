@@ -440,20 +440,8 @@ class OnDutyView(APIView):
             return self.judgeDutyState(request)
         elif action == 'dutyListSevenDays':
             return self.dutyListSevenDays(request)
-        elif action == 'setDutyState':
-            return self.setDutyState(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
-
-    def setDutyState(self, request):
-        data = json.loads(request.body)
-        onDuty = OnDuty()
-        onDuty.doctor = data['doctor']
-        onDuty.date = timezone.now()
-        onDuty.time = data['time']
-        onDuty.state = data['state']
-        onDuty.save()
-        return JsonResponse({'msg': "Successfully add onDuty"})
 
     def changeDutyState(self, request):
         data = json.loads(request.body)
@@ -461,6 +449,7 @@ class OnDutyView(APIView):
             doctor=data['doctor'], date=data['date'], time=data['time'])
         onDuty.state = onDuty.state & (~(1 << (data['queue_id'] - 1)))
         onDuty.save()
+        return JsonResponse({'msg': "Successfully change duty"})
 
     def judgeDutyState(self, request):
         data = json.loads(request.body)
