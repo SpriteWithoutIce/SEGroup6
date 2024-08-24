@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 配置项
-SERVER_USER="ubuntu"
+SERVER_USER="root"
 SERVER_IP="47.95.172.141"
 REQUIREMENTS_PATH="SEGroup6/requirements.txt"
 FRONTEND_PATH="SEGroup6/猫猫就诊/Project/frontend/dist"  # 前端静态文件的部署路径
@@ -9,7 +9,7 @@ BACKEND_PATH="SEGroup6/猫猫就诊/Project/django"    # 后端代码的部署�
 UWSGI_SERVICE_NAME="uwsgi"  # uWSGI 服务名
 NGINX_SERVICE_NAME="nginx"  # Nginx 服务名
 UWSGI_INI_PATH="uwsgi.ini"  # uWSGI 的 ini 文件路径
-SSH_PASSWORD="22371468Se"  # 
+SSH_PASSWORD="22373005Se"  # 
 
 # 安装 sshpass 工具
 
@@ -18,7 +18,7 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     cd SEGroup6
     git reset --hard
     git clean -fd
-    git checkout microservice
+    git checkout mic_lyx
     cd ..
 EOF
 
