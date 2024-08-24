@@ -13,7 +13,7 @@ SSH_PASSWORD="22373005Se"  #
 
 # 安装 sshpass 工具
 
-echo "checkout branch"
+# echo "checkout branch"
 # sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
 #     cd SEGroup6
 #     git reset --hard
@@ -23,7 +23,7 @@ echo "checkout branch"
 # EOF
 
 # sudo apt-get update && sudo apt-get install -y sshpass
-#echo "Copying Other files"
+echo "Copying Other files"
 #sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no  ./猫猫就诊/Project/uwsgi.ini $SERVER_USER@$SERVER_IP:/home/ubuntu/Project/uwsgi.ini
 # 前端部署
 #sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./猫猫就诊/Project/frontend/dist/* $SERVER_USER@$SERVER_IP:$FRONTEND_PATH
@@ -55,10 +55,10 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     ls
     # echo "$SSH_PASSWORD" | sudo killall -9 uwsgi
     # echo "$SSH_PASSWORD" | sudo killall -9 nginx
-    echo "$SSH_PASSWORD" | sudo docker-compose down
-    echo "$SSH_PASSWORD" | sudo docker build -t my-django-app .
-    echo "$SSH_PASSWORD" | sudo docker-compose build --no-cache
-    echo "$SSH_PASSWORD" | sudo docker-compose up -d --remove-orphans
+    echo "$SSH_PASSWORD" | docker-compose down
+    echo "$SSH_PASSWORD" | docker build -t my-django-app .
+    echo "$SSH_PASSWORD" | docker-compose build --no-cache
+    echo "$SSH_PASSWORD" | docker-compose up -d --remove-orphans
 
 
 
