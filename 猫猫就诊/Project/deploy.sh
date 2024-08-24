@@ -14,15 +14,15 @@ SSH_PASSWORD="22373005Se"  #
 # 安装 sshpass 工具
 
 echo "checkout branch"
-sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
-    cd SEGroup6
-    git reset --hard
-    git clean -fd
-    git checkout mic_lyx
-    cd ..
-EOF
+# sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
+#     cd SEGroup6
+#     git reset --hard
+#     git clean -fd
+#     git checkout mic_lyx
+#     cd ..
+# EOF
 
-sudo apt-get update && sudo apt-get install -y sshpass
+# sudo apt-get update && sudo apt-get install -y sshpass
 #echo "Copying Other files"
 #sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no  ./猫猫就诊/Project/uwsgi.ini $SERVER_USER@$SERVER_IP:/home/ubuntu/Project/uwsgi.ini
 # 前端部署
