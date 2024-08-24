@@ -7,7 +7,6 @@ ENV PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
 COPY requirements.txt /app/
 
 # 安装项目所需的依赖
-RUN pip install django-cors-headers Pillow uwsgi==2.0.19.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
 RUN pip install -r /app/requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 WORKDIR /app
