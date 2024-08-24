@@ -43,7 +43,9 @@ sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --pro
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/requirements.txt $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/requirements.txt
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/Dockerfile $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/Dockerfile
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/nginx.conf $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/nginx.conf
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/nginx.conf $SERVER_USER@$SERVER_IP:/etc/nginx/nginx.conf
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/default.conf $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/default.conf
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/default.conf $SERVER_USER@$SERVER_IP:/etc/nginx/conf.d/default.conf
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/uwsgi_params $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/uwsgi_params
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/docker-compose.yml $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/docker-compose.yml
 # SSH 到服务器上，执行后续命令
@@ -59,9 +61,9 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     echo "$SSH_PASSWORD" | sudo docker build -t my-django-app .
     echo "$SSH_PASSWORD" | sudo docker-compose build --no-cache
     echo "$SSH_PASSWORD" | sudo docker-compose up -d --remove-orphans
-
-
-
+    echo "$SSH_PASSWORD" | sudo docker images | grep 'localhost:5000/project-' | awk '{print $3}' | xargs docker rmi
+    echo "$SSH_PASSWORD" | sudo docker images | grep 'project-' | awk '{print $1":"$2}' | xargs -I {} docker tag {} localhost:5000/{}
+    echo "$SSH_PASSWORD" | sudo docker images --format "{{.Repository}}:{{.Tag}}" | grep 'project-' | xargs -I {} docker push localhost:5000/{}
 
 
     # 重启 uWSGI 和 Nginx 服务
