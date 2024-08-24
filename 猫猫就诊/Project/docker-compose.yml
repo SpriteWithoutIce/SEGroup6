@@ -15,7 +15,6 @@ services:
     build:
       context: user_service
       dockerfile: Dockerfile
-    image: my-django-app
     container_name: user_service
     ports:
       - "5004:5004" # 映射端口
@@ -25,7 +24,6 @@ services:
     build:
       context: patient_service
       dockerfile: Dockerfile
-    image: my-django-app
     container_name: patient_service
     ports:
       - "5001:5001" # 映射端口
@@ -35,7 +33,6 @@ services:
     build:
       context: doctor_service
       dockerfile: Dockerfile
-    image: my-django-app
     container_name: doctor_service
     ports:
       - "5002:5002" # 映射端口
@@ -45,7 +42,6 @@ services:
     build:
       context: administrator_service
       dockerfile: Dockerfile
-    image: my-django-app
     container_name: administrator_service
     ports:
       - "5003:5003" # 映射端口
