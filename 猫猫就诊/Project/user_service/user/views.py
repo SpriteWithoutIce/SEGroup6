@@ -55,6 +55,7 @@ class UserView(APIView):
         identity_num = data["idCard"]
         pwd = data["password"]
         type = data['userType']
+        
         if type == "医生":
             type = 1
         elif type == "普通用户":
