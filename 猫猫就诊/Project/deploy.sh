@@ -39,6 +39,8 @@ echo "传dockerfile和配置文件"
 # sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/user_service/Dockerfile $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/user_service/Dockerfile
 # sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/patient_service/Dockerfile $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/patient_service/Dockerfile
 # sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/administrator_service/Dockerfile $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/administrator_service/Dockerfile
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/Dockerfile $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/Dockerfile
+sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/requirements.txt $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/requirements.txt
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/Dockerfile $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/Dockerfile
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/nginx.conf $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/nginx.conf
 sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --progress ./猫猫就诊/Project/frontend/default.conf $SERVER_USER@$SERVER_IP:SEGroup6/猫猫就诊/Project/frontend/default.conf
@@ -54,6 +56,7 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     # echo "$SSH_PASSWORD" | sudo killall -9 uwsgi
     # echo "$SSH_PASSWORD" | sudo killall -9 nginx
     echo "$SSH_PASSWORD" | sudo docker-compose down
+    echo "$SSH_PASSWORD" | sudo docker build -t my-django-app --no-cache
     echo "$SSH_PASSWORD" | sudo docker-compose build --no-cache
     echo "$SSH_PASSWORD" | sudo docker-compose up -d --remove-orphans
 
