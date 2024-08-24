@@ -336,13 +336,14 @@ class TreatmentView(APIView):
         api_url = 'http://127.0.0.1:5001/api/patient_service/add/bill/'
         # 请求数据（如果需要的话）
 
-        requestData = {'type': 2,
-                       'state': "False",
-                       'patient': register['patient'],
-                       'treatment': treatment.id,
-                       'register': data['id'],
-                       'price': data['totalPrice'],
-                       'action': "addBill"}
+        requestData = {
+            'type': 2,
+            'state': "False",
+            'patient': register['patient'],
+            'treatment': treatment.id,
+            'register': data['id'],
+            'price': data['totalPrice'],
+            'action': "addBill"}
         # 发送 POST 请求
         requests.post(api_url, json=requestData)
         # API 服务器地址
@@ -376,8 +377,8 @@ class TreatmentView(APIView):
     def searchTreatment(self, request):
         data = json.loads(request.body)
         try:
-            treatment = Treatment.objects.get(id=data['id']).values('price')
-            return JsonResponse({'msg': "Treatment Exist", 'price': treatment['price']})
+            treatment = Treatment.objects.get(id=data['id'])
+            return JsonResponse({'msg': "Treatment Exist", 'price': treatment.price})
         except Treatment.DoesNotExist:
             return JsonResponse({'msg': "Treatment Not Exist"})
 
@@ -439,8 +440,20 @@ class OnDutyView(APIView):
             return self.judgeDutyState(request)
         elif action == 'dutyListSevenDays':
             return self.dutyListSevenDays(request)
+        elif action == 'setDutyState':
+            return self.setDutyState(request)
         else:
             return JsonResponse({'error': 'Invalid action'}, status=400)
+
+    def setDutyState(self, request):
+        data = json.loads(request.body)
+        onDuty = OnDuty()
+        onDuty.doctor = data['doctor']
+        onDuty.date = timezone.now()
+        onDuty.time = data['time']
+        onDuty.state = data['state']
+        onDuty.save()
+        return JsonResponse({'msg': "Successfully add onDuty"})
 
     def changeDutyState(self, request):
         data = json.loads(request.body)
