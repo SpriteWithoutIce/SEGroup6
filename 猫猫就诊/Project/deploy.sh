@@ -71,7 +71,7 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     #echo "$SSH_PASSWORD" | sudo -S killall -9 uwsgi
     #pwd
     #ls
-    
+
     #echo "$SSH_PASSWORD" | sudo uwsgi --ini uwsgi.ini
     #echo "$SSH_PASSWORD" | sudo nginx -s reload
 
