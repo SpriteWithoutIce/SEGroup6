@@ -880,7 +880,7 @@ class NoticeView(APIView):
                 })
             elif (item['msg_type'] == 3 or item['msg_type'] == 4) and item['patient'] == identity_num:
                 # API 服务器地址
-                api_url = '/api/treatment/exist/'
+                api_url = 'http://127.0.0.1:5002/api/doctor_service/treatments/filter/'
                 # 请求数据（如果需要的话）
                 requestData = {'id': item['treatment'],
                                'action': "searchTreatment"}
