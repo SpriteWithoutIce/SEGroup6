@@ -61,9 +61,9 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     echo "$SSH_PASSWORD" | sudo docker build -t my-django-app .
     echo "$SSH_PASSWORD" | sudo docker-compose build --no-cache
     echo "$SSH_PASSWORD" | sudo docker-compose up -d --remove-orphans
-    echo "$SSH_PASSWORD" | sudo docker images | grep 'localhost:5000/project-' | awk '{print $3}' | xargs docker rmi
-    echo "$SSH_PASSWORD" | sudo docker images | grep 'project-' | awk '{print $1":"$2}' | xargs -I {} docker tag {} localhost:5000/{}
-    echo "$SSH_PASSWORD" | sudo docker images --format "{{.Repository}}:{{.Tag}}" | grep 'project-' | xargs -I {} docker push localhost:5000/{}
+    # echo "$SSH_PASSWORD" | sudo docker images | grep 'localhost:5000/project-' | awk '{print $3}' | xargs docker rmi
+    # echo "$SSH_PASSWORD" | sudo docker images | grep 'project-' | awk '{print $1":"$2}' | xargs -I {} docker tag {} localhost:5000/{}
+    # echo "$SSH_PASSWORD" | sudo docker images --format "{{.Repository}}:{{.Tag}}" | grep 'project-' | xargs -I {} docker push localhost:5000/{}
 
 
     # 重启 uWSGI 和 Nginx 服务
