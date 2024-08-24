@@ -23,6 +23,10 @@ SSH_PASSWORD="22373005Se"  #
 # EOF
 
 # sudo apt-get update && sudo apt-get install -y sshpass
+echo "ls files"
+sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
+    ls
+EOF
 echo "Copying Other files"
 #sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no  ./猫猫就诊/Project/uwsgi.ini $SERVER_USER@$SERVER_IP:/home/ubuntu/Project/uwsgi.ini
 # 前端部署
