@@ -5,6 +5,10 @@
 __pycache__
 *.pyc
 
+# 排除测试和文档文件
+# tests/
+# docs/
+
 # 排除日志和临时文件
 *.log
 *.tmp
