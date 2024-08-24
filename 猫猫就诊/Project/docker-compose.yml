@@ -31,7 +31,7 @@ services:
     #   - database
   doctor-service:
     build:
-      context: doctor-service
+      context: doctor_service
       dockerfile: Dockerfile
     container_name: doctor-service
     ports:
