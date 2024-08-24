@@ -11,38 +11,38 @@ services:
   #   command: 
   #     --character-set-server=utf8mb4
   #     --collation-server=utf8mb4_unicode_ci
-  user_service:
+  user-service:
     build:
       context: user_service
       dockerfile: Dockerfile
-    container_name: user_service
+    container_name: user-service
     ports:
       - "5004:5004" # 映射端口
     # depends_on:
     #   - database
-  patient_service:
+  patient-service:
     build:
       context: patient_service
       dockerfile: Dockerfile
-    container_name: patient_service
+    container_name: patient-service
     ports:
       - "5001:5001" # 映射端口
     # depends_on:
     #   - database
-  doctor_service:
+  doctor-service:
     build:
-      context: doctor_service
+      context: doctor-service
       dockerfile: Dockerfile
-    container_name: doctor_service
+    container_name: doctor-service
     ports:
       - "5002:5002" # 映射端口
     # depends_on:
     #   - database
-  administrator_service:
+  administrator-service:
     build:
       context: administrator_service
       dockerfile: Dockerfile
-    container_name: administrator_service
+    container_name: administrator-service
     ports:
       - "5003:5003" # 映射端口
     # depends_on:
@@ -56,7 +56,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - user_service
-      - patient_service
-      - doctor_service
-      - administrator_service
+      - user-service
+      - patient-service
+      - doctor-service
+      - administrator-service
