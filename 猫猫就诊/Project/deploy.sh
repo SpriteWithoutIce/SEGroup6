@@ -55,8 +55,8 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
 
     cd SEGroup6/猫猫就诊/Project
     ls
-    # echo "$SSH_PASSWORD" | sudo killall -9 uwsgi
-    # echo "$SSH_PASSWORD" | sudo killall -9 nginx
+    echo "$SSH_PASSWORD" | sudo killall -9 uwsgi
+    echo "$SSH_PASSWORD" | sudo killall -9 nginx
     echo "$SSH_PASSWORD" | sudo docker-compose down
     echo "$SSH_PASSWORD" | sudo docker build -t my-django-app .
     echo "$SSH_PASSWORD" | sudo docker-compose build --no-cache
