@@ -2,7 +2,7 @@
 
 # 配置项
 SERVER_USER="ubuntu"
-SERVER_IP="10.2.24.12"
+SERVER_IP="81.70.182.21"
 REQUIREMENTS_PATH="SEGroup6/requirements.txt"
 FRONTEND_PATH="SEGroup6/猫猫就诊/Project/frontend/dist"  # 前端静态文件的部署路径
 BACKEND_PATH="SEGroup6/猫猫就诊/Project/django"    # 后端代码的部署路径
