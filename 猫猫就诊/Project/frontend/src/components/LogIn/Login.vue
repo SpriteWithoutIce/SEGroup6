@@ -47,15 +47,15 @@
 
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import globalStateManagement from '../../globalStateManagement.js'
-import { GlobalState } from '../../global.js'
-import CryptoJS from 'crypto-js'
-import { ElMessage } from 'element-plus'
-import { inject } from 'vue'
-import VueCookies from 'vue-cookies'
+import globalStateManagement from '../../globalStateManagement.js';
+import { GlobalState } from '../../global.js';
+import CryptoJS from 'crypto-js';
+import { ElMessage } from 'element-plus';
+import { inject } from 'vue';
+import VueCookies from 'vue-cookies';
 
 export default {
-  data() {
+  data () {
     return {
       identityNum: inject('$identity_num'),
       receivedidCard: '',
@@ -80,68 +80,68 @@ export default {
       }
     }
   },
-  mounted() {
-    this.checkLoginStatus()
+  mounted () {
+    this.checkLoginStatus();
   },
   methods: {
-    updateIdentityNum(newId) {
-      globalStateManagement.updateIdentityNum(newId)
+    updateIdentityNum (newId) {
+      globalStateManagement.updateIdentityNum(newId);
     },
-    getUserData(idCard, password, userType) {
+    getUserData (idCard, password, userType) {
       return new Promise((resolve, reject) => {
-        let ts = this
+        let ts = this;
         let requestData = {
           idCard: idCard,
           password: CryptoJS.SHA256(password).toString(),
           userType: userType
-        }
+        };
         this.$axios
-          .post('/api/user-service/login/', requestData)
+          .post('/api/user_service/login/', requestData)
           .then(function (response) {
-            ts.msg = response.data['msg']
-            console.log(ts.msg)
-            resolve()
+            ts.msg = response.data['msg'];
+            console.log(ts.msg);
+            resolve(); 
           })
           .catch(function (error) {
-            console.log(error)
-            reject(error)
-          })
-      })
+            console.log(error);
+            reject(error); 
+          });
+      });
     },
-    openModal(id, type) {
-      this.receivedidCard = id
-      this.receivedtype = type
+    openModal (id, type) {
+      this.receivedidCard = id;
+      this.receivedtype = type;
       if (id != '') {
-        this.isLogin = false
-        this.notLogin = true
+        this.isLogin = false;
+        this.notLogin = true;
       } else {
-        this.isLogin = true
-        this.notLogin = false
+        this.isLogin = true;
+        this.notLogin = false;
       }
-      this.loginForm.idCard = ''
-      this.loginForm.password = ''
-      this.loginVisible = true
-      document.body.style.overflow = 'hidden'
+      this.loginForm.idCard = '';
+      this.loginForm.password = '';
+      this.loginVisible = true;
+      document.body.style.overflow = 'hidden';
     },
-    closeModal() {
-      this.loginVisible = false
-      document.body.style.overflow = ''
+    closeModal () {
+      this.loginVisible = false;
+      document.body.style.overflow = '';
     },
-    cancelModal() {
+    cancelModal () {
       if (GlobalState.identityNum === 0) {
         ElMessage({
           type: 'info',
           message: '请登录后重试 ╮(╯▽╰)╭',
           showClose: true
-        })
+        });
       }
-      this.loginForm.userType = ''
-      this.closeModal()
+      this.loginForm.userType = "";
+      this.closeModal();
     },
-    handleLogin() {
+    handleLogin () {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          const { idCard, password, userType } = this.loginForm
+          const { idCard, password, userType } = this.loginForm;
 
           /*部署注释以下几行*/
 
@@ -153,91 +153,92 @@ export default {
           // VueCookies.set('userType', userType, '1h');
           // this.closeModal();
 
+
           this.getUserData(idCard, password, userType).then(() => {
             if (this.msg === 'Successfully Login') {
               ElMessage({
                 showClose: true,
                 message: '登录成功 (๑˃̵ᴗ˂̵)',
                 type: 'success'
-              })
-              this.identityNum = idCard
-              this.updateIdentityNum(idCard)
-              this.$emit('update:messagebox')
-              this.$emit('update:currentUserCard', this.loginForm.idCard)
-              this.$emit('update:currentUserType', this.loginForm.userType)
+              });
+              this.identityNum = idCard;
+              this.updateIdentityNum(idCard);
+              this.$emit('update:messagebox');
+              this.$emit('update:currentUserCard', this.loginForm.idCard);
+              this.$emit('update:currentUserType', this.loginForm.userType);
               // 设置 cookies
-              VueCookies.set('idCard', idCard, '1h')
-              VueCookies.set('userType', userType, '1h')
-              this.closeModal()
+              VueCookies.set('idCard', idCard, '1h');
+              VueCookies.set('userType', userType, '1h');
+              this.closeModal();
             } else if (this.msg === 'Wrong Password') {
               ElMessage({
                 showClose: true,
                 message: '密码错误或用户类型错误 ╮(╯▽╰)╭',
                 type: 'error'
-              })
+              });
             } else {
               ElMessage({
                 showClose: true,
                 message: '注册成功并已登录 (๑˃̵ᴗ˂̵)',
                 type: 'success'
-              })
-              this.identityNum = idCard
-              this.updateIdentityNum(idCard)
-              console.log('登录处修改identityNum为:', GlobalState.identityNum)
-              this.$emit('update:currentUserCard', this.loginForm.idCard)
-              this.$emit('update:currentUserType', this.loginForm.userType)
+              });
+              this.identityNum = idCard;
+              this.updateIdentityNum(idCard);
+              console.log("登录处修改identityNum为:", GlobalState.identityNum);
+              this.$emit('update:currentUserCard', this.loginForm.idCard);
+              this.$emit('update:currentUserType', this.loginForm.userType);
               // 设置 cookies
-              VueCookies.set('idCard', idCard, '1h')
-              VueCookies.set('userType', userType, '1h')
-              this.closeModal()
+              VueCookies.set('idCard', idCard, '1h');
+              VueCookies.set('userType', userType, '1h');
+              this.closeModal();
             }
-          })
+          });
         } else {
           ElMessage({
             type: 'info',
             message: '信息错误 ╮(╯▽╰)╭',
             showClose: true
-          })
+          });
         }
-      })
+      });
     },
-    checkLoginStatus() {
-      const idCard = VueCookies.get('idCard')
-      const userType = VueCookies.get('userType')
+    checkLoginStatus () {
+      const idCard = VueCookies.get('idCard');
+      const userType = VueCookies.get('userType');
       if (idCard && userType) {
-        this.isLogin = false
-        this.notLogin = true
-        this.receivedidCard = idCard
-        this.receivedtype = userType
+        this.isLogin = false;
+        this.notLogin = true;
+        this.receivedidCard = idCard;
+        this.receivedtype = userType;
       }
     },
-    logout() {
-      this.identityNum = '0'
-      this.receivedidCard = ''
-      this.currentUserType = ''
-      this.loginForm.userType = ''
-      this.updateIdentityNum(0)
-      this.$emit('update:messagebox')
-      this.$emit('update:currentUserCard', '')
-      this.$emit('update:currentUserType', '')
-      this.isLogin = true
-      this.notLogin = false
+    logout () {
+      this.identityNum = '0';
+      this.receivedidCard = '';
+      this.currentUserType = '';
+      this.loginForm.userType = '';
+      this.updateIdentityNum(0);
+      this.$emit('update:messagebox');
+      this.$emit('update:currentUserCard', '');
+      this.$emit('update:currentUserType', '');
+      this.isLogin = true;
+      this.notLogin = false;
       // 移除 cookies
-      VueCookies.remove('idCard')
-      VueCookies.remove('userType')
-      this.closeModal()
+      VueCookies.remove('idCard');
+      VueCookies.remove('userType');
+      this.closeModal();
       ElMessage({
         type: 'success',
         message: '已退出登录 (๑˃̵ᴗ˂̵)',
         showClose: true
-      })
+      });
 
       window.scrollTo({
         top: 0,
         left: 0,
         behavior: 'smooth'
-      })
-      this.$router.push({ path: '/Main' })
+      });
+      this.$router.push({ path: "/Main" });
     }
   }
 }
