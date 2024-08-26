@@ -76,7 +76,7 @@ class RegisterView(APIView):
         registers = []
         filter = {}
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/exist/'
+        api_url = 'http://nginx:80/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
@@ -87,14 +87,14 @@ class RegisterView(APIView):
         else:
             filter = {'register': identity_num}
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/list/'
+        api_url = 'http://nginx:80/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
         response = requests.post(api_url, json=requestData)
         doctorList = response.json().get('doctors', [])
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5001/api/patient_service/registers/filter/'
+        api_url = 'http://nginx:80/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': filter, 'action': "filterRegister"}
         # 发送 POST 请求
@@ -140,7 +140,7 @@ class RegisterView(APIView):
             end_time = f"{hour:02d}:{minute:02d}"
 
             # API 服务器地址
-            api_url = 'http://127.0.0.1:5001/api/patient_service/bills/register/'
+            api_url = 'http://nginx:80/api/patient_service/bills/register/'
             # 请求数据（如果需要的话）
             requestData = {'register': item['id'], 'action': "registerBill"}
             # 发送 POST 请求
@@ -177,7 +177,7 @@ class RegisterView(APIView):
         current_date = datetime.date.today().strftime("%Y-%m-%d")
         current_year, current_month, current_day = current_date.split('-')
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/exist/'
+        api_url = 'http://nginx:80/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
@@ -185,7 +185,7 @@ class RegisterView(APIView):
 
         filter = {'id': response.json().get('id')}
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5001/api/patient_service/registers/filter/'
+        api_url = 'http://nginx:80/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': filter, 'action': "filterRegister"}
         # 发送 POST 请求
@@ -250,7 +250,7 @@ class TreatmentView(APIView):
         identity_num = json.loads(request.body)['identity_num']
         filter = {}
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/exist/'
+        api_url = 'http://nginx:80/api/administrator_service/doctors/exist/'
         # 请求数据（如果需要的话）
         requestData = {'identity_num': identity_num, 'action': "searchDoctor"}
         # 发送 POST 请求
@@ -260,7 +260,7 @@ class TreatmentView(APIView):
         else:
             filter = {'register': identity_num}
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5003/api/administrator_service/doctors/list/'
+        api_url = 'http://nginx:80/api/administrator_service/doctors/list/'
         # 请求数据（如果需要的话）
         requestData = {'action': "getDoctorsData"}
         # 发送 POST 请求
@@ -287,7 +287,7 @@ class TreatmentView(APIView):
                     ' ' + CHINESE_PM + formatted_datetime[10:]
             patient_id = item['patient']
             # API 服务器地址
-            api_url = 'http://127.0.0.1:5001/api/patient_service/patient/add/'
+            api_url = 'http://nginx:80/api/patient_service/patient/add/'
             requestData = {
                 'number': patient_id,
                 'action': "getPatientName"
@@ -317,7 +317,7 @@ class TreatmentView(APIView):
             return JsonResponse({'msg': "Invalid id"}, status=400)
         treatment = Treatment()
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5001/api/patient_service/registers/filter/'
+        api_url = 'http://nginx:80/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': {
             'id': data['id']}, 'action': "filterRegister"}
@@ -333,7 +333,7 @@ class TreatmentView(APIView):
         treatment.price = data['totalPrice']
         treatment.save()
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5001/api/patient_service/add/bill/'
+        api_url = 'http://nginx:80/api/patient_service/add/bill/'
         # 请求数据（如果需要的话）
 
         requestData = {
@@ -347,7 +347,7 @@ class TreatmentView(APIView):
         # 发送 POST 请求
         requests.post(api_url, json=requestData)
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5001/api/patient_service/add/Notice/'
+        api_url = 'http://nginx:80/api/patient_service/add/Notice/'
         # 请求数据（如果需要的话）
         requestData = {
             'patient': register['patient'],
@@ -388,7 +388,7 @@ class TreatmentView(APIView):
             return JsonResponse({'msg': "Invalid id"}, status=400)
         treatment = Treatment()
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5001/api/patient_service/registers/filter/'
+        api_url = 'http://nginx:80/api/patient_service/registers/filter/'
         # 请求数据（如果需要的话）
         requestData = {'filter': {
             'id': data['id']}, 'action': "filterRegister"}
@@ -424,7 +424,7 @@ class MedicineView(APIView):
     # api/doctor_service/medicine/list/
     def get(self, request):
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5003/api/administrator_service/medicine/list/'
+        api_url = 'http://nginx:80/api/administrator_service/medicine/list/'
         # 发送 POST 请求
         response = requests.get(api_url)
         medicineList = response.json().get('medicine', [])
@@ -471,7 +471,7 @@ class OnDutyView(APIView):
             for item in OnDuty.objects.filter(date__lte=seven_days_later).values(
                     'doctor', 'date', 'time', 'state'):
                 # doctor=Doctors.objects.get(id=item['doctor'])
-                api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+                api_url = "http://nginx:80/api/administrator_service/doctors/getDoctor/"
                 requestData = {
                     'identity_num': item['doctor'],
                     'id': item['doctor'],  # 医生编号

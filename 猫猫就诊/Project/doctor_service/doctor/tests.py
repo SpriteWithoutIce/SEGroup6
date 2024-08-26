@@ -21,7 +21,7 @@ class TreatmentViewTest(APITestCase):
     def setUp(self):
         # 创建测试数据
         self.client = client
-        api_url = 'http://127.0.0.1:5001/api/patient_service/patient/add/'
+        api_url = 'http://nginx:80/api/patient_service/patient/add/'
         requestData = {
             'name': "Existing Patient",
             'paymentType': "非医保",
@@ -36,7 +36,7 @@ class TreatmentViewTest(APITestCase):
         self.patient = requests.post(
             api_url, json=requestData).json()['patients']
 
-        api_url = 'http://127.0.0.1:5003/api/administrator_service/test/addDoctor/'
+        api_url = 'http://nginx:80/api/administrator_service/test/addDoctor/'
         # 请求数据（如果需要的话）
         requestData = {
             'identity_num': '1234567890',  # 证件号
@@ -50,7 +50,7 @@ class TreatmentViewTest(APITestCase):
             'action': 'testAddDoctor'
         }
         respond = requests.post(api_url, json=requestData)
-        api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+        api_url = "http://nginx:80/api/administrator_service/doctors/getDoctor/"
         requestData = {
             'identity_num': '1234567890',  # 证件号
             'action': 'getDoctor'
@@ -58,7 +58,7 @@ class TreatmentViewTest(APITestCase):
         respond = requests.post(api_url, json=requestData)
         self.doctor = respond.json()['doctor']
 
-        api_url = "http://127.0.0.1:5001/api/patient_service/appointment/add/"
+        api_url = "http://nginx:80/api/patient_service/appointment/add/"
         requestData = {
             'action': 'addRegisterData',
             'number': 1,
@@ -125,7 +125,7 @@ class TreatmentViewTest(APITestCase):
 class OnDutyViewTestCase(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        api_url = 'http://127.0.0.1:5003/api/administrator_service/test/addDoctor/'
+        api_url = 'http://nginx:80/api/administrator_service/test/addDoctor/'
         # 请求数据（如果需要的话）
         requestData = {
             'identity_num': '1234567890',  # 证件号
@@ -139,7 +139,7 @@ class OnDutyViewTestCase(APITestCase):
             'action': 'testAddDoctor'
         }
         requests.post(api_url, json=requestData)
-        api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+        api_url = "http://nginx:80/api/administrator_service/doctors/getDoctor/"
         requestData = {
             'identity_num': '1234567890',  # 证件号
             'action': 'getDoctor'
@@ -176,7 +176,7 @@ class RegisterViewTestCase(APITestCase):
     def setUp(self):
         self.client = APIClient()
         # add patient
-        api_url = 'http://127.0.0.1:5001/api/patient_service/patient/add/'
+        api_url = 'http://nginx:80/api/patient_service/patient/add/'
         requestData = {
             'name': "Existing Patient",
             'paymentType': "非医保",
@@ -192,7 +192,7 @@ class RegisterViewTestCase(APITestCase):
             api_url, json=requestData).json()['patients']
 
         # add doctor
-        api_url = 'http://127.0.0.1:5003/api/administrator_service/test/addDoctor/'
+        api_url = 'http://nginx:80/api/administrator_service/test/addDoctor/'
         # 请求数据（如果需要的话）
         requestData = {
             'identity_num': '1234567890',
@@ -206,7 +206,7 @@ class RegisterViewTestCase(APITestCase):
             'action': 'testAddDoctor'
         }
         respond = requests.post(api_url, json=requestData)
-        api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+        api_url = "http://nginx:80/api/administrator_service/doctors/getDoctor/"
         requestData = {
             'identity_num': '1234567890',  # 证件号
             'action': 'getDoctor'
@@ -215,7 +215,7 @@ class RegisterViewTestCase(APITestCase):
         self.doctor = respond.json()['doctor'][0]
 
         # add register
-        api_url = "http://127.0.0.1:5001/api/patient_service/appointment/add/"
+        api_url = "http://nginx:80/api/patient_service/appointment/add/"
         requestData = {
             'action': 'addRegisterData',
             'number': 1,

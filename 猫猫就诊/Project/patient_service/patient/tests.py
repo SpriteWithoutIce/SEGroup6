@@ -63,7 +63,7 @@ client = APIClient()
 #     def setUp(self):
 #         # 准备测试数据
 #         # API 服务器地址
-#         api_url = 'http://127.0.0.1:5003/api/administrator_service/test/addDoctor/'
+#         api_url = 'http://nginx:80/api/administrator_service/test/addDoctor/'
 #         # 请求数据（如果需要的话）
 #         requestData = {
 #             'identity_num': '1234567890',  # 证件号
@@ -77,7 +77,7 @@ client = APIClient()
 #             'action': 'testAddDoctor'
 #         }
 #         requests.post(api_url, json=requestData)
-#         api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+#         api_url = "http://nginx:80/api/administrator_service/doctors/getDoctor/"
 #         requestData = {
 #             'identity_num': '1234567890',  # 证件号
 #             'action': 'getDoctor'
@@ -151,7 +151,7 @@ client = APIClient()
 #             address='Existing Address'
 #         )
 #         # API 服务器地址
-#         api_url = 'http://127.0.0.1:5003/api/administrator_service/test/addDoctor/'
+#         api_url = 'http://nginx:80/api/administrator_service/test/addDoctor/'
 #         # 请求数据（如果需要的话）
 #         requestData = {
 #             'identity_num': '1234567890',  # 证件号
@@ -165,7 +165,7 @@ client = APIClient()
 #             'action': 'testAddDoctor'
 #         }
 #         requests.post(api_url, json=requestData)
-#         api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+#         api_url = "http://nginx:80/api/administrator_service/doctors/getDoctor/"
 #         requestData = {
 #             'identity_num': '1234567890',  # 证件号
 #             'action': 'getDoctor'
@@ -182,7 +182,7 @@ client = APIClient()
 #             position="门诊大楼1楼内科"
 #         )
 #         # API 服务器地址
-#         api_url = 'http://127.0.0.1:5002/api/doctor_service/test/addTreatment'
+#         api_url = 'http://nginx:80/api/doctor_service/test/addTreatment'
 #         requestData = {
 #             'action': 'testAddTreatment',
 #             'id': self.register.id,
@@ -235,7 +235,7 @@ class NoticeViewTestCase(APITestCase):
             address='Existing Address'
         )
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5003/api/administrator_service/test/addDoctor/'
+        api_url = 'http://nginx:80/api/administrator_service/test/addDoctor/'
         # 请求数据（如果需要的话）
         requestData = {
             'identity_num': '1234567890',  # 证件号
@@ -249,7 +249,7 @@ class NoticeViewTestCase(APITestCase):
             'action': 'testAddDoctor'
         }
         requests.post(api_url, json=requestData)
-        api_url = "http://127.0.0.1:5003/api/administrator_service/doctors/getDoctor/"
+        api_url = "http://nginx:80/api/administrator_service/doctors/getDoctor/"
         requestData = {
             'identity_num': '1234567890',  # 证件号
             'action': 'getDoctor'
@@ -266,7 +266,7 @@ class NoticeViewTestCase(APITestCase):
             position="门诊大楼1楼内科"
         )
         # API 服务器地址
-        api_url = 'http://127.0.0.1:5002/api/doctor_service/test/addTreatment'
+        api_url = 'http://nginx:80/api/doctor_service/test/addTreatment'
         requestData = {
             'action': 'testAddTreatment',
             'id': self.register.id,

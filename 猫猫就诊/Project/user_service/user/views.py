@@ -76,7 +76,7 @@ class UserView(APIView):
             )
             user.save()
             # API 服务器地址
-            api_url = 'http://127.0.0.1:5001/api/patient_service/patient/add/'
+            api_url = 'http://nginx:80/api/patient_service/patient/add/'
             # 请求数据（如果需要的话）
             requestData = {
                 'name': "未填写",

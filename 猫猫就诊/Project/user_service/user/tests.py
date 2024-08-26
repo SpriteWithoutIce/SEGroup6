@@ -27,7 +27,7 @@ class UserViewTest(APITestCase):
             password='patientpass',
             type=2
         )
-        api_url = 'http://127.0.0.1:5001/api/patient_service/patient/add/'
+        api_url = 'http://nginx:80/api/patient_service/patient/add/'
         requestData = {
             'name': "未填写",
             'paymentType': "非医保",
