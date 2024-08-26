@@ -52,7 +52,7 @@ sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --pro
 echo "Connecting to server to finalize deployment..."
 sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
     # 进入后端项目目录
-
+    ls
     cd SEGroup6_lyh/猫猫就诊/Project
     ls
     echo "$SSH_PASSWORD" | sudo killall -9 uwsgi
