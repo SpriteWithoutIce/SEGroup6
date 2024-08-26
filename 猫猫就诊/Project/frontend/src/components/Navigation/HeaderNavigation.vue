@@ -8,7 +8,7 @@
     <el-header class="header-nav" @click="changeBackgroundOnClick">
       <nav>
 
-        <RouterLink to="/Main">microservice</RouterLink>
+        <RouterLink to="/Main">首页</RouterLink>
         <a href="#unknown" @click="showLogin()">登录</a>
         <a @click="openMessageBox">消息</a><el-badge :value="unreadCount" class="item"
           v-if="unreadCount !== 0"></el-badge>
