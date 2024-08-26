@@ -43,11 +43,9 @@ sshpass -p "$SSH_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" --pro
 # 检查服务器K3s集群状态
 echo "Connecting to server to check K3s..."
 sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP << EOF
-
     kubectl get nodes
     kubectl get pods 
     kubectl get svc -o wide
-
 EOF
 
 # SSH 到服务器上，执行后续命令
@@ -63,5 +61,4 @@ sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_
     echo "$SSH_PASSWORD" | docker build -t my-django-app .
     echo "$SSH_PASSWORD" | docker-compose build --no-cache
     echo "$SSH_PASSWORD" | docker-compose up -d --remove-orphans
-
 EOF
